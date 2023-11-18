@@ -1,3 +1,10 @@
+## 2023.11.18 (토)
+**[오픈AI, 샘 알트먼 CEO 해임](https://n.news.naver.com/mnews/article/215/0001134958?sid=101)** ```OpenAI``` ```ChatGPT```
+
+* 2015년 12월 범용 인공지능 (AGI) 를 목표로 OpenAI를 설립한 샘 알트먼 CEO가 2023년 11월 17일 해임되었다.
+* 현 CTO인 미라 무라티가 임시 회장직을 맡게 되었다.
+* OpenAI의 이사회는 샘 알트먼에 대해 그와의 의사소통이 솔직하지 못하다고 평가하였다.
+
 ## 2023.11.17 (금)
 **[생성형 AI 영화 "AI 수로부인"](https://n.news.naver.com/mnews/article/243/0000052898?sid=105)** ```Generative AI``` ```LLM```
 
