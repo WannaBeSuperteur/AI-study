@@ -7,7 +7,8 @@ TODO :
 * 자체 제작 토이 프로젝트 (2023.12.11 ~ 12.29)
 
 Project Branch Naming Rule :
-* **IP-P123-456** 123번째 Image Processing 관련 프로젝트 (토이 프로젝트 등) 의 456번째 branch
+* **IP-P123-master** 123번째 Image Processing 관련 프로젝트 (토이 프로젝트 등) 의 master branch 
+* **IP-P123-456** 123번째 Image Processing 관련 프로젝트의 456번째 sub-branch
 
 ## Projects
 * **IP-P1** 프로젝트 1 제목 (2023.00.00 ~ 2024.00.00, 0개월 0일)

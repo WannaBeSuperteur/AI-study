@@ -8,7 +8,8 @@ TODO :
 * 토이 프로젝트 (2024.01.01 ~ 02.04)
 
 Project Branch Naming Rule :
-* **GAI-P123-456** 123번째 생성형 AI 관련 프로젝트 (토이 프로젝트 등) 의 456번째 branch
+* **GAI-P123-master** 123번째 생성형 AI 관련 프로젝트 (토이 프로젝트 등) 의 master branch 
+* **GAI-P123-456** 123번째 생성형 AI 관련 프로젝트의 456번째 sub-branch
 
 ## Projects
 * **GAI-P1** 프로젝트 1 제목 (2023.00.00 ~ 2024.00.00, 0개월 0일)
