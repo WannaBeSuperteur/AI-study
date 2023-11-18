@@ -2,7 +2,7 @@
 
 Transformer, BERT, S-BERT 부터 시작해서, 최종적으로는 Mini Chat-GPT를 만드는 것이 목표!!
 
-TODO :
+**TODO :**
 * Transformer, BERT, S-BERT 등 NLP 알고리즘 기초지식 익히기 (~2023.12.10)
 * 자체 제작 자연어 처리 과제 (~2023.12.31)
   * 1차 : 2023.12.11 ~ 12.17
@@ -11,7 +11,7 @@ TODO :
 * 프로젝트 (2024.01.01 ~ 02.04)
   * Mini ChatGPT 만들기 (생성형 AI를 이용) : 2024.01.01 ~ 02.04
 
-Project Branch Naming Rule :
+**Project Branch Naming Rule :**
 * **NLP-P123-master** 123번째 NLP 관련 프로젝트 (토이 프로젝트 등) 의 master branch 
 * **NLP-P123-456** 123번째 NLP 관련 프로젝트의 456번째 sub-branch
 

@@ -4,7 +4,7 @@ Kaggle에서 현재 진행 중이거나 종료된 Competition에 참여해 보�
 
 * 2023.12.04 이후 수시로 업데이트 예정
 
-Project Branch Naming Rule :
+**Project Branch Naming Rule :**
 * **KAG-C123-master** 123번째 캐글 도전 (Competition) 주제의 master branch
 * **KAG-C123-456** 123번째 캐글 도전 주제의 456번째 sub-branch
 

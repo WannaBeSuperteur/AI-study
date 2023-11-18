@@ -2,12 +2,12 @@
 
 생성형 AI 분야에 대한 기초 지식 정리 및 간단한 실습, 토이 프로젝트 등
 
-TODO :
+**TODO :**
 * 생성형 AI를 개발하는 데 사용되는 최신 트렌드 기술 확인하기 (~2023.11.29)
 * 생성형 AI 개발에 필요한 기술에 대한 지식 정리 및 실습 (~2023.12.31)
 * 토이 프로젝트 (2024.01.01 ~ 02.04)
 
-Project Branch Naming Rule :
+**Project Branch Naming Rule :**
 * **GAI-P123-master** 123번째 생성형 AI 관련 프로젝트 (토이 프로젝트 등) 의 master branch 
 * **GAI-P123-456** 123번째 생성형 AI 관련 프로젝트의 456번째 sub-branch
 

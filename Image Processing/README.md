@@ -2,11 +2,11 @@
 
 이미지 프로세싱 분야에 대한 AI 기술 (CNN, ResNet, GoogleNET 등) 에 대한 학습
 
-TODO :
+**TODO :**
 * ResNet, GoogleNET 등 CNN 관련 기술 기초 학습 (~2023.12.10)
 * 자체 제작 토이 프로젝트 (2023.12.11 ~ 12.29)
 
-Project Branch Naming Rule :
+**Project Branch Naming Rule :**
 * **IP-P123-master** 123번째 Image Processing 관련 프로젝트 (토이 프로젝트 등) 의 master branch 
 * **IP-P123-456** 123번째 Image Processing 관련 프로젝트의 456번째 sub-branch
 
