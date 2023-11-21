@@ -1,3 +1,11 @@
+## 2023.11.21 (화)
+**[괴물 파도 예측하는 인공지능](https://n.news.naver.com/mnews/article/421/0007188225)** ```AI```
+
+* 덴마크, 캐나다 연구진이 괴물 파도를 예측할 수 있는 AI 기반 수학 모델 발표
+  * AI를 이용해 괴물 파도가 만들어질 확률 계산, 국제학술지 PNAS에 등재
+  * AI 학습에 미국 영해의 158개의 부표 사용
+* AI 알고리즘은 공공 분야에 공개
+
 ## 2023.11.20 (월)
 **[T 같은 ChatGPT vs. F 같은 이루다](https://www.aitimes.com/news/articleView.html?idxno=155278)** ```NLP``` ```chatbot``` ```ChatGPT```
 
