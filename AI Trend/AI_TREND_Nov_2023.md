@@ -1,3 +1,11 @@
+## 2023.11.22 (수)
+**[샘 알트먼 CEO, 오픈AI 복귀](https://n.news.naver.com/mnews/article/003/0012225679?sid=105)** ```OpenAI``` ```ChatGPT```
+
+* 샘 알트먼 CEO가 2023.11.22에 오픈AI 직원들의 지지로 오픈AI CEO로 복귀하였다.
+  * 이에 따라 ChatGPT 상업화 전략이 가속화될 것
+* OpenAI의 향후 계획은 자체 플랫폼 GPT Store (구글 플레이 스토어에 대항) 및 일반 인공지능 (AGI) 모델인 GPT-5
+* 이번 사태로 인해 OpenAI의 이사진 개편
+
 ## 2023.11.21 (화)
 **[괴물 파도 예측하는 인공지능](https://n.news.naver.com/mnews/article/421/0007188225)** ```AI```
 
