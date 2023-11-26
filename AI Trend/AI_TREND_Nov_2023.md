@@ -1,3 +1,14 @@
+## 2023.11.26 (일)
+**로컬에서 LLM을 실행할 수 있는 도구** ```NLP``` ```Large Language Model```
+
+ChatGPT에 입력하는 정보가 OpenAI에 전달될 수 있다는 보안 이슈 때문에 (삼성전자에서는 **사용 금지**한다고 함) 로컬에서 ChatGPT와 같은 LLM을 실행할 수 있는 도구가 등장하고 있다.
+* [Ollama](https://ollama.ai/)
+  * 2023년 11월 26일 현재 Linux 및 Mac용으로만 제공하며, Windows용은 추후 제공 예정이다. [Ollama Github](https://github.com/jmorganca/ollama)
+* [GPT4All](https://gpt4all.io/index.html)
+  * 개인 PC에서 작동하는 ChatGPT라고 할 수 있다.
+  * "Performance Benchmarks" 섹션에서 다운로드 가능한 모델 및 그 모델들의 성능을 확인할 수 있다.
+  * Windows 10에서 설치 및 실행이 가능하다.
+
 ## 2023.11.25 (토)
 **[제네시스랩, 인공지능 신뢰성·품질 대상 수상](https://n.news.naver.com/mnews/article/092/0002312670?sid=105)** ```AI``` ```XAI```
 
