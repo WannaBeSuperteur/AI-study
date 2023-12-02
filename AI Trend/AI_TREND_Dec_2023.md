@@ -1,3 +1,9 @@
+## 2023.12.02 (토)
+**[GPT 스토어 출시 2024년으로 연기](https://n.news.naver.com/mnews/article/092/0002313531?sid=105)** ```OpenAI``` ```AI``` ```ChatGPT```
+* 2023.12.01일 현지시각, OpenAI가 GPT Store 출시를 2024년으로 연기할 것으로 보도
+  * 11월 초 dev day에서 GPT Store를 11월 말 출시 예정으로 공언 (앱스토어와 유사한 역할 기대감)
+* 조만간 ChatGPT에 업데이트가 있을 것
+
 ## 2023.12.01 (금)
 **[AI 활용 게임 제작 매뉴얼 발표](https://n.news.naver.com/mnews/article/016/0002232025?sid=100)** ```AI``` ```Generative AI```
 
