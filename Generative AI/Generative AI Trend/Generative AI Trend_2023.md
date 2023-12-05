@@ -1,6 +1,6 @@
 # 생성형 AI 트렌드 기술 (2023년)
 ## Stable Diffusion
-Paper : **High-Resolution Image Synthesis with Latent Diffusion Models** (2022) [https://arxiv.org/pdf/2112.10752.pdf](Link)
+Paper : **High-Resolution Image Synthesis with Latent Diffusion Models** (2022) [Link](https://arxiv.org/pdf/2112.10752.pdf)
 
 Citation :
 ```
@@ -18,7 +18,7 @@ primaryClass: cs.CV
   * Latent Diffusion 모델은 원본 이미지를 입력값으로 하고 노이즈가 있는 이미지를 출력값으로 하는 모델에 대해, ```원본 이미지 -> Encoder -> Diffusion Process -> Denoising U-net -> Decoder -> 노이즈 이미지``` 와 같이, Diffusion Model과 달리 Encoder와 Decoder가 추가되어 있다.
 
 ## GPT-4 Technical Report
-Paper : **GPT-4 Technical Report** (2023) [https://arxiv.org/abs/2303.08774.pdf](Link)
+Paper : **GPT-4 Technical Report** (2023) [Link](https://arxiv.org/abs/2303.08774.pdf)
 
 Citation :
 ```
