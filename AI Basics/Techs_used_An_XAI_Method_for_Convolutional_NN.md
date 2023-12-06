@@ -22,6 +22,7 @@
 
 ### LIME
 **LIME (Local Interpretable Model-agnostic Explanations)** [Paper](https://arxiv.org/pdf/1602.04938.pdf)
+
 **기본 아이디어** : 특정 예측값 부근에서 설명력이 높은 (locally faithful) 설명 가능한 모델을 찾는다.
 * f, g, p(x)가 각각 설명하려는 모델, 임의의 설명 가능한 모델, p(x)가 특정 point x에 얼마나 가까운지를 나타내는 값이라고 할 때, 다음을 minimize 하는 모델 g를 찾는다.
   * **L(f, g, p(x)) + O(g)**
