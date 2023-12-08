@@ -1,3 +1,12 @@
+## 2023.12.08 (금)
+**[구글 차세대 AI모델 Gemini 공개](https://n.news.naver.com/mnews/article/018/0005633454?sid=101)** ```AI``` ```NLP``` ```Large Language Model```
+* 구글에서 2023.12.06일 (현지시각) 거대 언어 모델 Gemini 공개
+  * ChatGPT를 개발한 OpenAI에서 개발한 GPT-4보다 성능이 좋은, 최고 성능의 AI 모델
+  * Gemini Ultra/Pro/Nano의 3가지 버전으로 출시
+    * 범용 모델은 Gemini Pro로, 구글의 AI 챗봇 서비스 Bard에 탑재
+    * Gemini Ultra는 2024년 초 Bard에 탑재 예정
+  * 57개 과목의 지식 및 문제 해결 능력을 테스트하는 MMLU에서 GPT-4의 86.4%를 능가하는 90.0%의 점수 획득
+
 ## 2023.12.07 (목)
 **[SKT AI 역량강화 위한 조직 개편](https://n.news.naver.com/mnews/article/277/0005351682?sid=105)** ```AI```
 * SK텔레콤이 2023.12.07일 AI 역량 강화에 중점을 둔 임원 인사 및 조직 개편 단행
