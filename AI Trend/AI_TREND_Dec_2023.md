@@ -1,3 +1,10 @@
+## 2023.12.09 (토)
+**[Gemini 시연 영상 논란](https://n.news.naver.com/mnews/article/001/0014380643?sid=104)** ```AI``` ```NLP``` ```Large Language Model```
+* 구글에서 최고 성능의 모델이라면서 발표한 LLM인 Gemini의 성능이 논란 중
+  * 시연 영상의 내용은 Gemini의 상호작용에 대한 예시이고, 실시간으로 이루어진 것이 아니며, 미리 준비된 이미지와 텍스트로 제작되었다고 함 (즉, 사전 편집된 영상)
+  * Gemini가 정확한 답을 못 하거나 "최신 정보를 얻으려면 구글에 검색하라"는 등 답변을 회피하는 정황이 있음
+    * 이는 ChatGPT Pro, Bing 등 경쟁 챗봇과 대조적
+
 ## 2023.12.08 (금)
 **[구글 차세대 AI모델 Gemini 공개](https://n.news.naver.com/mnews/article/018/0005633454?sid=101)** ```AI``` ```NLP``` ```Large Language Model```
 * 구글에서 2023.12.06일 (현지시각) 거대 언어 모델 Gemini 공개
