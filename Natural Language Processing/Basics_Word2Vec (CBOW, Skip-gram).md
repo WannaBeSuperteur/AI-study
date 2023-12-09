@@ -33,7 +33,7 @@ Word2Vec에서는 **window size** 라는 것을 정의하는데, 이것은 중�
 
 ![CBOW 예시 2](./images/Word2Vec_2.PNG)
 
-* 4. 임베딩 벡터 $v$와 또 다른 가중치 행렬 $W'$ (크기: $M \times $V) 를 곱하여 $z$ (크기: $V$) 를 계산하고, 여기에 softmax를 적용하여 예측 출력값 $\hat{y}$ (크기: $V$) 을 계산한다. **이 출력값과 실제 machine을 나타내는 one-hot 벡터 $y$와의 cross entropy를 최소화** 하도록 학습한다.
+* 4. 임베딩 벡터 $v$와 또 다른 가중치 행렬 $W'$ (크기: $M \times V$) 를 곱하여 $z$ (크기: $V$) 를 계산하고, 여기에 softmax를 적용하여 예측 출력값 $\hat{y}$ (크기: $V$) 을 계산한다. **이 출력값과 실제 machine을 나타내는 one-hot 벡터 $y$와의 cross entropy를 최소화** 하도록 학습한다.
 
 이렇게 학습시키면 $v$는 다양한 단어를 임베딩할 수 있는 임베딩 벡터가 된다.
 
