@@ -37,9 +37,9 @@ BERT 모델의 학습은 Pre-training과 Fine-tuning의 2가지 단계이다.
 (출처: Jacob Devlin, Ming-Wei Chang et al, BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding)
 
 BERT와 OpenAI의 GPT, 그리고 ELMo의 주요한 차이점은 다음과 같다.
-* BERT : 양방향 transformer를 사용한다.
-* GPT : 단방향 (left-to-right) transformer를 사용한다.
-* ELMo : 각각 개별적으로 학습된 left-to-right LSTM과 right-to-left LSTM을 이용한다.
+* **BERT** : 양방향 transformer를 사용한다.
+* **GPT** : 단방향 (left-to-right) transformer를 사용한다.
+* **ELMo** : 각각 개별적으로 학습된 left-to-right LSTM과 right-to-left LSTM을 이용한다.
 
 ## SBERT 모델
 BERT도 문장을 임베딩을 할 수 있지만, **S-BERT (Sentence-BERT)** 는 BERT의 이 문장 임베딩 성능을 개선한 것이다.

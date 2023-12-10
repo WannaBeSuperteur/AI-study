@@ -39,6 +39,6 @@ Attention의 작동 원리는 다음과 같다.
 
 ## attention score 계산 함수의 종류
 attention score를 계산하기 위해서 아래와 같은 다양한 종류의 함수를 사용할 수 있다. 단, 여기서 Decoder의 LSTM cell의 hidden state $s_t$, Encoder의 LSTM cell의 hidden state $h_i$ 이다.
-* dot : score($s_t$, $h_i$) = $s_t^T h_i$
-* scaled dot : dot을 이용하여 계산한 attention score를 일정 값으로 나눈 것
-* general : score($s_t$, $h_i$) = $s_t^T W_a h_i$ ($W_a$ 는 학습 가능한 가중치 행렬)
+* **dot** : score($s_t$, $h_i$) = $s_t^T h_i$
+* **scaled dot** : dot을 이용하여 계산한 attention score를 일정 값으로 나눈 것
+* **general** : score($s_t$, $h_i$) = $s_t^T W_a h_i$ ($W_a$ 는 학습 가능한 가중치 행렬)

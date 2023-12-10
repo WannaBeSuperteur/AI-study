@@ -14,8 +14,8 @@ DenseNet은 다음과 같은 구조를 가지고 있다.
 * **입력 -> Conv -> Dense Block -> {N x (Conv -> Pooling -> Dense Block)} -> Pooling -> Linear -> output**
   * 위 구조에서 N은 Dense Block 구조의 개수이다.
 * 가운데의 Convolutional Layer와 Pooling Layer를 합쳐서 Transition Layer라고 하는데, 그 구조는 다음과 같다.
-  * Convolutional Layer : 1x1 Convolutional Layer이다.
-  * Pooling Layer : 2x2 average pooling을 사용한다.
+  * Convolutional Layer : **1x1 Convolutional Layer** 이다.
+  * Pooling Layer : **2x2 average pooling** 을 사용한다.
   * Batch Normalization Layer를 포함한다.
 
 ## ImageNet에 사용하는 DenseNet의 구조
