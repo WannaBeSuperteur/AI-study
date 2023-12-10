@@ -1,4 +1,4 @@
-# 자연어 처리 (NLP) 기초 - RNN과 LSTM
+# 자연어 처리 (NLP) 기초 - RNN과 LSTM, GRU
 
 ## RNN이란?
 **RNN (Recurrent Neural Network)** 은 일반적인 입력층 -> 은닉층 -> 출력층 구조의 딥러닝 신경망과 약간 다르게, 다음과 같은 형태의 구조를 하고 있는 신경망이다.
@@ -32,8 +32,28 @@ LSTM에는 Cell State, Forget Gate, Input Gate, Output Gate라는 구조가 존�
 
 **Cell State** : cell 정보를 다음 cell로 전달한다.
 * Forget Gate에서 정한 잊어버릴 정보와 Input Gate에서 정한 업데이트할 정보에 의해 업데이트된다.
-**Forget Gate** : 입력값과 직전 은닉층의 출력값에 따라, cell state의 정보 중에서 어떤 것을 **잊어버릴** 것인지 정한다.
-**Input Gate** : 입력값과 직전 은닉층의 출력값 중 어떤 것을 cell state에 **저장할지** 정한다.
-**Output Gate** : 입력값과 직전 은닉층의 출력값에 따라, cell state의 정보 중에서 어떤 것을 **출력할지** 정한다.
+
+각 Gate는 다음과 같다.
+* **Forget Gate** : 입력값과 직전 은닉층의 출력값에 따라, cell state의 정보 중에서 어떤 것을 **잊어버릴** 것인지 정한다.
+* **Input Gate** : 입력값과 직전 은닉층의 출력값 중 어떤 것을 cell state에 **저장할지** 정한다.
+* **Output Gate** : 입력값과 직전 은닉층의 출력값에 따라, cell state의 정보 중에서 어떤 것을 **출력할지** 정한다.
 
 어떤 것을 잊어버리고 기억할지 정하는 과정을 통해 RNN의 단점을 극복한다.
+
+## GRU
+**GRU (Gated Recurrent Unit)** 는 LSTM의 간소화된 버전이라고 할 수 있다.
+
+GRU의 구조는 다음 그림과 같다. (왼쪽은 RNN, 오른쪽이 GRU)
+
+![GRU의 구조](./images/RNN_5.PNG)
+
+여기서 ```s```는 sigmoid 활성화 함수를 나타내며, 출력값의 범위는 0에서 1까지이다.
+
+![GRU의 구조](./images/RNN_6.PNG)
+
+GRU에서의 각 변수의 값을 계산하는 과정 및 수식은 위 그림과 같다.
+
+GRU의 특징은 다음과 같다.
+* LSTM의 복잡한 구조를 비교적 단순화시켰다.
+* LSTM의 **장기 의존성 문제 (the problems of long-term dependencies)** 는 은닉층 초반의 정보가 마지막까지 전달되지 못하는 문제인데, 이것을 해결한다.
+* LSTM과 우열을 가리기 힘든 정도의 성능이지만, 데이터 양이 적을수록 GRU가, 많을수록 LSTM이 좋다는 이야기가 있다.

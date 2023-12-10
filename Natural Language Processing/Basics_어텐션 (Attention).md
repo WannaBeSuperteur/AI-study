@@ -33,7 +33,7 @@ Attention의 작동 원리는 다음과 같다.
   * 어텐션 분포의 각각의 값은 **Attention Weight (어텐션 가중치)** (막대그래프의 길이에 비례) 라고 한다.
   * 어텐션 가중치 ${\alpha}^t = softmax(e^t)$ 이다.
 * 3. Encoder의 각 단어에 대응되는 LSTM cell에 대한 **어텐션 가중치** 와 **hidden state** 의 가중치 합인 **Attention Value (어텐션 값)** 을 구한다.
-  * Encoder의 LSTM cell의 hidden state를 $h_1, h_2, ..., h_n$이라고 할 때, 어텐션 값 $a_t = \sum_{i=1}^n {{\alpha}_i^t h_i}$ 이다.
+  * Encoder의 LSTM cell의 hidden state를 $h_1, h_2, ..., h_n$이라고 할 때, 어텐션 값은 $$a_t = \sum_{i=1}^n {{\alpha}_i^t h_i}$$ 이다.
 * 4. 어텐션 값과 Decoder의 LSTM cell의 hidden state를 concatenate한다.
 * 5. 4번의 결과값을 변환하여 최종적으로 출력값을 예측한다.
 
