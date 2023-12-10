@@ -1,6 +1,6 @@
 # 자연어 처리 (NLP) 기초 - 트랜스포머 (Transformer) 모델
 
-2023.12.09 작성중
+2023.12.10 작성중
 
 ## 트랜스포머 모델
 **트랜스포머 (Transformer)** 는 인코더에서 단어 시퀀스를 입력받고, 디코더에서 출력 단어 시퀀스를 출력하는 형태의 Encoder-Decoder 구조를 유지하면서, **N개의 Encoder와 N개의 Decoder** 를 이용하는 형태의 모델이다.
@@ -18,6 +18,10 @@ $PE_{(p, 2i+1)} = cos((pos/(10000^{2i/{d_model}}))$
 예를 들어 입력 단어 시퀀스가 20개의 토큰으로 구성되어 있고 ($p=0,1,...,19$), 임베딩 벡터가 32차원일 때 ($d_model=32, i=0,1,...,31$), $i$와 $p$의 값에 따른 Positional Encoding 값은 다음과 같다.
 
 ![트랜스포머 포지셔널 인코딩 값](./images/Transformer_2.PNG)
+
+Transformer 모델에서는 임베딩 벡터가 입력되기 전에 **Positional Encoding 값을 먼저 더한다.** 예를 들어 다음과 같다.
+
+![Positional Encoding 예시](./images/Transformer_3.PNG)
 
 ## GPT (Generative Pre-trained Transformer)
 **GPT (Generative Pre-trained Transformer)** 는 그대로 풀어 쓰면 **사전 학습된 생성형 트랜스포머** 이다.
