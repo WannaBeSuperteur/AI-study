@@ -1,3 +1,13 @@
+## 2023.12.10 (일)
+**[일론 머스크의 AI 챗봇 그록 공식 배포](https://n.news.naver.com/mnews/article/001/0014379603?sid=104)** ```AI``` ```NLP``` ```ChatBot```
+
+* 테슬라 최고경영자 (CEO) 일론 머스크의 AI 챗봇 그록(Grok)이 2023.12.07일 (현지시각) 공식 배포됨
+  * 2023.11.04일 머스크의 AI 스타트업 xAI의 그록 공개 1개월 만
+  * 장기 가입자 우선 배포, 다음주 출시 완료
+* ChatGPT와 같은 생성형 AI로, xAI의 LLM Grok-1에 기반하여 작동
+* ChatGPT와 달리 **유머 감각** 이 있는 챗봇
+* 그록이 향후 ChatGPT, Bard 등 생성형 AI 간 경쟁할 것으로 예상
+
 ## 2023.12.09 (토)
 **[Gemini 시연 영상 논란](https://n.news.naver.com/mnews/article/001/0014380643?sid=104)** ```AI``` ```NLP``` ```Large Language Model```
 * 구글에서 최고 성능의 모델이라면서 발표한 LLM인 Gemini의 성능이 논란 중
