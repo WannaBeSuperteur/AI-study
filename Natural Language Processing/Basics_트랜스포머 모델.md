@@ -1,7 +1,5 @@
 # 자연어 처리 (NLP) 기초 - 트랜스포머 (Transformer) 모델
 
-2023.12.10 작성중
-
 ## 트랜스포머 모델
 **트랜스포머 (Transformer)** 는 인코더에서 단어 시퀀스를 입력받고, 디코더에서 출력 단어 시퀀스를 출력하는 형태의 Encoder-Decoder 구조를 유지하면서, **N개의 Encoder와 N개의 Decoder** 를 이용하는 형태의 모델이다.
 
@@ -23,11 +21,39 @@ Transformer 모델에서는 임베딩 벡터가 입력되기 전에 **Positional
 
 ![Positional Encoding 예시](./images/Transformer_3.PNG)
 
+즉, 단어가 Encoder 또는 Decoder의 hidden layer로 입력되기 전에 먼저 Positional Encoding 값이 더해진다.
+
+## 트랜스포머에서의 어텐션 메커니즘
+트랜스포머 모델에서는 다음과 같은 3가지 어텐션 메커니즘이 사용된다.
+
+|어텐션 메커니즘|위치|설명|
+|---|---|---|
+|Encoder Self-Attention|Encoder|입력 시퀀스 내에서 단어 간 관계 고려 (자기 자신을 포함한 모든 단어 고려)|
+|Masked Decoder Self-Attention|Decoder|출력 시퀀스에서 단어 간 관계 고려 (단, 매 순간 이전 단어만 고려)|
+|Encoder-Decoder Attention|Decoder|출력 시퀀스에서 입력 시퀀스의 단어를 고려한 Attention|
+
+각 어텐션을 그림으로 나타내면 다음과 같다.
+
+[트랜스포머에서의 어텐션 1](./images/Transformer_4.PNG)
+
+여기서 ```E1, E2, ..., En```은 각각 Encoder, ```D1, D2, ..., Dn```은 각각 Decoder를 나타낸다.
+
+각 어텐션이 Encoder와 Decoder에서 실시되는 것을 그림으로 나타내면 다음과 같다.
+
+[트랜스포머에서의 어텐션 2](./images/Transformer_5.PNG)
+
+여기서 N은 Encoder와 Decoder의 개수 (서로 같음) 를 나타낸다.
+
 ## GPT (Generative Pre-trained Transformer)
-**GPT (Generative Pre-trained Transformer)** 는 그대로 풀어 쓰면 **사전 학습된 생성형 트랜스포머** 이다.
+**GPT (Generative Pre-trained Transformer)** 는 OpenAI의 Large Language Model (거대 언어 모델)로, 그대로 풀어 쓰면 **사전 학습된 생성형 트랜스포머** 이다.
 * 생성 (Generative) 은 생성형 AI 기술을 적용하여 답변을 생성한다는 의미이다.
 * 사전 학습 (Pre-trained) 는 사전 학습된 언어 모델을 사용한다는 의미이다.
 
 GPT의 역사는 다음과 같다.
+* OpenAI의 첫 LLM인 GPT-1이 2018년 6월 출시되었다.
+* GPT-2가 2019년 2월 출시되었다. 단문의 경우 인간이 쓴 글과 구별할 수 없을 정도의 글을 쓸 수 있다.
+* GPT-3가 2020년 6월 출시되었다.
+* GPT-3.5가 2022년 11월 출시되었다.
+* GPT-4가 2023년 3월 14일 출시되었다.
 
-2022년 11월 30일, GPT의 응용으로 전 세계 AI의 역사에 한 획을 그은 **ChatGPT** 가 등장했으며, 2023년 3월 GPT-4가 적용되었다.
+2022년 11월 30일, GPT의 응용으로 전 세계 AI의 역사에 한 획을 그은 **ChatGPT** 가 등장했으며, 2023년 3월 GPT-4가 적용되었다. (GPT-4 API는 2023년 7월부터 일반인이 사용 가능하다.)
