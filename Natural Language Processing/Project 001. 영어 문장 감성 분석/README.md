@@ -9,6 +9,8 @@
 * ```run_train.py``` : 학습 데이터 기반으로 머신러닝 학습 수행 및 모델 저장
 * ```run_test_using_model.py``` : 저장된 모델을 이용하여 테스트 데이터에 대해 감정 예측 및 결과 (성능지표) 분석
 
+## 머신러닝 모델 설명
+
 ## 실행 순서
 ```
 python preprocess_data.py
@@ -21,6 +23,6 @@ python run_test_using_model.py
 * 성능 측정 결과 :
 
 ## branch info
-|branch|status|type|description|
+|branch|status|type|start|end|description|
 |---|---|---|---|
-|NLP-P1-master|||마스터 브랜치|
+|NLP-P1-master|||231212|231217|마스터 브랜치|
