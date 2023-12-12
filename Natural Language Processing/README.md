@@ -23,5 +23,5 @@ Transformer, BERT, S-BERT 부터 시작해서, 최종적으로는 Mini Chat-GPT�
 **Natural Language Processing gives machine a life.** 라는 문장은 이곳 NLP 파트에서 기술을 소개할 때 사용하는 대표적인 예시 문장이다. [ChatGPT도 이 문장의 의미에 공감한다.](https://chat.openai.com/share/3f608c85-58d1-4500-ad4c-7a99b045f2e6)
 
 ## Projects
-* **NLP-P1** 프로젝트 1 제목 (2023.00.00 ~ 2024.00.00, 0개월 0일)
+* **Project 001. 영어 문장 감성 분석** (2023.12.12 ~ 2023.12.17, 6일)
   * 프로젝트 1을 통해 기른 역량 및 사용한 기술
