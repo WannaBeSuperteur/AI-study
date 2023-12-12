@@ -24,5 +24,5 @@ python run_test_using_model.py
 
 ## branch info
 |branch|status|type|start|end|description|
-|---|---|---|---|
+|---|---|---|---|---|---|
 |NLP-P1-master|||231212|231217|마스터 브랜치|
