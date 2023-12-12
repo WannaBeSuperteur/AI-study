@@ -3,6 +3,23 @@
   * 영어로 된 트윗에 대한 감정을 분석하는 과제이다. 트윗을 한 시간, 나이, 사용자의 국가 등 추가 정보를 이용할 수 있다.
 * 수행 기간: 2023.12.12 ~ 2023.12.17 (6일)
 
+## 파일 및 코드 설명
+* ```train.csv```, ```test.csv``` (데이터셋을 다운받아야 함) : 학습 및 테스트 데이터
+* ```preprocess_data.csv``` : 학습 및 테스트 데이터를 전처리하는 파일
+* ```run_train.py``` : 학습 데이터 기반으로 머신러닝 학습 수행 및 모델 저장
+* ```run_test_using_model.py``` : 저장된 모델을 이용하여 테스트 데이터에 대해 감정 예측 및 결과 (성능지표) 분석
+
+## 실행 순서
+```
+python preprocess_data.py
+python run_train.py
+python run_test_using_model.py
+```
+
+## 성능지표 결과
+* 성능 측정지표 : ```positive=1, neutral=0.5, negative=0``` 으로 정의할 때, mean-squared-error
+* 성능 측정 결과 :
+
 ## branch info
 |branch|status|type|description|
 |---|---|---|---|
