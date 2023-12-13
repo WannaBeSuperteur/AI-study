@@ -1,3 +1,12 @@
+## 2023.12.13 (수)
+**[마이크로소프트 SLM 파이-2 출시](https://n.news.naver.com/mnews/article/092/0002314831?sid=105)** ```AI``` ```NLP``` ```Language Model```
+
+* 마이크로소프트 (MS) 가 2023.12.12일 공식 블로그를 통해 모바일 기기에서 구동할 수 있는 오픈소스형 [SLM (Small Language Model)](https://github.com/WannaBeSuperteur/AI-study/blob/main/Natural%20Language%20Processing/Basics_%EC%96%B8%EC%96%B4%20%EB%AA%A8%EB%8D%B8.md) Phi-2 (파이-2) 공개
+  * 파라미터 27억 개 보유, NVIDIA GPU 96대로 2주간 훈련
+  * 과학 지식, MS의 독자적인 데이터셋 등을 모델에 반영
+  * 강화학습, 미세 조정 없이도 Phi-1.5, 메타의 라마2보다 환각, 편향성이 낮음
+  * Google Gemini Nano 2와 비슷하거나 높은 성능을 기록
+
 ## 2023.12.12 (화)
 **[국내 첫 AI 윤리, 신뢰성 기준 제정](https://n.news.naver.com/mnews/article/584/0000025256?sid=105)** ```AI``` ```AI Ethics```
 
