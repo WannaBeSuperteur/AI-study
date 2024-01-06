@@ -1,3 +1,11 @@
+## 2024.01.06 (토)
+**[Windows PC 키보드에 코파일럿 전용 키 도입](https://n.news.naver.com/mnews/article/001/0014426794?sid=104)** ```AI```
+
+* Windows 11 OS가 적용된 Microsoft PC에 MS의 생성형 AI인 코파일럿을 호출할 수 있는 전용 키가 도입된다.
+  * 코파일럿은 Microsoft에서 ChatGPT를 개발한 OpenAI의 대규모 언어 모델 (LLM) 인 GPT를 기반으로 개발한 생성형 인공지능이다.
+  * 코파일럿을 앱 검색을 통해 찾지 않고 이 키 하나를 누르면 코파일럿이 호출된다.
+* MS는 코파일럿 키가 추가된 PC를 CES 2024에서 선보일 예정이다.
+
 ## 2024.01.05 (금)
 **[전자통신연 AI 기반 E-sports 분석 플랫폼](https://n.news.naver.com/mnews/article/421/0007273392?sid=102)** ```AI```
 
