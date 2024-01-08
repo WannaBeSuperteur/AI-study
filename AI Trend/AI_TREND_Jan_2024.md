@@ -1,3 +1,11 @@
+## 2024.01.08 (월)
+**[GPT 스토어 곧 출시된다](https://n.news.naver.com/mnews/article/003/0012303836?sid=105)** ```AI``` ```NLP``` ```OpenAI```
+
+* OpenAI는 ChatGPT에 쓰인 GPT 모델을 이용한 서비스를 개발하기 위한 플랫폼인 GPT Builder 사용자들에게 **GPT Store가 이번 주에 출시된다** 는 내용의 이메일을 보냈다.
+  * AI 전문가가 아니어도 AI 서비스를 GPT 스토어에 업로드할 수 있다.
+* GPT Store는 OpenAI의 대규모 언어모델 (Large Language Model) 기반으로 사용자가 개발한 맞춤형 AI 에이전트를 판매, 공유하는 공간이다.
+* GPT Store는 당초 2023년 11월 출시 예정이었으나, 샘 올트먼 CEO 해임 이슈로 인해 연기되었다.
+
 ## 2024.01.07 (일)
 **[LG U+ AI 스타트업 포티투마루 투자](https://n.news.naver.com/mnews/article/015/0004933785?sid=105)** ```AI``` ```NLP``` ```Language Model```
 
