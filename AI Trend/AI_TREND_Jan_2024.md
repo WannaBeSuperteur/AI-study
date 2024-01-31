@@ -1,3 +1,12 @@
+## 2024.01.31 (수)
+**[LG CNS, 코드 생성 AI 최적화 LLM 개발](https://n.news.naver.com/mnews/article/001/0014478102?sid=105)** ```AI``` ```Large Language Model```
+
+* LG CNS가 코드 생성형 AI에 최적화된 거대 언어 모델(LLM)을 개발했다.
+  * 메타의 코드 생성용 LLM인 '코드라마 (CodeLlama)' 를 비롯한 오픈소스 거대 언어 모델을 활용했다.
+  * 고객사가 보유한 자체 인프라에 LG CNS의 LLM 설치 후, LG CNS에서 ChatGPT에 기반하여 개발한 코드 생성형 AI인 'AI 코딩'을 플러그인 방식으로 연결할 수 있다.
+    * 고객사는 LG CNS의 LLM 또는 OpenAI의 ChatGPT 중 원하는 LLM을 선택하여 AI 코딩을 할 수 있다. 
+  * 고객사의 자체 인프라를 활용하므로 소스 코드 유출 등 보안 우려가 없다.
+
 ## 2024.01.30 (화)
 **[삼성 갤럭시S24 전세계 공식 출시](https://n.news.naver.com/mnews/article/003/0012345983?sid=105)** ```AI``` ```Galaxy S24```
 
