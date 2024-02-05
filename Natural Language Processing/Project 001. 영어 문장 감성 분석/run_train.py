@@ -7,6 +7,10 @@ import math
 
 from preprocess_data import read_data, add_age_of_user_numeric_col
 import nltk
+from sentence_transformers import SentenceTransformer
+
+# fastest model from https://www.sbert.net/docs/pretrained_models.html
+sbert_model = SentenceTransformer('paraphrase-MiniLM-L3-v2')
 
 
 def load_data():
@@ -102,19 +106,53 @@ def preprocess_before_training(train_data, test_data):
     test_data['sentiment'] = test_data['sentiment'].apply(lambda x: sentiment_mapping[x])
 
 
+def create_sbert_embeddings(data):
+    embeddings = []
+
+    for idx, row in data.iterrows():
+        if idx % 1000 == 0:
+            print(idx)
+            
+        embedding = sbert_model.encode(row['text'])
+        embeddings.append(embedding)
+
+    return embeddings
+
+
+def apply_sbert(data):
+    embeddings = create_sbert_embeddings(data)
+    embedding_dim = len(embeddings[0])
+    
+    for emb in range(embedding_dim):
+        data[f'emb_{emb}'] = data.index.map(lambda x: embeddings[x][emb])
+    data.drop(columns=['text'], inplace=True)
+
+
 def preprocess_text_in_data(train_data, test_data):
     apply_preprocess_text(train_data)
     apply_preprocess_text(test_data)
 
+    print('after text preprocessing:')
+    print(train_data)
+    print(test_data)
+
+    apply_sbert(train_data)
+    apply_sbert(test_data)
+
 
 if __name__ == '__main__':
     train_data, test_data = load_data()
+
+    # there is a row index jump near train_data[315]
+    train_data.index = pd.RangeIndex(len(train_data.index))
+    test_data.index = pd.RangeIndex(len(test_data.index))
+    
     print(train_data)
     print(test_data)
 
     preprocess_before_training(train_data, test_data)
     preprocess_text_in_data(train_data, test_data)
 
-    print('after preprocessed:')
+    print('after text embedding:')
     print(train_data)
     print(test_data)
