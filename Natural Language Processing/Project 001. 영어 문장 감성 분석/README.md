@@ -26,3 +26,9 @@ python run_test_using_model.py
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
 |NLP-P1-master|||231212|240211|마스터 브랜치|
+|NLP-P1-1|```done```|```feat```|231212|240205|기본 파일 추가 + 데이터 전처리 + EDA|
+|NLP-P1-2||```feat```|240205||모델 학습 > master|
+|NLP-P1-3||```feat```|||모델 학습 > 텍스트 전처리|
+|NLP-P1-4||```feat```|||모델 학습 > 텍스트 벡터화 (기존 NLP모델인 S-BERT 이용)|
+|NLP-P1-5||```feat```|||모델 학습 > 딥러닝 모델 개발 및 학습|
+|NLP-P1-6||```feat```|||모델 테스트 및 성능 측정|
