@@ -72,11 +72,7 @@ def apply_preprocess_text(data):
     data['text'] = data['text'].apply(lambda x: preprocess_text(x))
 
 
-if __name__ == '__main__':
-    train_data, test_data = load_data()
-    print(train_data)
-    print(test_data)
-
+def preprocess_before_training(train_data, test_data):
     add_age_of_user_numeric_col(train_data)
     add_age_of_user_numeric_col(test_data)
 
@@ -105,11 +101,19 @@ if __name__ == '__main__':
     train_data['sentiment'] = train_data['sentiment'].apply(lambda x: sentiment_mapping[x])
     test_data['sentiment'] = test_data['sentiment'].apply(lambda x: sentiment_mapping[x])
 
+
+def preprocess_text_in_data(train_data, test_data):
+    apply_preprocess_text(train_data)
+    apply_preprocess_text(test_data)
+
+
+if __name__ == '__main__':
+    train_data, test_data = load_data()
     print(train_data)
     print(test_data)
 
-    apply_preprocess_text(train_data)
-    apply_preprocess_text(test_data)
+    preprocess_before_training(train_data, test_data)
+    preprocess_text_in_data(train_data, test_data)
 
     print('after preprocessed:')
     print(train_data)
