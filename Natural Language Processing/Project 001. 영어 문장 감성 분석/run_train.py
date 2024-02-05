@@ -156,3 +156,6 @@ if __name__ == '__main__':
     print('after text embedding:')
     print(train_data)
     print(test_data)
+
+    train_data.to_csv('train_data_final.csv')
+    test_data.to_csv('test_data_final.csv')
