@@ -60,17 +60,45 @@ def print_basic_info(data, cols):
 
 # 데이터의 각 column의 각 one-hot class 별 데이터 개수 출력
 def print_data_count(data, cols):
-    pass
+    for col in cols:
+        print(f'\nvalue count of column {col} :')
+        print(data[col].value_counts(sort=True, ascending=False))
+
+
+# min, max 값을 이용하여 bin 만들기
+def get_bins(numbers, is_log=False, bin_count=20):
+    max_n = max(numbers)
+    min_n = max(min(numbers), 0.01) # prevent divide-by-0 error
+    
+    if is_log:
+        interval = pow(max_n / min_n, 1 / bin_count)
+        result = [min_n * pow(interval, i) for i in range(bin_count + 1)]
+    else:
+        interval = (max_n - min_n) / bin_count
+        result = [min_n + i * interval for i in range(bin_count + 1)]
+
+    return result
 
 
 # 데이터의 각 column의 값 분포 출력
-def print_distribution(data, cols):
-    pass
+def print_distribution(data, cols, is_log=False, bin_count=20):
+    for col in cols:
+        nums = data[col]
+        bins = get_bins(nums.tolist(), is_log, bin_count)
+
+        print(f'\nvalue distribution of column {col} :')
+        for i in range(bin_count):
+            min_n = bins[i]
+            max_n = bins[i + 1]
+            between_values = nums.between(min_n, max_n, inclusive='both').sum()
+            print(f'between {round(min_n, 2)} and {round(max_n, 2)}: {between_values}')
 
 
 # 데이터의 각 column의 상관계수 출력
 def print_corr_coef(data, cols):
-    pass
+    print(f'\ncorrcoef between columns {cols} :')
+    print(data[cols].corr())
+    print('\n')
 
 
 # EDA 하는 함수
@@ -81,7 +109,8 @@ def do_eda(data):
 
     # 컬럼 지정
     one_hot_cols = ['Time of Tweet', 'Age of User', 'Country']
-    numeric_cols = ['Age of User Numeric', 'Population -2020', 'Land Area (Km)', 'Density (P/Km)']
+    numeric_cols = ['Age of User Numeric']
+    numeric_log_cols = ['Population -2020', 'Land Area (Km)', 'Density (P/Km)']
 
     # EDA 대상 컬럼 :
     # sentiment, Time of Tweet, Age of User, Country, Population, Land Area, Density    
@@ -89,7 +118,7 @@ def do_eda(data):
 
     # corr-coef 출력 대상 컬럼 :
     # Age of User, Population, Land Area, Density
-    corr_coef_cols = numeric_cols
+    corr_coef_cols = numeric_cols + numeric_log_cols
     
     # 기본 정보 출력
     print_basic_info(data, eda_cols)
@@ -98,7 +127,8 @@ def do_eda(data):
     print_data_count(data, one_hot_cols)
 
     # numeric column들의 값 분포 출력
-    print_distribution(data, numeric_cols)
+    print_distribution(data, numeric_cols, is_log=False)
+    print_distribution(data, numeric_log_cols, is_log=True)
 
     # numeric column들의 상관계수 출력
     print_corr_coef(data, corr_coef_cols)
@@ -117,4 +147,8 @@ if __name__ == '__main__':
     do_eda(train_data)
 
     # 테스트 데이터의 Age of User의 Numeric 컬럼 추가
+    add_age_of_user_numeric_col(train_data)
     add_age_of_user_numeric_col(test_data)
+
+    print(train_data)
+    print(test_data)
