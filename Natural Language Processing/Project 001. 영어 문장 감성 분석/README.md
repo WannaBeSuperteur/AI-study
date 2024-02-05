@@ -1,7 +1,7 @@
 # NLP Project 001. 영어 문장 감성 분석
 * Dataset: [Sentiment Analysis Dataset](https://www.kaggle.com/datasets/abhi8923shriv/sentiment-analysis-dataset?select=train.csv)
   * 영어로 된 트윗에 대한 감정을 분석하는 과제이다. 트윗을 한 시간, 나이, 사용자의 국가 등 추가 정보를 이용할 수 있다.
-* 수행 기간: 2023.12.12 ~ 2023.12.17 (6일)
+* 수행 기간: 2023.12.12 ~ 2023.12.12, 2024.02.05 ~ 2024.02.11 (8일)
 
 ## 파일 및 코드 설명
 * ```train.csv```, ```test.csv``` (데이터셋을 다운받아야 함) : 학습 및 테스트 데이터
@@ -25,4 +25,4 @@ python run_test_using_model.py
 ## branch info
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
-|NLP-P1-master|||231212|231217|마스터 브랜치|
+|NLP-P1-master|||231212|240211|마스터 브랜치|
