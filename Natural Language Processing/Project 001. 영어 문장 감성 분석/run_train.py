@@ -28,9 +28,10 @@ def remove_unused_columns(train_data, test_data):
     test_data.drop(columns=['textID', 'Age of User'], inplace=True)
 
 
-def make_one_hot_columns(data, columns):
+def make_one_hot_columns(data, columns, base_data):
     for column in columns:
-        vcs_top10 = data[column].value_counts(sort=True, ascending=False).head(10)
+        vcs_top10 = base_data[column].value_counts().head(10)
+        
         unique_vals = list(vcs_top10.index)
         unique_vals.sort() # train, test에서 one-hot item 순서가 고정되게
 
@@ -85,8 +86,10 @@ def preprocess_before_training(train_data, test_data):
 
     # one-hot 처리
     one_hot_cols = ['Time of Tweet', 'Country']
-    make_one_hot_columns(train_data, one_hot_cols)
-    make_one_hot_columns(test_data, one_hot_cols)
+    train_data_copy = pd.DataFrame(train_data)
+    
+    make_one_hot_columns(train_data, one_hot_cols, train_data_copy)
+    make_one_hot_columns(test_data, one_hot_cols, train_data_copy)
 
     # normalize 처리
     numeric_cols = ['Age of User Numeric']
