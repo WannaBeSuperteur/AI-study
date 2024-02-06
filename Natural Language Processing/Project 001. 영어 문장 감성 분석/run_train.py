@@ -9,8 +9,51 @@ from preprocess_data import read_data, add_age_of_user_numeric_col
 import nltk
 from sentence_transformers import SentenceTransformer
 
+import tensorflow as tf
+from tensorflow.keras import layers, optimizers
+from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+
 # fastest model from https://www.sbert.net/docs/pretrained_models.html
 sbert_model = SentenceTransformer('paraphrase-MiniLM-L3-v2')
+EMBEDDING_DIM = 384
+
+class SentimentModel(tf.keras.Model):
+
+    def __init__(self, dropout_rate=0.25):
+        super().__init__()
+
+        L2 = tf.keras.regularizers.l2(0.001)
+
+        self.dense_info0 = layers.Dense(units=512, activation='relu', kernel_regularizer=L2)
+        self.dense_info1 = layers.Dense(units=256, activation='relu', kernel_regularizer=L2)
+        self.dense_info2 = layers.Dense(units=16, activation='relu', kernel_regularizer=L2)
+
+        self.dense_embed0 = layers.Dense(units=16, activation='relu', kernel_regularizer=L2)
+        
+        self.dense_final0 = layers.Dense(units=16, activation='sigmoid', kernel_regularizer=L2)
+        self.dense_final1 = layers.Dense(units=1, activation='sigmoid', kernel_regularizer=L2)
+        
+        self.dropout = layers.Dropout(rate=dropout_rate)
+
+    def call(self, inputs, training):
+        input_length = inputs.shape[1]
+        inputs_info, inputs_emb = tf.split(inputs, [input_length - EMBEDDING_DIM, EMBEDDING_DIM], axis=1)
+        
+        inputs_info = self.dense_info0(inputs_info)
+        inputs_info = self.dropout(inputs_info)
+        inputs_info = self.dense_info1(inputs_info)
+        inputs_info = self.dropout(inputs_info)
+        inputs_info = self.dense_info2(inputs_info)
+        inputs_info = self.dropout(inputs_info)
+
+        inputs_emb = self.dense_embed0(inputs_emb)
+        inputs_emb = self.dropout(inputs_emb)
+
+        inputs_concat = tf.keras.layers.Concatenate()([inputs_info, inputs_emb])
+        inputs_concat = self.dense_final0(inputs_concat)
+        outputs = self.dense_final1(inputs_concat)
+
+        return outputs
 
 
 def load_data():
@@ -143,6 +186,63 @@ def preprocess_text_in_data(train_data, test_data):
     apply_sbert(test_data)
 
 
+# train, valid, test 데이터 반환
+def define_data(train_data, test_data):
+    train_n = len(train_data)
+
+    train_input = train_data.drop(columns=['sentiment'])
+    train_output = train_data[['sentiment']]
+
+    print(train_input)
+    print(train_output)
+
+    train_input = np.array(train_input)
+    train_output = np.array(train_output)
+
+    valid_count = int(0.2 * train_n)
+    train_input_train = train_input[:-valid_count]
+    train_input_valid = train_input[-valid_count:]
+    train_output_train = train_output[:-valid_count]
+    train_output_valid = train_output[-valid_count:]
+
+    test_input = test_data.drop(columns=['sentiment'])
+    test_gt = test_data[['sentiment']]
+
+    print(test_input)
+    print(test_gt)
+
+    return (train_input_train, train_input_valid, train_output_train,
+            train_output_valid, test_input, test_gt)
+           
+
+# 모델 반환
+def define_model():
+    optimizer = optimizers.Adam(0.001, decay=1e-6)
+    early_stopping = EarlyStopping(monitor='val_loss', mode='min', patience=5)
+    lr_reduced = ReduceLROnPlateau(monitor='val_loss', mode='min', patience=2)
+        
+    model = SentimentModel(dropout_rate=0.25)
+    return model, optimizer, early_stopping, lr_reduced
+
+
+# 모델 학습 및 저장
+def train_model(train_data, test_data):
+    (train_input, valid_input, train_output, valid_output, test_input, test_gt) = define_data(train_data, test_data)
+    model, optimizer, early_stopping, lr_reduced = define_model()
+    
+    model.compile(loss='mse', optimizer=optimizer)
+
+    model.fit(
+        train_input, train_output,
+        callbacks=[early_stopping, lr_reduced],
+        epochs=10,
+        validation_data=(valid_input, valid_output)
+    )
+
+    model.summary()
+    model.save('sentiment_model')
+
+
 if __name__ == '__main__':
     train_data, test_data = load_data()
 
@@ -162,3 +262,6 @@ if __name__ == '__main__':
 
     train_data.to_csv('train_data_final.csv')
     test_data.to_csv('test_data_final.csv')
+
+    # train model
+    train_model(train_data, test_data)
