@@ -30,9 +30,9 @@ def remove_unused_columns(train_data, test_data):
 
 def make_one_hot_columns(data, columns, base_data):
     for column in columns:
-        vcs_top10 = base_data[column].value_counts().head(10)
+        vcs_top20 = base_data[column].value_counts().head(20)
         
-        unique_vals = list(vcs_top10.index)
+        unique_vals = list(vcs_top20.index)
         unique_vals.sort() # train, test에서 one-hot item 순서가 고정되게
 
         for unique_val in unique_vals:
