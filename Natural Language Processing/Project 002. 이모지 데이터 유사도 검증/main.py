@@ -2,6 +2,7 @@ import read_data as rd
 import embed_text as emb
 import pandas as pd
 import random
+import os
 
 
 def read_dataset():
@@ -16,6 +17,7 @@ def read_train_embed():
     return pd.read_csv('train_embed.csv', index_col=0)
 
 
+# data에 embedding 컬럼 추가
 def add_embeddings(df, is_save=True):
     df_embed = pd.DataFrame(df)
     df_embed['embedding'] = df['sentence'].apply(lambda x: emb.embed_text(x))
@@ -26,6 +28,7 @@ def add_embeddings(df, is_save=True):
     return read_train_embed()
 
 
+# numpy.array 를 나타낸 텍스트를 list로 변환
 def convert_to_list(text):
     text = text.replace('[ ', '[')
     text = text.replace(' ]', ']')
@@ -34,6 +37,7 @@ def convert_to_list(text):
     return eval(text)
 
 
+# 임베딩된 문장 2개 추출 및 결과 저장
 def run_experiment(df_embed, N=10000):
     rows = len(df_embed)
     result = pd.DataFrame()
@@ -62,6 +66,47 @@ def run_experiment(df_embed, N=10000):
         result = pd.concat([result, new_row])
 
     result.to_csv('emoji_and_embedding.csv')
+
+
+# 이모지 쌍별 cos 유사도 평균값 계산
+def compute_avg_cos_sim():
+    emoji_emb_df = pd.read_csv('emoji_and_embedding.csv', index_col=0)
+    print(emoji_emb_df)
+
+    emojis_set = set(list(emoji_emb_df['emoji_0']) + list(emoji_emb_df['emoji_1']))
+    emojis = list(emojis_set)
+    print(emojis)
+    
+    result = {}
+
+    for idx, row in emoji_emb_df.iterrows():
+        emoji_0 = row['emoji_0']
+        emoji_1 = row['emoji_1']
+        emoji_list = [emoji_0, emoji_1]
+        emoji_list.sort()
+        emoji_set = ' '.join(emoji_list)
+
+        if emoji_set in result:
+            result[emoji_set]['count'] += 1
+            result[emoji_set]['total'] += row['cos_sim']
+        else:
+            result[emoji_set] = {'count': 1, 'total': row['cos_sim']}
+
+    result_df = pd.DataFrame()
+
+    for emoji_set in result:
+        new_row = {
+            'emoji_0': [emoji_set.split(' ')[0]],
+            'emoji_1': [emoji_set.split(' ')[1]],
+            'mean': [result[emoji_set]['total'] / result[emoji_set]['count']],
+            'total': [result[emoji_set]['total']],
+            'count': [result[emoji_set]['count']]
+        }
+        new_row = pd.DataFrame(new_row)
+        result_df = pd.concat([result_df, new_row])
+
+    result_df.sort_values(by=['emoji_0', 'emoji_1'], inplace=True)
+    result_df.to_csv('avg_cos_sim.csv')
     
 
 if __name__ == '__main__':
@@ -78,4 +123,8 @@ if __name__ == '__main__':
     print(df_embed)
 
     # 임베딩된 문장 2개 추출 및 결과 저장
-    run_experiment(df_embed)
+    if 'emoji_and_embedding.csv' not in os.listdir():
+        run_experiment(df_embed)
+
+    # 이모지 쌍별 cos 유사도 평균값 계산
+    compute_avg_cos_sim()
