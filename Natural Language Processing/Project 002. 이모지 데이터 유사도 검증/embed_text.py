@@ -14,7 +14,12 @@ def compute_cos_sim(text1, text2):
     emb1 = embed_text(text1)
     emb2 = embed_text(text2)
     
-    cos_sim = dot(emb1, emb2) / (norm(emb1) * norm(emb2))
+    cos_sim = compute_cos_sim_arr(emb1, emb2)
+    return cos_sim
+
+
+def compute_cos_sim_arr(arr1, arr2):
+    cos_sim = dot(arr1, arr2) / (norm(arr1) * norm(arr2))
     return cos_sim
 
 
