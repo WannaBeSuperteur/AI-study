@@ -39,6 +39,8 @@ from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 
 
 # 임베딩 모델 (CBOW-like 이지만, 실제 CBOW 와 다소 차이가 있을 수 있음)
+# input shape : (vocab_n)
+# output shape : (vocab_n)
 class EmbeddingModel(tf.keras.Model):
 
     def __init__(self):
@@ -174,11 +176,20 @@ def convert_to_mean(df):
 
     # 각 row에 대해 최댓값으로 나누어서 최댓값을 1로 적용
     for i in range(len(df)):
+        max_value = df.iloc[i].max() # 가중치 최대가 2.0이므로 이 값은 최소 2.0임
+        
+        if i < 5:
+            print(list(df.iloc[i]))
+            print(max_value)
+            
         if i % 200 == 0:
             print(f'dividing by max : {i}')
         
         for j in range(vocab_n):
-            df.iloc[i][f'token_{j}'] = df.iloc[i][f'token_{j}'] / df.iloc[i].max()
+            df.iloc[i, df.columns.get_loc(f'token_{j}')] = df.iloc[i][f'token_{j}'] / max_value
+
+        if i < 5:
+            print(list(df.iloc[i]))
 
 
 # CBOW-like 학습 진행 및 모델 저장
