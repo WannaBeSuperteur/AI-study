@@ -4,6 +4,7 @@
   * 파이썬 코드 전처리 및 tokenize 기준
     * 파이썬 코드에서 각 변수명은 ```var1```, ```var2```, ... 로 대체한다.
     * 파이썬 코드에서 각 함수명은 ```func1```, ```func2```, ... 로 대체한다.
+    * 파이썬 코드에서 숫자 값은 ```(n)``` 으로 대체한다.
     * ```''```, ```""``` 안에 들어가는 텍스트는 각각 ```text1```, ```text2```, ... 로 대체한다. (서로 같은 텍스트는 동일한 이름으로 처리)
     * 괄호, 연산기호, ```if```, ```and```, 개행, 각 변수명, 각 함수명 등을 모두 token으로 간주한다.
   * AI 실행 과정
@@ -14,7 +15,9 @@
 ## 파일 및 코드 설명
 * ```Python_code_data.txt``` (데이터셋을 다운받아야 함) : 학습 데이터
 * ```read_data.py``` : 데이터를 읽는 함수
+  * 출력 : ```converted_data.csv``` (데이터 읽기 및 변환 결과)
 * ```tokenizer.py``` : 파이썬 코드를 tokenize 하는 것과 관련된 함수 모음
+  * 출력 : ```data_preproecssing_result.csv``` (데이터 텍스트 전처리 결과)
 * ```embedding_cbow.py``` : CBOW 와 유사한 방식으로 word embedding 하는 모델 관련 함수 모음 (모델 저장 포함)
 * ```generate_dataset.py``` : 원본 코드를 입력, 그 사이에 들어갈 것 (없을 수도 있음) 을 출력으로 하는 학습 데이터 생성
   * 입력 : 특정 부분 이전 N개 token + 이후 N개 token (특정 부분의 길이는 0 또는 1 token)
@@ -40,7 +43,7 @@ python test.py
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
 |NLP-P3-master|||240208||마스터 브랜치|
-|NLP-P3-1||```feat```|||데이터를 읽는 ```read_data.py``` 코드 작성|
+|NLP-P3-1|```done```|```feat```|240209|240209|데이터를 읽는 ```read_data.py``` 코드 작성|
 |NLP-P3-2||```feat```|||파이썬 코드 토크나이저 ```tokenizer.py``` 코드 작성|
 |NLP-P3-3||```feat```|||토큰화된 파이썬 코드를 CBOW로 학습 및 모델 저장|
 |NLP-P3-4||```feat```|||학습 데이터 생성|
