@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import numpy as np
 
 
 window_size = 9
@@ -49,11 +50,12 @@ class EmbeddingModel(tf.keras.Model):
         L2 = tf.keras.regularizers.l2(0.001)
 
         self.embedding = layers.Dense(units=16, activation='sigmoid', kernel_regularizer=L2)
-        self.output = layers.Dense(units=vocab_n, activation='softmax', kernel_regularizer=L2)
+        self.output_dense = layers.Dense(units=vocab_n, activation='softmax', kernel_regularizer=L2)
 
     def call(self, inputs, training):
-        embedding = self.embedding(inputs)
-        outputs = self.output(embedding)
+        embedding_result = self.embedding(inputs)
+        outputs = self.output_dense(embedding_result)
+        return outputs
 
 
 # 임베딩 결과 중 tokenize 된 코드 가져오기
@@ -192,9 +194,52 @@ def convert_to_mean(df):
             print(list(df.iloc[i]))
 
 
+# train, valid, test 데이터 반환
+def define_data(train_data):
+    train_n = len(train_data)
+    token_cols = [f'token_{i}' for i in range(vocab_n)]
+    out_cols = [f'out_{i}' for i in range(vocab_n)]
+
+    train_input = np.array(train_data[token_cols], dtype=np.float32)
+    train_output = np.array(train_data[out_cols], dtype=np.float32)
+
+    print(train_input)
+    print(train_output)
+
+    valid_count = int(0.2 * train_n)
+    train_input_train = train_input[:-valid_count]
+    train_input_valid = train_input[-valid_count:]
+    train_output_train = train_output[:-valid_count]
+    train_output_valid = train_output[-valid_count:]
+
+    return (train_input_train, train_input_valid, train_output_train, train_output_valid)
+
+
+# 모델 반환
+def define_model():
+    optimizer = optimizers.Adam(0.001, decay=1e-6)
+    early_stopping = EarlyStopping(monitor='val_loss', mode='min', patience=5)
+    lr_reduced = ReduceLROnPlateau(monitor='val_loss', mode='min', patience=2)
+        
+    model = EmbeddingModel()
+    return model, optimizer, early_stopping, lr_reduced
+
+
 # CBOW-like 학습 진행 및 모델 저장
 def train_model(df):
-    pass
+    (train_input, valid_input, train_output, valid_output) = define_data(df)
+    model, optimizer, early_stopping, lr_reduced = define_model()
+    model.compile(loss='mse', optimizer=optimizer)
+
+    model.fit(
+        train_input, train_output,
+        callbacks=[early_stopping, lr_reduced],
+        epochs=10,
+        validation_data=(valid_input, valid_output)
+    )
+
+    model.summary()
+    model.save('embedding_model')
 
 
 # 임베딩 모델을 통한 CBOW 방식 학습
