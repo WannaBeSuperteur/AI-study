@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 
 
 window_size = 9
@@ -14,6 +15,11 @@ vocab = [
     'lambda', 'date', 'list', 'filter', 'split', 'set', 'dict',
     'numpy', 'np', 'pandas', 'pd', 'DataFrame', 'sum'
 ]
+
+before_weight = [0.1, 0.2, 0.3, 0.5, 0.7, 0.9, 1.2, 1.6, 2.0]
+after_weight = before_weight[::-1]
+
+assert len(before_weight) == window_size and len(after_weight) == window_size
 
 for i in range(max_var_count):
     vocab.append('var' + str(i + 1))
@@ -41,7 +47,7 @@ class EmbeddingModel(tf.keras.Model):
         L2 = tf.keras.regularizers.l2(0.001)
 
         self.embedding = layers.Dense(units=16, activation='sigmoid', kernel_regularizer=L2)
-        self.output = layers.Dense(units=vocab_n, activation='sigmoid', kernel_regularizer=L2)
+        self.output = layers.Dense(units=vocab_n, activation='softmax', kernel_regularizer=L2)
 
     def call(self, inputs, training):
         embedding = self.embedding(inputs)
@@ -138,13 +144,50 @@ def convert_into_one_hot(embedding_df):
         embedding_df.drop(columns=[f'ia_{i}'], inplace=True)
 
 
+# ib_0 ~ ib_8 + ia_0 ~ ia_8 까지 평균 반환
+def compute_all_window_mean(row, vocab_idx):
+    result = 0
+
+    for i in range(window_size):
+        result += before_weight[i] * row[f'ib_{i}_{vocab_idx}']
+    for i in range(window_size):
+        result += after_weight[i] * row[f'ia_{i}_{vocab_idx}']
+        
+    return result
+
+
+# 각 단어의 one-hot 벡터를 가중평균을 이용하여 합성 -> 최댓값으로 나누어서 최댓값이 1이 되게
+def convert_to_mean(df):
+
+    # position에 따른 가중평균을 이용하여 배열 계산
+    for i in range(vocab_n):
+        print(f'processing vocab index {i} ...')
+        df[f'token_{i}'] = df.apply(lambda x: compute_all_window_mean(x, i), axis=1)
+
+    # 불필요한 컬럼 삭제
+    for i in range(window_size):
+        print(f'removing columns for window-size {i} ...')
+        
+        for j in range(vocab_n):
+            df.drop(columns=[f'ia_{i}_{j}'], inplace=True)
+            df.drop(columns=[f'ib_{i}_{j}'], inplace=True)
+
+    # 각 row에 대해 최댓값으로 나누어서 최댓값을 1로 적용
+    for i in range(len(df)):
+        if i % 200 == 0:
+            print(f'dividing by max : {i}')
+        
+        for j in range(vocab_n):
+            df.iloc[i][f'token_{j}'] = df.iloc[i][f'token_{j}'] / df.iloc[i].max()
+
+
 # CBOW-like 학습 진행 및 모델 저장
 def train_model(df):
     pass
 
 
 # 임베딩 모델을 통한 CBOW 방식 학습
-def train_cbow_like_model():
+def create_data_for_cbow_like_model():
     df = pd.read_csv('embedding_dataset.csv', index_col=0)
 
     print('train token idx data:')
@@ -152,12 +195,23 @@ def train_cbow_like_model():
 
     convert_into_one_hot(df)
 
-    print('\ntrain token idx data (modified):')
+    print('\ntrain token idx data (modified 1):')
     print(df)
 
-    print('\ncheck there are some 1s:')
-    print(df.sum())
+    convert_to_mean(df)
 
+    print('\ntrain token idx data (modified 2):')
+    print(df)
+
+    df.to_csv('embedding_dataset_for_cbow.csv')
+
+
+# 임베딩 모델을 통한 CBOW 방식 학습
+def train_cbow_like_model():
+    if 'embedding_dataset_for_cbow.csv' not in os.listdir():
+        create_data_for_cbow_like_model()
+
+    df = pd.read_csv('embedding_dataset_for_cbow.csv', index_col=0)
     train_model(df)
 
 
