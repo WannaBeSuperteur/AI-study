@@ -241,6 +241,18 @@ def train_model(df):
     model.summary()
     model.save('embedding_model')
 
+    # test embedding model
+    test_embedding_model(model)
+
+
+# 임베딩 테스트 (모델 output을 출력)
+def test_embedding_model(embedding_model):
+    for i in range(5):
+        test_arr = np.zeros((vocab_n))
+        test_arr[i] = 1
+        test_arr = np.array([test_arr])
+        print(f'{vocab[i]} -> {np.array(embedding_model(test_arr))}')
+
 
 # 임베딩 모델을 통한 CBOW 방식 학습
 def create_data_for_cbow_like_model():
