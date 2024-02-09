@@ -5,14 +5,17 @@ import pandas as pd
 
 # tokenize 하고, 그 텍스트를 공백으로 연결하여 반환
 def tokenize_with_join(text):
-    text = tokenizer.tokenize(text)
-    return ' '.join(text)
-
+    try:
+        text = tokenizer.tokenize(text)
+        return ' '.join(text)
+    
+    except:
+        return None
 
 # tokenize
 def tokenize_converted_data():
     df = pd.read_csv('converted_data.csv', index_col=0)
-    df['text'] = df['code'].apply(lambda x: tokenize_with_join(x))
+    df['tokenized_code'] = df['code'].apply(lambda x: tokenize_with_join(x))
     df.to_csv('data_preprocessing_result.csv')
 
 
