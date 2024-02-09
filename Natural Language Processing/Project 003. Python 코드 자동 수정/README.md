@@ -20,9 +20,11 @@
   * 출력 : ```data_preproecssing_result.csv``` (```main.py``` 를 통해 함수 실행 시, 데이터 텍스트 전처리 결과)
   * 출력 : ```data_preproecssing_result_test.csv``` (```tokenizer.py``` 직접 실행 시, 테스트용 데이터 텍스트 전처리 결과)
 * ```embedding_cbow.py``` : CBOW 와 유사한 방식으로 word embedding 하는 모델 관련 함수 모음 (모델 저장 포함)
+  * 출력 : ```embedding_dataset.csv``` : 임베딩 데이터셋 (CBOW 방식)
 * ```generate_dataset.py``` : 원본 코드를 입력, 그 사이에 들어갈 것 (없을 수도 있음) 을 출력으로 하는 학습 데이터 생성
   * 입력 : 특정 부분 이전 N개 token + 이후 N개 token (특정 부분의 길이는 0 또는 1 token)
   * 출력 : 해당 특정 부분에 들어갈 token (없음 or 1개)
+  * 입출력 데이터는 **```embedding_cbow.py``` 실행 결과로 임베딩된 배열** 형태
   * 원본 데이터셋 (Python Code Data) 의 코드 중 **연속된 (2 * N)개 token** 및 1개 token을 그 사이에 둔 **2개의 "연속된 N tokens"** 를 사용한다.
   * 해당 특정 부분이 변수명, 함수명 또는 텍스트인 경우, 해당 변수명/함수명/텍스트는 그 주변 N개 token 이내에 1번 이상 등장해야 한다.
   * 해당 특정 부분은 숫자 값 (```(n)```) 이 될 수 없다.
