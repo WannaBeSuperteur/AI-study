@@ -25,7 +25,9 @@ def convert_into_data(lines):
             
         else:
             except_comment = line.split('#')[0]
-            if except_comment != '':
+            is_importing = line.startswith('from ') or line.startswith('import ')
+            
+            if except_comment != '' and not is_importing:
                 code += except_comment + '\n'
 
     df.to_csv('converted_data.csv')
