@@ -1,3 +1,15 @@
+## 2024.02.09 (금)
+**[제미나이 AI 생태계 구축 나선 구글](https://n.news.naver.com/mnews/article/015/0004946960?sid=105)** ```AI``` ```Gemini``` ```Large Language Model```
+
+* 구글이 2023년 12월 출시된 대규모 언어모델 (LLM) Gemini를 중심으로 자사 제품 및 서비스 체계를 개편한다. 자세한 사항은 다음과 같다.
+  * 생성형 AI 챗봇 바드를 Gemini로 전환 및 대체
+    * 휴대폰에서 Gemini를 사용할 수 있도록 Android 및 iOS용 앱 출시
+  * Gemini Ultra 1.0이라는 고성능 모델을 기반으로 Gemini Advanced 유료 구독 서비스 시작
+    * Gemini Advanced는 고급 코딩, 맞춤형 개인 교사, 심층 데이터 분석 등 다양하게 활용할 수 있다.
+  * 구글 클라우드 협업툴 듀엣AI도 Gemini로 운영
+  * 구글 워크스페이스를 Gemini for workspace로 전환하여 다양한 기능 구현
+  * 결론적으로, **ChatGPT와 본격적으로 경쟁을 시작한다** 는 의미
+
 ## 2024.02.08 (목)
 **[생성형 AI가 개발자 대체 가능? 설문조사 결과](https://n.news.naver.com/mnews/article/009/0005256358?sid=105)** ```AI```
 
