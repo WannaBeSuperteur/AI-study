@@ -1,8 +1,8 @@
 import pandas as pd
 
 
-window_size = 6
-max_var_count = 30
+window_size = 9
+max_var_count = 12
 
 vocab = [
     'if', 'print', 'elif', 'else', 'for', 'in', 'while',
@@ -16,9 +16,9 @@ vocab = [
 ]
 
 for i in range(max_var_count):
-    vocab.append('var' + str(i))
-    vocab.append('func' + str(i))
-    vocab.append('mytxttkn' + str(i))
+    vocab.append('var' + str(i + 1))
+    vocab.append('func' + str(i + 1))
+    vocab.append('mytxttkn' + str(i + 1))
 
 vocab_n = len(vocab)
 
@@ -48,12 +48,14 @@ def convert_tokenized_code(tokenized_code):
         input_after = []
         
         for j in range(2 * window_size + 1):
+            position = i + j - window_size
+            
             if j < window_size:
-                input_before.append(vocab_dic[tokenized_code_split[j]])
+                input_before.append(vocab_dic[tokenized_code_split[position]])
             elif j > window_size:
-                input_after.append(vocab_dic[tokenized_code_split[j]])
+                input_after.append(vocab_dic[tokenized_code_split[position]])
             else:
-                output.append(vocab_dic[tokenized_code_split[j]])
+                output.append(vocab_dic[tokenized_code_split[position]])
 
         inputs_before.append(input_before)
         outputs.append(output)
@@ -65,12 +67,12 @@ def convert_tokenized_code(tokenized_code):
     for i in range(code_len - 2 * window_size): 
 
         new_row = {}
-        for idx, ib in enumerate(inputs_before):
+        for idx, ib in enumerate(inputs_before[i]):
             new_row[f'ib_{idx}'] = [int(inputs_before[i][idx])]
 
         new_row['out'] = [int(outputs[i][0])]
 
-        for idx, ia in enumerate(inputs_after):
+        for idx, ia in enumerate(inputs_after[i]):
             new_row[f'ia_{idx}'] = [int(inputs_after[i][idx])]
 
         new_row = pd.DataFrame(new_row)
@@ -99,7 +101,11 @@ def train_cbow_model():
     pass
 
 
-if __name__ == '__main__':
+# 전체 프로세스 진행
+def run_all_process():
     tokenized_codes = get_tokenized_codes()
-    print(tokenized_codes[0])
-    create_dataset(tokenized_codes)    
+    create_dataset(tokenized_codes)
+
+
+if __name__ == '__main__':
+    run_all_process()  

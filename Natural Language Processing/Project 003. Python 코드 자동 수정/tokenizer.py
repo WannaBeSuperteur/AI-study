@@ -69,7 +69,7 @@ def convert_var_func_nums(text_splitted):
     var_no = {}
     func_no = {}
     
-    for i in range(1, len(text_splitted)):
+    for i in range(len(text_splitted)):
         token = text_splitted[i]
         before_token = text_splitted[i-1]
         is_tokenized_text = (token[:8] == 'mytxttkn')

@@ -1,6 +1,7 @@
 import read_data as rd
 import tokenizer
 import pandas as pd
+import embedding_cbow as ecbow
 
 
 # tokenize 하고, 그 텍스트를 공백으로 연결하여 반환
@@ -11,6 +12,7 @@ def tokenize_with_join(text):
     
     except:
         return None
+
 
 # tokenize
 def tokenize_converted_data():
@@ -26,3 +28,6 @@ if __name__ == '__main__':
 
     # tokenize 실시
     tokenize_converted_data()
+
+    # CBOW embedding 학습 실시
+    ecbow.run_all_process()
