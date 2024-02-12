@@ -31,6 +31,9 @@
 
 ![임베딩 모델](./images/cbow_model.png)
 
+* 위 그림에서, 임베딩 모델에 대해 **window size = 3, before = ```[Natural, Language, Processing]```, after = ```[machine, a, life]```** 를 적용
+* 위 그림에서, CBOW-like 방법을 적용하기 위한 중심점이 되는, output data로 사용되는 word는 ```gives```
+
 * 실제 임베딩 적용 시에는 다음과 순서로 진행한다.
   * 크기 (2 * ```vocab size```) 인 배열을 생성한다.
   * 임베딩하려는 토큰의 tokenizer vocab 상의 index가 i일 때, 그 배열의 ```i```, ```vocab size + i``` 인덱스만 1로 하고 나머지는 모두 0으로 한다.
