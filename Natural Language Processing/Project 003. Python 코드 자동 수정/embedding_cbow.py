@@ -49,11 +49,15 @@ class EmbeddingModel(tf.keras.Model):
 
         L2 = tf.keras.regularizers.l2(0.001)
 
-        self.embedding = layers.Dense(units=16, activation='sigmoid', kernel_regularizer=L2)
+        self.dense0 = layers.Dense(units=32, activation='relu', kernel_regularizer=L2)
+        self.embedding = layers.Dense(units=16, activation='relu', kernel_regularizer=L2)
+        self.dense1 = layers.Dense(units=32, activation='relu', kernel_regularizer=L2)
         self.output_dense = layers.Dense(units=vocab_n, activation='softmax', kernel_regularizer=L2)
 
     def call(self, inputs, training):
+        inputs = self.dense0(inputs)
         embedding_result = self.embedding(inputs)
+        embedding_result = self.dense1(embedding_result)
         outputs = self.output_dense(embedding_result)
         return outputs
 
@@ -247,11 +251,11 @@ def train_model(df):
 
 # 임베딩 테스트 (모델 output을 출력)
 def test_embedding_model(embedding_model):
-    for i in range(5):
+    for i in range(vocab_n):
         test_arr = np.zeros((vocab_n))
         test_arr[i] = 1
         test_arr = np.array([test_arr])
-        print(f'{vocab[i]} -> {np.array(embedding_model(test_arr))}')
+        print(f'\n{vocab[i]} ->\n{np.array(embedding_model(test_arr))}')
 
 
 # 임베딩 모델을 통한 CBOW 방식 학습
