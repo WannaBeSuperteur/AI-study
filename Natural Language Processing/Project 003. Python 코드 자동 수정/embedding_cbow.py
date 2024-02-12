@@ -17,7 +17,7 @@ vocab = [
     'numpy', 'np', 'pandas', 'pd', 'DataFrame', 'sum'
 ]
 
-before_weight = [0.1, 0.3, 0.7, 2.0]
+before_weight = [0.1, 0.2, 0.4, 0.7]
 after_weight = before_weight[::-1]
 
 assert len(before_weight) == window_size and len(after_weight) == window_size
@@ -186,24 +186,6 @@ def convert_to_mean(df):
         for j in range(vocab_n):
             df.drop(columns=[f'ia_{i}_{j}'], inplace=True)
             df.drop(columns=[f'ib_{i}_{j}'], inplace=True)
-
-    # 각 row에 대해 최댓값으로 나누어서 최댓값을 1로 적용
-    for i in range(len(df)):
-        max_value = df.iloc[i].max() # 가중치 최대가 2.0이므로 이 값은 최소 2.0임
-        
-        if i < 5:
-            print(list(df.iloc[i]))
-            print(max_value)
-            
-        if i % 200 == 0:
-            print(f'dividing by max : {i}')
-        
-        for j in range(vocab_n):
-            df.iloc[i, df.columns.get_loc(f'token_before_{j}')] = df.iloc[i][f'token_before_{j}'] / max_value
-            df.iloc[i, df.columns.get_loc(f'token_after_{j}')] = df.iloc[i][f'token_after_{j}'] / max_value
-
-        if i < 5:
-            print(list(df.iloc[i]))
 
 
 # train, valid, test 데이터 반환
