@@ -17,6 +17,9 @@ embedding_size = 16 # embedding vector dimension
 vocab_n = 94 # embedding_cbow.py 의 vocab 구조 변경 시 업데이트
 
 
+global_count = 0
+
+
 class MainModel(tf.keras.Model):
 
     def __init__(self, dropout_rate=0.25):
@@ -25,22 +28,51 @@ class MainModel(tf.keras.Model):
         L2 = tf.keras.regularizers.l2(0.001)
 
         self.dense0 = layers.Dense(units=256, activation='relu', kernel_regularizer=L2)
-        self.dense1 = layers.Dense(units=512, activation='relu', kernel_regularizer=L2)
+        self.dense1 = layers.Dense(units=16, activation='relu', kernel_regularizer=L2)
         self.dense2 = layers.Dense(units=64, activation='relu', kernel_regularizer=L2)
-        self.dense3 = layers.Dense(units=7, activation='sigmoid', kernel_regularizer=L2)
+        self.dense3 = layers.Dense(units=1, activation='sigmoid', kernel_regularizer=L2)
 
         self.dropout = tf.keras.layers.Dropout(rate=dropout_rate, name='dropout')
 
     def call(self, inputs, training):
-        inputs = self.dense0(inputs)
-        inputs = self.dropout(inputs)
-        inputs = self.dense1(inputs)
-        inputs = self.dropout(inputs)
-        inputs = self.dense2(inputs)
-        inputs = self.dropout(inputs)
+
+        # suppose that window_size == 4
+        i0, i1, i2, i3, i4, i5, i6, i7 = tf.split(inputs, [embedding_size for i in range(8)], axis=1)
+        inputs_arr = [i0, i1, i2, i3, i4, i5, i6, i7]
+        inputs_processed = []
         
-        outputs = self.dense3(inputs)
+        for inp in inputs_arr:
+            inp1 = self.dense0(inp)
+            inp2 = self.dropout(inp1)
+            inp3 = self.dense1(inp2)
+            
+            inputs_processed.append(inp3)
+        
+        inputs_concat = tf.keras.layers.Concatenate()(inputs_processed)
+        inputs_concat = self.dropout(inputs_concat)
+        inputs_concat = self.dense2(inputs_concat)
+        inputs_concat = self.dropout(inputs_concat)
+        
+        outputs = self.dense3(inputs_concat)
         return outputs
+
+
+# out_0, out_1, ... 모두 더하기
+def sum_all_outs(df):
+
+    def get_all_sum(df_row):
+        global global_count
+        
+        if global_count % 2500 == 0:
+            print(global_count)
+        global_count += 1
+        
+        result = 0
+        for i in range(vocab_n):
+            result += df_row[f'out_{i}']
+        return result
+    
+    df['out_sum'] = df.apply(lambda x: get_all_sum(x), axis=1)
 
 
 # train, valid, test 데이터 반환
@@ -66,7 +98,10 @@ def define_data(train_df):
 
     # 평균으로 수렴하는 것을 방지하기 위해,
     # one-hot vector 기준 평균값이 0.05 이상인 column ('=', ':', '(', ')', ',', '(n)', '(nl)') 만 이용
-    out_cols = ['out_14', 'out_17', 'out_22', 'out_23', 'out_24', 'out_30', 'out_31']
+    # out_cols = ['out_14', 'out_17', 'out_22', 'out_23', 'out_24', 'out_30', 'out_31']
+
+    sum_all_outs(train_df)
+    out_cols = ['out_sum']
 
     train_input = np.array(train_df[embedding_element_cols], dtype=np.float32)
     train_output = np.array(train_df[out_cols], dtype=np.float32)
