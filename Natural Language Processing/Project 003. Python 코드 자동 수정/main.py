@@ -28,32 +28,21 @@ class MainModel(tf.keras.Model):
         L2 = tf.keras.regularizers.l2(0.001)
 
         self.dense0 = layers.Dense(units=256, activation='relu', kernel_regularizer=L2)
-        self.dense1 = layers.Dense(units=16, activation='relu', kernel_regularizer=L2)
+        self.dense1 = layers.Dense(units=256, activation='relu', kernel_regularizer=L2)
         self.dense2 = layers.Dense(units=64, activation='relu', kernel_regularizer=L2)
         self.dense3 = layers.Dense(units=1, activation='sigmoid', kernel_regularizer=L2)
 
         self.dropout = tf.keras.layers.Dropout(rate=dropout_rate, name='dropout')
 
     def call(self, inputs, training):
-
-        # suppose that window_size == 4
-        i0, i1, i2, i3, i4, i5, i6, i7 = tf.split(inputs, [embedding_size for i in range(8)], axis=1)
-        inputs_arr = [i0, i1, i2, i3, i4, i5, i6, i7]
-        inputs_processed = []
+        inputs = self.dense0(inputs)
+        inputs = self.dropout(inputs)
+        inputs = self.dense1(inputs)
+        inputs = self.dropout(inputs)
+        inputs = self.dense2(inputs)
+        inputs = self.dropout(inputs)
         
-        for inp in inputs_arr:
-            inp1 = self.dense0(inp)
-            inp2 = self.dropout(inp1)
-            inp3 = self.dense1(inp2)
-            
-            inputs_processed.append(inp3)
-        
-        inputs_concat = tf.keras.layers.Concatenate()(inputs_processed)
-        inputs_concat = self.dropout(inputs_concat)
-        inputs_concat = self.dense2(inputs_concat)
-        inputs_concat = self.dropout(inputs_concat)
-        
-        outputs = self.dense3(inputs_concat)
+        outputs = self.dense3(inputs)
         return outputs
 
 
@@ -80,26 +69,31 @@ def define_data(train_df):
     train_n = len(train_df)
     train_df = train_df.sample(frac=1.0).reset_index(drop=True) # shuffle train_df
     print(train_df)
-    
+
+    # input은 ('ia_0_x' - 'ib_3_x') (x = 0,1,...,15) 등 이웃한 word token embedding 간의 diff 값을 이용
     embedding_element_cols = []
-    for i in range(window_size):
-        for j in range(embedding_size):
-            embedding_element_cols.append(f'ia_{i}_{j}')
-            embedding_element_cols.append(f'ib_{i}_{j}')
+    
+    for i in range(embedding_size):
+        print(f'processing embedding element idx {i} ...')
 
-    # 각 out column의 데이터의 평균 파악
-    vocab = get_vocab()
-    for i in range(vocab_n):
-        mean_value = np.mean(train_df[f'out_{i}'])
-        if mean_value >= 0.05:
-            print(f'mean of column out_{i} ({vocab[i]}) : ' + str(mean_value))
+        for j in range(window_size - 1):
+            train_df[f'input_diff_{j}_{i}'] = train_df.apply(
+                lambda x: x[f'ib_{j+1}_{i}'] - x[f'ib_{j}_{i}'], axis=1
+            )
+
+        train_df[f'input_diff_{window_size - 1}_{i}'] = train_df.apply(
+            lambda x: x[f'ia_0_{i}'] - x[f'ib_{window_size - 1}_{i}'], axis=1
+        )
+
+        for j in range(window_size - 1):
+            train_df[f'input_diff_{window_size + j}_{i}'] = train_df.apply(
+                lambda x: x[f'ia_{j+1}_{i}'] - x[f'ia_{j}_{i}'], axis=1
+            )
         
-    # out_cols = [f'out_{i}' for i in range(vocab_n)]
-
-    # 평균으로 수렴하는 것을 방지하기 위해,
-    # one-hot vector 기준 평균값이 0.05 이상인 column ('=', ':', '(', ')', ',', '(n)', '(nl)') 만 이용
-    # out_cols = ['out_14', 'out_17', 'out_22', 'out_23', 'out_24', 'out_30', 'out_31']
-
+        for j in range(2 * window_size - 1):
+            embedding_element_cols.append(f'input_diff_{j}_{i}')
+    
+    # output 수렴 방지를 위해, 각 output 대신 그 합계만 이용
     sum_all_outs(train_df)
     out_cols = ['out_sum']
 
@@ -139,7 +133,7 @@ def define_model():
 # 테스트 (모델 output을 출력 -> 평균으로 수렴하지 않았는지 테스트)
 def test_main_model(main_model):
     for i in range(15):
-        test_arr = np.random.rand(1, 2 * window_size * embedding_size)
+        test_arr = np.random.rand(1, (2 * window_size - 1) * embedding_size)
         print(f'random array {i + 1} -> {np.array(main_model(test_arr))}')
 
 
