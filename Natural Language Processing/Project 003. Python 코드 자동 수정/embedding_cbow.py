@@ -49,14 +49,16 @@ class EmbeddingModel(tf.keras.Model):
 
         L2 = tf.keras.regularizers.l2(0.001)
 
-        self.dense0 = layers.Dense(units=32, activation='relu', kernel_regularizer=L2)
+        self.dense0 = layers.Dense(units=64, activation='relu', kernel_regularizer=L2)
         self.embedding = layers.Dense(units=16, activation='relu', kernel_regularizer=L2)
-        self.dense1 = layers.Dense(units=32, activation='relu', kernel_regularizer=L2)
-        self.output_dense = layers.Dense(units=vocab_n, activation='softmax', kernel_regularizer=L2)
+        
+        self.dense1 = layers.Dense(units=64, activation='relu', kernel_regularizer=L2)
+        self.output_dense = layers.Dense(units=1, activation='sigmoid', kernel_regularizer=L2)
 
     def call(self, inputs, training):
         inputs = self.dense0(inputs)
         embedding_result = self.embedding(inputs)
+        
         embedding_result = self.dense1(embedding_result)
         outputs = self.output_dense(embedding_result)
         return outputs
@@ -208,7 +210,11 @@ def convert_to_mean(df):
 def define_data(train_data):
     train_n = len(train_data)
     token_cols = [f'token_before_{i}' for i in range(vocab_n)] + [f'token_after_{i}' for i in range(vocab_n)]
-    out_cols = [f'out_{i}' for i in range(vocab_n)]
+    out_cols_all = [f'out_{i}' for i in range(vocab_n)]
+
+    mean_argmax = np.argmax(train_data[out_cols_all].mean())
+    print('mean argmax:', mean_argmax)
+    out_cols = [f'out_{mean_argmax}']
 
     train_input = np.array(train_data[token_cols], dtype=np.float32)
     train_output = np.array(train_data[out_cols], dtype=np.float32)
@@ -252,7 +258,7 @@ def train_model(df):
     model.fit(
         train_input, train_output,
         callbacks=[early_stopping, lr_reduced],
-        epochs=10,
+        epochs=100,
         validation_data=(valid_input, valid_output)
     )
 
@@ -265,7 +271,7 @@ def train_model(df):
 
 # 임베딩 테스트 (모델 output을 출력)
 def test_embedding_model(embedding_model):
-    for i in range(5):
+    for i in range(15):
         test_arr = np.random.rand((2 * vocab_n))
         test_arr = np.array([test_arr])
         print(f'\nrandom array ->\n{np.array(embedding_model(test_arr))}')

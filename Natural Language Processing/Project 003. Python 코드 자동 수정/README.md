@@ -15,16 +15,22 @@
 ## 파일 및 코드 설명
 * ```Python_code_data.txt``` (데이터셋을 다운받아야 함) : 학습 데이터
 * ```read_data.py``` : 데이터를 읽는 함수
-  * 출력 : ```converted_data.csv``` (데이터 읽기 및 변환 결과)
+  * 출력 파일 : ```converted_data.csv``` (데이터 읽기 및 변환 결과)
 * ```tokenizer.py``` : 파이썬 코드를 tokenize 하는 것과 관련된 함수 모음
-  * 출력 : ```data_preproecssing_result.csv``` (```main.py``` 를 통해 함수 실행 시, 데이터 텍스트 전처리 결과)
-  * 출력 : ```data_preproecssing_result_test.csv``` (```tokenizer.py``` 직접 실행 시, 테스트용 데이터 텍스트 전처리 결과)
+  * 출력 파일 : ```data_preproecssing_result.csv``` (```main.py``` 를 통해 함수 실행 시, 데이터 텍스트 전처리 결과)
+  * 출력 파일 : ```data_preproecssing_result_test.csv``` (```tokenizer.py``` 직접 실행 시, 테스트용 데이터 텍스트 전처리 결과)
 * ```embedding_cbow.py``` : CBOW 와 유사한 방식으로 word embedding 하는 **임베딩 모델** 관련 함수 모음 (임베딩 모델 저장 포함)
-  * 출력 : ```embedding_dataset.csv``` : 임베딩 데이터셋 (CBOW 방식과 유사하게)
+  * 출력 파일 : ```embedding_dataset.csv``` : 임베딩 데이터셋 (CBOW 방식과 유사하게)
     * **임베딩 모델** 의 학습 데이터를 생성하기 위한 데이터
-  * 출력 : ```embedding_dataset_for_cbow.csv``` : CBOW 와 유사한 방식으로 모델을 학습시키기 위한, **각 vocab index (단어를 나타내는 one-hot vector의 인덱스) 에 대해 전후 window size 이내의 position 별 one-hot 값을 가중평균한, 크기 ```vocab size```인 배열** (before, after 각각, 총 2개) 을 계산한 후, 해당 2개 배열의 각 원소를 그 최댓값으로 나눈 배열을 나타낸 데이터셋
+  * 출력 파일 : ```embedding_dataset_for_cbow.csv``` : CBOW 와 유사한 방식으로 모델을 학습시키기 위한, **각 vocab index (단어를 나타내는 one-hot vector의 인덱스) 에 대해 전후 window size 이내의 position 별 one-hot 값을 가중평균한, 크기 ```vocab size```인 배열** (CBOW의 output position을 기준으로 before, after 각각, 총 2개) 을 계산한 후, 해당 2개 배열의 각 원소를 그 최댓값으로 나눈 배열을 나타낸 데이터셋
     * **임베딩 모델** 의 학습 데이터로 사용
+    * **임베딩 모델** 의 입력 데이터는 후술할 가중평균이며, 출력 데이터는 CBOW의 output position에 해당하는 token의 one-hot 배열 (단, 해당 배열에서 평균값이 가장 큰, 즉 가장 많이 등장하는 토큰에 해당하는 1개의 열의 값을 이용)
     * position에 따른 가중평균 (입력 데이터 차원 = 2 * ```vocab size```) 을 이용하고 최종적으로 그 최댓값으로 나눈다는 점은 CBOW와 다르다.
+
+임베딩 모델을 그림으로 나타내면 다음과 같다. 단, 실제 가중치는 아래 그림과 다르며, 실제 구현에서는 **아래 그림의 최종 학습 데이터의 output 중 열의 평균값이 가장 큰 1개의 열만 출력 데이터로 사용** 한다.
+
+![임베딩 모델](./images/cbow_model.png)
+
 * ```generate_dataset.py``` : 원본 코드를 입력, 그 사이에 들어갈 것 (없을 수도 있음) 을 출력으로 하는 **메인 모델** 의 학습 데이터 생성
   * **메인 모델** 관련 정보
     * 입력 : 특정 부분 이전 N개 token + 이후 N개 token (특정 부분의 길이는 0 또는 1 token)
