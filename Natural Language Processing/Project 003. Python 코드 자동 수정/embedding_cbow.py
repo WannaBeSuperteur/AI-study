@@ -272,16 +272,18 @@ def train_model(df):
 # 임베딩 테스트 (모델 output을 출력)
 def test_embedding_model(embedding_model):
     for i in range(15):
-        test_arr = np.random.rand((2 * vocab_n))
+        test_arr = np.zeros(2 * vocab_n)
+        test_arr[i] = 1
+        test_arr[i + vocab_n] = 1
+        
         test_arr = np.array([test_arr])
-        print(f'\nrandom array ->\n{np.array(embedding_model(test_arr))}')
+        print(f'\n{vocab[i]} -> {np.array(embedding_model(test_arr))}')
 
 
 # 임베딩 모델을 통한 CBOW 방식 학습
 def create_data_for_cbow_like_model():
 
-    # 임시로 최초 10,000 개의 row만 가지고 학습
-    df = pd.read_csv('embedding_dataset.csv', index_col=0)[:10000]
+    df = pd.read_csv('embedding_dataset.csv', index_col=0)
 
     print('train token idx data:')
     print(df)
