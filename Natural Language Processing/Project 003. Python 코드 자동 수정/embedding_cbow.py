@@ -37,6 +37,7 @@ for i in range(vocab_n):
 import tensorflow as tf
 from tensorflow.keras import layers, optimizers
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from keras import backend as K
 
 
 # 임베딩 모델 (CBOW-like 이지만, 실제 CBOW 와 다소 차이가 있을 수 있음)
@@ -49,18 +50,19 @@ class EmbeddingModel(tf.keras.Model):
 
         L2 = tf.keras.regularizers.l2(0.001)
 
-        self.dense0 = layers.Dense(units=64, activation='relu', kernel_regularizer=L2)
-        self.embedding = layers.Dense(units=16, activation='relu', kernel_regularizer=L2)
-        
-        self.dense1 = layers.Dense(units=64, activation='relu', kernel_regularizer=L2)
-        self.output_dense = layers.Dense(units=1, activation='sigmoid', kernel_regularizer=L2)
+        self.encoder = tf.keras.Sequential([
+            layers.Dense(units=64, activation='relu', kernel_regularizer=L2),
+            layers.Dense(units=16, activation='relu', kernel_regularizer=L2)
+        ])
+
+        self.decoder = tf.keras.Sequential([
+            layers.Dense(units=64, activation='relu', kernel_regularizer=L2),
+            layers.Dense(units=1, activation='sigmoid', kernel_regularizer=L2)
+        ])
 
     def call(self, inputs, training):
-        inputs = self.dense0(inputs)
-        embedding_result = self.embedding(inputs)
-        
-        embedding_result = self.dense1(embedding_result)
-        outputs = self.output_dense(embedding_result)
+        embedding_result = self.encoder(inputs)
+        outputs = self.decoder(embedding_result)
         return outputs
 
 
@@ -260,6 +262,15 @@ def test_embedding_model(embedding_model):
         
         test_arr = np.array([test_arr])
         print(f'\n{vocab[i]} -> {np.array(embedding_model(test_arr))}')
+
+
+# 텍스트 임베딩 실시
+def run_embedding(idx, emb_model_encoder):
+    one_hot_arr = np.zeros((1, 2 * vocab_n))
+    one_hot_arr[0][idx] = 1
+    one_hot_arr[0][idx + vocab_n] = 1
+
+    return emb_model_encoder(one_hot_arr)[0]
 
 
 # 임베딩 모델을 통한 CBOW 방식 학습

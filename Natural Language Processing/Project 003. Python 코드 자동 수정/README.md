@@ -31,8 +31,9 @@
 
 ![임베딩 모델](./images/cbow_model.png)
 
-* 위 그림에서, 임베딩 모델에 대해 **window size = 3, before = ```[Natural, Language, Processing]```, after = ```[machine, a, life]```** 를 적용
-* 위 그림에서, CBOW-like 방법을 적용하기 위한 중심점이 되는, output data로 사용되는 word는 ```gives```
+위 그림에 대한 설명은 다음과 같다.
+* 임베딩 모델에 대해 **window size = 3, before = ```[Natural, Language, Processing]```, after = ```[machine, a, life]```** 를 적용
+* CBOW-like 방법을 적용하기 위한 중심점이 되는, output data로 사용되는 word는 ```gives```
 
 **임베딩 모델을 이용한 word embedding 방법**
 * 실제 임베딩 적용 시에는 다음과 순서로 진행한다.
@@ -49,6 +50,12 @@
     * 원본 데이터셋 (Python Code Data) 의 코드 중 **연속된 (2 * N)개 token** 및 1개 token을 그 사이에 둔 **2개의 "연속된 N tokens"** 를 사용한다.
     * 해당 특정 부분이 변수명, 함수명 또는 텍스트인 경우, 해당 변수명/함수명/텍스트는 그 주변 N개 token 이내에 1번 이상 등장해야 한다.
     * 해당 특정 부분은 숫자 값 (```(n)```) 이 될 수 없다.
+
+![메인 모델](./images/main_model.png)
+
+위 그림에 대한 설명은 다음과 같다.
+* 메인 모델의 학습 데이터를 만들기 위해 ```Natural Language Processing gives machine a life.``` 라는 문장을 이용할 때, 특정 부분을 ```Processing```과 ```gives```의 사이 부분 (길이=0) 으로 했을 때와 ```Processing```과 ```machine```의 사이 부분 (```gives```, 길이=1) 으로 각각 했을 때를 나타낸 것이다.
+
 * ```main.py``` : 데이터 읽기, 모델 생성 등 전체적인 프로세스 진행
 * ```test.py``` : 모델 테스트 (파이썬 코드는 ```python_code.txt``` 파일에 작성)
   * 전처리된 파이썬 코드를 원상복구하는 기능 포함
@@ -72,6 +79,6 @@ python test.py
 |NLP-P3-2|```done```|```feat```|240209|240209|파이썬 코드 토크나이저 ```tokenizer.py``` 코드 작성|
 |NLP-P3-3|```done```|```feat```|240209|240209|토큰화된 파이썬 코드를 CBOW로 임베딩 학습 및 **임베딩 모델** 저장|
 |NLP-P3-4|```done```|```fix```|240209|240212|**임베딩 모델** 학습 시 평균으로 수렴하는 이슈 해결|
-|NLP-P3-5||```feat```|||**메인 모델** 에 사용되는 학습 데이터 생성|
+|NLP-P3-5||```feat```|240212||**메인 모델** 에 사용되는 학습 데이터 생성|
 |NLP-P3-6||```feat```|||**메인 모델** 학습|
 |NLP-P3-7||```feat```|||학습한 모델 테스트|
