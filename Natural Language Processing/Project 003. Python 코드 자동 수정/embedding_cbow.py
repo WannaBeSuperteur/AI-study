@@ -66,6 +66,10 @@ class EmbeddingModel(tf.keras.Model):
         return outputs
 
 
+def get_vocab():
+    return vocab
+
+
 # 임베딩 결과 중 tokenize 된 코드 가져오기
 def get_tokenized_codes():
     data_preprocessing_result = pd.read_csv('data_preprocessing_result.csv', index_col=0)

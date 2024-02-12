@@ -2,6 +2,7 @@ import read_data as rd
 import tokenizer
 import pandas as pd
 import embedding_cbow as ecbow
+from embedding_cbow import get_vocab
 import os
 from generate_dataset import get_or_create_main_model_train_data
 
@@ -25,8 +26,8 @@ class MainModel(tf.keras.Model):
 
         self.dense0 = layers.Dense(units=256, activation='relu', kernel_regularizer=L2)
         self.dense1 = layers.Dense(units=512, activation='relu', kernel_regularizer=L2)
-        self.dense2 = layers.Dense(units=256, activation='relu', kernel_regularizer=L2)
-        self.dense3 = layers.Dense(units=vocab_n, activation='sigmoid', kernel_regularizer=L2)
+        self.dense2 = layers.Dense(units=64, activation='relu', kernel_regularizer=L2)
+        self.dense3 = layers.Dense(units=7, activation='sigmoid', kernel_regularizer=L2)
 
         self.dropout = tf.keras.layers.Dropout(rate=dropout_rate, name='dropout')
 
@@ -53,8 +54,19 @@ def define_data(train_df):
         for j in range(embedding_size):
             embedding_element_cols.append(f'ia_{i}_{j}')
             embedding_element_cols.append(f'ib_{i}_{j}')
+
+    # 각 out column의 데이터의 평균 파악
+    vocab = get_vocab()
+    for i in range(vocab_n):
+        mean_value = np.mean(train_df[f'out_{i}'])
+        if mean_value >= 0.05:
+            print(f'mean of column out_{i} ({vocab[i]}) : ' + str(mean_value))
         
-    out_cols = [f'out_{i}' for i in range(vocab_n)]
+    # out_cols = [f'out_{i}' for i in range(vocab_n)]
+
+    # 평균으로 수렴하는 것을 방지하기 위해,
+    # one-hot vector 기준 평균값이 0.05 이상인 column ('=', ':', '(', ')', ',', '(n)', '(nl)') 만 이용
+    out_cols = ['out_14', 'out_17', 'out_22', 'out_23', 'out_24', 'out_30', 'out_31']
 
     train_input = np.array(train_df[embedding_element_cols], dtype=np.float32)
     train_output = np.array(train_df[out_cols], dtype=np.float32)
