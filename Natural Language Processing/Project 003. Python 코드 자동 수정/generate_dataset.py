@@ -74,9 +74,9 @@ def create_dataset(embedding_df):
     embedding_train_df_1 = pd.DataFrame()
     n = len(embedding_train_df_0)
 
-    for i in range(int(n * 0.1)):
+    for i in range(int(n * 0.5)):
         if i % 100 == 0:
-            print(f'{i} / {n * 0.1}')
+            print(f'{i} / {n * 0.5}')
             
         new_row = {}
         for j in range(window_size):
