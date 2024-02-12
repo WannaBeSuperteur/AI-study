@@ -3,7 +3,7 @@ import os
 import numpy as np
 
 
-window_size = 9
+window_size = 4
 max_var_count = 12
 
 vocab = [
@@ -17,7 +17,7 @@ vocab = [
     'numpy', 'np', 'pandas', 'pd', 'DataFrame', 'sum'
 ]
 
-before_weight = [0.1, 0.2, 0.3, 0.5, 0.7, 0.9, 1.2, 1.6, 2.0]
+before_weight = [0.1, 0.3, 0.7, 2.0]
 after_weight = before_weight[::-1]
 
 assert len(before_weight) == window_size and len(after_weight) == window_size
@@ -152,14 +152,15 @@ def convert_into_one_hot(embedding_df):
         embedding_df.drop(columns=[f'ia_{i}'], inplace=True)
 
 
-# ib_0 ~ ib_8 + ia_0 ~ ia_8 까지 평균 반환
-def compute_all_window_mean(row, vocab_idx):
+# ib_0 ~ ib_8 또는 ia_0 ~ ia_8 까지 평균 반환
+def compute_all_window_mean(row, vocab_idx, before_after):
     result = 0
 
     for i in range(window_size):
-        result += before_weight[i] * row[f'ib_{i}_{vocab_idx}']
-    for i in range(window_size):
-        result += after_weight[i] * row[f'ia_{i}_{vocab_idx}']
+        if before_after == 'before':
+            result += before_weight[i] * row[f'ib_{i}_{vocab_idx}']
+        elif before_after == 'after':
+            result += after_weight[i] * row[f'ia_{i}_{vocab_idx}']
         
     return result
 
@@ -169,8 +170,12 @@ def convert_to_mean(df):
 
     # position에 따른 가중평균을 이용하여 배열 계산
     for i in range(vocab_n):
-        print(f'processing vocab index {i} ...')
-        df[f'token_{i}'] = df.apply(lambda x: compute_all_window_mean(x, i), axis=1)
+        print(f'processing vocab index {i} (before) ...')
+        df[f'token_before_{i}'] = df.apply(lambda x: compute_all_window_mean(x, i, before_after='before'), axis=1)
+
+    for i in range(vocab_n):
+        print(f'processing vocab index {i} (after) ...')
+        df[f'token_after_{i}'] = df.apply(lambda x: compute_all_window_mean(x, i, before_after='after'), axis=1)
 
     # 불필요한 컬럼 삭제
     for i in range(window_size):
@@ -192,7 +197,8 @@ def convert_to_mean(df):
             print(f'dividing by max : {i}')
         
         for j in range(vocab_n):
-            df.iloc[i, df.columns.get_loc(f'token_{j}')] = df.iloc[i][f'token_{j}'] / max_value
+            df.iloc[i, df.columns.get_loc(f'token_before_{j}')] = df.iloc[i][f'token_before_{j}'] / max_value
+            df.iloc[i, df.columns.get_loc(f'token_after_{j}')] = df.iloc[i][f'token_after_{j}'] / max_value
 
         if i < 5:
             print(list(df.iloc[i]))
@@ -201,20 +207,28 @@ def convert_to_mean(df):
 # train, valid, test 데이터 반환
 def define_data(train_data):
     train_n = len(train_data)
-    token_cols = [f'token_{i}' for i in range(vocab_n)]
+    token_cols = [f'token_before_{i}' for i in range(vocab_n)] + [f'token_after_{i}' for i in range(vocab_n)]
     out_cols = [f'out_{i}' for i in range(vocab_n)]
 
     train_input = np.array(train_data[token_cols], dtype=np.float32)
     train_output = np.array(train_data[out_cols], dtype=np.float32)
 
     print(train_input)
+    print(np.shape(train_input))
+    
     print(train_output)
+    print(np.shape(train_output))
 
     valid_count = int(0.2 * train_n)
     train_input_train = train_input[:-valid_count]
     train_input_valid = train_input[-valid_count:]
     train_output_train = train_output[:-valid_count]
     train_output_valid = train_output[-valid_count:]
+
+    print('train_input - train shape :', np.shape(train_input_train))
+    print('train_input - valid shape :', np.shape(train_input_valid))
+    print('train_output - train shape :', np.shape(train_output_train))
+    print('train_output - valid shape :', np.shape(train_output_valid))
 
     return (train_input_train, train_input_valid, train_output_train, train_output_valid)
 
@@ -251,16 +265,17 @@ def train_model(df):
 
 # 임베딩 테스트 (모델 output을 출력)
 def test_embedding_model(embedding_model):
-    for i in range(vocab_n):
-        test_arr = np.zeros((vocab_n))
-        test_arr[i] = 1
+    for i in range(5):
+        test_arr = np.random.rand((2 * vocab_n))
         test_arr = np.array([test_arr])
-        print(f'\n{vocab[i]} ->\n{np.array(embedding_model(test_arr))}')
+        print(f'\nrandom array ->\n{np.array(embedding_model(test_arr))}')
 
 
 # 임베딩 모델을 통한 CBOW 방식 학습
 def create_data_for_cbow_like_model():
-    df = pd.read_csv('embedding_dataset.csv', index_col=0)
+
+    # 임시로 최초 10,000 개의 row만 가지고 학습
+    df = pd.read_csv('embedding_dataset.csv', index_col=0)[:10000]
 
     print('train token idx data:')
     print(df)

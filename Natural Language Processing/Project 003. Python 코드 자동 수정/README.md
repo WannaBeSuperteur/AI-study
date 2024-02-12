@@ -10,7 +10,7 @@
   * AI 실행 과정
     * ```python_code.txt``` 파일의 코드를 tokenize한다.
     * window size (전후 token 개수) 를 일정한 값으로 하여 코드의 처음부터 끝까지 탐색하면서, AI의 판단에 따라 코드를 수정한다.
-* 수행 기간: 2024.02.08 ~ 2024.02.10 (3일)
+* 수행 기간: 2024.02.08 ~ 2024.02.14 (7일)
 
 ## 파일 및 코드 설명
 * ```Python_code_data.txt``` (데이터셋을 다운받아야 함) : 학습 데이터
@@ -22,9 +22,9 @@
 * ```embedding_cbow.py``` : CBOW 와 유사한 방식으로 word embedding 하는 **임베딩 모델** 관련 함수 모음 (임베딩 모델 저장 포함)
   * 출력 : ```embedding_dataset.csv``` : 임베딩 데이터셋 (CBOW 방식과 유사하게)
     * **임베딩 모델** 의 학습 데이터를 생성하기 위한 데이터
-  * 출력 : ```embedding_dataset_for_cbow.csv``` : CBOW 와 유사한 방식으로 모델을 학습시키기 위한, **각 vocab index (단어를 나타내는 one-hot vector의 인덱스) 에 대해 전후 window size 이내의 position 별 one-hot 값을 가중평균한, 크기 ```vocab size```인 배열** 을 계산한 후, 해당 배열의 각 원소를 그 최댓값으로 나눈 배열을 나타낸 데이터셋
+  * 출력 : ```embedding_dataset_for_cbow.csv``` : CBOW 와 유사한 방식으로 모델을 학습시키기 위한, **각 vocab index (단어를 나타내는 one-hot vector의 인덱스) 에 대해 전후 window size 이내의 position 별 one-hot 값을 가중평균한, 크기 ```vocab size```인 배열** (before, after 각각, 총 2개) 을 계산한 후, 해당 2개 배열의 각 원소를 그 최댓값으로 나눈 배열을 나타낸 데이터셋
     * **임베딩 모델** 의 학습 데이터로 사용
-    * position에 따른 가중평균 (입력 데이터 차원 = ```vocab size```) 을 이용하고 최종적으로 그 최댓값으로 나눈다는 점은 CBOW와 다르다.
+    * position에 따른 가중평균 (입력 데이터 차원 = 2 * ```vocab size```) 을 이용하고 최종적으로 그 최댓값으로 나눈다는 점은 CBOW와 다르다.
 * ```generate_dataset.py``` : 원본 코드를 입력, 그 사이에 들어갈 것 (없을 수도 있음) 을 출력으로 하는 **메인 모델** 의 학습 데이터 생성
   * **메인 모델** 관련 정보
     * 입력 : 특정 부분 이전 N개 token + 이후 N개 token (특정 부분의 길이는 0 또는 1 token)
