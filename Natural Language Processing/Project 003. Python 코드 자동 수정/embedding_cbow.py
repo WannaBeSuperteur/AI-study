@@ -274,7 +274,11 @@ def run_embedding(idx, emb_model_encoder):
     one_hot_arr[0][idx] = 1
     one_hot_arr[0][idx + vocab_n] = 1
 
-    return emb_model_encoder(one_hot_arr)[0]
+    try:
+        return emb_model_encoder(one_hot_arr)[0]
+    except:
+        one_hot_arr_tf = tf.convert_to_tensor(one_hot_arr, dtype=tf.float32, name='inputs')
+        return emb_model_encoder(one_hot_arr_tf)[0]
 
 
 # 임베딩 모델을 통한 CBOW 방식 학습
