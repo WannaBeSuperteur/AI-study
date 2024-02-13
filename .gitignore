@@ -1,5 +1,7 @@
 Natural Language Processing/Project 001. 영어 문장 감성 분석/*.csv
 Natural Language Processing/Project 002. 이모지 데이터 유사도 검증/train.txt
 Natural Language Processing/Project 002. 이모지 데이터 유사도 검증/*.csv
+Natural Language Processing/Project 003. Python 코드 자동 수정/Python_code_data.txt
+Natural Language Processing/Project 003. Python 코드 자동 수정/*.csv
 *.pyc
 __pycache__/
