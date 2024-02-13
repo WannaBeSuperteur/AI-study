@@ -9,7 +9,7 @@ Transformer, BERT, S-BERT 부터 시작해서, 최종적으로는 Mini Chat-GPT�
     * Project 001. 영어 문장 감성 분석
   * 2차 : 2024.02.07 ~ 02.11
     * Project 002. 이모지 데이터 유사도 검증
-  * 3차 : 2024.02.09 ~ 02.14
+  * 3차 : 2024.02.08 ~ 02.13
     * Project 003. Python 코드 자동 수정
 * 프로젝트 (2024.02.16 ~ 03.10)
   * Mini ChatGPT 만들기 (생성형 AI를 이용) : 2024.02.16 ~ 03.10
@@ -31,5 +31,5 @@ Transformer, BERT, S-BERT 부터 시작해서, 최종적으로는 Mini Chat-GPT�
   * 기본적인 데이터 전처리, Sentence-BERT (S-BERT) 를 통한 문장 임베딩, 신경망 내에서 입력 데이터가 분리 및 합성되는 Tensorflow 모델
 * **Project 002. 이모지 데이터 유사도 검증** (2024.02.07 ~ 2024.02.11, 5일)
   * S-BERT
-* **Project 003. Python 코드 자동 수정** (2024.02.09 ~ 2024.02.14, 6일)
+* **Project 003. Python 코드 자동 수정** (2024.02.08 ~ 2024.02.13, 6일)
   * word embedding model (CBOW와 유사한 방식) 을 통한 토큰 임베딩, 딥러닝 모델이 평균으로 수렴하는 이슈의 원인 및 해결 방안 파악
