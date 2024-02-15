@@ -22,7 +22,7 @@
 * ```embedding_cbow.py``` : CBOW 와 유사한 방식으로 word embedding 하는 **임베딩 모델** 관련 함수 모음 (임베딩 모델 저장 포함)
   * 출력 파일 : ```embedding_dataset.csv``` : 임베딩 데이터셋 (CBOW 방식과 유사하게)
     * **임베딩 모델** 의 학습 데이터를 생성하기 위한 데이터
-  * 출력 파일 : ```embedding_dataset_for_cbow.csv``` : CBOW 와 유사한 방식으로 모델을 학습시키기 위한, 전후 window size 이내의 position 별 one-hot 벡터들 (총 ```2 * window size``` 개) 를 가중평균하여 전체 합산 (아래 그림의 오른쪽 위 부분 참고) 한, 크기 ```vocab size```인 배열** (CBOW의 output position을 기준으로 before, after 각각, 총 2개) 을 계산한 데이터셋
+  * 출력 파일 : ```embedding_dataset_for_cbow.csv``` : CBOW 와 유사한 방식으로 모델을 학습시키기 위한, 전후 window size 이내의 position 별 one-hot 벡터들 (총 ```2 * window size``` 개) 를 **가중평균하여 전체 합산 (아래 그림의 오른쪽 위 부분 참고) 한, 크기 ```vocab size```인 배열** (CBOW의 output position을 기준으로 before, after 각각, 총 2개) 을 계산한 데이터셋
     * **임베딩 모델** 의 학습 데이터로 사용
     * **임베딩 모델** 의 입력 데이터는 후술할 가중평균이며, 출력 데이터는 CBOW의 output position에 해당하는 token의 one-hot 배열 (단, 해당 배열에서 평균값이 가장 큰, 즉 가장 많이 등장하는 토큰에 해당하는 1개의 열의 값을 이용)
     * position에 따른 가중평균 (입력 데이터 차원 = 2 * ```vocab size```) 을 이용한다는 점은 CBOW와 다르다.
