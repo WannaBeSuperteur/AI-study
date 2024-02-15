@@ -1,5 +1,18 @@
 # Image Processing Project 001. 사과와 토마토 분류
-* Dataset: [Apple Tomato Classification](https://www.kaggle.com/code/rishavd/apple-tomato-classification)
+* Dataset: [Apple Tomato Classification](https://www.kaggle.com/datasets/samuelcortinhas/apples-or-tomatoes-image-classification)
+  * 해당 위치에서 다운받은 ```archive.zip``` 파일의 압축을 풀어서 다음과 같은 파일 데이터 구조를 만든다.
+
+```
+Project 001. 사과와 토마토 분류
+- archive
+  - test
+    - apples
+    - tomatoes
+  - train
+    - apples
+    - tomatoes
+```
+
 * 수행 기간: 2024.02.14 ~ 2024.02.18 (5일)
 
 ## 파일 및 코드 설명
