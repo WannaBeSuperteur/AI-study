@@ -1,6 +1,6 @@
 # Variational Auto Encoder (VAE)
 
-2024.02.11 작성중
+2024.02.15 작성중
 
 ## Variational Auto Encoder (VAE) 란?
 **Variational Auto Encoder (VAE)** 는 기존의 Auto-Encoder와는 다르지만 그 구조가 비슷한 형태의 비지도학습 알고리즘이다.
@@ -15,7 +15,12 @@
 
 ## Variational Auto Encoder의 작동 원리
 
+![VAE의 구조](./images/VAE_0.PNG)
+
 ## Variational Auto Encoder의 활용 사례
+* 이미지 생성 인공지능 (생성형 AI)
+* 이상 탐지
+* 이미지 복원 기법을 적용한 사실적인 이미지 생성
 
 ## AE와 VAE의 비교
 AE (AutoEncoder) 와 VAE의 특징의 공통점과 차이점은 다음과 같다.
