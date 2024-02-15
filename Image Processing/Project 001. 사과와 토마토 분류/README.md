@@ -51,7 +51,7 @@ python main.py
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
 |IP-P1-master|||240214|240218|마스터 브랜치|
-|IP-P1-1||```feat```|||이미지 데이터 augmentation|
+|IP-P1-1|```ing```|```feat```|240215||이미지 데이터 augmentation|
 |IP-P1-2||```feat```|||모델 학습|
 |IP-P1-3||```feat```|||모델 테스트 및 성능지표 결과 출력|
 |IP-P1-4||```feat```|||전 과정 통합 실행 코드 ```main.py``` 작성|
