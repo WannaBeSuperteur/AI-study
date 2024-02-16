@@ -1,6 +1,6 @@
 # Variational Auto Encoder (VAE)
 
-2024.02.15 작성중
+2024.02.16 작성중
 
 ## Variational Auto Encoder (VAE) 란?
 **Variational Auto Encoder (VAE)** 는 기존의 Auto-Encoder와는 다르지만 그 구조가 비슷한 형태의 비지도학습 알고리즘이다.
@@ -16,6 +16,17 @@
 ## Variational Auto Encoder의 작동 원리
 
 ![VAE의 구조](./images/VAE_0.PNG)
+
+VAE의 기본 동작 원리는 다음과 같다.
+* 입력 이미지에 대해서 잘 설명하는 feature를 추출하고, 그 feature를 latent vector z에 저장한다.
+  * 이때 각 feature의 분포는 Gaussian Distribution 이고, latent vector z는 각 feature의 평균 및 분산을 의미한다.
+  * 예를 들어, 사람의 얼굴을 그리려면 눈, 코, 입, 머리카락 등의 요소가 필요한데, **이들의 특징 (길이 등) 에 대한 평균 및 분산을 latene vector z에 저장** 한다.
+
+Decoder 부분에서는 Latent vector z를 이용하여 다음과 같이 한다.
+* z에 저장된 확률분포상에서 각 feature에 대한 확률 값이 높은 부분을 추출한다.
+* 해당 부분을 이용하여 새로운 이미지를 생성한다.
+
+즉, VAE의 목표는 **입력 데이터의 분포를 잘 나타내고 근사하는** 모델을 만드는 것이다.
 
 ## Variational Auto Encoder의 활용 사례
 * 이미지 생성 인공지능 (생성형 AI)
