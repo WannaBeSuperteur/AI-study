@@ -11,8 +11,8 @@ Transformer, BERT, S-BERT 부터 시작해서, 최종적으로는 Mini Chat-GPT�
     * Project 002. 이모지 데이터 유사도 검증
   * 3차 : 2024.02.08 ~ 02.13
     * Project 003. Python 코드 자동 수정
-* 프로젝트 (2024.02.16 ~ 03.10)
-  * Mini ChatGPT 만들기 (생성형 AI를 이용) : 2024.02.16 ~ 03.10
+* 프로젝트 (2024.02.22 ~ 03.10)
+  * Mini ChatGPT 만들기 (생성형 AI를 이용) : 2024.02.22 ~ 03.10
   * 문장에 따라 적절히 행동하는 AI 만들기 : 2024.03.11 ~ 04.07
 
 **Project Branch Naming Rule :**

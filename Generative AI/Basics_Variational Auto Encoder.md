@@ -1,6 +1,6 @@
 # Variational Auto Encoder (VAE)
 
-2024.02.16 작성중
+2024.02.17 작성중
 
 ## Variational Auto Encoder (VAE) 란?
 **Variational Auto Encoder (VAE)** 는 기존의 Auto-Encoder와는 다르지만 그 구조가 비슷한 형태의 비지도학습 알고리즘이다.
@@ -27,6 +27,11 @@ Decoder 부분에서는 Latent vector z를 이용하여 다음과 같이 한다.
 * 해당 부분을 이용하여 새로운 이미지를 생성한다.
 
 즉, VAE의 목표는 **입력 데이터의 분포를 잘 나타내고 근사하는** 모델을 만드는 것이다.
+
+VAE의 학습을 위한 입력 데이터 및 출력 데이터는 다음과 같다. 즉 입력 데이터에 대한 label이 없으므로 **비지도학습** 알고리즘이다.
+* 입력 데이터 : 이미지
+* 출력 데이터 : 입력 데이터와 같은 이미지
+* reconstruction loss : 입력 데이터와 출력 데이터의 차이를 나타내는 loss 값으로, **VAE 의 loss 값** 에 해당한다.
 
 ## Variational Auto Encoder의 활용 사례
 * 이미지 생성 인공지능 (생성형 AI)
