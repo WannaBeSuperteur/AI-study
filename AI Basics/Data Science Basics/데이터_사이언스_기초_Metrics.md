@@ -21,9 +21,9 @@
 
 ## Accuracy, Recall, Precision
 * Accuracy (정확도) : (TP + TN) / (TP + TN + FP + FN)
-* Recall (재현율) : TP / (TP + **FN**)
+* **Recall (재현율)** : TP / (TP + **FN**)
   * **실제 값이 True**인 것들 중 모델이 True로 분류한 것의 비율
-* Precision (정밀도) : TP / (TP + **FP**)
+* **Precision (정밀도)** : TP / (TP + **FP**)
   * **모델이 True로 분류**한 것들 중 실제 값이 True인 것의 비율
 
 Recall은 **False Negative**, Precision은 **False Positive**인 것을 고려한 것이다.
@@ -34,6 +34,23 @@ Recall은 **False Negative**, Precision은 **False Positive**인 것을 고려�
 * F1 Score : 2 * Precision * Recall / (Precision + Recall)
 
 즉, Precision과 Recall의 조화 평균값이다.
+
+## IoU
+주로 Image Segmentation과 같은 task의 정확도를 구하기 위해 사용되는 값으로, 예측 영역과 실제 영역의 **(교집합의 크기) / (합집합의 크기)**, 즉 **Intersection over Union** 을 의미한다.
+
+수식으로 나타내면 **IoU = TP / (TP + FP + FN)** 이다.
+
+## DICE Score
+**DICE Score (또는 DICE Coefficient)** 는 **(2 x 예측 영역과 실제 영역의 교집합의 크기) / (예측 영역의 크기 + 실제 영역의 크기)** 로 나타낼 수 있다.
+
+즉, DICE Score는 다음과 같은 식으로 나타낼 수 있다.
+* (2 * TP) / (2 * TP + FP + FN) = (2 * TP) / ((TP + FP) + (TP + FN))
+
+딥러닝에서 loss를 감소하도록 학습시키기 위해서 DICE Score를 이용하여 Loss를 정의하기도 한다. DICE Score를 이용한 Loss function은 다음과 같다.
+* (DICE Loss) = 1 - (DICE Score)
+
+## 특이도 (Sensitivity)
+특이도 (Sensitivity) 는 **TN / (FP + TN)** 의 값으로, 실제로 False인 데이터 중 머신러닝 모델이 False로 예측하는 비율을 의미한다.
 
 ## Type 1 Error, Type 2 Error
 * Type 1 Error (1종 오류) : False Negative에 의한 오류
