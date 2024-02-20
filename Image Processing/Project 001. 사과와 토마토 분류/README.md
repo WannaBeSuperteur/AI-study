@@ -25,14 +25,14 @@ Project 001. 사과와 토마토 분류
     * ```tomatoes``` 클래스에 대해서도 ```apples```를 ```tomatoes```로 바꿔서 동일하게 생각하면 됨
 * ```train.py``` : 모델 학습
 * ```test.py``` : 모델 테스트 및 성능지표 결과 확인
-* ```main.py``` : 데이터 전처리, 모델 학습, 테스트 등 전 과정을 한번에 진행
+* ```main.py``` : 데이터 augmentation, 데이터 전처리, 모델 학습, 테스트 등 전 과정을 한번에 진행
 
 ## 데이터 전처리 과정
 * 이미지 데이터가 수백 장 이하로 적으므로, augmentation을 먼저 실시한다.
 
 ## 실제 학습 및 테스트 데이터
 * 학습 데이터
-  * ```augment_data.py``` 실행 후, ```images/train/``` 폴더 내부의 데이터
+  * ```main.py``` 또는 ```augment_data.py``` 실행 후, ```images/train/``` 폴더 내부의 데이터
 * 테스트 데이터
   * ```archive/test/apples```, ```archive/test/tomatoes``` 폴더 내부의 데이터 (원본 데이터)
 
