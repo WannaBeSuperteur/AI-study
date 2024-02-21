@@ -122,17 +122,25 @@ def apply_augmentation(images, dir_name, prefix):
 
 
 # 모든 이미지들에 대해 augmentation 적용하는 함수
-def apply_augmentation_all():
-    shutil.rmtree('images')
+def apply_augmentation_all(train_tomatoes, train_apples):
+    try:
+        shutil.rmtree('images')
+    except:
+        pass
+    
     apply_augmentation(images=train_tomatoes, dir_name='train', prefix='tomatoes')
     apply_augmentation(images=train_apples, dir_name='train', prefix='apples')
 
 
-if __name__ == '__main__':
+def run_augmentation():
     train_tomatoes = load_imgs(is_train=True, img_class='tomatoes')
     train_apples = load_imgs(is_train=True, img_class='apples')
 
     print(train_tomatoes)
     print(np.shape(train_tomatoes))
 
-    apply_augmentation_all()
+    apply_augmentation_all(train_tomatoes, train_apples)
+
+
+if __name__ == '__main__':
+    run_augmentation()

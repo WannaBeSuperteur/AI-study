@@ -82,11 +82,11 @@ def print_performance_scores(test_output, ground_truth):
 if __name__ == '__main__':
 
     # [apple, apple, apple, apple, apple, tomato, tomato, tomato]
-    test_output = [[1, 0], [1, 0], [0.9, 0.1], [0.75, 0.25], [0.9, 0.1],
-                   [0.3, 0.7], [0.45, 0.55], [0.2, 0.8]]
+    test_prediction = [[1, 0], [1, 0], [0.9, 0.1], [0.75, 0.25], [0.9, 0.1],
+                       [0.3, 0.7], [0.45, 0.55], [0.2, 0.8]]
 
     # [apple, apple, tomato, tomato, apple, tomato, apple, tomato]
     ground_truth = [[1, 0], [1, 0], [0, 1], [0, 1], [1, 0],
                     [0, 1], [1, 0], [0, 1]]
 
-    print_performance_scores(test_output, ground_truth)
+    print_performance_scores(test_prediction, ground_truth)
