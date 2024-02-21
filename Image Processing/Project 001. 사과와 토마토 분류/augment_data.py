@@ -96,6 +96,7 @@ def apply_augmentation(images, dir_name, prefix):
                 for vc in [-20, 0, 60]: # value
                     if hc != 0 or sc != 5 or vc != 0:
                         hsv_changed_img = change_hsv(image, hc, sc, vc)
+
                         make_dir_and_imwrite(
                             f'images/{dir_name}/{prefix}_{idx}_hsv_{current_hsv_option}.png',
                             hsv_changed_img
@@ -111,6 +112,8 @@ def apply_augmentation(images, dir_name, prefix):
                     for right in [0, CROP_SIZE]:
                         if top + bottom + left + right > 0:
                             cropped_img = crop(image, top, bottom, left, right)
+                            cropped_img = cv2.resize(cropped_img, dsize=(RESIZE_DEST, RESIZE_DEST))
+
                             make_dir_and_imwrite(
                                 f'images/{dir_name}/{prefix}_{idx}_crop_{current_crop_option}.png',
                                 cropped_img
