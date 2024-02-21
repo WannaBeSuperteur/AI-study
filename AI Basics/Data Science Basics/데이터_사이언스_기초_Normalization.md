@@ -24,7 +24,7 @@
 
 ### Min-max Normalization
 **Min-max Normalization** 은 다음 수식을 이용하여 $X$ 를 $Y$ 로 변환시키는 방법으로 데이터를 정규화하는 것을 말한다.
-* $Y = \frac{X - MIN}{MAX - MIN}$
+* $\displaystyle Y = \frac{X - MIN}{MAX - MIN}$
 * 여기서 $MIN$ 은 데이터의 최솟값, $MAX$ 는 데이터의 최댓값을 말한다.
 * 쉽게 생각하면, 데이터 값을 **데이터가 최솟값과 최댓값 사이 어느 지점에 위치해 있는지의 값** 으로 변환하는 것이라고 할 수 있다.
 
@@ -46,7 +46,7 @@ Min-max Normalization의 특징 및 장단점은 다음과 같다.
 
 ### Standarization (Z-score normalization)
 **Standarization (표준화)** 는 데이터를 평균이 0, 표준편차가 1인 정규분포로 정규화하는 방법으로, 마찬가지로 식을 쓰면 다음과 같다.
-* $Y = \frac{X - MEAN}{STD}$
+* $\displaystyle Y = \frac{X - MEAN}{STD}$
 * 여기서 $MEAN$ 은 데이터의 평균값, $STD$ 는 표준편차를 나타낸다.
 
 표준화의 특징 및 장단점은 다음과 같다.
