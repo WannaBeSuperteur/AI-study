@@ -1,6 +1,7 @@
 from augment_data import run_augmentation
-import test
-import train
+from test import print_performance_scores
+from train import train_model
+
 import cv2
 import os
 import numpy as np
@@ -58,29 +59,29 @@ def load_test_data():
     test_apples_name = os.listdir('archive/test/apples')
     test_tomatoes_name = os.listdir('archive/test/tomatoes')
     test_input = []
-    test_output = []
+    ground_truth = []
 
     for name in test_apples_name:
         apple_img = cv2.imread('archive/test/apples/' + name, cv2.IMREAD_UNCHANGED)
         apple_img = cv2.resize(apple_img, dsize=(RESIZE_DEST, RESIZE_DEST))
         
         test_input.append(np.array(apple_img) / 255.0)
-        test_output.append([1, 0])
+        ground_truth.append([1, 0])
 
     for name in test_tomatoes_name:
         tomato_img = cv2.imread('archive/test/tomatoes/' + name, cv2.IMREAD_UNCHANGED)
         tomato_img = cv2.resize(tomato_img, dsize=(RESIZE_DEST, RESIZE_DEST))
         
         test_input.append(np.array(tomato_img) / 255.0)
-        test_output.append([0, 1])
+        ground_truth.append([0, 1])
 
     test_input_return = np.array(test_input)
-    test_output_return = np.array(test_output)
+    ground_truth_return = np.array(ground_truth)
 
     print(f'shape of test input : {np.shape(test_input_return)}')
-    print(f'shape of test output : {np.shape(test_output_return)}')
+    print(f'shape of test output / ground truth : {np.shape(ground_truth_return)}')
     
-    return test_input_return, test_output_return
+    return test_input_return, ground_truth_return
 
 
 if __name__ == '__main__':
@@ -90,6 +91,13 @@ if __name__ == '__main__':
 
     # 학습, validation 및 테스트 데이터 로딩
     train_input, train_output, valid_input, valid_output = load_train_data()
-    test_input, test_output = load_test_data()
+    test_input, ground_truth = load_test_data()
 
-    
+    # 모델 학습
+    cnn_model = train_model(train_input, valid_input, train_output, valid_output)
+
+    # 모델 테스트
+    test_output = model(test_input)
+
+    # 성능 측정
+    print_performance_scores(test_output, ground_truth)
