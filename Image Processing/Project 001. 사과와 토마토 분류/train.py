@@ -51,7 +51,7 @@ class CNN_Model(tf.keras.Model):
         outputs_00 = self.dropout(outputs_00)
         outputs_01 = self.conv_01(outputs_00)
         
-        outputs_0 = tf.keras.layers.Add()([inputs, outputs_01]) # skip connection
+        outputs_0 = tf.keras.layers.Add()([inputs, outputs_01], axis=2) # skip connection
         outputs_0 = self.pooling(outputs_0)
 
         # conv part 1 (64 -> 32)
@@ -59,7 +59,7 @@ class CNN_Model(tf.keras.Model):
         outputs_10 = self.dropout(outputs_10)
         outputs_11 = self.conv_11(outputs_10)
         
-        outputs_1 = tf.keras.layers.Add()([outputs_0, outputs_11]) # skip connection
+        outputs_1 = tf.keras.layers.Add()([outputs_0, outputs_11], axis=2) # skip connection
         outputs_1 = self.pooling(outputs_1)
 
         # conv part 2 (32 -> 16)
@@ -67,7 +67,7 @@ class CNN_Model(tf.keras.Model):
         outputs_20 = self.dropout(outputs_20)
         outputs_21 = self.conv_21(outputs_20)
         
-        outputs_2 = tf.keras.layers.Add()([outputs_1, outputs_21]) # skip connection
+        outputs_2 = tf.keras.layers.Add()([outputs_1, outputs_21], axis=2) # skip connection
         outputs_2 = self.pooling(outputs_2)
 
         # conv part 3 (16 -> 8)
@@ -75,7 +75,7 @@ class CNN_Model(tf.keras.Model):
         outputs_30 = self.dropout(outputs_30)
         outputs_31 = self.conv_31(outputs_30)
         
-        outputs_3 = tf.keras.layers.Add()([outputs_2, outputs_31]) # skip connection
+        outputs_3 = tf.keras.layers.Add()([outputs_2, outputs_31], axis=2) # skip connection
         outputs_3 = self.pooling(outputs_3)
 
         # conv part 4 (8 -> 8)

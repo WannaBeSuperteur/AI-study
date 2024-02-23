@@ -13,7 +13,7 @@ Project 001. 사과와 토마토 분류
     - tomatoes (130)
 ```
 
-* 수행 기간: 2024.02.14 ~ 2024.02.23 (10일)
+* 수행 기간: 2024.02.14 ~ 2024.02.24 (11일)
 
 ## 파일 및 코드 설명
 * ```augment_data.py``` : 이미지 데이터 augmentation 코드
@@ -71,7 +71,7 @@ python main.py
 ## branch info
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
-|IP-P1-master|||240214|240223|마스터 브랜치|
+|IP-P1-master|||240214|240224|마스터 브랜치|
 |IP-P1-1|```done```|```feat```|240215|240221|이미지 데이터 augmentation|
 |IP-P1-2|```done```|```feat```|240221|240221|모델 학습|
 |IP-P1-3|```done```|```feat```|240221|240221|모델 테스트 및 성능지표 결과 출력|
