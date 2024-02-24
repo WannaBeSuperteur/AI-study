@@ -21,20 +21,20 @@ class CNN_Model(tf.keras.Model):
         self.conv_00 = tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same', input_shape=[128, 128, 3], name='conv_00')
         self.conv_01 = tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same', name='conv_01')
 
-        self.conv_10 = tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same', name='conv_10')
-        self.conv_11 = tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same', name='conv_11')
+        self.conv_10 = tf.keras.layers.Conv2D(48, (3, 3), activation='relu', padding='same', name='conv_10')
+        self.conv_11 = tf.keras.layers.Conv2D(48, (3, 3), activation='relu', padding='same', name='conv_11')
 
-        self.conv_20 = tf.keras.layers.Conv2D(128, (3, 3), activation='relu', padding='same', name='conv_20')
-        self.conv_21 = tf.keras.layers.Conv2D(128, (3, 3), activation='relu', padding='same', name='conv_21')
+        self.conv_20 = tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same', name='conv_20')
+        self.conv_21 = tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same', name='conv_21')
 
-        self.conv_30 = tf.keras.layers.Conv2D(256, (3, 3), activation='relu', padding='same', name='conv_30')
-        self.conv_31 = tf.keras.layers.Conv2D(256, (3, 3), activation='relu', padding='same', name='conv_31')
+        self.conv_30 = tf.keras.layers.Conv2D(96, (3, 3), activation='relu', padding='same', name='conv_30')
+        self.conv_31 = tf.keras.layers.Conv2D(96, (3, 3), activation='relu', padding='same', name='conv_31')
 
-        self.conv_40 = tf.keras.layers.Conv2D(256, (3, 3), activation='relu', padding='same', name='conv_40')
-        self.conv_41 = tf.keras.layers.Conv2D(256, (3, 3), activation='relu', padding='same', name='conv_41')
+        self.conv_40 = tf.keras.layers.Conv2D(128, (3, 3), activation='relu', padding='same', name='conv_40')
+        self.conv_41 = tf.keras.layers.Conv2D(128, (3, 3), activation='relu', padding='same', name='conv_41')
         
         # fully connected part
-        self.dense_0 = tf.keras.layers.Dense(1024, activation=tf.keras.layers.LeakyReLU(alpha=0.025),
+        self.dense_0 = tf.keras.layers.Dense(256, activation=tf.keras.layers.LeakyReLU(alpha=0.025),
                                              kernel_regularizer=L2, name='dense_0')
 
         self.dense_1 = tf.keras.layers.Dense(64, activation=tf.keras.layers.LeakyReLU(alpha=0.025),
@@ -52,10 +52,6 @@ class CNN_Model(tf.keras.Model):
         outputs_01 = self.conv_01(outputs_00)
 
         # Concatenate (?, A, B, 32) with (?, A, B, 3)
-        print(inputs)
-        print(outputs_01)
-        print(np.shape(inputs))
-        print(np.shape(outputs_01))
         outputs_0 = tf.keras.layers.Concatenate()([inputs, outputs_01])
         outputs_0 = self.pooling(outputs_0)
 
@@ -119,7 +115,7 @@ def train_model(train_input, valid_input, train_output, valid_output):
     model.fit(
         train_input, train_output,
         callbacks=[early_stopping, lr_reduced],
-        epochs=100,
+        epochs=5, # each epoch takes around 7 minutes
         validation_data=(valid_input, valid_output)
     )
 

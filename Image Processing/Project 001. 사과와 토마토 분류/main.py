@@ -97,7 +97,13 @@ if __name__ == '__main__':
     cnn_model = train_model(train_input, valid_input, train_output, valid_output)
 
     # 모델 테스트
+    print('\ntest input')
+    print(test_input)
+    
     test_output = model(test_input)
 
+    print('\ntest output')
+    print(test_input)
+    
     # 성능 측정
     print_performance_scores(test_output, ground_truth)
