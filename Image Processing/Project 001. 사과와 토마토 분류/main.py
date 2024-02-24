@@ -100,7 +100,7 @@ if __name__ == '__main__':
     print('\ntest input')
     print(test_input)
     
-    test_output = model(test_input)
+    test_output = cnn_model(test_input)
 
     print('\ntest output')
     print(test_input)
