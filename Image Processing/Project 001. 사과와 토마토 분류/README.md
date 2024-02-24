@@ -60,13 +60,13 @@ python main.py
 
 |이미지 class|성능지표|결과|
 |---|---|---|
-|공통|accuracy||
-|사과|F1 score||
-|사과|precision||
-|사과|recall||
-|토마토|F1 score||
-|토마토|precision||
-|토마토|recall||
+|공통|accuracy|68.04%|
+|사과|F1 score|65.93%|
+|사과|precision|81.08%|
+|사과|recall|55.56%|
+|토마토|F1 score|69.90%|
+|토마토|precision|60.00%|
+|토마토|recall|83.72%|
 
 ## branch info
 |branch|status|type|start|end|description|
@@ -75,4 +75,4 @@ python main.py
 |IP-P1-1|```done```|```feat```|240215|240221|이미지 데이터 augmentation|
 |IP-P1-2|```done```|```feat```|240221|240221|모델 학습|
 |IP-P1-3|```done```|```feat```|240221|240221|모델 테스트 및 성능지표 결과 출력|
-|IP-P1-4|```ing```|```feat```|240221||전 과정 통합 실행 코드 ```main.py``` 작성|
+|IP-P1-4|```done```|```feat```|240221|240224|전 과정 통합 실행 코드 ```main.py``` 작성|
