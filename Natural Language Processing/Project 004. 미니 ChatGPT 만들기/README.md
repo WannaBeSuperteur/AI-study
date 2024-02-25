@@ -15,8 +15,9 @@
 
 ## 데이터 전처리 및 생성 과정
 * tokenize 방법
-  * 공백 단위로 tokenize (추후 변경 가능)
+  * 문장 부호 및 단어 간 공백 단위로 tokenize (추후 변경 가능)
   * 말하는 사람이 한 사람에서 다른 사람으로 전환되는 부분은 특별한 token을 생성
+    * 예: ```Person 1: Natural Language Processing gives machine a life. Do you agree?, Person 2: Yes, ChatGPT is the best example!``` 에 대해, token 구성은 ```[..., "life", ".", "Do", "you", "agree", "?", "<Person_Change>", "Yes", ",", "ChatGPT", "is", ...]``` 가 된다. 이때 ```<Person_Change>``` 라는 특별한 token이 삽입되었다.
 * 데이터 생성 방법
   * 학습 데이터 전체를 처음부터 읽어 나가면서, **전체 학습 데이터의 첫 번째 token부터 ~ 마지막 token을 기준으로 16개 token 만큼 이전의 token까지** 의 각 token을 시작점으로,
     * 연속된 17개의 token을 추출
@@ -54,6 +55,7 @@ python main.py
 ## 성능지표 결과
 * 성능 측정지표 : 정성 평가로 진행
   * ```test.py``` 파일 실행 시, 입력 문장을 받은 후, **메인 모델** 이 출력하는 답변을 확인할 수 있음
+  * 이때, **메인 모델** 은 다음 token 예측을 15회 정도 또는 마침표가 올 때까지 반복하여, 예측한 token을 모두 연결하여 완전한 문장을 출력하게 한다.
 
 ## branch info
 |branch|status|type|start|end|description|
