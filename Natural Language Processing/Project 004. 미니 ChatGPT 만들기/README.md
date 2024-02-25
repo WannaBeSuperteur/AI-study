@@ -25,13 +25,13 @@
   * 위와 같은 방법으로 구성한 데이터셋을 **토큰 예측 학습 데이터** 라 하자. 이 데이터셋에서, 첫 90%는 train data, 마지막 10%는 validation data
 
 ## 머신러닝 모델 설명
-* 각 token에 해당하는 word 를 저장하고 one-hot encoding 할 수 있는 dictionary 필요
+* 각 token에 해당하는 word 를 저장하고 one-hot encoding 할 수 있는 **dictionary (=vocab)** 필요
 * **메인 모델** (실질적으로 ChatGPT에서 답변을 출력하는 역할을 하는 NLP 모델)
   * 입력 : **토큰 예측 학습 데이터** 에서, 입력 데이터에 해당하는 16개의 token + latent vector
     * latent vector는 입력 데이터에 해당하는 16개의 token을 **latent vector 모델** 에 넣었을 때 생성되는 latent vector 임.
   * 출력 : **토큰 예측 학습 데이터** 에서, 출력 데이터에 해당하는 1개의 token
   * 입력 데이터에 해당하는 token 들을 **dictionary 를 이용하여 one-hot encoding -> embedding -> concatenate -> Neural Network -> output** 으로 진행하여 출력
-  * output 은 dictionary의 크기만큼의 크기를 갖는 배열로, 출력값으로 가장 적절한 1개의 token을 예측
+  * output 은 dictionary (vocab) 의 크기만큼의 크기를 갖는 배열로, 출력값으로 가장 적절한 1개의 token을 예측
 * **latent vector 모델** (Auto-Encoder 구조)
   * 입력 : **토큰 예측 학습 데이터** 에서, 입력 데이터에 해당하는 16개의 token
   * 출력 : 입력과 동일
@@ -39,6 +39,11 @@
   * 학습 목적 : 입력 데이터를 나타내는 latent vector 생성
     * 해당 latent vector는 메인 모델의 입력 데이터로 사용
     * 해당 latent vector에 랜덤한 noise를 추가하거나 조작하여 **언어를 생성하는 모델** 구현이 목표
+    * 가장 적절한 token을 예측할 때, **메인 모델** 의 출력 배열에서 가장 큰 값에 해당하는 index의 단어 1개만을 hard하게 출력하는 대신, 그 값이 일정 값 이상인 모든 index에 대해, 그 값의 크기에 비례하는 확률로 해당 index들에 해당하는 단어를 확률적으로 출력하게 하면 어떨까?
+      * 예: dictionary (vocab) 의 size가 5라고 하자. 이때, 어떤 입력에 대한 **메인 모델** 의 출력 배열이 ```[0.03, 0.6, 0.2, 0.1, 0.07]``` 일 때, ```0.6```의 index 해당하는 단어만 출력하는 대신, ```0.1``` 이상인 모든 index (```0.6```, ```0.2```, ```0.1```) 에 대해 그 값에 비례해서 확률적으로 단어를 출력한다. 예를 들어 ```0.6```의 index에 해당하는 단어는 ```0.6 / (0.6 + 0.2 + 0.1) = 66.7%``` 의 확률로, ```0.2```의 index에 해당하는 단어는 ```0.2 / (0.6 + 0.2 + 0.1) = 22.2%``` 의 확률로 출력한다.
+      * latent vector를 사용하지 않아도 되는데, 이것이 장단점이 있다.
+        * 장점 : 모델을 **메인 모델** 만 사용해도 되기 때문에, 전체적인 프로젝트 구조가 간단해진다.
+        * 단점 : latent vector를 조작하여 **특정한 어투 등을 반영하여** 문장을 생성하도록 할 수 없다.
 * 학습 순서는 **latent vector 모델 -> 메인 모델**
 
 ## 실행 순서
