@@ -2,7 +2,10 @@
 1. [True Positive, True Negative, False Positive, False Negative](#True-Positive,-True-Negative,-False-Positive,-False-Negative)
 2. [Accuracy, Recall, Precision](#Accuracy,-Recall,-Precision)
 3. [F1 Score](#F1-Score)
-4. [Type 1 Error, Type 2 Error](#Type-1-Error,-Type-2-Error)
+4. [IoU](#IoU)
+5. [DICE Score](#DICE-Score)
+6. [특이도 (Sensitivity)](#특이도-(Sensitivity))
+7. [Type 1 Error, Type 2 Error](#Type-1-Error,-Type-2-Error)
 
 ## True Positive, True Negative, False Positive, False Negative
 * True Positive (TP) : 모델의 예측이 **참**, 실제 값이 **참** 인 것
