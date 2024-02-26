@@ -8,11 +8,31 @@ sbert_model = SentenceTransformer('paraphrase-MiniLM-L3-v2')
 sbert_embeddings = {}
 
 import tensorflow as tf
+import tensorflow.keras.backend as K
+
 from tensorflow.keras import layers, optimizers
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from tensorflow.keras.utils import get_custom_objects
+
+SBERT_EMBED_SIZE_TO_USE = 128 # S-BERT embedding 값 384개 중 128개만 이용
+DEST_EMBED_SIZE = 24
+
+
+# 사용자 정의 activation function = 1.25 * tanh(x) (기존 tanh는 미분값 평균 1 미만으로 Vanishing Gradient Problem 존재) + Zero-centered
+class Tanh_mul(tf.keras.layers.Activation):
+    def __init__(self, activation, **kwargs):
+        super(Tanh_mul, self).__init__(activation, **kwargs)
+        self.__name__ = 'Tanh_mul'
+        
+def tanh_mul(x):
+    return 1.25 * K.tanh(x)
+
+get_custom_objects().update({'tanh_mul': Tanh_mul(tanh_mul)})
+
 
 
 # 본 프로젝트에서 개발한 임베딩 모델
+# tf.keras.layers.LeakyReLU(alpha=0.25) or tanh?
 class EmbeddingModel(tf.keras.Model):
 
     def __init__(self):
@@ -21,13 +41,15 @@ class EmbeddingModel(tf.keras.Model):
         L2 = tf.keras.regularizers.l2(0.001)
 
         self.encoder = tf.keras.Sequential([
-            layers.Dense(units=256, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2),
-            layers.Dense(units=16, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2)
+            layers.Dense(units=512, activation='tanh_mul', kernel_regularizer=L2),
+            layers.Dense(units=64, activation='tanh_mul', kernel_regularizer=L2),
+            layers.Dense(units=DEST_EMBED_SIZE, activation='tanh_mul', kernel_regularizer=L2)
         ])
 
         self.decoder = tf.keras.Sequential([
-            layers.Dense(units=256, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2),
-            layers.Dense(units=384, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2)
+            layers.Dense(units=64, activation='tanh_mul', kernel_regularizer=L2),
+            layers.Dense(units=512, activation='tanh_mul', kernel_regularizer=L2),
+            layers.Dense(units=SBERT_EMBED_SIZE_TO_USE, activation='tanh_mul', kernel_regularizer=L2)
         ])
 
     def call(self, inputs, training):
@@ -36,16 +58,16 @@ class EmbeddingModel(tf.keras.Model):
         return outputs
 
 
-# S-BERT 로 임베딩
+# S-BERT 로 임베딩 (임베딩된 벡터의 384개의 값 중 처음 SBERT_EMBED_SIZE_TO_USE 개만 반환)
 def embed_text_sbert(text):
     if text not in sbert_embeddings:
-        sbert_embeddings[text] = sbert_model.encode(text)
+        sbert_embeddings[text] = sbert_model.encode(text)[:SBERT_EMBED_SIZE_TO_USE]
     return sbert_embeddings[text]
         
 
 # train_data.csv 파일의 데이터를 S-BERT 임베딩으로 변환해서 반환
-# 입력 : (2번째 단어의 S-BERT embedding) * A
-# 출력 : (1번째, 3번째 단어의 S-BERT embedding vector 의 평균) * B
+# 입력 : (2번째 단어의 S-BERT embedding vector) * A + (small random noise)
+# 출력 : (입력과 동일한 2번째 단어의 S-BERT embedding vector) * A
 def get_train_data_as_embeddings(verbose=False):
     token_ids = get_token_ids()
     vocab_size = len(token_ids)
@@ -66,9 +88,8 @@ def get_train_data_as_embeddings(verbose=False):
     output_data = []
     train_data_iter_cnt = 0
 
-    # embedding을 "표준정규분포에 가까운" input, output data 로 변환하기 위해 곱하는 값 A, B
-    A = 2.5
-    B = 3.5
+    # embedding을 "표준정규분포에 가까운" input, output data 로 변환하기 위해 곱하는 값
+    A = 1.2
 
     for _, row in train_data.iterrows():
         if train_data_iter_cnt % 1500 == 0:
@@ -76,11 +97,11 @@ def get_train_data_as_embeddings(verbose=False):
         
         tokens = row['data'].split(' ')
         second_token_input = embed_text_sbert(tokens[1])
-        first_token_output = embed_text_sbert(tokens[0])
-        third_token_output = embed_text_sbert(tokens[2])
-        
-        input_data.append(second_token_input * A)
-        output_data.append((first_token_output + third_token_output) / 2.0 * B)
+        second_token_output = embed_text_sbert(tokens[1])
+
+        random_noise = 0.05 * np.random.randn(SBERT_EMBED_SIZE_TO_USE)
+        input_data.append(second_token_input * A + random_noise)
+        output_data.append(second_token_input * A)
         
         train_data_iter_cnt += 1
 
@@ -143,7 +164,7 @@ def test_embedding_model(text):
     
     sbert_embedding = sbert_embeddings[text]
     model_embedding = embedding_encoder(np.array([sbert_embedding]))
-    print(f'{text} -> embedding:\n{np.array(model_embedding)}')
+    print(f'\n{text} -> embedding:\n{np.array(model_embedding)}')
         
 
 if __name__ == '__main__':
@@ -152,7 +173,7 @@ if __name__ == '__main__':
     train_model(train_input, train_output, valid_input, valid_output)
 
     # 본 프로젝트에서 개발한 임베딩 모델 테스트
-    test_tokens = 'you have to run .'
+    test_tokens = 'you have to run . good great best awesome bad worse worst'
               
     for token in test_tokens.split(' '):
         test_embedding_model(token)
