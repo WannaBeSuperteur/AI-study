@@ -9,11 +9,14 @@
 * ```generate_data.py``` : 모델 학습에 필요한 입력 데이터 및 출력 데이터로 구성된 데이터셋인 **토큰 예측 학습 데이터** 생성
   * 출력 파일 : ```train_data.csv``` (학습 데이터)
 * ```embedding_helper.py``` : token의 one-hot encoding, dictionary에서의 index 값으로 변환 등 임베딩 관련 함수
-* ```train_latent_vector_model.py``` : **latent vector 모델** 에 대한 학습 실시
+* ```train_embedding_model.py``` : **임베딩 모델** 에 대한 학습 실시
   * 필요 파일 : ```train_data.csv```
+  * 출력 모델 : ```embedding_model``` (임베딩 모델)
+* ```train_latent_vector_model.py``` : **latent vector 모델** 에 대한 학습 실시
+  * 필요 파일 및 모델 : ```train_data.csv```, ```embedding_model```
   * 출력 모델 : ```latent_vector_model``` (latent vector 모델)
 * ```train_main_model.py``` : **메인 모델** 에 대한 학습 실시
-  * 필요 파일 및 모델 : ```train_data.csv```, ```latent_vector_model```
+  * 필요 파일 및 모델 : ```train_data.csv```, ```embedding_model```, ```latent_vector_model```
   * 출력 모델 : ```main_model``` (메인 모델)
 * ```test.py``` : 학습으로 만들어진 모델 테스트
   * 필요 모델 : ```main_model```
@@ -39,21 +42,25 @@
   * 입력 : **토큰 예측 학습 데이터** 에서, 입력 데이터에 해당하는 16개의 token + latent vector
     * latent vector는 입력 데이터에 해당하는 16개의 token을 **latent vector 모델** 에 넣었을 때 생성되는 latent vector 임.
   * 출력 : **토큰 예측 학습 데이터** 에서, 출력 데이터에 해당하는 1개의 token
-  * 입력 데이터에 해당하는 token 들을 **dictionary 를 이용하여 one-hot encoding -> embedding -> concatenate -> Neural Network -> output** 으로 진행하여 출력
+  * 입력 데이터에 해당하는 token 들을 **dictionary 를 이용하여 token id -> embedding (**임베딩 모델** 이용, for each token) -> concatenate -> Neural Network -> output** 으로 진행하여 출력
   * output 은 dictionary (vocab) 의 크기만큼의 크기를 갖는 배열로, 출력값으로 가장 적절한 1개의 token을 예측
+  * output 되는 token 은 output 과 가장 가까운 embedding 을 이용
 * **latent vector 모델** (Auto-Encoder 구조)
   * 입력 : **토큰 예측 학습 데이터** 에서, 입력 데이터에 해당하는 16개의 token의 one-hot encoding (단, 여기에 random noise 추가)
   * 출력 : random noise가 없는 원본 입력 데이터와 동일
-  * 입력 데이터에 해당하는 token을 **dictionary 를 이용하여 one-hot encoding -> concatenate -> Neural Network -> latent vector -> Neural Network -> split -> one-hot encoding** 으로 진행하여 출력
+  * 입력 데이터에 해당하는 token을 **dictionary 를 이용하여 token id -> embeddings (**임베딩 모델** 이용, for each token) -> concatenate -> Neural Network -> latent vector -> Neural Network -> split -> embeddings (for each token)** 으로 진행하여 출력
   * 학습 목적 : 입력 데이터를 나타내는 latent vector 생성
     * 해당 latent vector는 메인 모델의 입력 데이터로 사용
     * 해당 latent vector에 랜덤한 noise를 추가하거나 조작하여 **언어를 생성하는 모델** 구현이 목표
-    * 가장 적절한 token을 예측할 때, **메인 모델** 의 출력 배열에서 가장 큰 값에 해당하는 index의 단어 1개만을 hard하게 출력하는 대신, 그 값이 일정 값 이상인 모든 index에 대해, 그 값의 크기에 비례하는 확률로 해당 index들에 해당하는 단어를 확률적으로 출력하게 하면 어떨까?
-      * 예: dictionary (vocab) 의 size가 5라고 하자. 이때, 어떤 입력에 대한 **메인 모델** 의 출력 배열이 ```[0.03, 0.6, 0.2, 0.1, 0.07]``` 일 때, ```0.6```의 index 해당하는 단어만 출력하는 대신, ```0.1``` 이상인 모든 index (```0.6```, ```0.2```, ```0.1```) 에 대해 그 값에 비례해서 확률적으로 단어를 출력한다. 예를 들어 ```0.6```의 index에 해당하는 단어는 ```0.6 / (0.6 + 0.2 + 0.1) = 66.7%``` 의 확률로, ```0.2```의 index에 해당하는 단어는 ```0.2 / (0.6 + 0.2 + 0.1) = 22.2%``` 의 확률로 출력한다.
-      * latent vector를 사용하지 않아도 되는데, 이것이 장단점이 있다.
+    * 가장 적절한 token을 예측할 때, **메인 모델** 의 출력 배열과 Euclidean Distance 기준으로 가장 가까운 embedding 의 단어 1개만을 hard하게 출력하는 대신, Euclidean Distance 가 일정 값 이하인 모든 임베딩에 대해, 그 거리에 반비례하는 확률로 해당 임베딩에 해당하는 단어를 확률적으로 출력하게 하면 어떨까?
+      * 이렇게 하면 latent vector를 사용하지 않아도 되는데, 이것이 장단점이 있다.
         * 장점 : 모델을 **메인 모델** 만 사용해도 되기 때문에, 전체적인 프로젝트 구조가 간단해진다.
         * 단점 : latent vector를 조작하여 **특정한 어투 등을 반영하여** 문장을 생성하도록 할 수 없다.
-* 학습 순서는 **latent vector 모델 -> 메인 모델**
+* **임베딩 모델**
+  * 입력 : 각 단어의 S-BERT 임베딩 (384) * ```일정 값 (1)```
+  * 출력 : 학습 데이터에서 전후 1개씩 총 2개의 단어의 S-BERT 임베딩의 평균 (384) * ```일정 값 (2)```
+  * 학습 데이터 : **토큰 예측 학습 데이터** 의 각 row 에서 2번째 단어를 입력, 1번째, 3번째 단어를 출력에 이용
+* 학습 순서는 **임베딩 모델 -> latent vector 모델 -> 메인 모델**
 
 ## 실행 순서
 ```
@@ -72,7 +79,8 @@ python main.py
 |NLP-P4-1|```done```|```feat```|240225|240225|학습 데이터 tokenize 진행|
 |NLP-P4-2|```done```|```feat```|240226|240226|**토큰 예측 학습 데이터** 생성|
 |NLP-P4-3|```ing```|```feat```|240226||**latent vector 모델** 구성 및 해당 모델의 학습 실시|
-|NLP-P4-4||```feat```|||**메인 모델** 구성 및 해당 모델의 학습 실시|
-|NLP-P4-5||```feat```|||학습 모델 테스트|
-|NLP-P4-6||```feat```|||전처리, 학습, 테스트의 모든 과정을 진행하는 ```main.py``` 파일 작성|
-|NLP-P4-7||```feat```|||모델 정성평가용으로, 사용자가 입력하면 **메인 모델** 이 답변을 출력하는 부분 작성|
+|NLP-P4-4|```ing```|```feat```|240226||**임베딩 모델** 구성 및 해당 모델의 학습 실시|
+|NLP-P4-5||```feat```|||**메인 모델** 구성 및 해당 모델의 학습 실시|
+|NLP-P4-6||```feat```|||학습 모델 테스트|
+|NLP-P4-7||```feat```|||전처리, 학습, 테스트의 모든 과정을 진행하는 ```main.py``` 파일 작성|
+|NLP-P4-8||```feat```|||모델 정성평가용으로, 사용자가 입력하면 **메인 모델** 이 답변을 출력하는 부분 작성|
