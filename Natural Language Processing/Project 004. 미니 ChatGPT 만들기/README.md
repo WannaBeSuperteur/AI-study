@@ -33,7 +33,7 @@
     * 17개의 token 중 첫 16개 token은 입력 데이터로, 마지막 1개 token은 출력 데이터로 지정
     * 첫 16개 token에 근거하여 마지막 1개 token을 예측하는 모델을 생성하도록 데이터 구성
   * 위와 같은 방법으로 구성한 데이터셋을 **토큰 예측 학습 데이터** 라 하자. 이 데이터셋에서, 첫 90%는 train data, 마지막 10%는 validation data
-    * train, valid 데이터 구분은 Tensorflow 를 이용하여 실제 모델을 학습할 때 split_ratio 등을 이용하여 적용한다.
+    * train, valid 데이터 구분은 데이터를 지정하거나 실제 Tensorflow를 이용하여 학습할 때 split_ratio 등을 이용하여 적용한다.
   * 위 데이터는 ```train_data.csv``` 파일에 저장한다.
 
 ## 머신러닝 모델 설명
