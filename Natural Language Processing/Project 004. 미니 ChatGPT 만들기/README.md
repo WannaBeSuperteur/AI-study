@@ -60,6 +60,7 @@
   * 입력 : 각 단어의 S-BERT 임베딩 (384) * ```일정 값 (1)```
   * 출력 : 학습 데이터에서 전후 1개씩 총 2개의 단어의 S-BERT 임베딩의 평균 (384) * ```일정 값 (2)```
   * 학습 데이터 : **토큰 예측 학습 데이터** 의 각 row 에서 2번째 단어를 입력, 1번째, 3번째 단어를 출력에 이용
+  * 모델 구조 : **입력 -> Neural Network -> embedding layer (16) -> Neural Network -> 출력** (embedding layer 의 값이 word/token embedding 에 해당함)
 * 학습 순서는 **임베딩 모델 -> latent vector 모델 -> 메인 모델**
 
 ## 실행 순서
