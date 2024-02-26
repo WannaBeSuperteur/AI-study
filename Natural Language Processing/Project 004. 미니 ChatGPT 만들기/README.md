@@ -7,10 +7,16 @@
 ## 파일 및 코드 설명
 * ```tokenize_data.py``` : 학습 데이터에 대한 tokenize 진행
 * ```generate_data.py``` : 모델 학습에 필요한 입력 데이터 및 출력 데이터로 구성된 데이터셋인 **토큰 예측 학습 데이터** 생성
+  * 출력 파일 : ```train_data.csv``` (학습 데이터)
 * ```embedding_helper.py``` : token의 one-hot encoding, dictionary에서의 index 값으로 변환 등 임베딩 관련 함수
 * ```train_latent_vector_model.py``` : **latent vector 모델** 에 대한 학습 실시
+  * 필요 파일 : ```train_data.csv```
+  * 출력 모델 : ```latent_vector_model``` : latent vector 모델
 * ```train_main_model.py``` : **메인 모델** 에 대한 학습 실시
+  * 필요 파일 및 모델 : ```train_data.csv```, ```latent_vector_model```
+  * 출력 모델 : ```main_model``` : 메인 모델
 * ```test.py``` : 학습으로 만들어진 모델 테스트
+  * 필요 모델 : ```main_model```
 * ```main.py``` : 전처리, 학습 실시, 테스트 실시의 모든 과정을 한번에 진행
 
 ## 데이터 전처리 및 생성 과정
@@ -24,6 +30,8 @@
     * 17개의 token 중 첫 16개 token은 입력 데이터로, 마지막 1개 token은 출력 데이터로 지정
     * 첫 16개 token에 근거하여 마지막 1개 token을 예측하는 모델을 생성하도록 데이터 구성
   * 위와 같은 방법으로 구성한 데이터셋을 **토큰 예측 학습 데이터** 라 하자. 이 데이터셋에서, 첫 90%는 train data, 마지막 10%는 validation data
+    * train, valid 데이터 구분은 Tensorflow 를 이용하여 실제 모델을 학습할 때 split_ratio 등을 이용하여 적용한다.
+  * 위 데이터는 ```train_data.csv``` 파일에 저장한다.
 
 ## 머신러닝 모델 설명
 * 각 token에 해당하는 word 를 저장하고 one-hot encoding 할 수 있는 **dictionary (=vocab)** 필요
@@ -62,7 +70,7 @@ python main.py
 |---|---|---|---|---|---|
 |NLP-P4-master|||240225|240310|마스터 브랜치|
 |NLP-P4-1|```done```|```feat```|240225|240225|학습 데이터 tokenize 진행|
-|NLP-P4-2||```feat```|||**토큰 예측 학습 데이터** 생성|
+|NLP-P4-2|```done```|```feat```|240226|240226|**토큰 예측 학습 데이터** 생성|
 |NLP-P4-3||```feat```|||**latent vector 모델** 구성 및 해당 모델의 학습 실시|
 |NLP-P4-4||```feat```|||**메인 모델** 구성 및 해당 모델의 학습 실시|
 |NLP-P4-5||```feat```|||학습 모델 테스트|
