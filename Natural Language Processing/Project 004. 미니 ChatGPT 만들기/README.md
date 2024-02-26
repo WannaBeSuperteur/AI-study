@@ -11,10 +11,10 @@
 * ```embedding_helper.py``` : token의 one-hot encoding, dictionary에서의 index 값으로 변환 등 임베딩 관련 함수
 * ```train_latent_vector_model.py``` : **latent vector 모델** 에 대한 학습 실시
   * 필요 파일 : ```train_data.csv```
-  * 출력 모델 : ```latent_vector_model``` : latent vector 모델
+  * 출력 모델 : ```latent_vector_model``` (latent vector 모델)
 * ```train_main_model.py``` : **메인 모델** 에 대한 학습 실시
   * 필요 파일 및 모델 : ```train_data.csv```, ```latent_vector_model```
-  * 출력 모델 : ```main_model``` : 메인 모델
+  * 출력 모델 : ```main_model``` (메인 모델)
 * ```test.py``` : 학습으로 만들어진 모델 테스트
   * 필요 모델 : ```main_model```
 * ```main.py``` : 전처리, 학습 실시, 테스트 실시의 모든 과정을 한번에 진행
@@ -71,7 +71,7 @@ python main.py
 |NLP-P4-master|||240225|240310|마스터 브랜치|
 |NLP-P4-1|```done```|```feat```|240225|240225|학습 데이터 tokenize 진행|
 |NLP-P4-2|```done```|```feat```|240226|240226|**토큰 예측 학습 데이터** 생성|
-|NLP-P4-3||```feat```|||**latent vector 모델** 구성 및 해당 모델의 학습 실시|
+|NLP-P4-3|```ing```|```feat```|240226||**latent vector 모델** 구성 및 해당 모델의 학습 실시|
 |NLP-P4-4||```feat```|||**메인 모델** 구성 및 해당 모델의 학습 실시|
 |NLP-P4-5||```feat```|||학습 모델 테스트|
 |NLP-P4-6||```feat```|||전처리, 학습, 테스트의 모든 과정을 진행하는 ```main.py``` 파일 작성|
