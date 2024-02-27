@@ -48,7 +48,9 @@
 * **latent vector 모델** (Auto-Encoder 구조)
   * 입력 : **토큰 예측 학습 데이터** 에서, 입력 데이터에 해당하는 16개의 token의 **임베딩 모델** 에 의한 embedding 의 concatenation (단, 여기에 random noise 추가)
   * 출력 : random noise가 없는 원본 입력 데이터와 동일
-  * 입력 데이터에 해당하는 token을 **dictionary 를 이용하여 embeddings (**임베딩 모델** 이용, for each token) -> concatenate -> Neural Network -> latent vector -> Neural Network -> split -> embeddings (for each token)** 으로 진행하여 출력
+  * 입력 데이터에 해당하는 token을 **dictionary 를 이용하여 embeddings (**임베딩 모델** 이용, 24 for each token) -> common NN -> concatenate (1-dim vector for 16 tokens) -> Neural Network -> latent vector -> Neural Network -> split (1-dim vector for 16 tokens) -> inverse common NN -> embeddings (24 for each token)** 으로 진행하여 출력
+    * common NN : **임베딩 모델** 에 의한 임베딩 (vector size 24) 을 입력받아서 vector size 1을 출력하는, 모든 embedding에 대해 공통으로 사용되는 간단한 신경망 구조
+    * inverse common NN : vector size 1을 입력받아서 **임베딩 모델** 에 의한 임베딩 (vector size 24) 를 출력하는, 마찬가지로 모든 embedding에 대해 공통으로 사용되는 간단한 신경망 구조
   * 학습 목적 : 입력 데이터를 나타내는 latent vector 생성
     * 해당 latent vector는 메인 모델의 입력 데이터로 사용
     * 해당 latent vector에 랜덤한 noise를 추가하거나 조작하여 **언어를 생성하는 모델** 구현이 목표
