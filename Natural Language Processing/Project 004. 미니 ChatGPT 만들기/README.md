@@ -46,7 +46,7 @@
   * output 은 dictionary (vocab) 의 크기만큼의 크기를 갖는 배열로, 출력값으로 가장 적절한 1개의 token을 예측
   * output 되는 token 은 output 과 가장 가까운 Euclidean 거리의 embedding 을 이용
   * 아이디어
-    * 생성형 언어 모델로 만들기 위해서, latent vector 사용 시의 모델 성능이 좋지 않은 경우 output 과 동일한 shape 의 가중치 (weight) array를 0.5~1.5 등 적절한 특정 범위의 값들로 랜덤하게 초기화한 후, **output과 각 embedding에 대해 해당 array를 각각 dot product (output * weight, embedding * weight)** 해서 거리를 구하는 것은 어떨까?
+    * 생성형 언어 모델로 만들기 위해서, latent vector 사용 시의 **언어 생성 능력** 관점에서의 모델 성능이 좋지 않은 경우 output 과 동일한 shape 의 가중치 (weight) array를 0.5~1.5 등 적절한 특정 범위의 값들로 랜덤하게 초기화한 후, **output과 각 embedding에 대해 해당 array를 각각 dot product (output * weight, embedding * weight)** 해서 거리를 구하는 것은 어떨까?
 * **latent vector 모델** (Auto-Encoder 구조)
   * 입력 : **토큰 예측 학습 데이터** 에서, 입력 데이터에 해당하는 16개의 token의 **임베딩 모델** 에 의한 embedding 의 concatenation (단, 여기에 random noise 추가)
   * 출력 : random noise가 없는 원본 입력 데이터와 동일
