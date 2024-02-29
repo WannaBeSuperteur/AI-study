@@ -2,7 +2,7 @@
 * Dataset: [Human Conversation training data](https://www.kaggle.com/datasets/projjal1/human-conversation-training-data)
   * Human 1, Human 2 라는 두 사람이 대화를 나누는 것에 대한 학습 데이터이다.
   * 다운로드 버튼을 클릭하여 ```archive.zip``` 파일을 다운받은 후, 그 파일의 압축을 풀어서 나온 ```archive/human_chat.txt``` 파일이 학습 데이터이다.
-* 수행 기간: 2024.02.25 ~ 2024.03.10 (15일)
+* 수행 기간: 2024.02.25 ~ 2024.02.29 (5일)
 
 ## 파일 및 코드 설명
 * ```tokenize_data.py``` : 학습 데이터에 대한 tokenize 진행
@@ -89,11 +89,11 @@ python test.py
 ## branch info
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
-|NLP-P4-master|||240225|240310|마스터 브랜치|
+|NLP-P4-master|||240225|240229|마스터 브랜치|
 |NLP-P4-1|```done```|```feat```|240225|240225|학습 데이터 tokenize 진행|
 |NLP-P4-2|```done```|```feat```|240226|240226|**토큰 예측 학습 데이터** 생성|
 |NLP-P4-3|```done```|```feat```|240226|240229|**latent vector 모델** 구성 및 해당 모델의 학습 실시|
 |NLP-P4-4|```done```|```feat```|240226|240226|**임베딩 모델** 구성 및 해당 모델의 학습 실시|
 |NLP-P4-5|```done```|```feat```|240229|240229|**메인 모델** 구성 및 해당 모델의 학습 실시|
 |NLP-P4-6|```done```|```feat```|240229|240229|전처리, 학습, 테스트의 모든 과정을 진행하는 ```main.py``` 파일 작성|
-|NLP-P4-7||```feat```|||모델 정성평가용으로, 사용자가 입력하면 **메인 모델** 이 답변을 출력하는 부분 작성|
+|NLP-P4-7|```done```|```feat```|240229|240229|모델 정성평가용으로, 사용자가 입력하면 **메인 모델** 이 답변을 출력하는 부분 작성|

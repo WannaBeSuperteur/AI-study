@@ -185,7 +185,7 @@ def get_train_data_embedding(token_ids, verbose=False, limit=None):
 
 
 # 본 프로젝트에서 개발한 메인 모델 테스트
-def test_main_model(text):
+def test_main_model(text, is_return=False):
     embedding_model = tf.keras.models.load_model('embedding_model')
     embedding_encoder = embedding_model.encoder
 
@@ -201,6 +201,9 @@ def test_main_model(text):
     # 실제로 가장 가까운 token embedding 을 계산할 때는 해당 출력 결과를 먼저 MULTIPLE 로 나누어서,
     # 원래 값을 복구한 후 그 복구한 값을 이용하여 찾아야 함
     print(f'\n{text} -> main model result:\n{np.array(main_model([text_embedding]))}')
+
+    if is_return:
+        return np.array(main_model([text_embedding]))
 
 
 # 메인 모델 학습 프로세스 전체 진행

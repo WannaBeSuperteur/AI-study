@@ -155,16 +155,22 @@ def train_model(train_input, train_output, valid_input, valid_output):
 
 
 # 본 프로젝트에서 개발한 임베딩 모델 테스트
-def test_embedding_model(text):
-    embedding_model = tf.keras.models.load_model('embedding_model')
-    embedding_encoder = embedding_model.encoder
+def test_embedding_model(text, is_return=False, embedding_encoder=None, verbose=True):
+    if embedding_encoder is None:
+        embedding_model = tf.keras.models.load_model('embedding_model')
+        embedding_encoder = embedding_model.encoder
 
     if text not in sbert_embeddings:
         embed_text_sbert(text)
     
     sbert_embedding = sbert_embeddings[text]
     model_embedding = embedding_encoder(np.array([sbert_embedding]))
-    print(f'\n{text} -> embedding:\n{np.array(model_embedding)}')
+
+    if verbose:
+        print(f'\n{text} -> embedding:\n{np.array(model_embedding)}')
+
+    if is_return:
+        return model_embedding
 
 
 def run_all_process():
