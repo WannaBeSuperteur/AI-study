@@ -11,8 +11,8 @@ Transformer, BERT, S-BERT 부터 시작해서, 최종적으로는 Mini Chat-GPT�
     * Project 002. 이모지 데이터 유사도 검증
   * 3차 : 2024.02.08 ~ 02.13
     * Project 003. Python 코드 자동 수정
-* 프로젝트 (2024.02.22 ~ 03.10)
-  * Mini ChatGPT 만들기 (생성형 AI를 이용) : 2024.02.22 ~ 03.10
+* 프로젝트 (2024.02.25 ~ 03.10)
+  * Mini ChatGPT 만들기 (생성형 AI를 이용) : 2024.02.25 ~ 03.10, ```Project 004. 미니 ChatGPT 만들기```
   * 문장에 따라 적절히 행동하는 AI 만들기 : 2024.03.11 ~ 04.07
 
 **Project Branch Naming Rule :**
@@ -33,3 +33,5 @@ Transformer, BERT, S-BERT 부터 시작해서, 최종적으로는 Mini Chat-GPT�
   * S-BERT
 * **Project 003. Python 코드 자동 수정** (2024.02.08 ~ 2024.02.13, 6일)
   * word embedding model (CBOW와 유사한 방식) 을 통한 토큰 임베딩, 딥러닝 모델이 평균으로 수렴하는 이슈의 원인 및 해결 방안 파악
+* **Project 004. 미니 ChatGPT 만들기** (2024.02.25 ~ 2024.03.10, 15일)
+  * 생성형 언어 모델 (Generative Language Model), word embedding, tokenize 및 다음 token 예측
