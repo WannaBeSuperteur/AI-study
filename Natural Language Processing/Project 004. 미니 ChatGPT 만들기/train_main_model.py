@@ -207,7 +207,7 @@ if __name__ == '__main__':
     token_ids = get_token_ids()
 
     # 학습 데이터
-    input_data_all, output_data_all = get_train_data_embedding(token_ids, limit=2500) # temp
+    input_data_all, output_data_all = get_train_data_embedding(token_ids)
 
     # 메인 모델 학습 및 저장
     latent_vector_model = train_model(input_data_all, output_data_all)
