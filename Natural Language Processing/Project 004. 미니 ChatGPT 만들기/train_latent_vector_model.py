@@ -198,7 +198,7 @@ def fill_embedding_dic(token_ids):
                 print(f'token: {token}\nembedding:\n{embedding_dic[token]}')
 
 
-# train_data.csv 파일의 데이터 전체를,
+# train_data.csv 파일의 입력 데이터 전체를,
 # 본 프로젝트에서 개발한 임베딩 모델에 의한 임베딩 배열로 만들어서 반환
 def get_train_data_embedding(token_ids, verbose=False):
     vocab_size = len(token_ids)

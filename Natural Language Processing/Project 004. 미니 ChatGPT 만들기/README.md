@@ -40,9 +40,9 @@
 ## 머신러닝 모델 설명
 * 각 token에 해당하는 word 를 저장하고 one-hot encoding 할 수 있는 **dictionary (=vocab)** 필요
 * **메인 모델** (실질적으로 ChatGPT에서 답변을 출력하는 역할을 하는 NLP 모델)
-  * 입력 : **토큰 예측 학습 데이터** 에서, 입력 데이터에 해당하는 16개의 token (각각 24-dim vector로 embedding) (+ latent vector (dimension = 16), **현재 사용하지 않음**)
+  * 입력 : **토큰 예측 학습 데이터** 에서, 입력 데이터에 해당하는 16개의 token (각각 24-dim vector로 embedding) (+ latent vector (dimension = 16), **현재 latent vector는 사용하지 않음**)
     * latent vector는 **현재 사용하지 않으며,** 입력 데이터에 해당하는 16개의 token을 **latent vector 모델** 에 넣었을 때 생성되는 latent vector 임.
-    * 실제 모델 테스트 시, 입력 데이터 중 16개의 token 이외의 latent vector 부분의 경우, 입력 데이터 token을 latent vector 모델에 넣어서 생성된 값 대신 원하는 값으로 **자유롭게 조작 가능**
+    * 실제 모델 테스트 시, 입력 데이터 중 16개의 token 이외의 latent vector **(현재 미사용)** 부분의 경우, 입력 데이터 token을 latent vector 모델에 넣어서 생성된 값 대신 원하는 값으로 **자유롭게 조작 가능**
   * 출력 : **토큰 예측 학습 데이터** 에서, 출력 데이터에 해당하는 (output embedding 과 가장 가까운) 1개의 token
     * output 은 embedding vector 크기만큼의 크기 (=24) 를 갖는 배열로, 출력값으로 가장 적절한 1개의 token을 예측
     * output 되는 token 은 vocab의 각 단어를 S-BERT 임베딩한 결과 벡터를 **임베딩 모델** 에 넣었을 때 출력되는 임베딩 중 output 과 가장 가까운 Euclidean 거리의 embedding 에 해당하는 단어
@@ -79,7 +79,7 @@ python test.py
 ## 성능지표 결과
 * 성능 측정지표 : 정성 평가로 진행
   * ```test.py``` 파일 실행 시, 입력 문장을 받은 후, **메인 모델** 이 출력하는 답변을 확인할 수 있음
-  * 이때, **메인 모델** 은 다음 token 예측을 15회 정도 또는 마침표가 올 때까지 반복하여, 예측한 token을 모두 연결하여 완전한 문장을 출력하게 한다.
+  * 이때, **메인 모델** 은 다음 token 예측을 15회 정도 또는 마침표 / ```<Person-Change>``` 토큰이 올 때까지 반복하여, 예측한 token을 모두 연결하여 완전한 문장을 출력하게 한다.
 
 ## branch info
 |branch|status|type|start|end|description|
@@ -89,7 +89,7 @@ python test.py
 |NLP-P4-2|```done```|```feat```|240226|240226|**토큰 예측 학습 데이터** 생성|
 |NLP-P4-3|```done```|```feat```|240226|240229|**latent vector 모델** 구성 및 해당 모델의 학습 실시|
 |NLP-P4-4|```done```|```feat```|240226|240226|**임베딩 모델** 구성 및 해당 모델의 학습 실시|
-|NLP-P4-5||```feat```|||**메인 모델** 구성 및 해당 모델의 학습 실시|
+|NLP-P4-5|```ing```|```feat```|240229||**메인 모델** 구성 및 해당 모델의 학습 실시|
 |NLP-P4-6||```feat```|||학습 모델 테스트|
 |NLP-P4-7||```feat```|||전처리, 학습, 테스트의 모든 과정을 진행하는 ```main.py``` 파일 작성|
 |NLP-P4-8||```feat```|||모델 정성평가용으로, 사용자가 입력하면 **메인 모델** 이 답변을 출력하는 부분 작성|
