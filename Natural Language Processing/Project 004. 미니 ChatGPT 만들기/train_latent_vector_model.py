@@ -2,7 +2,138 @@ from embedding_helper import get_token_ids, load_embedding_encoder, get_embeddin
 import pandas as pd
 import numpy as np
 
+import tensorflow as tf
+import tensorflow.keras.backend as K
+
+from tensorflow.keras import layers, optimizers
+from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from tensorflow.keras.utils import get_custom_objects
+
 embedding_dic = {}
+
+INPUT_TOKEN_CNT = 16 # 학습 데이터 row 당 입력 토큰 개수
+EMBEDDING_DIM = 24 # 본 프로젝트의 임베딩 모델에 의해 토큰이 임베딩 되는 dimension
+
+
+# latent vector model
+class LatentVectorModel(tf.keras.Model):
+
+    def __init__(self):
+        super().__init__()
+
+        L2 = tf.keras.regularizers.l2(0.001)
+
+        # common NN
+        self.common_NN = tf.keras.Sequential([
+            layers.Dense(units=16, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2),
+            layers.Dense(units=4, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2)
+        ])
+
+        # inverse common NN
+        self.inverse_common_NN = tf.keras.Sequential([
+            layers.Dense(units=16, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2),
+            layers.Dense(units=24, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2)
+        ])
+
+        # encoder 부분 (4 dim x 16 tokens = 64 -> 32 -> 16)
+        self.dense_0 = layers.Dense(units=32, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2)
+        self.dense_1 = layers.Dense(units=16, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2)
+
+        # decoder 부분 (16 -> 32 -> 64 = 4 dim x 16 tokens)
+        self.dense_2 = layers.Dense(units=32, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2)
+        self.dense_3 = layers.Dense(units=64, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2)
+
+    def call(self, inputs, training):
+        input_length = inputs.shape[1] # 24 tokens x 16-dim vector for each tokens = 384
+        token_cnt = input_length // EMBEDDING_DIM
+
+        # encoding
+        t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15 = tf.split(
+            inputs, [EMBEDDING_DIM for i in range(token_cnt)], axis=1
+        )
+
+        tokens = [t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15]
+        for i in range(len(tokens)):
+            tokens[i] = self.common_NN(tokens[i])
+
+        tokens_concat = tf.keras.layers.Concatenate()(tokens)
+        tokens_concat = self.dense_0(tokens_concat)
+        latent_vector = self.dense_1(tokens_concat)
+
+        # decoding
+        tokens_concat_ = self.dense_2(latent_vector)
+        tokens_concat_ = self.dense_3(tokens_concat_)
+
+        t0_, t1_, t2_, t3_, t4_, t5_, t6_, t7_, t8_, t9_, t10_, t11_, t12_, t13_, t14_, t15_ = tf.split(
+            tokens_concat_, [4 for i in range(token_cnt)], axis=1
+        )
+
+        tokens_ = [t0_, t1_, t2_, t3_, t4_, t5_, t6_, t7_, t8_, t9_, t10_, t11_, t12_, t13_, t14_, t15_]
+        for i in range(len(tokens)):
+            tokens_[i] = self.inverse_common_NN(tokens_[i])
+
+        # output
+        outputs = tf.keras.layers.Concatenate()(tokens_)
+        return outputs
+
+
+# 모델 반환
+def define_model():
+    optimizer = optimizers.Adam(0.001, decay=1e-6)
+    early_stopping = EarlyStopping(monitor='val_loss', mode='min', patience=5)
+    lr_reduced = ReduceLROnPlateau(monitor='val_loss', mode='min', patience=2)
+        
+    model = LatentVectorModel()
+    return model, optimizer, early_stopping, lr_reduced
+
+
+# input data, output data 로부터 train, valid data 추출
+def define_data(train_data_embedding, valid_ratio=0.1):
+    
+    train_data_embedding = np.reshape(train_data_embedding, (-1, INPUT_TOKEN_CNT * EMBEDDING_DIM))
+    valid_cnt = int(valid_ratio * len(train_data_embedding))
+
+    # define train and valid, input and output data
+    train_input_data = train_data_embedding[:-valid_cnt]
+    train_output_data = train_data_embedding[:-valid_cnt]
+
+    valid_input_data = train_data_embedding[-valid_cnt:]
+    valid_output_data = train_data_embedding[-valid_cnt:]
+
+    # add random noise to input data
+    train_random_noise = np.random.normal(0.0, 0.025, train_input_data.shape)
+    train_input_data += train_random_noise
+
+    valid_random_noise = np.random.normal(0.0, 0.025, valid_input_data.shape)
+    valid_input_data += valid_random_noise
+
+    return train_input_data, train_output_data, valid_input_data, valid_output_data
+
+
+# 모델 학습 및 저장
+def train_model(train_data_embedding):
+    (train_input, train_output, valid_input, valid_output) = define_data(train_data_embedding)
+
+    print(f'train input : {np.shape(train_input)}')
+    print(f'valid input : {np.shape(valid_input)}')
+    print(f'train output : {np.shape(train_output)}')
+    print(f'valid output : {np.shape(valid_output)}')
+    
+    model, optimizer, early_stopping, lr_reduced = define_model()
+    
+    model.compile(loss='mse', optimizer=optimizer)
+
+    model.fit(
+        train_input, train_output,
+        callbacks=[early_stopping, lr_reduced],
+        epochs=10,
+        validation_data=(valid_input, valid_output)
+    )
+
+    model.summary()
+    model.save('latent_vector_model')
+
+    return model
 
 
 # 각 token을 본 프로젝트에서 개발한 임베딩 모델에 의한 embedding으로 매핑
@@ -62,5 +193,11 @@ if __name__ == '__main__':
 
     # 학습 데이터
     train_data_embedding = get_train_data_embedding(token_ids, verbose=True)
+
+    # latent vector 모델 학습 및 저장
+    latent_vector_model = train_model(train_data_embedding)
+
+    # latent vector 모델 테스트
+    # TODO
     
     print(f'shape of train_data_embedding: {np.shape(train_data_embedding)}')
