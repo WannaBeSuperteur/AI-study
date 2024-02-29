@@ -42,11 +42,11 @@ def get_train_data_embedding(token_ids, verbose=False):
         if train_data_iter_cnt % 2500 == 0:
             print(f'count: {train_data_iter_cnt}')
         
-        tokens = row['data'].split(' ')
+        tokens = row['data'].split(' ')[:input_size]
 
         train_data_one_hot_row = []
-        for i in range(all_size):
-            train_data_one_hot_row += list(embedding_dic(tokens[i]))
+        for i in range(input_size):
+            train_data_one_hot_row += list(embedding_dic[tokens[i]])
         train_data_one_hot.append(train_data_one_hot_row)
 
         train_data_iter_cnt += 1
@@ -63,4 +63,4 @@ if __name__ == '__main__':
     # 학습 데이터
     train_data_embedding = get_train_data_embedding(token_ids, verbose=True)
     
-    print(train_data_one_hot)
+    print(f'shape of train_data_embedding: {np.shape(train_data_embedding)}')
