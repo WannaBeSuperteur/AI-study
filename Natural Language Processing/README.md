@@ -36,7 +36,7 @@ Transformer, BERT, S-BERT 부터 시작해서, 최종적으로는 Mini Chat-GPT�
   * word embedding model (CBOW와 유사한 방식) 을 통한 토큰 임베딩, 딥러닝 모델이 평균으로 수렴하는 이슈의 원인 및 해결 방안 파악
 * **Project 004. 미니 ChatGPT 만들기** (2024.02.25 ~ 2024.02.29, 5일)
   * 생성형 언어 모델 (Generative Language Model), word embedding, tokenize 및 다음 token 예측
-* **Project 005. 미니 ChatGPT 만들기** (2024.03.01 ~ 2024.03.10, 10일)
+* **Project 005. 미니 ChatGPT 만들기 (2)** (2024.03.01 ~ 2024.03.10, 10일)
   * 생성형 언어 모델 (Generative Language Model), word embedding, Embedding and LSTM layer of Keras, tokenize, 다음 token 예측
 * **Project 006. Python 코드 개행해야 하는지 판단하기** (2024.03.11 ~ 2024.03.24, 14일)
   * 추가 예정
