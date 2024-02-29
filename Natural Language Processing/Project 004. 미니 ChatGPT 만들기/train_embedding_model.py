@@ -165,12 +165,16 @@ def test_embedding_model(text):
     sbert_embedding = sbert_embeddings[text]
     model_embedding = embedding_encoder(np.array([sbert_embedding]))
     print(f'\n{text} -> embedding:\n{np.array(model_embedding)}')
-        
 
-if __name__ == '__main__':
+
+def run_all_process():
     input_data, output_data = get_train_data_as_embeddings(verbose=True)
     train_input, train_output, valid_input, valid_output = define_data(input_data, output_data)
     train_model(train_input, train_output, valid_input, valid_output)
+        
+
+if __name__ == '__main__':
+    run_all_process()
 
     # 본 프로젝트에서 개발한 임베딩 모델 테스트
     test_tokens = 'you have to run . good great best awesome bad worse worst'

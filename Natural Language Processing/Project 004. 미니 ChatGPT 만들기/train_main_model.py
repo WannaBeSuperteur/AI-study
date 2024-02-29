@@ -203,14 +203,20 @@ def test_main_model(text):
     print(f'\n{text} -> main model result:\n{np.array(main_model([text_embedding]))}')
 
 
-if __name__ == '__main__':
+# 메인 모델 학습 프로세스 전체 진행
+def run_all_process(limit=None):
     token_ids = get_token_ids()
-
+    
     # 학습 데이터
-    input_data_all, output_data_all = get_train_data_embedding(token_ids)
+    input_data_all, output_data_all = get_train_data_embedding(token_ids, limit=limit)
 
     # 메인 모델 학습 및 저장
-    latent_vector_model = train_model(input_data_all, output_data_all)
+    main_model = train_model(input_data_all, output_data_all)
+    return main_model
+
+
+if __name__ == '__main__':
+    run_all_process()
 
     # 메인 모델 테스트 (each example text has 16 tokens)
     example_texts = [
