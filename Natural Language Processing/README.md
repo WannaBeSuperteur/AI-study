@@ -13,7 +13,8 @@ Transformer, BERT, S-BERT 부터 시작해서, 최종적으로는 Mini Chat-GPT�
     * Project 003. Python 코드 자동 수정
 * 프로젝트 (2024.02.25 ~ 04.07)
   * Mini ChatGPT 만들기 (생성형 AI를 이용) : 2024.02.25 ~ 03.10, ```Project 004. 미니 ChatGPT 만들기``` ```Project 005. 미니 ChatGPT 만들기 (2)```
-  * Python 코드 개행 판단하는 AI 만들기 : 2024.03.11 ~ 04.07
+  * Python 코드 개행해야 하는지 판단하는 AI 만들기 : 2024.03.11 ~ 03.24
+  * 텍스트에 이모지 추가하는 AI 만들기 : 2024.03.25 ~ 04.07
 
 **Project Branch Naming Rule :**
 * **NLP-P123-master** 123번째 NLP 관련 프로젝트 (토이 프로젝트 등) 의 master branch 
@@ -37,5 +38,7 @@ Transformer, BERT, S-BERT 부터 시작해서, 최종적으로는 Mini Chat-GPT�
   * 생성형 언어 모델 (Generative Language Model), word embedding, tokenize 및 다음 token 예측
 * **Project 005. 미니 ChatGPT 만들기** (2024.03.01 ~ 2024.03.10, 10일)
   * 생성형 언어 모델 (Generative Language Model), word embedding, Embedding and LSTM layer of Keras, tokenize, 다음 token 예측
-* **Project 006. Python 코드 개행 판단하기** (2024.03.11 ~ 2024.04.07, 28일)
+* **Project 006. Python 코드 개행해야 하는지 판단하기** (2024.03.11 ~ 2024.03.24, 14일)
+  * 추가 예정
+* **Project 007. 텍스트에 이모지 추가하는 AI 만들기** (2024.03.25 ~ 2024.04.07, 14일)
   * 추가 예정
