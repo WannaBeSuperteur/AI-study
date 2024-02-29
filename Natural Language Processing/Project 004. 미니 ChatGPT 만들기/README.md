@@ -16,7 +16,8 @@
   * 필요 파일 및 모델 : ```train_data.csv```, ```embedding_model```
   * 출력 모델 : ```latent_vector_model``` (latent vector 모델)
 * ```train_main_model.py``` : **메인 모델** 에 대한 학습 실시
-  * 필요 파일 및 모델 : ```train_data.csv```, ```embedding_model```, ```latent_vector_model```
+  * 필요 파일 및 모델 : ```train_data.csv```, ```embedding_model```
+    * 현재는 사용하지 않지만, 경우에 따라 ```latent_vector_model``` 모델 사용 가능
   * 출력 모델 : ```main_model``` (메인 모델)
 * ```test.py``` : 학습으로 만들어진 모델 테스트
   * 필요 모델 : ```main_model```
@@ -39,8 +40,8 @@
 ## 머신러닝 모델 설명
 * 각 token에 해당하는 word 를 저장하고 one-hot encoding 할 수 있는 **dictionary (=vocab)** 필요
 * **메인 모델** (실질적으로 ChatGPT에서 답변을 출력하는 역할을 하는 NLP 모델)
-  * 입력 : **토큰 예측 학습 데이터** 에서, 입력 데이터에 해당하는 16개의 token (각각 24-dim vector로 embedding) + latent vector (dimension = 16)
-    * latent vector는 입력 데이터에 해당하는 16개의 token을 **latent vector 모델** 에 넣었을 때 생성되는 latent vector 임.
+  * 입력 : **토큰 예측 학습 데이터** 에서, 입력 데이터에 해당하는 16개의 token (각각 24-dim vector로 embedding) (+ latent vector (dimension = 16), **현재 사용하지 않음**)
+    * latent vector는 **현재 사용하지 않으며,** 입력 데이터에 해당하는 16개의 token을 **latent vector 모델** 에 넣었을 때 생성되는 latent vector 임.
     * 실제 모델 테스트 시, 입력 데이터 중 16개의 token 이외의 latent vector 부분의 경우, 입력 데이터 token을 latent vector 모델에 넣어서 생성된 값 대신 원하는 값으로 **자유롭게 조작 가능**
   * 출력 : **토큰 예측 학습 데이터** 에서, 출력 데이터에 해당하는 (output embedding 과 가장 가까운) 1개의 token
     * output 은 embedding vector 크기만큼의 크기 (=24) 를 갖는 배열로, 출력값으로 가장 적절한 1개의 token을 예측
@@ -63,7 +64,7 @@
 * 학습 순서는 **임베딩 모델 -> latent vector 모델 -> 메인 모델**
 
 ### 아이디어
-* 생성형 언어 모델로 만들기 위해서, latent vector 사용 시의 **언어 생성 능력** 관점에서의 모델 성능이 좋지 않은 경우 output 과 동일한 shape 의 가중치 (weight) array를 0.5~1.5 등 적절한 특정 범위의 값들로 랜덤하게 초기화한 후, **output과 각 embedding에 대해 해당 array를 각각 dot product (output * weight, embedding * weight)** 해서 거리를 구하는 것은 어떨까?
+* **(최종 채택)** 생성형 언어 모델로 만들기 위해서, latent vector 사용 시의 **언어 생성 능력** 관점에서의 모델 성능이 좋지 않은 경우 output 과 동일한 shape 의 가중치 (weight) array를 0.5~1.5 등 적절한 특정 범위의 값들로 랜덤하게 초기화한 후, **output과 각 embedding에 대해 해당 array를 각각 dot product (output * weight, embedding * weight)** 해서 거리를 구하는 것은 어떨까?
 * 가장 적절한 token을 예측할 때, **메인 모델** 의 출력 배열과 Euclidean Distance 기준으로 가장 가까운 embedding 의 단어 1개만을 hard하게 출력하는 대신, Euclidean Distance 가 일정 값 이하인 모든 임베딩에 대해, 그 거리에 반비례하는 확률로 해당 임베딩에 해당하는 단어를 확률적으로 출력하게 하면 어떨까?
   * 이렇게 하면 latent vector를 사용하지 않아도 되는데, 이것이 장단점이 있다.
     * 장점 : 모델을 **메인 모델** 만 사용해도 되기 때문에, 전체적인 프로젝트 구조가 간단해진다.
@@ -86,7 +87,7 @@ python test.py
 |NLP-P4-master|||240225|240310|마스터 브랜치|
 |NLP-P4-1|```done```|```feat```|240225|240225|학습 데이터 tokenize 진행|
 |NLP-P4-2|```done```|```feat```|240226|240226|**토큰 예측 학습 데이터** 생성|
-|NLP-P4-3|```ing```|```feat```|240226||**latent vector 모델** 구성 및 해당 모델의 학습 실시|
+|NLP-P4-3|```done```|```feat```|240226|240229|**latent vector 모델** 구성 및 해당 모델의 학습 실시|
 |NLP-P4-4|```done```|```feat```|240226|240226|**임베딩 모델** 구성 및 해당 모델의 학습 실시|
 |NLP-P4-5||```feat```|||**메인 모델** 구성 및 해당 모델의 학습 실시|
 |NLP-P4-6||```feat```|||학습 모델 테스트|

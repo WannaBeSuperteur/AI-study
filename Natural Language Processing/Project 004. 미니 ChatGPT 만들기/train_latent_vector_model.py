@@ -9,10 +9,24 @@ from tensorflow.keras import layers, optimizers
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from tensorflow.keras.utils import get_custom_objects
 
+from sentence_transformers import SentenceTransformer
+
+# fastest model from https://www.sbert.net/docs/pretrained_models.html
+sbert_model = SentenceTransformer('paraphrase-MiniLM-L3-v2')
+sbert_embeddings = {}
+
 embedding_dic = {}
 
 INPUT_TOKEN_CNT = 16 # 학습 데이터 row 당 입력 토큰 개수
 EMBEDDING_DIM = 24 # 본 프로젝트의 임베딩 모델에 의해 토큰이 임베딩 되는 dimension
+SBERT_EMBED_SIZE_TO_USE = 128
+
+
+# S-BERT 로 임베딩 (임베딩된 벡터의 384개의 값 중 처음 SBERT_EMBED_SIZE_TO_USE 개만 반환)
+def embed_text_sbert(text):
+    if text not in sbert_embeddings:
+        sbert_embeddings[text] = sbert_model.encode(text)[:SBERT_EMBED_SIZE_TO_USE]
+    return sbert_embeddings[text]
 
 
 # latent vector model
@@ -25,23 +39,23 @@ class LatentVectorModel(tf.keras.Model):
 
         # common NN
         self.common_NN = tf.keras.Sequential([
-            layers.Dense(units=16, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2),
-            layers.Dense(units=4, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2)
+            layers.Dense(units=16, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2, name='common_NN_0'),
+            layers.Dense(units=4, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2, name='common_NN_1')
         ])
 
         # inverse common NN
         self.inverse_common_NN = tf.keras.Sequential([
-            layers.Dense(units=16, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2),
-            layers.Dense(units=24, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2)
+            layers.Dense(units=16, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2, name='inverse_common_NN_0'),
+            layers.Dense(units=24, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2, name='inverse_common_NN_1')
         ])
 
         # encoder 부분 (4 dim x 16 tokens = 64 -> 32 -> 16)
-        self.dense_0 = layers.Dense(units=32, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2)
-        self.dense_1 = layers.Dense(units=16, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2)
+        self.dense_0 = layers.Dense(units=32, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2, name='dense_0')
+        self.dense_1 = layers.Dense(units=16, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2, name='dense_1')
 
         # decoder 부분 (16 -> 32 -> 64 = 4 dim x 16 tokens)
-        self.dense_2 = layers.Dense(units=32, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2)
-        self.dense_3 = layers.Dense(units=64, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2)
+        self.dense_2 = layers.Dense(units=32, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2, name='dense_2')
+        self.dense_3 = layers.Dense(units=64, activation=tf.keras.layers.LeakyReLU(alpha=0.1), kernel_regularizer=L2, name='dense_3')
 
     def call(self, inputs, training):
         input_length = inputs.shape[1] # 24 tokens x 16-dim vector for each tokens = 384
@@ -136,6 +150,41 @@ def train_model(train_data_embedding):
     return model
 
 
+# latent vector 모델로부터 텍스트의 모든 token의 embedding의 concatenation에 대한 latent vector 추출
+def get_latent_vector(text_embeddings, latent_vector_model):
+    vectors_len_4 = [] # 4-dimension vectors each, for 16 tokens
+    for embedding in text_embeddings:
+        vectors_len_4.append(latent_vector_model.common_NN(embedding))
+    vectors_len_4_concat = np.array(vectors_len_4).flatten() # 16 x 4 -> 64
+    vectors_len_4_concat = np.array([vectors_len_4_concat])
+
+    vectors_len_4_concat = latent_vector_model.dense_0(vectors_len_4_concat) # 32
+    latent_vector = latent_vector_model.dense_1(vectors_len_4_concat) # 16
+
+    return latent_vector
+
+
+# 본 프로젝트에서 개발한 latent vector 모델 테스트
+def test_latent_vector_model(text):
+    embedding_model = tf.keras.models.load_model('embedding_model')
+    latent_vector_model = tf.keras.models.load_model('latent_vector_model')
+    embedding_encoder = embedding_model.encoder
+
+    text_embeddings = []
+
+    for token in text.split(' '):
+        if token not in sbert_embeddings:
+            embed_text_sbert(token)
+        
+        token_sbert_embedding = sbert_embeddings[token]
+        token_embedding = embedding_encoder(np.array([token_sbert_embedding]))
+        text_embeddings.append(token_embedding)
+        print(f'\n{token} -> embedding:\n{np.array(token_embedding)}')
+
+    # 텍스트 임베딩 concate 후 latent vector 추출
+    print(f'\n{text} -> latent vector:\n{np.array(get_latent_vector(text_embeddings, latent_vector_model))}')
+
+
 # 각 token을 본 프로젝트에서 개발한 임베딩 모델에 의한 embedding으로 매핑
 # example of 'token_ids': {'a': 0, 'about': 1, 'and': 2, ...}
 def fill_embedding_dic(token_ids):
@@ -197,7 +246,14 @@ if __name__ == '__main__':
     # latent vector 모델 학습 및 저장
     latent_vector_model = train_model(train_data_embedding)
 
-    # latent vector 모델 테스트
-    # TODO
+    # latent vector 모델 테스트 (each example text has 16 tokens)
+    example_texts = [
+        'what was the most number of people you have ever met during a working day ?',
+        'i know him very well . <Person-Change> is him your friend ? if so , it',
+        'how can i do for you ? <Person-Change> can you borrow me a science book ?'
+    ]
+    
+    for example_text in example_texts:
+        test_latent_vector_model(example_text)
     
     print(f'shape of train_data_embedding: {np.shape(train_data_embedding)}')
