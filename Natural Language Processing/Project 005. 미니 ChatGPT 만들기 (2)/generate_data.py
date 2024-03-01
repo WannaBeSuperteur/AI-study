@@ -26,16 +26,16 @@ def generate_data(tokens, verbose=False):
         # 실제로는 입력 데이터의 최초 20개 token 중 <Person-Change> 가 있어야 함
         data_input_first_20 = tokens[i + 1:i + INPUT_SIZE - 4]
         
-        if '<Person-Change>' in data_input_first_20:
+        if '<person-change>' in data_input_first_20:
             data_row_with_null = []
             is_person_change_detected = False
             
             for j in range(INPUT_SIZE, -1, -1):
                 if is_person_change_detected:
-                    data_row_with_null = ['<Null>'] + data_row_with_null
+                    data_row_with_null = ['<null>'] + data_row_with_null
                 else:
                     data_row_with_null = [data_input[j]] + data_row_with_null
-                    if data_input[j] == '<Person-Change>':
+                    if data_input[j] == '<person-change>':
                         is_person_change_detected = True
 
             data_row_with_null = ' '.join(data_row_with_null)

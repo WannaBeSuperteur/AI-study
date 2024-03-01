@@ -5,7 +5,7 @@ def handle_numerics(line):
     for i in range(len(tokens)):
         try:
             numeric = int(tokens[i])
-            tokens[i] = '<Number>'
+            tokens[i] = '<number>'
         except:
             pass
 
@@ -39,9 +39,7 @@ def tokenize_line(line, ing_map, ly_map):
     return line
 
 
-def tokenize(content):
-    tokens = []
-
+def get_maps():
     ing_map = {
         'fascinating': 'fascinate -ing', 'coming': 'come -ing',
         'telling': 'tell -ing', 'dancing': 'dance -ing', 'interesting': 'interest -ing',
@@ -56,6 +54,13 @@ def tokenize(content):
         'remarkably': 'remarkable -ly', 'oddly': 'odd -ly', 'actually': 'actual -ly',
         'especially': 'especial -ly', 'recently': 'recent -ly', 'probably': 'probable -ly'
     }
+
+    return ing_map, ly_map
+
+
+def tokenize(content):
+    tokens = []
+    ing_map, ly_map = get_maps()
     
     for line in content:
 
@@ -66,7 +71,7 @@ def tokenize(content):
         # tokenize 실시
         line = tokenize_line(line, ing_map, ly_map)
 
-        tokens += (line.split(' ') + ['<Person-Change>'])
+        tokens += (line.split(' ') + ['<person-change>'])
 
     return tokens
 

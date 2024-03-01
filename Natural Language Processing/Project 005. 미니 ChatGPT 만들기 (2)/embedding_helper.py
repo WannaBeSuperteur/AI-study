@@ -34,7 +34,20 @@ def get_token_ids():
         token_ids[token] = i
 
     return token_ids
-        
+
+
+# 단어의 순서를 나타낸 배열 반환 (get_token_ids() 결과의 inverse)
+# 예: ['a', 'about', 'and', ...]
+def get_token_arr():
+    token_ids = get_token_ids()
+    vocab_size = len(token_ids)
+    result = ['' for _ in range(vocab_size)]
+
+    for token, idx in token_ids.items():
+        result[idx] = token
+
+    return result
+    
 
 # token 을 one-hot embedding한 배열 반환
 def encode_one_hot(token_ids, token):

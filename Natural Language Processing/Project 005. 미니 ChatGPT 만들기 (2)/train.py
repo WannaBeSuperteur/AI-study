@@ -1,6 +1,8 @@
-from embedding_helper import get_token_ids, encode_one_hot
+from embedding_helper import get_token_ids, get_token_arr, encode_one_hot
 import pandas as pd
 import numpy as np
+
+from tokenize_data import get_maps, tokenize_line
 
 import tensorflow as tf
 from tensorflow.keras import layers, optimizers
@@ -170,11 +172,50 @@ def run_all_process(limit=None):
 
 
 # NLP 모델 테스트
-def test_model(text, is_return=False):
-    main_model = tf.keras.models.load_model('mini_chatgpt_model')
+def test_model(text, model, is_return=False, verbose=False):
+    token_ids = get_token_ids()
 
-    # TODO
+    ing_map, ly_map = get_maps()
+    tokenized_line = tokenize_line(text, ing_map, ly_map)
+    tokens = (tokenized_line.split(' ') + ['<person-change>'])
 
+    if verbose:
+        print(f'\ntokens: {tokens}')
+
+    tokens_id = [token_ids[t] for t in tokens]
+
+    if verbose:
+        print(f'ID of tokens: {tokens_id}')
+
+    if len(tokens_id) < INPUT_TOKEN_CNT:
+        rest = INPUT_TOKEN_CNT - len(tokens_id)
+        tokens_id = ([token_ids['<null>']] * rest) + tokens_id
+
+    if verbose:
+        print(f'ID of tokens: {tokens_id}')
+
+    output = model([tokens_id])
+
+    if verbose:
+        print(f'mini chatgpt model output: {output[0]}')
+
+    output_rank = []
+    token_arr = get_token_arr()
+
+    if verbose:
+        print(f'first 10 of token arr: {token_arr[:10]}')
+
+    for i in range(len(token_ids)):
+        output_rank.append([token_arr[i], float(output[0][i])])
+    output_rank.sort(key=lambda x:x[1], reverse=True)
+
+    if verbose:
+        for i in range(20):
+            print(f'rank {i} : {output_rank[i]}')
+
+    if is_return:
+        return output_rank[0][0]
+    
 
 if __name__ == '__main__':
     run_all_process()
@@ -182,9 +223,14 @@ if __name__ == '__main__':
     # 메인 모델 테스트 (each example text has 16 tokens)
     example_texts = [
         'what was the most number of people you have ever met during a working day ?',
-        'i know him very well . <Person-Change> is him your friend ? if so , it',
-        'how can i do for you ? <Person-Change> can you borrow me a science book ?'
+        'i know him very well . <person-change> is him your friend ? if so , it',
+        'how can i do for you ? <person-change> can you buy me a book ?'
     ]
+
+    mini_chatgpt_model = tf.keras.models.load_model('mini_chatgpt_model')
     
     for example_text in example_texts:
-        test_model(example_text)
+        try:
+            test_model(example_text, model=mini_chatgpt_model, verbose=True)
+        except Exception as e:
+            print(f'error: {e}')
