@@ -15,16 +15,19 @@ SBERT_EMBED_SIZE_TO_USE = 128
 def get_token_ids():
     train_data = pd.read_csv('train_data.csv', index_col=0)
     token_list = []
+    row_idx = 0
 
-    for idx, row in train_data.iterrows():
+    for _, row in train_data.iterrows():
         tokens = row['data'].split(' ')
         
-        if idx == len(train_data) - 1:
+        if row_idx >= len(train_data) - 2:
             for token in tokens:
                 token_list.append(token)
                 
         else:
             token_list.append(tokens[0])
+
+        row_idx += 1
 
     token_list = list(set(token_list))
     token_list.sort()

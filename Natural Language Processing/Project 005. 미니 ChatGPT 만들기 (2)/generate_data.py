@@ -3,7 +3,8 @@ import pandas as pd
 from tokenize_data import tokenize_file_content
 
 
-INPUT_SIZE = 24
+INPUT_SIZE = 36
+CHECK_PERSON_CHANGE = 30
 
 
 # 학습 데이터 생성
@@ -23,10 +24,10 @@ def generate_data(tokens, verbose=False):
         df = pd.concat([df, new_row])
 
         # 입력 데이터 중 <Person-Change> 가 있으면 그 전의 모든 token을 <Null> 로 교체한 새로운 row 추가
-        # 실제로는 입력 데이터의 최초 20개 token 중 <Person-Change> 가 있어야 함
-        data_input_first_20 = tokens[i + 1:i + INPUT_SIZE - 4]
+        # 실제로는 입력 데이터의 최초 30개 token 중 <Person-Change> 가 있어야 함
+        data_input_first_30 = tokens[i + 1:i + CHECK_PERSON_CHANGE]
         
-        if '<person-change>' in data_input_first_20:
+        if '<person-change>' in data_input_first_30:
             data_row_with_null = []
             is_person_change_detected = False
             
@@ -35,7 +36,7 @@ def generate_data(tokens, verbose=False):
                     data_row_with_null = ['<null>'] + data_row_with_null
                 else:
                     data_row_with_null = [data_input[j]] + data_row_with_null
-                    if data_input[j] == '<person-change>':
+                    if data_input[j] == '<person-change>' and j < CHECK_PERSON_CHANGE:
                         is_person_change_detected = True
 
             data_row_with_null = ' '.join(data_row_with_null)

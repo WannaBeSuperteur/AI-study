@@ -24,11 +24,11 @@
   * 말하는 사람이 한 사람에서 다른 사람으로 전환되는 부분은 특별한 token을 생성
     * 예: ```Person 1: Natural Language Processing gives machine a life. Do you agree?, Person 2: Yes, ChatGPT is the best example!``` 에 대해, token 구성은 ```[..., "life", ".", "Do", "you", "agree", "?", "<Person_Change>", "Yes", ",", "ChatGPT", "is", ...]``` 가 된다. 이때 ```<Person_Change>``` 라는 특별한 token이 삽입되었다.
 * 데이터 생성 방법
-  * 학습 데이터 전체를 처음부터 읽어 나가면서, **전체 학습 데이터의 첫 번째 token부터 ~ 마지막 token을 기준으로 24개 token 만큼 이전의 token까지** 의 각 token을 시작점으로,
-    * 연속된 25개의 token을 추출
-    * 25개의 token 중 첫 24개 token은 입력 데이터로, 마지막 1개 token은 출력 데이터로 지정
-      * 첫 24개 token 중 발화자 변경에 따른 특별한 토큰인 ```<person-change>``` 가 있을 시, 마지막으로 등장하는 ```<person-change>``` 토큰 이전의 모든 토큰을 ```<null>``` 토큰으로 변경한 데이터를 입력 데이터로 하여, 동일한 출력 데이터를 가지는 새로운 data row를 같이 추가한다.
-    * 첫 24개 token에 근거하여 마지막 1개 token을 예측하는 모델을 생성하도록 데이터 구성
+  * 학습 데이터 전체를 처음부터 읽어 나가면서, **전체 학습 데이터의 첫 번째 token부터 ~ 마지막 token을 기준으로 36개 token 만큼 이전의 token까지** 의 각 token을 시작점으로,
+    * 연속된 37개의 token을 추출
+    * 37개의 token 중 첫 36개 token은 입력 데이터로, 마지막 1개 token은 출력 데이터로 지정
+      * 첫 36개 token 중 발화자 변경에 따른 특별한 토큰인 ```<person-change>``` 가 있을 시, 마지막으로 등장하는 ```<person-change>``` 토큰 이전의 모든 토큰을 ```<null>``` 토큰으로 변경한 데이터를 입력 데이터로 하여, 동일한 출력 데이터를 가지는 새로운 data row를 같이 추가한다.
+    * 첫 36개 token에 근거하여 마지막 1개 token을 예측하는 모델을 생성하도록 데이터 구성
   * 위와 같은 방법으로 구성한 데이터셋에서, 첫 90%는 train data, 마지막 10%는 validation data
     * train, valid 데이터 구분은 데이터를 지정하거나 실제 Tensorflow를 이용하여 학습할 때 split_ratio 등을 이용하여 적용한다.
   * 위 데이터는 ```train_data.csv``` 파일에 저장한다.
@@ -36,7 +36,7 @@
 ## 머신러닝 모델 설명
 * 각 token에 해당하는 word 를 저장하고 one-hot encoding 할 수 있는 **dictionary (=vocab)** 필요
 * **모델 설명** (실질적으로 ChatGPT에서 답변을 출력하는 역할을 하는 NLP 모델)
-  * 입력 : 학습 데이터에서, 입력 데이터에 해당하는 24개의 token의 ID
+  * 입력 : 학습 데이터에서, 입력 데이터에 해당하는 36개의 token의 ID
   * 출력 : 학습 데이터에서, 출력 데이터에 해당하는 1개의 token에 대해 그 ID를 이용한 one-hot vector (크기: vocab) 
     * 출력값으로 가장 적절한 1개의 token을 예측하며, 가장 큰 값에 해당하는 ID의 token을 최종 출력
     * **생성형 출력** 을 위해, 다음과 같은 행렬 및 연산을 이용
@@ -67,5 +67,5 @@ python test.py
 |NLP-P5-2|```done```|```feat```|240301|240301|학습 데이터 생성|
 |NLP-P5-3|```done```|```feat```|240301|240301|모델 구성 및 해당 모델의 학습 실시|
 |NLP-P5-4|```done```|```feat```|240301|240301|전처리, 학습, 테스트의 모든 과정을 진행하는 ```main.py``` 파일 작성|
-|NLP-P5-5||```fix```|||모델 성능 향상을 위한 tokenizer 변경 등|
+|NLP-P5-5|```ing```|```fix```|240301||모델 성능 향상을 위한 tokenizer 변경 등|
 |NLP-P5-6||```feat```|||모델 정성평가용으로, 사용자가 입력하면 모델을 통해 답변을 출력하는 부분 작성|

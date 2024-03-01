@@ -10,7 +10,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from tensorflow.keras.layers import Dense, LSTM, Embedding, LeakyReLU
 
 
-INPUT_TOKEN_CNT = 24 # 학습 데이터 row 당 입력 토큰 개수
+INPUT_TOKEN_CNT = 36 # 학습 데이터 row 당 입력 토큰 개수
 VOCAB_SIZE = None
 
 
@@ -25,9 +25,9 @@ class MiniChatGPTModel(tf.keras.Model):
         L2 = tf.keras.regularizers.l2(0.001)
 
         self.embedding = Embedding(VOCAB_SIZE, INPUT_TOKEN_CNT, input_length=INPUT_TOKEN_CNT)
-        self.LSTM_0 = LSTM(64, return_sequences=True)
-        self.LSTM_1 = LSTM(64)
-        self.dense = Dense(256, activation=LeakyReLU(alpha=0.1))
+        self.LSTM_0 = LSTM(128, return_sequences=True)
+        self.LSTM_1 = LSTM(128)
+        self.dense = Dense(512, activation=LeakyReLU(alpha=0.1))
         self.final = Dense(VOCAB_SIZE, activation='softmax')
 
     def call(self, inputs, training):
