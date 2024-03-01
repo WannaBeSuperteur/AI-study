@@ -42,8 +42,10 @@
     * **생성형 출력** 을 위해, 다음과 같은 행렬 및 연산을 이용
       * 모델 중 word embedding 하는 부분을 따로 떼어내서, 해당 부분에 각 token를 넣어서 embedding 된 결과를 저장한 **(vocab size x embedding dimension)** 차원의 행렬 **A** (```embedding_results.csv``` 파일로 저장)
       * embedding 의 각 원소에 대한 가중치를 담은 **(embedding dimension)** 차원의 randomly initialized 된 배열 **B**
-      * 모델의 원래 출력값을 $O$라고 할 때, 다음과 같이 변환된 출력값 $O'$ 를 이용 (단, $v = 0,1,...,V-1$, $d = 0,1,...,D-1$, $V$ = (vocab size), $D$ = (embedding dimension), $i$ 는 출력값 $O$ 의 해당 단어의 index)
-        * $\displaystyle O'_i = O_i \times sum_{d=0}^{D-1} (|A_{i,d}| \times B_{d})$
+      * 모델의 원래 출력값을 $O$라고 할 때, 다음과 같이 각 index $i$에 대해 변환된 출력값 $O'$ 를 이용 (단, $v = 0,1,...,V-1$, $d = 0,1,...,D-1$, $V$ = (vocab size), $D$ = (embedding dimension), $i$ 는 출력값 $O$ 의 해당 단어의 index)
+      * $\displaystyle O'^{i} = O^i \times \Sigma_{d=0}^{D-1} (|A_{i,d}| \times B_{d}), i=0,1,...,V-1$ (단, $O^i, O'^i$ 는 각각 $O$, $O'$ 의 index $i$ 의 값)
+    * **생성형 출력** 을 위해, 위 수식에 따라 변환된 출력값 $O'$ 에서 **값이 가장 큰 index에 대응되는 token** 이 아닌, **값이 일정 threshold (예: 0.05) 이상인 index의 모든 token을, 해당 값에 비례하여 확률적으로** 출력
+      * 예를 들어, $O' = [0.02, 0.5, 0.25, 0.03, 0.01, 0.04, 0.15]$ (vocab size = 7) 이고 해당 threshold가 0.05일 때, 0.5에 해당하는 index의 token을 출력할 확률은 100% 가 아니라 **0.5 / (0.5 + 0.25 + 0.15) = 55.6%**  
   * 모델 구조 : 입력 데이터에 해당하는 token 들을 **token ID -> embedding -> LSTM -> Dense Layers -> output (with vocab size) -> softmax로 token 출력** 을 적용
 
 ## 실행 순서
@@ -65,4 +67,4 @@ python test.py
 |NLP-P5-2||```feat```|||학습 데이터 생성|
 |NLP-P5-3||```feat```|||모델 구성 및 해당 모델의 학습 실시|
 |NLP-P5-4||```feat```|||전처리, 학습, 테스트의 모든 과정을 진행하는 ```main.py``` 파일 작성|
-|NLP-P5-5||```feat```|||모델 정성평가용으로, 사용자가 입력하면 **메인 모델** 이 답변을 출력하는 부분 작성|
+|NLP-P5-5||```feat```|||모델 정성평가용으로, 사용자가 입력하면 모델을 통해 답변을 출력하는 부분 작성|
