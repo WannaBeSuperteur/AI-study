@@ -63,7 +63,7 @@ python test.py
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
 |NLP-P5-master|||240301|240310|마스터 브랜치|
-|NLP-P5-1||```fix```|||tokenizer 개선|
+|NLP-P5-1|```done```|```fix```|240301|240301|tokenizer 개선|
 |NLP-P5-2||```feat```|||학습 데이터 생성|
 |NLP-P5-3||```feat```|||모델 구성 및 해당 모델의 학습 실시|
 |NLP-P5-4||```feat```|||전처리, 학습, 테스트의 모든 과정을 진행하는 ```main.py``` 파일 작성|
