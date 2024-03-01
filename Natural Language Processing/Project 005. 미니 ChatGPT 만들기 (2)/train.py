@@ -1,6 +1,7 @@
 from embedding_helper import get_token_ids, get_token_arr, encode_one_hot
 import pandas as pd
 import numpy as np
+import os
 
 from tokenize_data import get_maps, tokenize_line
 
@@ -178,12 +179,15 @@ def run_all_process(limit=None):
 
 
 # NLP 모델 테스트
-def test_model(text, model, is_return=False, verbose=False):
+def test_model(text, model, additional_tokenize=True, is_return=False, verbose=False):
     token_ids = get_token_ids()
 
-    ing_map, ly_map = get_maps()
-    tokenized_line = tokenize_line(text, ing_map, ly_map)
-    tokens = (tokenized_line.split(' ') + ['<person-change>'])
+    if additional_tokenize:
+        ing_map, ly_map = get_maps()
+        tokenized_line = tokenize_line(text, ing_map, ly_map)
+        tokens = (tokenized_line.split(' ') + ['<person-change>'])
+    else:
+        tokens = text.split(' ')
 
     if verbose:
         print(f'\ntokens: {tokens}')
@@ -220,13 +224,14 @@ def test_model(text, model, is_return=False, verbose=False):
             print(f'rank {i} : {output_rank[i]}')
 
     if is_return:
-        return output_rank[0][0]
+        return output_rank
     
 
 if __name__ == '__main__':
 
     # 전체 실행
-    run_all_process()
+    if 'mini_chatgpt_model' not in os.listdir():
+        run_all_process()
 
     # 메인 모델 테스트 (each example text has 16 tokens)
     example_texts = [
