@@ -179,8 +179,9 @@ def run_all_process(limit=None):
 
 
 # NLP 모델 테스트
-def test_model(text, model, additional_tokenize=True, is_return=False, verbose=False):
-    token_ids = get_token_ids()
+def test_model(text, model, additional_tokenize=True, is_return=False, verbose=False, token_arr=None, token_ids=None):
+    if token_ids is None:
+        token_ids = get_token_ids()
 
     if additional_tokenize:
         ing_map, ly_map = get_maps()
@@ -210,13 +211,18 @@ def test_model(text, model, additional_tokenize=True, is_return=False, verbose=F
         print(f'mini chatgpt model output: {output[0]}')
 
     output_rank = []
-    token_arr = get_token_arr()
+
+    if token_arr is None:
+        token_arr = get_token_arr()
 
     if verbose:
         print(f'first 10 of token arr: {token_arr[:10]}')
 
     for i in range(len(token_ids)):
-        output_rank.append([token_arr[i], float(output[0][i])])
+        token = token_arr[i]
+        prob = float(output[0][i])
+        output_rank.append([token, prob])
+            
     output_rank.sort(key=lambda x:x[1], reverse=True)
 
     if verbose:
