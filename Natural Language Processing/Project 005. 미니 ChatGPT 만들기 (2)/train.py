@@ -8,7 +8,7 @@ from tokenize_data import get_maps, tokenize_line
 import tensorflow as tf
 from tensorflow.keras import layers, optimizers
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
-from tensorflow.keras.layers import Dense, LSTM, Embedding, LeakyReLU, Dropout
+from tensorflow.keras.layers import Dense, LSTM, Bidirectional, Embedding, LeakyReLU, Dropout
 
 
 INPUT_TOKEN_CNT = 36 # 학습 데이터 row 당 입력 토큰 개수
@@ -43,9 +43,9 @@ class MiniChatGPTModel(tf.keras.Model):
             input_length=INPUT_TOKEN_CNT
         )
         
-        self.LSTM_0 = LSTM(128, return_sequences=True)
-        self.LSTM_1 = LSTM(128)
-        self.dense = Dense(512, activation=LeakyReLU(alpha=0.1))
+        self.BIDRC_LSTM_0 = Bidirectional(LSTM(128, return_sequences=True))
+        self.BIDRC_LSTM_1 = Bidirectional(LSTM(128))
+        self.dense = Dense(256, activation=LeakyReLU(alpha=0.1))
         self.final = Dense(VOCAB_SIZE, activation='softmax')
 
     def call(self, inputs, training):
@@ -56,10 +56,10 @@ class MiniChatGPTModel(tf.keras.Model):
         embed = embed_tkn + embed_pos
 
         intermediate_0 = self.dropout(embed)
-        intermediate_0 = self.LSTM_0(intermediate_0)
+        intermediate_0 = self.BIDRC_LSTM_0(intermediate_0)
 
         intermediate_1 = self.dropout(intermediate_0)
-        intermediate_1 = self.LSTM_1(intermediate_1)
+        intermediate_1 = self.BIDRC_LSTM_1(intermediate_1)
 
         intermediate_2 = self.dropout(intermediate_1)
         intermediate_2 = self.dense(intermediate_2)
