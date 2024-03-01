@@ -38,9 +38,13 @@ def get_embedding_array_A(token_ids, mini_chatgpt_model):
     A = np.zeros((vocab_size, NUM_INPUT_TOKENS))
 
     for token, idx in token_ids.items():
-        embedding = mini_chatgpt_model.embedding(np.array([idx]).astype(np.int32))
+        embedding = mini_chatgpt_model.tkn_embedding(np.array([idx]).astype(np.int32))
         embedding = embedding.numpy()[0]
-        A[idx] = embedding
+
+        try:
+            A[idx] = embedding
+        except:
+            A[idx] = embedding[:NUM_INPUT_TOKENS]
 
     return A
 

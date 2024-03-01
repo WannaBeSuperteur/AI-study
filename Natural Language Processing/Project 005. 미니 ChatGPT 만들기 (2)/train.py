@@ -12,7 +12,9 @@ from tensorflow.keras.layers import Dense, LSTM, Embedding, LeakyReLU, Dropout
 
 
 INPUT_TOKEN_CNT = 36 # 학습 데이터 row 당 입력 토큰 개수
-EMBEDDING_DIM = 64
+TKN_EMBEDDING_DIM = 64
+POS_EMBEDDING_DIM = 64
+assert TKN_EMBEDDING_DIM == POS_EMBEDDING_DIM
 VOCAB_SIZE = None
 
 
@@ -27,14 +29,31 @@ class MiniChatGPTModel(tf.keras.Model):
         L2 = tf.keras.regularizers.l2(0.001)
         self.dropout = Dropout(rate=dropout_rate)
 
-        self.embedding = Embedding(VOCAB_SIZE, EMBEDDING_DIM, input_length=INPUT_TOKEN_CNT)
-        self.LSTM_0 = LSTM(64, return_sequences=True)
-        self.LSTM_1 = LSTM(64)
-        self.dense = Dense(128, activation=LeakyReLU(alpha=0.1))
+        # token embedding
+        self.tkn_embedding = Embedding(
+            input_dim=VOCAB_SIZE,
+            output_dim=TKN_EMBEDDING_DIM,
+            input_length=INPUT_TOKEN_CNT
+        )
+
+        # positional embedding
+        self.pos_embedding = Embedding(
+            input_dim=INPUT_TOKEN_CNT,
+            output_dim=POS_EMBEDDING_DIM,
+            input_length=INPUT_TOKEN_CNT
+        )
+        
+        self.LSTM_0 = LSTM(128, return_sequences=True)
+        self.LSTM_1 = LSTM(128)
+        self.dense = Dense(512, activation=LeakyReLU(alpha=0.1))
         self.final = Dense(VOCAB_SIZE, activation='softmax')
 
     def call(self, inputs, training):
-        embed = self.embedding(inputs)
+        positions = tf.range(start=0, limit=INPUT_TOKEN_CNT, delta=1)
+        
+        embed_tkn = self.tkn_embedding(inputs)
+        embed_pos = self.pos_embedding(positions)
+        embed = embed_tkn + embed_pos
 
         intermediate_0 = self.dropout(embed)
         intermediate_0 = self.LSTM_0(intermediate_0)
@@ -52,7 +71,7 @@ class MiniChatGPTModel(tf.keras.Model):
 # 모델 반환
 def define_model():
     optimizer = optimizers.Adam(0.001, decay=1e-6)
-    early_stopping = EarlyStopping(monitor='val_loss', mode='min', patience=15)
+    early_stopping = EarlyStopping(monitor='val_loss', mode='min', patience=5)
     lr_reduced = ReduceLROnPlateau(monitor='val_loss', mode='min', patience=2)
         
     model = MiniChatGPTModel()
