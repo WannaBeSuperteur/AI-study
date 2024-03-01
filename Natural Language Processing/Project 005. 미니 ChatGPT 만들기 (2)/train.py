@@ -11,8 +11,7 @@ from tensorflow.keras.layers import Dense, LSTM, Embedding, LeakyReLU
 
 
 INPUT_TOKEN_CNT = 24 # 학습 데이터 row 당 입력 토큰 개수
-VOCAB_SIZE = len(get_token_ids()) # vocab의 크기
-print(f'VOCAB SIZE = {VOCAB_SIZE}')
+VOCAB_SIZE = None
 
 
 # mini chatgpt model (=NLP model)
@@ -21,6 +20,7 @@ class MiniChatGPTModel(tf.keras.Model):
     
     def __init__(self, dropout_rate=0.25):
         super().__init__()
+        global VOCAB_SIZE, INPUT_TOKEN_CNT
 
         L2 = tf.keras.regularizers.l2(0.001)
 
@@ -161,7 +161,13 @@ def get_train_data_token_ids(token_ids, verbose=False, limit=None):
 
 # 모델 학습 프로세스 전체 진행
 def run_all_process(limit=None):
+    global VOCAB_SIZE
+    
     token_ids = get_token_ids()
+
+    # vocab size 초기화
+    VOCAB_SIZE = len(token_ids)
+    print(f'VOCAB SIZE = {VOCAB_SIZE}')
     
     # 학습 데이터
     input_data_all, output_data_all = get_train_data_token_ids(token_ids, limit=limit)
@@ -218,6 +224,8 @@ def test_model(text, model, is_return=False, verbose=False):
     
 
 if __name__ == '__main__':
+
+    # 전체 실행
     run_all_process()
 
     # 메인 모델 테스트 (each example text has 16 tokens)

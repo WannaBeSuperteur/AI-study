@@ -18,4 +18,4 @@ if __name__ == '__main__':
     # 메인 모델 학습
     if 'mini_chatgpt_model' not in file_list:
         print('training mini chatgpt model ...')
-        train_main_model.run_all_process(limit=LIMIT)
+        run_all_process(limit=LIMIT)
