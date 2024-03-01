@@ -12,9 +12,7 @@ from tensorflow.keras.layers import Dense, LSTM, Bidirectional, Embedding, Leaky
 
 
 INPUT_TOKEN_CNT = 36 # 학습 데이터 row 당 입력 토큰 개수
-TKN_EMBEDDING_DIM = 64
-POS_EMBEDDING_DIM = 64
-assert TKN_EMBEDDING_DIM == POS_EMBEDDING_DIM
+TKN_EMBEDDING_DIM = 96 # token embedding dimension
 VOCAB_SIZE = None
 
 
@@ -35,27 +33,18 @@ class MiniChatGPTModel(tf.keras.Model):
             output_dim=TKN_EMBEDDING_DIM,
             input_length=INPUT_TOKEN_CNT
         )
-
-        # positional embedding
-        self.pos_embedding = Embedding(
-            input_dim=INPUT_TOKEN_CNT,
-            output_dim=POS_EMBEDDING_DIM,
-            input_length=INPUT_TOKEN_CNT
-        )
         
-        self.BIDRC_LSTM_0 = Bidirectional(LSTM(128, return_sequences=True))
-        self.BIDRC_LSTM_1 = Bidirectional(LSTM(128))
-        self.dense = Dense(256, activation=LeakyReLU(alpha=0.1))
+        self.BIDRC_LSTM_0 = Bidirectional(LSTM(96, return_sequences=True))
+        self.BIDRC_LSTM_1 = Bidirectional(LSTM(96))
+        self.dense = Dense(128, activation=LeakyReLU(alpha=0.1))
         self.final = Dense(VOCAB_SIZE, activation='softmax')
 
     def call(self, inputs, training):
         positions = tf.range(start=0, limit=INPUT_TOKEN_CNT, delta=1)
         
         embed_tkn = self.tkn_embedding(inputs)
-        embed_pos = self.pos_embedding(positions)
-        embed = embed_tkn + embed_pos
 
-        intermediate_0 = self.dropout(embed)
+        intermediate_0 = self.dropout(embed_tkn)
         intermediate_0 = self.BIDRC_LSTM_0(intermediate_0)
 
         intermediate_1 = self.dropout(intermediate_0)
@@ -71,8 +60,8 @@ class MiniChatGPTModel(tf.keras.Model):
 # 모델 반환
 def define_model():
     optimizer = optimizers.Adam(0.001, decay=1e-6)
-    early_stopping = EarlyStopping(monitor='val_loss', mode='min', patience=5)
-    lr_reduced = ReduceLROnPlateau(monitor='val_loss', mode='min', patience=2)
+    early_stopping = EarlyStopping(monitor='val_loss', mode='min', patience=500)
+    lr_reduced = ReduceLROnPlateau(monitor='val_loss', mode='min', patience=500)
         
     model = MiniChatGPTModel()
     return model, optimizer, early_stopping, lr_reduced
@@ -110,7 +99,7 @@ def train_model(input_data_all, output_data_all):
     model.fit(
         train_input, train_output,
         callbacks=[early_stopping, lr_reduced],
-        epochs=50,
+        epochs=40,
         validation_data=(valid_input, valid_output)
     )
 
