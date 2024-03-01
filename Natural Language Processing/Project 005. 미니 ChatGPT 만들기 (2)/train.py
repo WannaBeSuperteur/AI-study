@@ -8,10 +8,11 @@ from tokenize_data import get_maps, tokenize_line
 import tensorflow as tf
 from tensorflow.keras import layers, optimizers
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
-from tensorflow.keras.layers import Dense, LSTM, Embedding, LeakyReLU
+from tensorflow.keras.layers import Dense, LSTM, Embedding, LeakyReLU, Dropout
 
 
 INPUT_TOKEN_CNT = 36 # 학습 데이터 row 당 입력 토큰 개수
+EMBEDDING_DIM = 64
 VOCAB_SIZE = None
 
 
@@ -19,23 +20,30 @@ VOCAB_SIZE = None
 # ref: https://www.kaggle.com/code/carlosaguayo/predicting-the-next-word-using-lstm/notebook
 class MiniChatGPTModel(tf.keras.Model):
     
-    def __init__(self, dropout_rate=0.25):
+    def __init__(self, dropout_rate=0.45):
         super().__init__()
         global VOCAB_SIZE, INPUT_TOKEN_CNT
 
         L2 = tf.keras.regularizers.l2(0.001)
+        self.dropout = Dropout(rate=dropout_rate)
 
-        self.embedding = Embedding(VOCAB_SIZE, INPUT_TOKEN_CNT, input_length=INPUT_TOKEN_CNT)
-        self.LSTM_0 = LSTM(128, return_sequences=True)
-        self.LSTM_1 = LSTM(128)
-        self.dense = Dense(512, activation=LeakyReLU(alpha=0.1))
+        self.embedding = Embedding(VOCAB_SIZE, EMBEDDING_DIM, input_length=INPUT_TOKEN_CNT)
+        self.LSTM_0 = LSTM(64, return_sequences=True)
+        self.LSTM_1 = LSTM(64)
+        self.dense = Dense(128, activation=LeakyReLU(alpha=0.1))
         self.final = Dense(VOCAB_SIZE, activation='softmax')
 
     def call(self, inputs, training):
         embed = self.embedding(inputs)
-        intermediate_0 = self.LSTM_0(embed)
-        intermediate_1 = self.LSTM_1(intermediate_0)
-        intermediate_2 = self.dense(intermediate_1)
+
+        intermediate_0 = self.dropout(embed)
+        intermediate_0 = self.LSTM_0(intermediate_0)
+
+        intermediate_1 = self.dropout(intermediate_0)
+        intermediate_1 = self.LSTM_1(intermediate_1)
+
+        intermediate_2 = self.dropout(intermediate_1)
+        intermediate_2 = self.dense(intermediate_2)
         
         outputs = self.final(intermediate_2)
         return outputs
@@ -44,7 +52,7 @@ class MiniChatGPTModel(tf.keras.Model):
 # 모델 반환
 def define_model():
     optimizer = optimizers.Adam(0.001, decay=1e-6)
-    early_stopping = EarlyStopping(monitor='val_loss', mode='min', patience=5)
+    early_stopping = EarlyStopping(monitor='val_loss', mode='min', patience=15)
     lr_reduced = ReduceLROnPlateau(monitor='val_loss', mode='min', patience=2)
         
     model = MiniChatGPTModel()
