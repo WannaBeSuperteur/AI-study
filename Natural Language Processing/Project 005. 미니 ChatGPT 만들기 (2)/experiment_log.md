@@ -1,3 +1,335 @@
+# model 2 (2024.03.02 01:31)
+
+## 모델 설정 및 코드
+
+* epochs : **40**
+
+```
+INPUT_TOKEN_CNT = 36 # 학습 데이터 row 당 입력 토큰 개수
+TKN_EMBEDDING_DIM = 128 # token embedding dimension
+VOCAB_SIZE = None
+
+
+# mini chatgpt model (=NLP model)
+# ref: https://www.kaggle.com/code/carlosaguayo/predicting-the-next-word-using-lstm/notebook
+class MiniChatGPTModel(tf.keras.Model):
+    
+    def __init__(self, dropout_rate=0.45):
+        super().__init__()
+        global VOCAB_SIZE, INPUT_TOKEN_CNT
+
+        L2 = tf.keras.regularizers.l2(0.001)
+        self.dropout = Dropout(rate=dropout_rate)
+
+        # token embedding
+        self.tkn_embedding = Embedding(
+            input_dim=VOCAB_SIZE,
+            output_dim=TKN_EMBEDDING_DIM,
+            input_length=INPUT_TOKEN_CNT
+        )
+        
+        self.BIDRC_LSTM_0 = Bidirectional(LSTM(128))
+        self.dense = Dense(192, activation=LeakyReLU(alpha=0.1))
+        self.final = Dense(VOCAB_SIZE, activation='softmax')
+```
+
+## 모델 구조 로그 (```train.py``` 실행)
+
+```
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #
+=================================================================
+ dropout (Dropout)           multiple                  0
+
+ embedding (Embedding)       multiple                  358528
+
+ bidirectional (Bidirectiona  multiple                 263168
+ l)
+
+ dense (Dense)               multiple                  49344
+
+ dense_1 (Dense)             multiple                  540593
+
+=================================================================
+Total params: 1,211,633
+Trainable params: 1,211,633
+Non-trainable params: 0
+_________________________________________________________________
+```
+
+## 모델 학습 (fit) 로그 (```train.py``` 실행)
+
+```
+Epoch 1/40
+1354/1354 [==============================] - 110s 79ms/step - loss: 5.5964 - val_loss: 5.4930 - lr: 0.0010
+Epoch 2/40
+1354/1354 [==============================] - 120s 89ms/step - loss: 4.8276 - val_loss: 5.4540 - lr: 0.0010
+Epoch 3/40
+1354/1354 [==============================] - 123s 91ms/step - loss: 4.4052 - val_loss: 5.5454 - lr: 0.0010
+Epoch 4/40
+1354/1354 [==============================] - 125s 93ms/step - loss: 4.1011 - val_loss: 5.8000 - lr: 0.0010
+Epoch 5/40
+1354/1354 [==============================] - 125s 92ms/step - loss: 3.8695 - val_loss: 5.9613 - lr: 0.0010
+Epoch 6/40
+1354/1354 [==============================] - 124s 91ms/step - loss: 3.6643 - val_loss: 6.2413 - lr: 0.0010
+Epoch 7/40
+1354/1354 [==============================] - 125s 92ms/step - loss: 3.4687 - val_loss: 6.4388 - lr: 0.0010
+Epoch 8/40
+1354/1354 [==============================] - 124s 92ms/step - loss: 3.2984 - val_loss: 6.6436 - lr: 0.0010
+Epoch 9/40
+1354/1354 [==============================] - 124s 92ms/step - loss: 3.1453 - val_loss: 6.8415 - lr: 0.0010
+Epoch 10/40
+1354/1354 [==============================] - 125s 93ms/step - loss: 3.0047 - val_loss: 7.0123 - lr: 0.0010
+Epoch 11/40
+1354/1354 [==============================] - 132s 97ms/step - loss: 2.8779 - val_loss: 7.1268 - lr: 0.0010
+Epoch 12/40
+1354/1354 [==============================] - 126s 93ms/step - loss: 2.7606 - val_loss: 7.2398 - lr: 0.0010
+Epoch 13/40
+1354/1354 [==============================] - 144s 106ms/step - loss: 2.6625 - val_loss: 7.3784 - lr: 0.0010
+Epoch 14/40
+1354/1354 [==============================] - 130s 96ms/step - loss: 2.5694 - val_loss: 7.5040 - lr: 0.0010
+Epoch 15/40
+1354/1354 [==============================] - 127s 94ms/step - loss: 2.4791 - val_loss: 7.6720 - lr: 0.0010
+Epoch 16/40
+1354/1354 [==============================] - 127s 94ms/step - loss: 2.4221 - val_loss: 7.6838 - lr: 0.0010
+Epoch 17/40
+1354/1354 [==============================] - 129s 95ms/step - loss: 2.3345 - val_loss: 7.7547 - lr: 0.0010
+Epoch 18/40
+1354/1354 [==============================] - 127s 94ms/step - loss: 2.2764 - val_loss: 7.7850 - lr: 0.0010
+Epoch 19/40
+1354/1354 [==============================] - 128s 95ms/step - loss: 2.2199 - val_loss: 7.8314 - lr: 0.0010
+Epoch 20/40
+1354/1354 [==============================] - 128s 95ms/step - loss: 2.1674 - val_loss: 7.8727 - lr: 0.0010
+Epoch 21/40
+1354/1354 [==============================] - 127s 94ms/step - loss: 2.1174 - val_loss: 7.9630 - lr: 0.0010
+Epoch 22/40
+1354/1354 [==============================] - 129s 95ms/step - loss: 2.0737 - val_loss: 8.0221 - lr: 0.0010
+Epoch 23/40
+1354/1354 [==============================] - 129s 95ms/step - loss: 2.0418 - val_loss: 8.0093 - lr: 0.0010
+Epoch 24/40
+1354/1354 [==============================] - 130s 96ms/step - loss: 1.9986 - val_loss: 8.0408 - lr: 0.0010
+Epoch 25/40
+1354/1354 [==============================] - 128s 95ms/step - loss: 1.9658 - val_loss: 8.1044 - lr: 0.0010
+Epoch 26/40
+1354/1354 [==============================] - 128s 94ms/step - loss: 1.9352 - val_loss: 8.1327 - lr: 0.0010
+Epoch 27/40
+1354/1354 [==============================] - 130s 96ms/step - loss: 1.8954 - val_loss: 8.2496 - lr: 0.0010
+Epoch 28/40
+1354/1354 [==============================] - 131s 97ms/step - loss: 1.8743 - val_loss: 8.2101 - lr: 0.0010
+Epoch 29/40
+1354/1354 [==============================] - 130s 96ms/step - loss: 1.8351 - val_loss: 8.2960 - lr: 0.0010
+Epoch 30/40
+1354/1354 [==============================] - 129s 95ms/step - loss: 1.8080 - val_loss: 8.2845 - lr: 0.0010
+Epoch 31/40
+1354/1354 [==============================] - 129s 95ms/step - loss: 1.7904 - val_loss: 8.3957 - lr: 0.0010
+Epoch 32/40
+1354/1354 [==============================] - 130s 96ms/step - loss: 1.7684 - val_loss: 8.3679 - lr: 0.0010
+Epoch 33/40
+1354/1354 [==============================] - 129s 95ms/step - loss: 1.7345 - val_loss: 8.4442 - lr: 0.0010
+Epoch 34/40
+1354/1354 [==============================] - 130s 96ms/step - loss: 1.7244 - val_loss: 8.4211 - lr: 0.0010
+Epoch 35/40
+1354/1354 [==============================] - 130s 96ms/step - loss: 1.7014 - val_loss: 8.4375 - lr: 0.0010
+Epoch 36/40
+1354/1354 [==============================] - 133s 99ms/step - loss: 1.6723 - val_loss: 8.4351 - lr: 0.0010
+Epoch 37/40
+1354/1354 [==============================] - 117s 86ms/step - loss: 1.6644 - val_loss: 8.4619 - lr: 0.0010
+Epoch 38/40
+1354/1354 [==============================] - 117s 86ms/step - loss: 1.6419 - val_loss: 8.3760 - lr: 0.0010
+Epoch 39/40
+1354/1354 [==============================] - 118s 87ms/step - loss: 1.6255 - val_loss: 8.5110 - lr: 0.0010
+Epoch 40/40
+1354/1354 [==============================] - 120s 89ms/step - loss: 1.6123 - val_loss: 8.4779 - lr: 0.0010
+```
+
+## 다음 토큰 순위 테스트 로그 (```train.py``` 실행)
+```
+tokens: ['what', 'was', 'the', 'most', 'number', 'of', 'people', 'you', 'have', 'ever', 'met', 'during', 'a', 'working', 'day', '', '?', '<person-change>']
+ID of tokens: [2708, 2681, 2463, 1565, 1637, 1651, 1772, 2782, 1106, 814, 1521, 752, 71, 2750, 640, 0, 57, 53]
+ID of tokens: [51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 2708, 2681, 2463, 1565, 1637, 1651, 1772, 2782, 1106, 814, 1521, 752, 71, 2750, 640, 0, 57, 53]
+mini chatgpt model output: [2.3578769e-03 1.2832024e-04 8.1298509e-07 ... 9.2945567e-07 1.1358058e-08
+ 6.0701797e-07]
+first 10 of token arr: ['', '!', '!--', '!unlike', "'billions'", "'court'", "'d", "'m", "'re", "'s"]
+rank 0 : ['yeah', 0.1982189416885376]
+rank 1 : ['i', 0.13240747153759003]
+rank 2 : ['no', 0.1250891387462616]
+rank 3 : ['yes', 0.07773283869028091]
+rank 4 : ['hmmmm', 0.04164377972483635]
+rank 5 : ['ah', 0.03754977136850357]
+rank 6 : ['oh', 0.02619194984436035]
+rank 7 : ['true', 0.01907411217689514]
+rank 8 : ['admit', 0.017851844429969788]
+rank 9 : ['noodle', 0.017426161095499992]
+rank 10 : ['we', 0.01730366051197052]
+rank 11 : ['nope', 0.017002221196889877]
+rank 12 : ['sure', 0.015324749052524567]
+rank 13 : ['depends', 0.013863597065210342]
+rank 14 : ['hi', 0.013665417209267616]
+rank 15 : ['lol', 0.013634657487273216]
+rank 16 : ['well', 0.013099875301122665]
+rank 17 : ['not', 0.01284028124064207]
+rank 18 : ['haha', 0.011791757307946682]
+rank 19 : ['likewise', 0.010808155871927738]
+
+tokens: ['i', 'know', 'him', 'very', 'well', '', '.', '<person-change>', 'is', 'him', 'your', 'friend', '', '?', 'if', 'so', '', ',', 'it', '<person-change>']
+ID of tokens: [1204, 1343, 1144, 2643, 2704, 0, 21, 53, 1280, 1144, 2784, 975, 0, 57, 1218, 2220, 0, 16, 1283, 53]
+ID of tokens: [51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 1204, 1343, 1144, 2643, 2704, 0, 21, 53, 1280, 1144, 2784, 975, 0, 57, 1218, 2220, 0, 16, 1283, 53]
+mini chatgpt model output: [3.4006269e-04 6.5233246e-05 4.5032471e-07 ... 6.1471164e-06 1.5262127e-09
+ 2.6960741e-08]
+first 10 of token arr: ['', '!', '!--', '!unlike', "'billions'", "'court'", "'d", "'m", "'re", "'s"]
+rank 0 : ['hi', 0.14377261698246002]
+rank 1 : ['oh', 0.08038187772035599]
+rank 2 : ['im', 0.06189049780368805]
+rank 3 : ['ouch', 0.05749477446079254]
+rank 4 : ['i', 0.05586232990026474]
+rank 5 : ['yeah', 0.052465785294771194]
+rank 6 : ['seems', 0.03977170214056969]
+rank 7 : ['cool', 0.03355791047215462]
+rank 8 : ['awesome', 0.031132513657212257]
+rank 9 : ['nope', 0.02840917930006981]
+rank 10 : ['yes', 0.027056748047471046]
+rank 11 : ['does', 0.02178298868238926]
+rank 12 : ['haha', 0.020056169480085373]
+rank 13 : ['either', 0.017450332641601562]
+rank 14 : ['arghhh', 0.015636183321475983]
+rank 15 : ['all', 0.014835222624242306]
+rank 16 : ['thats', 0.0146075040102005]
+rank 17 : ['true', 0.012603809125721455]
+rank 18 : ['what', 0.012580029666423798]
+rank 19 : ['yea', 0.01046320702880621]
+
+tokens: ['how', 'can', 'i', 'do', 'for', 'you', '', '?', '<person-change>', 'can', 'you', 'buy', 'me', 'a', 'book', '', '?', '<person-change>']
+ID of tokens: [1184, 381, 1204, 713, 951, 2782, 0, 57, 53, 381, 2782, 365, 1485, 71, 311, 0, 57, 53]
+ID of tokens: [51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 1184, 381, 1204, 713, 951, 2782, 0, 57, 53, 381, 2782, 365, 1485, 71, 311, 0, 57, 53]
+mini chatgpt model output: [3.0183161e-04 9.8760902e-05 2.6442491e-08 ... 9.5166841e-05 2.0999481e-10
+ 3.8253001e-09]
+first 10 of token arr: ['', '!', '!--', '!unlike', "'billions'", "'court'", "'d", "'m", "'re", "'s"]
+rank 0 : ['i', 0.21374785900115967]
+rank 1 : ['nope', 0.18364255130290985]
+rank 2 : ['yes', 0.11089217662811279]
+rank 3 : ['no', 0.1076144352555275]
+rank 4 : ['yeah', 0.10562951117753983]
+rank 5 : ['hmm', 0.03441639244556427]
+rank 6 : ['hi', 0.031036093831062317]
+rank 7 : ['oh', 0.018554385751485825]
+rank 8 : ['not', 0.011347801424562931]
+rank 9 : ['well', 0.010891283862292767]
+rank 10 : ['haha', 0.009984000585973263]
+rank 11 : ['it', 0.008660438470542431]
+rank 12 : ['anything', 0.008111309260129929]
+rank 13 : ['a', 0.007332478184252977]
+rank 14 : ['we', 0.006951083429157734]
+rank 15 : ['that', 0.00598540622740984]
+rank 16 : ['upstate', 0.005838797893375158]
+rank 17 : ['barely', 0.005588383413851261]
+rank 18 : ['pictionary', 0.004646633751690388]
+rank 19 : ['im', 0.004388262517750263]
+```
+
+## 대화 테스트 로그 (```test.py``` 실행)
+현재 AI 답변은 출력된 token 을 단순히 공백으로 연결한 것이며, 실제 서비스로 배포할 때는 해당 부분을 픽스해야 합니다.
+
+```
+input text :
+What is your favorite season?
+AI output :
+i trained in contemporary and jazz .
+
+input text :
+Contemporary and Jazz?
+AI output :
+haha , apart from during the friendship i expected . how has your favorite cities thing for society ?
+
+input text :
+My favorite city?
+AI output :
+hmm , popcorn for the sequels .
+
+input text :
+How are you?
+AI output :
+i 've seen avatar too much . what do you do anything ?
+
+input text :
+I am listening to musics.
+error: 'musics'
+all outputs: i trained in contemporary and jazz . <person-change> haha , apart from during the friendship i expected . how has your favorite cities thing for society ? <person-change> hmm , popcorn for the sequels . <person-change> i 've seen avatar too much . what do you do anything ? <person-change>
+```
+
+```
+input text :
+Hello!
+AI output :
+hi !
+
+input text :
+Nice to meet you!
+AI output :
+hi !
+
+input text :
+Do you know this music?
+AI output :
+i visited maui . it 's a lot of helpless , sad papers fighting fish . actual -ly france , vita nostra and dark matter ) but i got promoted next cycle i formed go somewhere for the year .
+
+input text :
+Where will you go for the year?
+AI output :
+i am exhausted by a farm . helping three flavors ?
+
+input text :
+Are you busy now?
+AI output :
+i loved the x-men as a kid , but i useful as well not a bit shameful to both and and i do n't understand .
+
+input text :
+What do you mean?
+AI output :
+i used logic pro x , pretty handy stuff as you 're a rockstar !
+
+input text :
+Am I a rockstar then?
+AI output :
+nope , i 'm a lawyer . i feel like god
+
+input text :
+Wow that's great!
+AI output :
+hi !
+
+input text :
+It's time to go to bed.
+error: 'bed'
+all outputs: hi ! <person-change> hi ! <person-change> i visited maui . it 's a lot of helpless , sad papers fighting fish . actual -ly france , vita nostra and dark matter ) but i got promoted next cycle i formed go somewhere for the year . <person-change> i am exhausted by a farm . helping three flavors ? <person-change> i loved the x-men as a kid , but i useful as well not a bit shameful to both and and i do n't understand . <person-change> i used logic pro x , pretty handy stuff as you 're a rockstar ! <person-change> nope , i 'm a lawyer . i feel like god <person-change> hi ! <person-change>
+```
+
+```
+input text :
+Good bye!
+AI output :
+hey sup
+
+input text :
+Hey! Don't you understand?
+AI output :
+i 'm jealous . sorry for the late response -- i traveled around a delicious over the weekends .
+
+input text :
+Delicious? Where did you travel?
+AI output :
+i love noodle soups who have n't do plenty of turkey
+
+input text :
+Do you want to eat them?
+AI output :
+oh i grew up speaking it . it sucks to tell me a balance . why we do the count in thrones
+```
+
+## 총평
+train loss 1.6 부근에서 종료한 모델로, 기존 train loss 2.8 부근에서 종료한 모델보다 **전반적으로 답변이 자연스럽다. 단, 질문의 의도에 적절한 답변을 하는 능력은 여전히 다소 부족하다.**
+* epochs 40 -> 160 으로 테스트 시도
+* RMSProp Loss 적용 테스트 시도 (valid loss뿐만 아니라 train loss 마저 높은 상황에서도 실제 AI Chatbot 과의 채팅이 자연스럽게 이루어질 수 있을지도?)
+
 # model 1 (2024.03.01 23:07)
 
 ## 모델 설정 및 코드
@@ -231,6 +563,8 @@ rank 19 : ['cool', 0.013721117749810219]
 ```
 
 ## 대화 테스트 로그 (```test.py``` 실행)
+현재 AI 답변은 출력된 token 을 단순히 공백으로 연결한 것이며, 실제 서비스로 배포할 때는 해당 부분을 픽스해야 합니다.
+
 ```
 input text :
 What is your favorite season?

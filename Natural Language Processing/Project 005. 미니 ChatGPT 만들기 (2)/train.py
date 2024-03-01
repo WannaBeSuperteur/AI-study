@@ -12,7 +12,7 @@ from tensorflow.keras.layers import Dense, LSTM, Bidirectional, Embedding, Leaky
 
 
 INPUT_TOKEN_CNT = 36 # 학습 데이터 row 당 입력 토큰 개수
-TKN_EMBEDDING_DIM = 96 # token embedding dimension
+TKN_EMBEDDING_DIM = 128 # token embedding dimension
 VOCAB_SIZE = None
 
 
@@ -34,9 +34,8 @@ class MiniChatGPTModel(tf.keras.Model):
             input_length=INPUT_TOKEN_CNT
         )
         
-        self.BIDRC_LSTM_0 = Bidirectional(LSTM(96, return_sequences=True))
-        self.BIDRC_LSTM_1 = Bidirectional(LSTM(96))
-        self.dense = Dense(128, activation=LeakyReLU(alpha=0.1))
+        self.BIDRC_LSTM_0 = Bidirectional(LSTM(128))
+        self.dense = Dense(192, activation=LeakyReLU(alpha=0.1))
         self.final = Dense(VOCAB_SIZE, activation='softmax')
 
     def call(self, inputs, training):
@@ -48,18 +47,15 @@ class MiniChatGPTModel(tf.keras.Model):
         intermediate_0 = self.BIDRC_LSTM_0(intermediate_0)
 
         intermediate_1 = self.dropout(intermediate_0)
-        intermediate_1 = self.BIDRC_LSTM_1(intermediate_1)
-
-        intermediate_2 = self.dropout(intermediate_1)
-        intermediate_2 = self.dense(intermediate_2)
+        intermediate_1 = self.dense(intermediate_1)
         
-        outputs = self.final(intermediate_2)
+        outputs = self.final(intermediate_1)
         return outputs
 
 
 # 모델 반환
 def define_model():
-    optimizer = optimizers.Adam(0.001, decay=1e-6)
+    optimizer = optimizers.Adam(0.001, decay=1e-6) # RMSProp 적용 시 train loss 발산 (확인 필요)
     early_stopping = EarlyStopping(monitor='val_loss', mode='min', patience=500)
     lr_reduced = ReduceLROnPlateau(monitor='val_loss', mode='min', patience=500)
         
