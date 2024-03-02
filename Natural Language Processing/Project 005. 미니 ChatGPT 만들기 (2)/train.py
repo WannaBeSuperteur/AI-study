@@ -57,7 +57,7 @@ class MiniChatGPTModel(tf.keras.Model):
 def define_model():
     optimizer = optimizers.Adam(0.001, decay=1e-6) # RMSProp 적용 시 train loss 발산 (확인 필요)
     early_stopping = EarlyStopping(monitor='val_loss', mode='min', patience=500)
-    lr_reduced = ReduceLROnPlateau(monitor='val_loss', mode='min', patience=500)
+    lr_reduced = ReduceLROnPlateau(monitor='val_loss', mode='min', patience=40, factor=0.5)
         
     model = MiniChatGPTModel()
     return model, optimizer, early_stopping, lr_reduced
@@ -95,7 +95,7 @@ def train_model(input_data_all, output_data_all):
     model.fit(
         train_input, train_output,
         callbacks=[early_stopping, lr_reduced],
-        epochs=40,
+        epochs=180,
         validation_data=(valid_input, valid_output)
     )
 
