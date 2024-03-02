@@ -10,12 +10,15 @@
   * 출력 파일 : ```train_data.csv``` (학습 데이터)
 * ```embedding_helper.py``` : token의 one-hot encoding, dictionary에서의 index 값으로 변환 등 임베딩 관련 함수
 * ```train.py``` : 모델에 대한 학습 실시
-  * 필요 파일 및 모델 : ```train_data.csv```
+  * 필요 파일 : ```train_data.csv```
   * 출력 파일 : ```embedding_result.csv``` (생성형 출력을 위한 token 별 embedding 결과)
   * 출력 모델 : ```mini_chatgpt_model``` (모델)
 * ```test.py``` : 학습으로 만들어진 모델 테스트
-  * 필요 파일 : ```embedding_result.csv``` (생성형 출력을 위한 token 별 embedding 결과)
+  * 필요 파일 : ```embedding_result.csv``` (생성형 출력을 위한 token 별 embedding 결과), ```bert_embedding_dict.csv``` (vocab 의 모든 token에 대한 BERT embedding 결과)
   * 필요 모델 : ```mini_chatgpt_model```
+* ```add_bert_embedding_dict.py``` : vocab 의 모든 token에 대한 BERT embedding 결과 저장
+  * 필요 파일 : ```train_data.csv``` (학습 데이터, vocab 추출용)
+  * 출력 파일 : ```bert_embedding_dict.csv``` (vocab 의 모든 token에 대한 BERT embedding 결과)
 * ```main.py``` : 전처리, 학습 실시, 테스트 실시의 모든 과정을 한번에 진행
 
 ## 데이터 전처리 및 생성 과정
@@ -52,6 +55,7 @@
 ## 실행 순서
 ```
 python main.py
+python add_bert_embedding_dict.py
 python test.py
 ```
 
@@ -59,6 +63,8 @@ python test.py
 * 성능 측정지표 : 정성 평가로 진행
   * ```test.py``` 파일 실행 시, 입력 문장을 받은 후, **메인 모델** 이 출력하는 답변을 확인할 수 있음
   * 이때, **메인 모델** 은 다음 token 예측을 15회 정도 또는 마침표 / ```<Person-Change>``` 토큰이 올 때까지 반복하여, 예측한 token을 모두 연결하여 완전한 문장을 출력하게 한다.
+* ```test.py``` 실행 시 vocab에 존재하지 않는 token 처리
+  * vocab 내의 모든 token의 BERT Embedding을 사전에 저장한 ```bert_embedding_dict.csv``` 의 데이터를 근거로, 해당 token과 Euclidean Distance가 가장 가까운 vocab 내의 token으로 대체하여 처리
 
 ## branch info
 |branch|status|type|start|end|description|
@@ -72,3 +78,4 @@ python test.py
 |NLP-P5-6|```done```|```feat```|240301|240301|모델 정성평가용으로, 사용자가 입력하면 모델을 통해 답변을 출력하는 부분 작성|
 |NLP-P5-7|```ing```|```fix```|240301||모델 성능 향상을 위한 arctitecture, tokenizer 등 수정|
 |NLP-P5-8|```done```|```fix```|240302|240302|NLP-P5-7 의 하위 branch로, 데이터셋 구성 방식 수정 (다이얼로그 구분, null token 관련)|
+|NLP-P5-9|```done```|```fix```|240302|240303|NLP-P5-7 의 하위 브랜치로, vocab에 존재하지 않는 단어 처리|
