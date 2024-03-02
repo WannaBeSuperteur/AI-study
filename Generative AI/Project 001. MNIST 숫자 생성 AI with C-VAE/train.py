@@ -58,23 +58,23 @@ class CVAE_Model:
         L2 = tf.keras.regularizers.l2(0.001)
 
         # encoder 용 레이어
-        self.encoder_cnn0 = layers.Conv2D(16, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='ec0')
-        self.encoder_cnn1 = layers.Conv2D(32, (3, 3), strides=1, activation='relu', padding='same', kernel_regularizer=L2, name='ec1')
-        self.encoder_cnn2 = layers.Conv2D(48, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='ec2')
-        self.encoder_cnn3 = layers.Conv2D(64, (3, 3), strides=1, activation='relu', padding='same', kernel_regularizer=L2, name='ec3')
+        self.encoder_cnn0 = layers.Conv2D(16, (5, 5), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='ec0')
+        self.encoder_cnn1 = layers.Conv2D(32, (5, 5), strides=1, activation='relu', padding='same', kernel_regularizer=L2, name='ec1')
+        self.encoder_cnn2 = layers.Conv2D(32, (5, 5), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='ec2')
+        self.encoder_cnn3 = layers.Conv2D(32, (5, 5), strides=1, activation='relu', padding='same', kernel_regularizer=L2, name='ec3')
 
-        self.encoder_dense0 = layers.Dense(200, activation='relu', name='ed0')
-        self.encoder_dense1 = layers.Dense(50, activation='relu', name='ed1')
+        self.encoder_dense0 = layers.Dense(120, activation='relu', name='ed0')
+        self.encoder_dense1 = layers.Dense(40, activation='relu', name='ed1')
 
         # decoder 용 레이어
-        self.decoder_dense0 = layers.Dense(50, activation='relu', name='dd0')
-        self.decoder_dense1 = layers.Dense(200, activation='relu', name='dd1')
-        self.decoder_dense2 = layers.Dense(64 * TOTAL_CELLS // (4 * 4), activation='relu', name='dd2')
+        self.decoder_dense0 = layers.Dense(40, activation='relu', name='dd0')
+        self.decoder_dense1 = layers.Dense(120, activation='relu', name='dd1')
+        self.decoder_dense2 = layers.Dense(32 * TOTAL_CELLS // (4 * 4), activation='relu', name='dd2')
 
-        self.decoder_cnn0 = layers.Conv2DTranspose(48, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dc0')
-        self.decoder_cnn1 = layers.Conv2DTranspose(32, (3, 3), strides=1, activation='relu', padding='same', kernel_regularizer=L2, name='dc1')
-        self.decoder_cnn2 = layers.Conv2DTranspose(16, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dc2')
-        self.decoder_cnn3 = layers.Conv2DTranspose(1, (3, 3), strides=1, activation='relu', padding='same', kernel_regularizer=L2, name='dc3')
+        self.decoder_cnn0 = layers.Conv2DTranspose(32, (5, 5), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dc0')
+        self.decoder_cnn1 = layers.Conv2DTranspose(32, (5, 5), strides=1, activation='relu', padding='same', kernel_regularizer=L2, name='dc1')
+        self.decoder_cnn2 = layers.Conv2DTranspose(16, (5, 5), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dc2')
+        self.decoder_cnn3 = layers.Conv2DTranspose(1, (5, 5), strides=1, activation='relu', padding='same', kernel_regularizer=L2, name='dc3')
 
         # encoder
         input_image = layers.Input(batch_shape=(BATCH_SIZE, INPUT_IMG_SIZE, INPUT_IMG_SIZE))
@@ -110,7 +110,7 @@ class CVAE_Model:
         dec_d0 = self.dropout(dec_d0)
         dec_d1 = self.decoder_dense1(dec_d0)
         dec_d2 = self.decoder_dense2(dec_d1)
-        dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 4, INPUT_IMG_SIZE // 4, 64))(dec_d2)
+        dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 4, INPUT_IMG_SIZE // 4, 32))(dec_d2)
 
         dec_c0 = self.decoder_cnn0(dec_reshaped)
         dec_c0 = self.dropout(dec_c0)
@@ -176,7 +176,7 @@ def train_cvae_model(train_input, train_class):
 
     cvae_model_class.cvae.fit(
         [train_input, train_class, train_class], train_input,
-        epochs=5,
+        epochs=8,
         batch_size=BATCH_SIZE,
         shuffle=True
     )

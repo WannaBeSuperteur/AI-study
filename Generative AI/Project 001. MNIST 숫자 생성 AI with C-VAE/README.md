@@ -41,4 +41,4 @@ python test.py
 |GAI-P1-master|||240302|240310|마스터 브랜치|
 |GAI-P1-1|```done```|```feat```|240302|240302|```mnist_train.csv``` 데이터를 C-VAE 모델로 학습|
 |GAI-P1-2|```done```|```feat```|240302|240302|C-VAE 모델 테스트|
-|GAI-P1-3||```fix```|||C-VAE 모델 성능 향상 시도|
+|GAI-P1-3|```ing```|```fix```|240302||C-VAE 모델 성능 향상 시도|
