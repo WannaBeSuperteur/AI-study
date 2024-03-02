@@ -63,16 +63,17 @@ class CVAE_Model:
         self.encoder_cnn2 = layers.Conv2D(128, (3, 3), strides=1, activation='relu', padding='same', kernel_regularizer=L2, name='ec2')
         
         self.encoder_dense0 = layers.Dense(256, activation='relu', name='ed0')
+        self.encoder_ad0 = layers.Dense(64, activation='relu', name='ead0') # input 과 직접 연결
 
         # decoder 용 레이어
-        self.decoder_dense0 = layers.Dense(256, activation='relu', name='dd0')
-        self.decoder_dense1 = layers.Dense(128 * TOTAL_CELLS // (4 * 4), activation='relu', name='dd1')
+        self.decoder_dense0 = layers.Dense(320, activation='relu', name='dd0')
+        self.decoder_dense1 = layers.Dense(160 * TOTAL_CELLS // (4 * 4), activation='relu', name='dd1')
 
-        self.decoder_cnn0 = layers.Conv2DTranspose(64, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dc0')
-        self.decoder_cnn1 = layers.Conv2DTranspose(32, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dc1')
+        self.decoder_cnn0 = layers.Conv2DTranspose(80, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dc0')
+        self.decoder_cnn1 = layers.Conv2DTranspose(40, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dc1')
         self.decoder_cnn2 = layers.Conv2DTranspose(1, (3, 3), strides=1, activation='relu', padding='same', kernel_regularizer=L2, name='dc2')
 
-        # encoder
+        # encoder (main stream)
         input_image = layers.Input(batch_shape=(BATCH_SIZE, INPUT_IMG_SIZE, INPUT_IMG_SIZE))
         input_image_reshaped = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 1))(input_image)
         
@@ -88,9 +89,16 @@ class CVAE_Model:
         enc_merged = layers.concatenate([enc_flatten, input_class])
         enc_d0 = self.encoder_dense0(enc_merged)
 
+        # encoder (additional stream)
+        enc_flatten_for_ad = self.flatten(input_image)
+        enc_ad0 = self.encoder_ad0(enc_flatten_for_ad)
+
+        # encoder (concatenated)
+        end_d0_ad0 = layers.concatenate([enc_d0, enc_ad0])
+
         # latent space
-        self.latent_mean = layers.Dense(HIDDEN_DIMS, name='lm')(enc_d0)
-        self.latent_log_var = layers.Dense(HIDDEN_DIMS, name='llv')(enc_d0)
+        self.latent_mean = layers.Dense(HIDDEN_DIMS, name='lm')(end_d0_ad0)
+        self.latent_log_var = layers.Dense(HIDDEN_DIMS, name='llv')(end_d0_ad0)
         self.latent_space = layers.Lambda(noise_maker, output_shape=(HIDDEN_DIMS,), name='ls')([self.latent_mean, self.latent_log_var])
 
         # decoder
@@ -100,7 +108,7 @@ class CVAE_Model:
         dec_merged = layers.concatenate([latent_for_decoder, class_for_decoder])
         dec_d0 = self.decoder_dense0(dec_merged)
         dec_d1 = self.decoder_dense1(dec_d0)
-        dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 4, INPUT_IMG_SIZE // 4, 128))(dec_d1)
+        dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 4, INPUT_IMG_SIZE // 4, 160))(dec_d1)
 
         dec_c0 = self.decoder_cnn0(dec_reshaped)
         dec_c0 = self.dropout(dec_c0)
