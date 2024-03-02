@@ -28,7 +28,8 @@ BATCH_SIZE = 32
 # CVAE Model
 # 입력 이미지 (bs, 28, 28) -> (bs, 28, 28, 1), 입력 class (10,), 출력 이미지 (bs, 28, 28) (bs: batch size)
 
-# ref: https://www.kaggle.com/code/mersico/cvae-from-scratch
+# ref-1: https://www.kaggle.com/code/mersico/cvae-from-scratch
+# ref-2: https://github.com/ekzhang/vae-cnn-mnist/blob/master/MNIST%20Convolutional%20VAE%20with%20Label%20Input.ipynb
 class CVAE_Model:
 
     def noise_maker(self, noise_args):
@@ -36,7 +37,7 @@ class CVAE_Model:
         noise_log_var = noise_args[1]
         
         noise = K.random_normal(shape=(BATCH_SIZE, HIDDEN_DIMS), mean=0.0, stddev=1.0)
-        return K.exp(self.latent_log_var / 2.0) * noise + self.latent_mean
+        return K.exp(noise_log_var / 2.0) * noise + noise_mean
 
 
     # VAE 의 loss function (kl_loss : KL Divergence, https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence)
@@ -132,8 +133,8 @@ class CVAE_Model:
         )
 
 
-#    def call(self, inputs, training):
-#        return self.cvae(inputs)
+    def call(self, inputs, training):
+        return self.cvae(inputs)
 
 
 # mnist_train.csv 파일로부터 학습 데이터 추출
@@ -181,9 +182,20 @@ def train_cvae_model(train_input, train_class):
         shuffle=True
     )
 
+    print('\n === ENCODER ===')
+    cvae_model_class.encoder.summary()
+
+    print('\n === DECODER ===')
+    cvae_model_class.decoder.summary()
+
+    print('\n === C-VAE ===')
     cvae_model_class.cvae.summary()
+    
+    cvae_model_class.encoder.save('cvae_encoder_model')
+    cvae_model_class.decoder.save('cvae_decoder_model')
     cvae_model_class.cvae.save('cvae_model')
-    return cvae_model_class.cvae
+    
+    return cvae_model_class.encoder, cvae_model_class.decoder, cvae_model_class.cvae
 
 
 if __name__ == '__main__':
@@ -194,4 +206,4 @@ if __name__ == '__main__':
     print(f'shape of train class: {np.shape(train_class)}')
 
     # 학습 실시 및 모델 저장
-    cvae_model = train_cvae_model(train_input, train_class)
+    cvae_encoder, cvae_decoder, cvae_model = train_cvae_model(train_input, train_class)
