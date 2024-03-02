@@ -2,20 +2,31 @@ import pandas as pd
 import numpy as np
 
 import tensorflow as tf
-import tensorflow_addons as tfa
 from tensorflow.keras import layers, optimizers
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from keras.losses import binary_crossentropy
 import keras.backend as K
 
+
+# to fix error below:
+# TypeError: Could not build a TypeSpec for KerasTensor(type_spec=TensorSpec(shape=(None, 16), dtype=tf.float32, name=None),
+#            name='tf.__operators__.add/AddV2:0', description="created by layer 'tf.__operators__.add'") of unsupported type
+#            <class 'keras.engine.keras_tensor.KerasTensor'>.
+
+# ref: https://stackoverflow.com/questions/65383964/typeerror-could-not-build-a-typespec-with-type-kerastensor
+
+tf.compat.v1.disable_eager_execution()
+
+
 INPUT_IMG_SIZE = 28
 NUM_CLASSES = 10
 HIDDEN_DIMS = 16
 TOTAL_CELLS = INPUT_IMG_SIZE * INPUT_IMG_SIZE
+BATCH_SIZE = 32
 
 
 # CVAE Model
-# 입력 이미지 (-1, 28, 28), 입력 class (10,), 출력 이미지 (-1, 28, 28)
+# 입력 이미지 (bs, 28, 28) -> (bs, 28, 28, 1), 입력 class (10,), 출력 이미지 (bs, 28, 28) (bs: batch size)
 
 # ref: https://www.kaggle.com/code/mersico/cvae-from-scratch
 class CVAE_Model:
@@ -24,63 +35,58 @@ class CVAE_Model:
         noise_mean = noise_args[0]
         noise_log_var = noise_args[1]
         
-        noise = K.random_normal(shape=(-1, HIDDEN_DIMS), mean=0.0, stddev=1.0)
+        noise = K.random_normal(shape=(BATCH_SIZE, HIDDEN_DIMS), mean=0.0, stddev=1.0)
         return K.exp(self.latent_log_var / 2.0) * noise + self.latent_mean
 
 
     # VAE 의 loss function (kl_loss : KL Divergence, https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence)
     def vae_loss(self, x, y):
-        x_reshaped = np.reshape(x, shape=(-1, TOTAL_CELLS))
-        y_reshaped = np.reshape(y, shape=(-1, TOTAL_CELLS))
-        print(np.shape(x_reshaped))
+        x_reshaped = K.reshape(x, shape=(BATCH_SIZE, TOTAL_CELLS))
+        y_reshaped = K.reshape(y, shape=(BATCH_SIZE, TOTAL_CELLS))
         bce_loss = TOTAL_CELLS * binary_crossentropy(x_reshaped, y_reshaped)
         
         kl_loss = -0.5 * K.sum(1 + self.latent_log_var - K.square(self.latent_mean) - K.exp(self.latent_log_var), axis=-1)
-        print(kl_loss)
-        print(np.shape(kl_loss))
-        return mse_loss + kl_loss
+        return bce_loss + kl_loss
     
 
     def __init__(self, dropout_rate=0.45):
 
         # 공통 레이어
         self.flatten = tf.keras.layers.Flatten()
-        self.pooling = tf.keras.layers.MaxPooling2D((2, 2))
-        self.unpooling = tfa.layers.MaxUnpooling2D((2, 2))
         self.dropout = tf.keras.layers.Dropout(rate=dropout_rate, name='dropout')
 
         L2 = tf.keras.regularizers.l2(0.001)
 
         # encoder 용 레이어
-        self.encoder_cnn0 = layers.Conv2D(32, (3, 3), activation='relu', padding='same', kernel_regularizer=L2, name='ec0')
-        self.encoder_cnn1 = layers.Conv2D(64, (3, 3), activation='relu', padding='same', kernel_regularizer=L2, name='ec1')
-        self.encoder_cnn2 = layers.Conv2D(96, (3, 3), activation='relu', padding='same', kernel_regularizer=L2, name='ec2')
-        self.encoder_cnn3 = layers.Conv2D(128, (3, 3), activation='relu', padding='same', kernel_regularizer=L2, name='ec3')
+        self.encoder_cnn0 = layers.Conv2D(16, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='ec0')
+        self.encoder_cnn1 = layers.Conv2D(32, (3, 3), strides=1, activation='relu', padding='same', kernel_regularizer=L2, name='ec1')
+        self.encoder_cnn2 = layers.Conv2D(48, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='ec2')
+        self.encoder_cnn3 = layers.Conv2D(64, (3, 3), strides=1, activation='relu', padding='same', kernel_regularizer=L2, name='ec3')
 
-        self.encoder_dense0 = layers.Dense(256, activation='relu', name='ed0')
-        self.encoder_dense1 = layers.Dense(64, activation='relu', name='ed1')
+        self.encoder_dense0 = layers.Dense(200, activation='relu', name='ed0')
+        self.encoder_dense1 = layers.Dense(50, activation='relu', name='ed1')
 
         # decoder 용 레이어
-        self.decoder_dense0 = layers.Dense(64, activation='relu', name='dd0')
-        self.decoder_dense1 = layers.Dense(256, activation='relu', name='dd1')
-        self.decoder_dense2 = layers.Dense(128 * TOTAL_CELLS, activation='relu', name='dd2')
+        self.decoder_dense0 = layers.Dense(50, activation='relu', name='dd0')
+        self.decoder_dense1 = layers.Dense(200, activation='relu', name='dd1')
+        self.decoder_dense2 = layers.Dense(64 * TOTAL_CELLS // (4 * 4), activation='relu', name='dd2')
 
-        self.decoder_cnn0 = layers.Conv2D(96, (3, 3), activation='relu', padding='same', kernel_regularizer=L2, name='dc0')
-        self.decoder_cnn1 = layers.Conv2D(64, (3, 3), activation='relu', padding='same', kernel_regularizer=L2, name='dc1')
-        self.decoder_cnn2 = layers.Conv2D(32, (3, 3), activation='relu', padding='same', kernel_regularizer=L2, name='dc2')
-        self.decoder_cnn3 = layers.Conv2D(1, (3, 3), activation='relu', padding='same', kernel_regularizer=L2, name='dc3')
+        self.decoder_cnn0 = layers.Conv2DTranspose(48, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dc0')
+        self.decoder_cnn1 = layers.Conv2DTranspose(32, (3, 3), strides=1, activation='relu', padding='same', kernel_regularizer=L2, name='dc1')
+        self.decoder_cnn2 = layers.Conv2DTranspose(16, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dc2')
+        self.decoder_cnn3 = layers.Conv2DTranspose(1, (3, 3), strides=1, activation='relu', padding='same', kernel_regularizer=L2, name='dc3')
 
         # encoder
-        input_image = layers.Input(batch_shape=(None, INPUT_IMG_SIZE, INPUT_IMG_SIZE, 1))
+        input_image = layers.Input(batch_shape=(BATCH_SIZE, INPUT_IMG_SIZE, INPUT_IMG_SIZE))
+        input_image_reshaped = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 1))(input_image)
+        
         input_class = layers.Input(shape=(NUM_CLASSES,))
         
-        enc_c0 = self.encoder_cnn0(input_image)
+        enc_c0 = self.encoder_cnn0(input_image_reshaped)
         enc_c0 = self.dropout(enc_c0)
         enc_c1 = self.encoder_cnn1(enc_c0)
-        enc_c1 = self.pooling(enc_c1)
         enc_c1 = self.dropout(enc_c1)
         enc_c2 = self.encoder_cnn2(enc_c1)
-        enc_c2 = self.pooling(enc_c2)
         enc_c2 = self.dropout(enc_c2)
         enc_c3 = self.encoder_cnn3(enc_c2)
         enc_fl = self.flatten(enc_c3)
@@ -96,21 +102,19 @@ class CVAE_Model:
         self.latent_space = layers.Lambda(self.noise_maker, output_shape=(HIDDEN_DIMS,), name='ls')([self.latent_mean, self.latent_log_var])
 
         # decoder
-        latent_for_decoder = Input(shape=(HIDDEN_DIMS,))
-        class_for_decoder = Input(shape=(NUM_CLASSES,))
+        latent_for_decoder = layers.Input(shape=(HIDDEN_DIMS,))
+        class_for_decoder = layers.Input(shape=(NUM_CLASSES,))
 
         dec_merged = layers.concatenate([latent_for_decoder, class_for_decoder])
         dec_d0 = self.decoder_dense0(dec_merged)
         dec_d0 = self.dropout(dec_d0)
         dec_d1 = self.decoder_dense1(dec_d0)
         dec_d2 = self.decoder_dense2(dec_d1)
-        dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 4, INPUT_IMG_SIZE // 4, 1))(dec_c2)
+        dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 4, INPUT_IMG_SIZE // 4, 64))(dec_d2)
 
         dec_c0 = self.decoder_cnn0(dec_reshaped)
-        dec_c0 = self.unpooling(dec_c0)
         dec_c0 = self.dropout(dec_c0)
         dec_c1 = self.decoder_cnn1(dec_c0)
-        dec_c1 = self.unpooling(dec_c1)
         dec_c1 = self.dropout(dec_c1)
         dec_c2 = self.decoder_cnn2(dec_c1)
         dec_c2 = self.dropout(dec_c2)
@@ -118,10 +122,10 @@ class CVAE_Model:
         dec_final = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE))(dec_c3)
 
         # define encoder, decoder and cvae model
-        self.encoder = keras.Model([input_image, input_class], self.latent_space, name='encoder')
-        self.decoder = keras.Model([latent_for_decoder, class_for_decoder], dec_final, name='decoder')
+        self.encoder = tf.keras.Model([input_image, input_class], self.latent_space, name='encoder')
+        self.decoder = tf.keras.Model([latent_for_decoder, class_for_decoder], dec_final, name='decoder')
 
-        self.cvae = keras.Model(
+        self.cvae = tf.keras.Model(
             inputs=[input_image, input_class, class_for_decoder],
             outputs=self.decoder([self.encoder([input_image, input_class]), class_for_decoder]),
             name='final_cvae'
@@ -167,18 +171,19 @@ def define_cvae_model():
 
 # C-VAE 모델 학습 실시 및 모델 저장
 def train_cvae_model(train_input, train_class):
-    cvae_model, optimizer = define_cvae_model()
-    cvae_model.compile(loss=cvae_model.vae_loss, optimizer=optimizer)
+    cvae_model_class, optimizer = define_cvae_model()
+    cvae_model_class.cvae.compile(loss=cvae_model_class.vae_loss, optimizer=optimizer)
 
-    cvae_model.cvae.fit(
+    cvae_model_class.cvae.fit(
         [train_input, train_class, train_class], train_input,
-        epochs=30,
+        epochs=5,
+        batch_size=BATCH_SIZE,
         shuffle=True
     )
 
-    cvae_model.cvae.summary()
-    cvae_model.cvae.save('cvae_model')
-    return cvae_model
+    cvae_model_class.cvae.summary()
+    cvae_model_class.cvae.save('cvae_model')
+    return cvae_model_class.cvae
 
 
 if __name__ == '__main__':
