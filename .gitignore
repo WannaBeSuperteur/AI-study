@@ -12,5 +12,8 @@ Natural Language Processing/Project 004. 미니 ChatGPT 만들기/embedding_mode
 Image Processing/Project 001. 사과와 토마토 분류/archive.zip
 Image Processing/Project 001. 사과와 토마토 분류/archive/*
 Image Processing/Project 001. 사과와 토마토 분류/images/*
+Generative AI/Project 001. MNIST 숫자 생성 AI with C-VAE/*.csv
+Generative AI/Project 001. MNIST 숫자 생성 AI with C-VAE/*.csv.zip
+Generative AI/Project 001. MNIST 숫자 생성 AI with C-VAE/cvae_model/*
 *.pyc
 __pycache__/
