@@ -3,7 +3,7 @@
 ## 모델 설정 및 코드
 * epochs : **180**
 * learning rate : ```lr_reduced = ReduceLROnPlateau(monitor='val_loss', mode='min', patience=40, factor=0.5)```
-* 이외 모두 동일
+* 이외는 **model 2** 와 모두 동일
 
 ## 모델 학습 (fit) 로그 (```train.py``` 실행)
 
@@ -608,6 +608,7 @@ TODO
 * 유사한 과제 (next token prediction for Chatbot) 에서 사람들이 많이 활용한 RMSProp 으로 마찬가지로 180 epochs로 실험 (3월 3일 새벽)
   * RMSProp Loss 관련 참고 사항 : [딥러닝 기초 Optimizer 정리 문서](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Deep%20Learning%20Basics/%EB%94%A5%EB%9F%AC%EB%8B%9D_%EA%B8%B0%EC%B4%88_Optimizer.md)
   * train loss가 발산하는지, 발산하는 상황에서도 대화가 자연스러운지 체크
+* learning rate 감소 주기를 ```patience=40``` 에서 ```patience=16``` 으로 조정하여 재실험
 * 문맥 token 길이를 36에서 60 정도로 늘려서 실험 (null 토큰을 추가하는 부분은 전체 토큰 개수의 1/6 정도만 null이 아니게 하면 되는 것은 유지하지만, null 토큰을 포함한 학습 데이터를 기존보다 줄이자!)
   * RMSProp으로 train loss가 수렴하거나, 대화가 자연스러울 시 RMSProp을 이용, 그렇지 않으면 Adam 또는 AdamW를 이용
 
