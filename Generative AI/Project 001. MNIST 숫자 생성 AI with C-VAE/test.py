@@ -30,7 +30,7 @@ def generate_image_with_num(num, latent_space=None, prefix='test_number'):
     img = decoder([latent_space, input_class])
     img_np = img.numpy() * 255.0
     img_np_rgb = Image.fromarray(img_np[0]).convert('RGB')
-    img_np_rgb.save(f'test_imgs/{prefix}_{i}.png')
+    img_np_rgb.save(f'test_imgs/{prefix}_{num}.png')
 
 
 if __name__ == '__main__':
