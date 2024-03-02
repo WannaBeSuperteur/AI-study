@@ -1,6 +1,8 @@
 from embedding_helper import get_token_ids, get_token_arr
 from tokenize_data import tokenize_line, get_maps
 from train import test_model
+from add_bert_embedding_dict import find_nearest_bert_embedding
+
 import math
 import tensorflow as tf
 import numpy as np
@@ -8,6 +10,20 @@ import random
 
 NUM_INPUT_TOKENS = 36
 ing_map, ly_map = get_maps()
+token_ids = get_token_ids()
+
+
+# vocab에 없는 토큰 처리 함수
+def handle_tokens_not_in_vocab(text):
+    text_split = text.split(' ')
+
+    for i in range(len(text_split)):
+        if text_split[i] not in token_ids:
+            replaced = find_nearest_bert_embedding(text_split[i])
+            print(f'{text_split[i]} 는 vocab 에 없으므로 {replaced} 로 대체됨')
+            text_split[i] = replaced
+
+    return ' '.join(text_split)
 
 
 # 사용자 입력을 tokenize 하는 함수
@@ -22,7 +38,10 @@ def tokenize_for_test(text, fill_rest_null=True):
     if fill_rest_null and text_tokens < NUM_INPUT_TOKENS - 1:
         rest = (NUM_INPUT_TOKENS - 1) - text_tokens
         text = '<null> ' * rest + text
-        
+
+    # vocab에 없는 토큰 처리 후 반환
+    text = handle_tokens_not_in_vocab(text)
+    
     return text + ' <person-change>'
 
 
@@ -33,7 +52,7 @@ def get_user_input(fill_rest_null=True):
 
 
 # 생성형 출력을 위해, embedding array A 저장
-def get_embedding_array_A(token_ids, mini_chatgpt_model):
+def get_embedding_array_A(mini_chatgpt_model):
     vocab_size = len(token_ids)
     A = np.zeros((vocab_size, NUM_INPUT_TOKENS))
 
@@ -50,7 +69,7 @@ def get_embedding_array_A(token_ids, mini_chatgpt_model):
 
 
 # next_output_rank (tokne의 출력값 순위 정보) 재정렬
-def restore_next_output_rank(next_output_rank, token_ids, A, B):
+def restore_next_output_rank(next_output_rank, A, B):
     vocab_size = len(token_ids)
 
     for i in range(vocab_size):
@@ -92,11 +111,10 @@ def choose_one_token(next_output_rank, threshold=0.3, verbose=False):
 
 if __name__ == '__main__':
     mini_chatgpt_model = tf.keras.models.load_model('mini_chatgpt_model')
-    token_ids = get_token_ids()
     token_arr = get_token_arr()
 
     # next output rank를 생성형 예측으로 만들기 위한 embedding layer A와 random init 배열 B
-    A = get_embedding_array_A(token_ids, mini_chatgpt_model)
+    A = get_embedding_array_A(mini_chatgpt_model)
     B = np.random.uniform(0.5, 1.5, NUM_INPUT_TOKENS)
 
     print(f'embedding array A: ({np.shape(A)})\n{A}\n')
@@ -108,7 +126,7 @@ if __name__ == '__main__':
     current_turn_outputs = []
     
     next_output = ''
-    verbose_for_test = False
+    verbose_for_test = True
 
     while True:
 
@@ -141,7 +159,7 @@ if __name__ == '__main__':
                     print(next_output_rank[i])
 
             # 재정렬 후 다음 토큰 예측
-            restore_next_output_rank(next_output_rank, token_ids, A, B)
+            restore_next_output_rank(next_output_rank, A, B)
 
             if verbose_for_test:
                 print('')
