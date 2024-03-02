@@ -6,7 +6,7 @@ import numpy as np
 from train import noise_maker
 import os
 
-HIDDEN_DIMS = 16
+HIDDEN_DIMS = 40
 NUM_CLASSES = 10
 BATCH_SIZE = 32
 

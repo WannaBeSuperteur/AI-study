@@ -18,7 +18,7 @@ import keras.backend as K
 
 INPUT_IMG_SIZE = 28
 NUM_CLASSES = 10
-HIDDEN_DIMS = 16
+HIDDEN_DIMS = 40
 TOTAL_CELLS = INPUT_IMG_SIZE * INPUT_IMG_SIZE
 BATCH_SIZE = 32
 
@@ -59,18 +59,16 @@ class CVAE_Model:
 
         # encoder 용 레이어
         self.encoder_cnn0 = layers.Conv2D(32, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='ec0')
-        self.encoder_cnn1 = layers.Conv2D(48, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='ec1')
-        self.encoder_cnn2 = layers.Conv2D(64, (3, 3), strides=1, activation='relu', padding='same', kernel_regularizer=L2, name='ec2')
+        self.encoder_cnn1 = layers.Conv2D(64, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='ec1')
+        self.encoder_cnn2 = layers.Conv2D(128, (3, 3), strides=1, activation='relu', padding='same', kernel_regularizer=L2, name='ec2')
         
-        self.encoder_dense0 = layers.Dense(160, activation='relu', name='ed0')
-        self.encoder_dense1 = layers.Dense(60, activation='relu', name='ed1')
+        self.encoder_dense0 = layers.Dense(256, activation='relu', name='ed0')
 
         # decoder 용 레이어
-        self.decoder_dense0 = layers.Dense(60, activation='relu', name='dd0')
-        self.decoder_dense1 = layers.Dense(160, activation='relu', name='dd1')
-        self.decoder_dense2 = layers.Dense(64 * TOTAL_CELLS // (4 * 4), activation='relu', name='dd2')
+        self.decoder_dense0 = layers.Dense(256, activation='relu', name='dd0')
+        self.decoder_dense1 = layers.Dense(128 * TOTAL_CELLS // (4 * 4), activation='relu', name='dd1')
 
-        self.decoder_cnn0 = layers.Conv2DTranspose(48, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dc0')
+        self.decoder_cnn0 = layers.Conv2DTranspose(64, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dc0')
         self.decoder_cnn1 = layers.Conv2DTranspose(32, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dc1')
         self.decoder_cnn2 = layers.Conv2DTranspose(1, (3, 3), strides=1, activation='relu', padding='same', kernel_regularizer=L2, name='dc2')
 
@@ -89,12 +87,10 @@ class CVAE_Model:
 
         enc_merged = layers.concatenate([enc_flatten, input_class])
         enc_d0 = self.encoder_dense0(enc_merged)
-        enc_d0 = self.dropout(enc_d0)
-        enc_d1 = self.encoder_dense1(enc_d0)
 
         # latent space
-        self.latent_mean = layers.Dense(HIDDEN_DIMS, name='lm')(enc_d1)
-        self.latent_log_var = layers.Dense(HIDDEN_DIMS, name='llv')(enc_d1)
+        self.latent_mean = layers.Dense(HIDDEN_DIMS, name='lm')(enc_d0)
+        self.latent_log_var = layers.Dense(HIDDEN_DIMS, name='llv')(enc_d0)
         self.latent_space = layers.Lambda(noise_maker, output_shape=(HIDDEN_DIMS,), name='ls')([self.latent_mean, self.latent_log_var])
 
         # decoder
@@ -103,10 +99,8 @@ class CVAE_Model:
 
         dec_merged = layers.concatenate([latent_for_decoder, class_for_decoder])
         dec_d0 = self.decoder_dense0(dec_merged)
-        dec_d0 = self.dropout(dec_d0)
         dec_d1 = self.decoder_dense1(dec_d0)
-        dec_d2 = self.decoder_dense2(dec_d1)
-        dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 4, INPUT_IMG_SIZE // 4, 64))(dec_d2)
+        dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 4, INPUT_IMG_SIZE // 4, 128))(dec_d1)
 
         dec_c0 = self.decoder_cnn0(dec_reshaped)
         dec_c0 = self.dropout(dec_c0)
