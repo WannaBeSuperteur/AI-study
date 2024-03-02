@@ -15,8 +15,6 @@ import keras.backend as K
 
 # ref: https://stackoverflow.com/questions/65383964/typeerror-could-not-build-a-typespec-with-type-kerastensor
 
-tf.compat.v1.disable_eager_execution()
-
 
 INPUT_IMG_SIZE = 28
 NUM_CLASSES = 10
@@ -25,20 +23,21 @@ TOTAL_CELLS = INPUT_IMG_SIZE * INPUT_IMG_SIZE
 BATCH_SIZE = 32
 
 
+# random normal noise maker for VAE 
+def noise_maker(noise_args):
+    noise_mean = noise_args[0]
+    noise_log_var = noise_args[1]
+        
+    noise = K.random_normal(shape=(BATCH_SIZE, HIDDEN_DIMS), mean=0.0, stddev=1.0)
+    return K.exp(noise_log_var / 2.0) * noise + noise_mean
+
+
 # CVAE Model
 # 입력 이미지 (bs, 28, 28) -> (bs, 28, 28, 1), 입력 class (10,), 출력 이미지 (bs, 28, 28) (bs: batch size)
 
 # ref-1: https://www.kaggle.com/code/mersico/cvae-from-scratch
 # ref-2: https://github.com/ekzhang/vae-cnn-mnist/blob/master/MNIST%20Convolutional%20VAE%20with%20Label%20Input.ipynb
 class CVAE_Model:
-
-    def noise_maker(self, noise_args):
-        noise_mean = noise_args[0]
-        noise_log_var = noise_args[1]
-        
-        noise = K.random_normal(shape=(BATCH_SIZE, HIDDEN_DIMS), mean=0.0, stddev=1.0)
-        return K.exp(noise_log_var / 2.0) * noise + noise_mean
-
 
     # VAE 의 loss function (kl_loss : KL Divergence, https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence)
     def vae_loss(self, x, y):
@@ -100,7 +99,7 @@ class CVAE_Model:
         # latent space
         self.latent_mean = layers.Dense(HIDDEN_DIMS, name='lm')(enc_d1)
         self.latent_log_var = layers.Dense(HIDDEN_DIMS, name='llv')(enc_d1)
-        self.latent_space = layers.Lambda(self.noise_maker, output_shape=(HIDDEN_DIMS,), name='ls')([self.latent_mean, self.latent_log_var])
+        self.latent_space = layers.Lambda(noise_maker, output_shape=(HIDDEN_DIMS,), name='ls')([self.latent_mean, self.latent_log_var])
 
         # decoder
         latent_for_decoder = layers.Input(shape=(HIDDEN_DIMS,))
@@ -199,6 +198,7 @@ def train_cvae_model(train_input, train_class):
 
 
 if __name__ == '__main__':
+    tf.compat.v1.disable_eager_execution()
 
     # 학습 데이터 추출 (이미지 input + 해당 이미지의 class)
     train_input, train_class = create_train_and_valid_data()
