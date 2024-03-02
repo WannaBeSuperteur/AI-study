@@ -17,5 +17,6 @@ Generative AI/Project 001. MNIST 숫자 생성 AI with C-VAE/*.csv.zip
 Generative AI/Project 001. MNIST 숫자 생성 AI with C-VAE/cvae_model/*
 Generative AI/Project 001. MNIST 숫자 생성 AI with C-VAE/cvae_encoder_model/*
 Generative AI/Project 001. MNIST 숫자 생성 AI with C-VAE/cvae_decoder_model/*
+Generative AI/Project 001. MNIST 숫자 생성 AI with C-VAE/test_imgs/*
 *.pyc
 __pycache__/
