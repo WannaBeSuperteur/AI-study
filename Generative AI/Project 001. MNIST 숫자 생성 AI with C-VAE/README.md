@@ -33,5 +33,5 @@ python test.py
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
 |GAI-P1-master|||240302|240310|마스터 브랜치|
-|GAI-P1-1||```feat```|||```mnist_train.csv``` 데이터를 C-VAE 모델로 학습|
+|GAI-P1-1|```ing```|```feat```|240302||```mnist_train.csv``` 데이터를 C-VAE 모델로 학습|
 |GAI-P1-2||```feat```|||C-VAE 모델 테스트|
