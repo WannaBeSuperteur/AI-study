@@ -4,7 +4,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras import layers, optimizers
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
-from keras.losses import binary_crossentropy
+from keras.losses import mean_squared_error
 import keras.backend as K
 
 
@@ -43,10 +43,10 @@ class CVAE_Model:
     def vae_loss(self, x, y):
         x_reshaped = K.reshape(x, shape=(BATCH_SIZE, TOTAL_CELLS))
         y_reshaped = K.reshape(y, shape=(BATCH_SIZE, TOTAL_CELLS))
-        bce_loss = TOTAL_CELLS * binary_crossentropy(x_reshaped, y_reshaped)
+        mse_loss = TOTAL_CELLS * mean_squared_error(x_reshaped, y_reshaped)
         
         kl_loss = -0.5 * K.sum(1 + self.latent_log_var - K.square(self.latent_mean) - K.exp(self.latent_log_var), axis=-1)
-        return bce_loss + kl_loss
+        return mse_loss + kl_loss
     
 
     def __init__(self, dropout_rate=0.45):
@@ -170,7 +170,7 @@ def train_cvae_model(train_input, train_class):
 
     cvae_model_class.cvae.fit(
         [train_input, train_class, train_class], train_input,
-        epochs=25,
+        epochs=8,
         batch_size=BATCH_SIZE,
         shuffle=True
     )
