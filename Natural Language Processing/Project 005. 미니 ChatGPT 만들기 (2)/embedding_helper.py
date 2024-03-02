@@ -19,8 +19,9 @@ def get_token_ids():
 
     for _, row in train_data.iterrows():
         tokens = row['data'].split(' ')
-        
-        if row_idx >= len(train_data) - 2:
+
+        # 마지막 행 또는 다음 행이 <null> 로 시작하는 행이면
+        if row_idx >= len(train_data) - 1 or train_data.iloc[row_idx + 1]['data'].startswith('<null>'):
             for token in tokens:
                 token_list.append(token)
                 

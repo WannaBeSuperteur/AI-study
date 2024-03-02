@@ -29,6 +29,7 @@
       * ```Human 1: Hi!``` 에 해당하는 token의 이전 token은 존재하지 않는데, 37개 token 추출 시 이렇게 존재하지 않는 부분의 토큰은 모두 ```<null>``` 토큰으로 변경
     * 37개의 token 중 첫 36개 token은 입력 데이터로, 마지막 1개 token은 출력 데이터로 지정
     * 첫 36개 token에 근거하여 마지막 1개 token을 예측하는 모델을 생성하도록 데이터 구성
+    * 단, **37개 토큰 중 마지막 4개 토큰에서 ```["<person-change>", "hi"]``` 순서로 token 이 detect 되는 경우, 모델이 응답으로 "hi!" 를 지나치게 자주 출력하는 현상을 방지하기 위해 학습 데이터에서 제외**
   * 위와 같은 방법으로 구성한 데이터셋에서, 첫 90%는 train data, 마지막 10%는 validation data
     * train, valid 데이터 구분은 데이터를 지정하거나 실제 Tensorflow를 이용하여 학습할 때 split_ratio 등을 이용하여 적용한다.
   * 위 데이터는 ```train_data.csv``` 파일에 저장한다.
@@ -70,4 +71,4 @@ python test.py
 |NLP-P5-5|```done```|```fix```|240301|240301|모델 성능 향상을 위한 architecture 수정 (1차)|
 |NLP-P5-6|```done```|```feat```|240301|240301|모델 정성평가용으로, 사용자가 입력하면 모델을 통해 답변을 출력하는 부분 작성|
 |NLP-P5-7|```ing```|```fix```|240301||모델 성능 향상을 위한 arctitecture, tokenizer 등 수정|
-|NLP-P5-8||```fix```|240302||NLP-P5-7 의 하위 branch로, 데이터셋 구성 방식 수정 (다이얼로그 구분, null token 관련)|
+|NLP-P5-8|```done```|```fix```|240302|240302|NLP-P5-7 의 하위 branch로, 데이터셋 구성 방식 수정 (다이얼로그 구분, null token 관련)|
