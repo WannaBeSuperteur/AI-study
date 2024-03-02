@@ -3,6 +3,12 @@
   * 문장과 이모지 표정이 ```;``` 로 구분된 텍스트의 집합
 * 수행 기간: 2024.02.07 ~ 02.08 (2일)
 
+## License and Acknowledgements about the dataset
+* LICENSE : **CC BY-SA 4.0** [라이선스 설명](https://creativecommons.org/licenses/by-sa/4.0/)
+* Thanks to : **Elvis (https://lnkd.in/eXJ8QVB) & Hugging Face**
+* 데이터셋 제작에 사용된 기술 : https://www.aclweb.org/anthology/D18-1404/ 논문 참고
+  * Citation : ```Elvis Saravia, Hsien-Chi Toby Liu, Yen-Hao Huang, Junlin Wu, and Yi-Shin Chen. 2018. CARER: Contextualized Affect Representations for Emotion Recognition. In Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing, pages 3687–3697, Brussels, Belgium. Association for Computational Linguistics.``` 
+
 ## 파일 및 코드 설명
 * ```train.txt``` (데이터셋을 다운받아야 함) : 학습 데이터 (```val.txt```, ```test.txt``` 는 사용하지 않음)
 * ```read_data.py``` : ```train.txt``` 데이터를 읽어서 pandas DataFrame 으로 변환
