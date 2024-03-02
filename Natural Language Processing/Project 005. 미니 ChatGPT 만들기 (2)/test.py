@@ -126,7 +126,7 @@ if __name__ == '__main__':
     current_turn_outputs = []
     
     next_output = ''
-    verbose_for_test = True
+    verbose_for_test = False
 
     while True:
 
