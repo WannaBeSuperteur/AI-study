@@ -209,7 +209,7 @@ def train_cvae_model(train_input, train_class, train_color_info):
 
     cvae_model_class.cvae.fit(
         [train_input, train_condition, train_condition], train_input,
-        epochs=8,
+        epochs=40,
         batch_size=BATCH_SIZE,
         shuffle=True
     )
