@@ -1,3 +1,40 @@
+# Model 2 (2024.03.03 23:18)
+## 이전 모델과의 차이점
+* white 성분 비율에 따른 condition 값을 전체 데이터셋이 아닌, **각 숫자 class (0, 1, ..., 9) 별 평균 및 표준편차를 이용** 하는 것으로 변경
+
+## 실험 로그
+* epochs : **8**
+* 최종 train loss : **24.1930**
+
+```
+Epoch 1/8
+2024-03-03 22:45:54.238963: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2024-03-03 22:45:54.286821: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:354] MLIR V1 optimization pass is not enabled
+60000/60000 [==============================] - 269s 4ms/sample - loss: 34.0153
+Epoch 2/8
+60000/60000 [==============================] - 239s 4ms/sample - loss: 27.4517
+Epoch 3/8
+60000/60000 [==============================] - 253s 4ms/sample - loss: 26.0133
+Epoch 4/8
+60000/60000 [==============================] - 241s 4ms/sample - loss: 25.3609
+Epoch 5/8
+60000/60000 [==============================] - 243s 4ms/sample - loss: 24.9078
+Epoch 6/8
+60000/60000 [==============================] - 240s 4ms/sample - loss: 24.6133
+Epoch 7/8
+60000/60000 [==============================] - 240s 4ms/sample - loss: 24.3711
+Epoch 8/8
+60000/60000 [==============================] - 240s 4ms/sample - loss: 24.1930
+```
+
+## 실험 결과 및 총평
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/ede2fca0-29e0-4724-8572-8a5919090944)
+
+* Model 1의 경우 숫자의 굵기를 설정하는 white ratio condition의 값이 동일함에도 '1'과 같은 특정 숫자가 다른 숫자보다 굵게 나오는 이슈가 있었는데, 해당 이슈가 해결되었다.
+  * Model 1을 이용하여 해당 특정 숫자 이미지를 생성한 것이 다소 어색했는데, 이 점도 해결되었다.
+* 숫자의 굵기를 설정하는 condition의 값은 잘 반영된 편이다.
+
 # Model 1 (2024.03.03 22:00)
 ## 이전 모델과의 차이점
 * 같은 latent vector를 통해 생성하는 숫자의 굵기를 일정하게 하기 위해, **숫자 이미지의 white 성분 비율** 을 C-VAE 모델의 추가 condition으로 지정
@@ -12,6 +49,6 @@
 ## 실험 결과 및 총평
 ![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/8ec916f7-29cb-45b7-9450-6ec44752c6ad)
 
-* 위쪽 1~3, 4~6, 7~9, 10~12 번째 줄 각각이 같은 latent vector 값을 이용, 각 줄마다 굵기만 다름
+* 위쪽 1-3, 4-6, 7-9, 10-12 번째 줄 각각이 같은 latent vector 값을 이용, 각 줄마다 굵기만 다름
 * 숫자의 굵기를 설정하는 condition의 값이 실제로 잘 반영된 듯하다.
 * 같은 latent vector를 사용하고 굵기 condition만 다르게 설정한 경우, 동일한 숫자들은 글자 스타일이 동일한 것을 확인할 수 있다.

@@ -46,4 +46,4 @@ if __name__ == '__main__':
         for j in range(4):
             latent_space = np.random.normal(0.0, 1.0, size=(1, HIDDEN_DIMS))
             for k in range(3):
-                generate_image_with_num(num=i, bold=0.1+0.4*k, latent_space=latent_space, prefix=f'test_num_with_ls_{j}_{k}')
+                generate_image_with_num(num=i, bold=0.5*k, latent_space=latent_space, prefix=f'test_num_with_ls_{j}_{k}')

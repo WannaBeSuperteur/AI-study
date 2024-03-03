@@ -134,6 +134,23 @@ class CVAE_Model:
         return self.cvae(inputs)
 
 
+# 각 숫자 별 white 성분 비율의 평균 및 표준편차 파악
+def check_white_ratio_stat(train_df):
+    avgs = []
+    stds = []
+
+    for i in range(10):
+        class_pixels_info = np.array(train_df[train_df['label'] == i].iloc[:, 1:TOTAL_CELLS+1]) / 255.0
+        class_pixels_info = np.sum(class_pixels_info, axis=1) / TOTAL_CELLS
+        
+        avgs.append(np.mean(class_pixels_info.flatten()))
+        stds.append(np.std(class_pixels_info.flatten()))
+        print(f'class: {i}, white ratio mean: {avgs[i]}, std: {stds[i]}')
+
+    print('')
+    return avgs, stds
+
+
 # mnist_train.csv 파일로부터 학습 데이터 추출
 def create_train_and_valid_data():
     train_df = pd.read_csv('mnist_train.csv')
@@ -144,6 +161,10 @@ def create_train_and_valid_data():
     train_class = np.zeros((train_n, NUM_CLASSES))
     train_color_info = np.zeros((train_n, 1))
 
+    # 각 숫자 별 white 성분 비율 평균, 표준편차 파악
+    white_ratio_avg, white_ratio_std = check_white_ratio_stat(train_df)
+
+    # 입력, 출력 데이터 추출
     for idx, row in train_df.iterrows():
         if idx % 5000 == 0:
             print(idx)
@@ -159,7 +180,14 @@ def create_train_and_valid_data():
         train_class[idx][out_class] = 1
 
         # output (color info)
-        train_color_info[idx][0] = np.clip((np.sum(inp) / TOTAL_CELLS - 0.075) * 10.0, 0.0, 1.0)
+        wr_avg = white_ratio_avg[out_class]
+        wr_std = white_ratio_std[out_class]
+        white_ratio = np.sum(inp) / TOTAL_CELLS
+
+        if idx < 3 or idx >= len(train_df) - 3:
+            print(f'idx:{idx}, white_ratio:{white_ratio}, avg:{wr_avg}, std:{wr_std}')
+        
+        train_color_info[idx][0] = np.clip((white_ratio - wr_avg) / wr_std * 0.5, -1.0, 1.0)
 
     return train_input, train_class, train_color_info
 
