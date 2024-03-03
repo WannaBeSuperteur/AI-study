@@ -1,3 +1,151 @@
+# model 5 (2024.03.03 13:10)
+
+## 모델 설정 및 코드
+* 데이터셋 구조, 모델 구조 등 전반적으로 변경
+* epochs = 40
+
+## 모델 학습 (fit) 로그 (```train.py``` 실행)
+
+**최초 10회 epochs**
+```
+Epoch 1/40
+702/702 [==============================] - 35s 42ms/step - loss: 5.8466 - val_loss: 5.6081 - lr: 0.0010
+Epoch 2/40
+702/702 [==============================] - 33s 46ms/step - loss: 5.1158 - val_loss: 5.4293 - lr: 0.0010
+Epoch 3/40
+702/702 [==============================] - 45s 64ms/step - loss: 4.6870 - val_loss: 5.4672 - lr: 0.0010
+Epoch 4/40
+702/702 [==============================] - 37s 53ms/step - loss: 4.3724 - val_loss: 5.5520 - lr: 0.0010
+Epoch 5/40
+702/702 [==============================] - 38s 54ms/step - loss: 4.1147 - val_loss: 5.7065 - lr: 0.0010
+Epoch 6/40
+702/702 [==============================] - 40s 57ms/step - loss: 3.8787 - val_loss: 5.9534 - lr: 0.0010
+Epoch 7/40
+702/702 [==============================] - 41s 58ms/step - loss: 3.6487 - val_loss: 6.1311 - lr: 0.0010
+Epoch 8/40
+702/702 [==============================] - 40s 57ms/step - loss: 3.4174 - val_loss: 6.5045 - lr: 0.0010
+Epoch 9/40
+702/702 [==============================] - 41s 58ms/step - loss: 3.1904 - val_loss: 6.8426 - lr: 0.0010
+Epoch 10/40
+702/702 [==============================] - 42s 59ms/step - loss: 2.9627 - val_loss: 7.0970 - lr: 0.0010
+```
+
+**마지막 10회 epochs**
+```
+Epoch 31/40
+702/702 [==============================] - 48s 68ms/step - loss: 0.5686 - val_loss: 16.4193 - lr: 0.0010
+Epoch 32/40
+702/702 [==============================] - 42s 60ms/step - loss: 0.5294 - val_loss: 16.7121 - lr: 0.0010
+Epoch 33/40
+702/702 [==============================] - 42s 60ms/step - loss: 0.4998 - val_loss: 17.0463 - lr: 0.0010
+Epoch 34/40
+702/702 [==============================] - 42s 60ms/step - loss: 0.4532 - val_loss: 17.4552 - lr: 0.0010
+Epoch 35/40
+702/702 [==============================] - 42s 60ms/step - loss: 0.4203 - val_loss: 17.9717 - lr: 0.0010
+Epoch 36/40
+702/702 [==============================] - 43s 61ms/step - loss: 0.3990 - val_loss: 18.3355 - lr: 0.0010
+Epoch 37/40
+702/702 [==============================] - 44s 63ms/step - loss: 0.3766 - val_loss: 18.5393 - lr: 0.0010
+Epoch 38/40
+702/702 [==============================] - 43s 61ms/step - loss: 0.3429 - val_loss: 19.1572 - lr: 0.0010
+Epoch 39/40
+702/702 [==============================] - 45s 64ms/step - loss: 0.3259 - val_loss: 19.2953 - lr: 0.0010
+Epoch 40/40
+702/702 [==============================] - 56s 80ms/step - loss: 0.3113 - val_loss: 20.2240 - lr: 0.0010
+```
+
+## 대화 테스트 로그 (```test.py``` 실행)
+현재 AI 답변은 출력된 token 을 단순히 공백으로 연결한 것이며, 실제 서비스로 배포할 때는 해당 부분을 픽스해야 합니다.
+
+```
+input text :
+Hi!
+AI output :
+hello , how are you doing today ? busy with your day so far ?
+
+input text :
+No, I am not busy.
+AI output :
+talking to claim you are a scary or had it ! try this ?
+
+input text :
+I didn't try it.
+AI output :
+talking to chat for long . try this is diving for your hike ?
+
+input text :
+What do you mean?
+AI output :
+a project went to tell me . it had n't like a pretty high resolution .
+
+input text :
+What are you doing?
+AI output :
+i 'm go -ing to learn , but i got to get my minute schedule any month though . do you ever heard of it ?
+
+input text :
+Do you eat bread?
+bread 는 vocab 에 없으므로 meat 로 대체됨
+AI output :
+i think so . i know a bit sad and samosas with a while . i do n't recall neural go down for the one mins driver
+
+input text :
+Hello!
+AI output :
+how was your party last week ?
+
+input text :
+When did you learn English?
+AI output :
+yes ! i made i made donuts and samosas with an air fryer have you believe in dinner food in bay area . have you seen more food . have you ever made for where we have one of ?
+
+input text :
+What are you doing now?
+AI output :
+at my favorite dish will we have any shovel semester ?
+
+input text :
+Which movie do you like?
+AI output :
+i think i know right ! i know right ! where i went to australia and finish up skiing in cats - robots in there comes as to ask .
+
+input text :
+ttyl
+AI output :
+how 's your day go -ing ?
+
+input text :
+I'm fine.
+AI output :
+how does your name ? try to keep an open mind !
+
+input text :
+Open mind?
+AI output :
+it 's a little a depress -ing food and something you at a try !
+
+input text :
+Okay
+AI output :
+corgi belly flop compilation - cute more virtual reality you like some day for his something something for christmas and ?
+
+input text :
+Merry Christmas!
+merry 는 vocab 에 없으므로 giant 로 대체됨
+AI output :
+what is it go -ing ?
+
+input text :
+You are an artificial intelligence.
+AI output :
+haha . . . very honestly , i 've been to say after this sentient do to be born with . . . this stay this time , so . like is go -ing to the hotel !
+```
+
+## 총평
+* AI의 답변이 비교적 자연스러운 편이지만, 질문의 의도를 파악하지 못하는 경우가 여전히 많다.
+* loss를 token에 대한 categorical crossentropy에서, 자체 임베딩 모델에 근거한 실제 embedding과 예측 embedding 간의 mean squared loss로 변경하면 어떨까?
+  * 이를 위해서 임베딩 검증, 자체 임베딩을 위한 첫번째 모델 학습 (기존 모델), 자체 임베딩에 근거한 embedding 예측 모델 학습 (신규 모델) 필요할듯
+
 # model 4 (2024.03.03 05:04)
 
 ## 모델 설정 및 코드

@@ -111,7 +111,7 @@ def train_model(input_data_all, output_data_all):
     model.fit(
         train_input, train_output,
         callbacks=[early_stopping, lr_reduced],
-        epochs=3,
+        epochs=40,
         validation_data=(valid_input, valid_output)
     )
 
