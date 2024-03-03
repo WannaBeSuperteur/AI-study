@@ -50,34 +50,15 @@ def encode_one_hot(token_ids, token):
 
 
 # cosine similarity
-def cos_sim(x, y):
-    return dot(x, y) / (norm(x) * norm(y))
+def cos_sim(x, y, weight=None):
+    n = len(x)
+
+    if weight is not None:
+        x_weighted = [x[i] * weight[i] for i in range(n)]
+        y_weighted = [y[i] * weight[i] for i in range(n)]
+        return dot(x_weighted, y_weighted) / (norm(x_weighted) * norm(y_weighted))
+    else:
+        return dot(x, y) / (norm(x) * norm(y))
 
 
-# embedding array A를 이용한 임베딩 검증 (임시)
-def validate_embedding(A, token_ids, token_pairs):
-    for token_pair in token_pairs:
-        first_token_embedding = A[token_ids[token_pair[0]]]
-        second_token_embedding = A[token_ids[token_pair[1]]]
-        
-        cos_similarity = cos_sim(first_token_embedding, second_token_embedding)
-        print(f'embedding between {token_pair[0]}, {token_pair[1]} : {cos_similarity}')
 
-
-# embedding array A를 이용한 가장 가까운 토큰 순위 표시
-def print_most_similar_tokens(A, token_ids, token_arr, token):
-    token_embedding = A[token_ids[token]]
-
-    result = []
-    for i in range(len(A)):
-        token_to_check_sim = token_arr[i]
-        emb_of_token = A[i]
-        cos_similarity = cos_sim(token_embedding, emb_of_token)
-        
-        result.append([token_to_check_sim, cos_similarity])
-
-    result.sort(key=lambda x: x[1], reverse=True)
-
-    print(f'\n10 nearest token of "{token}" based on embedding:')
-    for i in range(11):
-        print(f'rank {i} : {result[i]}')

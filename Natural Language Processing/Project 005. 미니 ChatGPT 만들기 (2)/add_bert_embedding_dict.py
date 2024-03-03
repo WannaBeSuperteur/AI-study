@@ -57,23 +57,38 @@ def find_nearest_bert_embedding(token):
     return min_dist_token
 
 
-# 가장 가까운 BERT Embedding 순위 출력
+# 가장 가까운 BERT Embedding 순위 출력 (token 이 주어졌을 때)
 # 참고: Pandas Dataframe 대신 Numpy array를 이용하면 속도가 훨씬 빨라진다?
-def find_nearest_bert_embedding_rank(token, bert_embedding_dict_np, embed_limit=128):
+def find_nearest_bert_embedding_rank_for_token(token, bert_embedding_dict_np, embed_limit=128, verbose=False):
     token_embedding = get_bert_embedding(token)[0][:embed_limit]
+    
+    return find_nearest_bert_embedding_rank_for_embvec(
+        embedding_vector=token_embedding,
+        bert_embedding_dict_np=bert_embedding_dict_np,
+        embed_limit=embed_limit,
+        verbose=verbose
+    )
+
+
+# 가장 가까운 BERT Embedding 순위 출력 (embedding vector 가 주어졌을 때)
+def find_nearest_bert_embedding_rank_for_embvec(embedding_vector, bert_embedding_dict_np, embed_limit=128, verbose=False, weight=None):
     result = []
     
     for i in range(len(bert_embedding_dict_np)):
         tkn = bert_embedding_dict_np[i][0]
         embedding = bert_embedding_dict_np[i][1:embed_limit+1]
-        cos_similarity = cos_sim(token_embedding, embedding) # Cosine similarity
-        result.append([tkn, cos_similarity])
+        
+        cos_similarity = cos_sim(embedding_vector, embedding, weight=weight) # Cosine similarity with element-wise weight
+        result.append([tkn, cos_similarity ** 4.0])
 
     result.sort(key=lambda x: x[1], reverse=True)
 
-    print(f'\n10 nearest token of "{token}" based on BERT embedding (limit: {embed_limit}) :')
-    for i in range(11):
-        print(f'rank {i} : {result[i]}')
+    if verbose:
+        print(f'10 nearest tokens based on BERT embedding (limit: {embed_limit}) :')
+        for i in range(11):
+            print(f'rank {i} : {result[i]}')
+
+    return result
 
 
 # BERT Embedding table 파일에서 token의 임베딩 찾기

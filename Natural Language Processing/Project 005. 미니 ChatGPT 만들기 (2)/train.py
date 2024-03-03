@@ -1,5 +1,5 @@
 from embedding_helper import get_token_ids, get_token_arr, encode_one_hot
-from add_bert_embedding_dict import find_embedding_from_table
+from add_bert_embedding_dict import find_embedding_from_table, find_nearest_bert_embedding_rank_for_embvec
 import pandas as pd
 import numpy as np
 import os
@@ -239,7 +239,7 @@ def run_all_process(limit=None):
 
 
 # NLP 모델 테스트
-def test_model(text, model, additional_tokenize=True, is_return=False, verbose=False, token_arr=None, token_ids=None):
+def test_model(text, model, additional_tokenize=True, is_return=False, verbose=False, token_arr=None, token_ids=None, weight=None):
     if token_ids is None:
         token_ids = get_token_ids()
 
@@ -276,13 +276,16 @@ def test_model(text, model, additional_tokenize=True, is_return=False, verbose=F
     if verbose:
         print(f'first 10 of token arr: {token_arr[:10]}')
 
-    output_rank = []
-    for i in range(len(token_ids)):
-        token = token_arr[i]
-        prob = float(output[0][i])
-        output_rank.append([token, prob])
-            
-    output_rank.sort(key=lambda x:x[1], reverse=True)
+    bert_embedding_table_df = pd.read_csv('bert_embedding_dict.csv', index_col=0)
+    bert_embedding_table_np = np.array(bert_embedding_table_df)
+
+    output_rank = find_nearest_bert_embedding_rank_for_embvec(
+        embedding_vector=output[0].numpy(),
+        bert_embedding_dict_np=bert_embedding_table_np,
+        embed_limit=TKN_EMBEDDING_DIM,
+        verbose=False,
+        weight=weight
+    )
 
     if verbose:
         for i in range(20):
