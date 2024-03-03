@@ -3,11 +3,12 @@ from tokenize_data import tokenize_line, get_maps
 from train import test_model
 from train import INPUT_TOKEN_CNT_EACH, TKN_EMBEDDING_DIM
 
-from add_bert_embedding_dict import find_nearest_bert_embedding
+from add_bert_embedding_dict import find_nearest_bert_embedding, find_nearest_bert_embedding_rank
 
 import math
 import tensorflow as tf
 import numpy as np
+import pandas as pd
 import random
 
 ing_map, ly_map = get_maps()
@@ -120,10 +121,16 @@ if __name__ == '__main__':
     token_pairs_for_valid_embed = [["'m", "am"], ["'s", "is"], ["n't", "not"], ["one", "two"], ["what", "which"],
                                    ["make", "super"], ["deep", "food"], ["what", "could"], ["song", "to"], ["listen", "where"]]
     validate_embedding(A, token_ids, token_pairs_for_valid_embed)
+
+    bert_embedding_dict_df = pd.read_csv('bert_embedding_dict.csv', index_col=0)
+    bert_embedding_dict_np = np.array(bert_embedding_dict_df)
     
-    tokens_for_valid_embed = ['good', 'i', 'am', 'is', 'are', 'his', 'her', 'where', 'when']
+    tokens_for_valid_embed = ['good', 'better', 'best', 'chicken', 'strawberry', 'blue', 'green', 'down', 'rainy', 'moon']
     for token in tokens_for_valid_embed:
         print_most_similar_tokens(A, token_ids, token_arr, token)
+
+        # BERT 임베딩 결과와 비교
+        find_nearest_bert_embedding_rank(token, bert_embedding_dict_np, embed_limit=128)
 
     # 사용자 입력
     tokenized_input = get_user_input() + (' <null>' * INPUT_TOKEN_CNT_EACH)
