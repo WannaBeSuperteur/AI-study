@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import tensorflow as tf
 import time
+from numpy import dot
+from numpy.linalg import norm
 
 
 # 단어를 사전순으로 정렬하여 첫 단어부터 0, 1, ... 로 매긴 dict 반환
@@ -45,4 +47,18 @@ def encode_one_hot(token_ids, token):
     result = [0 for i in range(len(token_ids))]
     result[token_ids[token]] = 1
     return result
+
+
+# cosine similarity
+def cos_sim(x, y, weight=None):
+    n = len(x)
+
+    if weight is not None:
+        x_weighted = [x[i] * weight[i] for i in range(n)]
+        y_weighted = [y[i] * weight[i] for i in range(n)]
+        return dot(x_weighted, y_weighted) / (norm(x_weighted) * norm(y_weighted))
+    else:
+        return dot(x, y) / (norm(x) * norm(y))
+
+
 

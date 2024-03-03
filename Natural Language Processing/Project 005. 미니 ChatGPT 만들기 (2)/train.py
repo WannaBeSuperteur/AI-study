@@ -1,4 +1,5 @@
 from embedding_helper import get_token_ids, get_token_arr, encode_one_hot
+from add_bert_embedding_dict import find_embedding_from_table, find_nearest_bert_embedding_rank_for_embvec
 import pandas as pd
 import numpy as np
 import os
@@ -6,14 +7,29 @@ import os
 from tokenize_data import get_maps, tokenize_line
 
 import tensorflow as tf
+import tensorflow.keras.backend as K
+
 from tensorflow.keras import layers, optimizers
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from tensorflow.keras.layers import Dense, LSTM, Bidirectional, Embedding, LeakyReLU, Dropout, Flatten, concatenate
+from tensorflow.keras.utils import get_custom_objects
 
 
 INPUT_TOKEN_CNT_EACH = 30 # 학습 데이터 row 당 각 발화자의 turn에 대한 입력 토큰 개수
 TKN_EMBEDDING_DIM = 128 # token embedding dimension
 VOCAB_SIZE = None
+
+
+# 사용자 정의 activation function = 1.5 * tanh(x) (-1 < tanh(x) < 1 인데, output 되는 값의 절댓값이 1보다 큰 경우 존재)
+class Tanh_mul(tf.keras.layers.Activation):
+    def __init__(self, activation, **kwargs):
+        super(Tanh_mul, self).__init__(activation, **kwargs)
+        self.__name__ = 'Tanh_mul'
+        
+def tanh_mul(x):
+    return 1.5 * K.tanh(x)
+
+get_custom_objects().update({'tanh_mul': Tanh_mul(tanh_mul)})
 
 
 # mini chatgpt model (=NLP model)
@@ -44,10 +60,10 @@ class MiniChatGPTModel(tf.keras.Model):
 
         # dense layers
         self.dense = Dense(128, activation=LeakyReLU(alpha=0.1))
-        self.final = Dense(VOCAB_SIZE, activation='softmax')
+        self.final = Dense(TKN_EMBEDDING_DIM, activation='tanh_mul')
+
 
     def call(self, inputs, training):
-
         inputs_last_turn, inputs_current_turn = tf.split(inputs, [INPUT_TOKEN_CNT_EACH, INPUT_TOKEN_CNT_EACH], axis=1)
 
         # for last turn
@@ -97,6 +113,9 @@ def define_data(input_data_all, output_data_all, valid_ratio=0.1):
 
 # NLP 모델 학습
 def train_model(input_data_all, output_data_all):
+    print(f'all input : {np.shape(input_data_all)}\n{input_data_all}\n')
+    print(f'all output : {np.shape(output_data_all)}\n{output_data_all}\n')
+    
     (train_input, train_output, valid_input, valid_output) = define_data(input_data_all, output_data_all)
 
     print(f'train input : {np.shape(train_input)}\n{train_input}\n')
@@ -105,13 +124,12 @@ def train_model(input_data_all, output_data_all):
     print(f'valid output : {np.shape(valid_output)}\n{valid_output}\n')
     
     model, optimizer, early_stopping, lr_reduced = define_model()
-    
-    model.compile(loss='categorical_crossentropy', optimizer=optimizer)
+    model.compile(loss='mse', optimizer=optimizer)
 
     model.fit(
         train_input, train_output,
         callbacks=[early_stopping, lr_reduced],
-        epochs=40,
+        epochs=3,
         validation_data=(valid_input, valid_output)
     )
 
@@ -133,17 +151,19 @@ input : (44380, 24)
  [1734 2269   25 ...   11 1325   25]
  [  76   76   76 ...   76   76   76]]
 
-output : (44380, 1)
-[[2514]
- [2514]
- [1607]
- ...
- [  25]
- [  77]
- [  77]]
+output : (44380, embedding_dim) = (44380, 128), first 128 elements of BERT embedding of output token
+(단, 여기에 표시된 각 token ID에 대한 BERT 임베딩은 임의로 만든 것으로, 아래와 다를 수 있음)
+
+[[2514]      [[0.53, 0.45, -0.17, ...,  0.28,  0.19, 0.6 ]
+ [2514]       [0.53, 0.45, -0.17, ...,  0.28,  0.19, 0.6 ]
+ [1607]       [1.12, 0.7,   0.13, ..., -0.45, -0.79, 0.02]
+ ...      =>  ...
+ [  25]       [0.97, 0.08,  0.02, ..., -1.01,  0.9 , 0.44]
+ [  77]       [0.66, 0.24,  0.19, ...,  0.38, -0.99, 0.75]
+ [  77]]      [0.66, 0.24,  0.19, ...,  0.38, -0.99, 0.75]]
 """
 
-def get_train_data_token_ids(token_ids, verbose=False, limit=None):
+def get_train_data_token_embeddings(token_ids, verbose=False, limit=None):
     vocab_size = len(token_ids)
     
     train_data = pd.read_csv('train_data.csv', index_col=0)
@@ -163,6 +183,11 @@ def get_train_data_token_ids(token_ids, verbose=False, limit=None):
     input_data_all = [] # 전체 학습 입력 데이터
     output_data_all = [] # 전체 학습 출력 데이터
 
+    # BERT 임베딩 파일을 numpy로 변환
+    bert_embedding_dict_df = pd.read_csv('bert_embedding_dict.csv', index_col=0)
+    bert_embedding_dict_np = np.array(bert_embedding_dict_df)
+    
+    # BERT 임베딩을 output data에 추가
     for _, row in train_data.iterrows():
         if train_data_iter_cnt % 5000 == 0:
             print(f'count: {train_data_iter_cnt}')
@@ -177,7 +202,14 @@ def get_train_data_token_ids(token_ids, verbose=False, limit=None):
 
         for input_token in input_tokens:
             input_text_token_ids.append(token_ids[input_token])
-        output_text_token_ids.append(encode_one_hot(token_ids=token_ids, token=output_token))
+
+        output_embedding = find_embedding_from_table(
+            token=output_token,
+            token_ids=token_ids,
+            bert_embedding_dict_np=bert_embedding_dict_np,
+            embed_limit=TKN_EMBEDDING_DIM
+        )
+        output_text_token_ids.append(output_embedding)
 
         train_data_iter_cnt += 1
 
@@ -185,13 +217,13 @@ def get_train_data_token_ids(token_ids, verbose=False, limit=None):
         input_data_all.append(np.array(input_text_token_ids).flatten())
         output_data_all.append(np.array(output_text_token_ids).flatten())
 
-    return np.array(input_data_all), np.array(output_data_all)
+    return np.array(input_data_all).astype(np.float16), np.array(output_data_all).astype(np.float16)
 
 
 # 모델 학습 프로세스 전체 진행
 def run_all_process(limit=None):
     global VOCAB_SIZE
-    
+    np.set_printoptions(linewidth=160)
     token_ids = get_token_ids()
 
     # vocab size 초기화
@@ -199,7 +231,7 @@ def run_all_process(limit=None):
     print(f'VOCAB SIZE = {VOCAB_SIZE}')
     
     # 학습 데이터
-    input_data_all, output_data_all = get_train_data_token_ids(token_ids, limit=limit)
+    input_data_all, output_data_all = get_train_data_token_embeddings(token_ids, limit=limit)
 
     # 모델 학습 및 저장
     main_model = train_model(input_data_all, output_data_all)
@@ -207,7 +239,7 @@ def run_all_process(limit=None):
 
 
 # NLP 모델 테스트
-def test_model(text, model, additional_tokenize=True, is_return=False, verbose=False, token_arr=None, token_ids=None):
+def test_model(text, model, additional_tokenize=True, is_return=False, verbose=False, token_arr=None, token_ids=None, weight=None):
     if token_ids is None:
         token_ids = get_token_ids()
 
@@ -238,20 +270,22 @@ def test_model(text, model, additional_tokenize=True, is_return=False, verbose=F
     if verbose:
         print(f'mini chatgpt model output: {output[0]}')
 
-    output_rank = []
-
     if token_arr is None:
         token_arr = get_token_arr()
 
     if verbose:
         print(f'first 10 of token arr: {token_arr[:10]}')
 
-    for i in range(len(token_ids)):
-        token = token_arr[i]
-        prob = float(output[0][i])
-        output_rank.append([token, prob])
-            
-    output_rank.sort(key=lambda x:x[1], reverse=True)
+    bert_embedding_table_df = pd.read_csv('bert_embedding_dict.csv', index_col=0)
+    bert_embedding_table_np = np.array(bert_embedding_table_df)
+
+    output_rank = find_nearest_bert_embedding_rank_for_embvec(
+        embedding_vector=output[0].numpy(),
+        bert_embedding_dict_np=bert_embedding_table_np,
+        embed_limit=TKN_EMBEDDING_DIM,
+        verbose=False,
+        weight=weight
+    )
 
     if verbose:
         for i in range(20):
