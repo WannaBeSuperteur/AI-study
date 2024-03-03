@@ -59,7 +59,7 @@ def find_nearest_bert_embedding(token):
 
 # 가장 가까운 BERT Embedding 순위 출력
 # 참고: Pandas Dataframe 대신 Numpy array를 이용하면 속도가 훨씬 빨라진다?
-def find_nearest_bert_embedding_rank(token, bert_embedding_dict_np, embed_limit=24):
+def find_nearest_bert_embedding_rank(token, bert_embedding_dict_np, embed_limit=128):
     token_embedding = get_bert_embedding(token)[0][:embed_limit]
     result = []
     
@@ -74,6 +74,12 @@ def find_nearest_bert_embedding_rank(token, bert_embedding_dict_np, embed_limit=
     print(f'\n10 nearest token of "{token}" based on BERT embedding (limit: {embed_limit}) :')
     for i in range(11):
         print(f'rank {i} : {result[i]}')
+
+
+# BERT Embedding table 파일에서 token의 임베딩 찾기
+def find_embedding_from_table(token, token_ids, bert_embedding_dict_np, embed_limit=128):
+    token_id = token_ids[token]
+    return bert_embedding_dict_np[token_id][1:embed_limit+1]
 
 
 # BERT Embedding 목록 생성
@@ -91,7 +97,8 @@ def create_bert_embedding_dict(token_ids):
     return bert_embedding_dict
 
 
-if __name__ == '__main__':
+# BERT embedding table 생성의 전체 프로세스 실행
+def run_all_process_bert_embedding_table():
     token_ids = get_token_ids()
     bert_embedding_dict = create_bert_embedding_dict(token_ids)
     save_bert_embedding_dict(bert_embedding_dict)
@@ -102,3 +109,7 @@ if __name__ == '__main__':
     for test_token in test_tokens:
         nearest_token = find_nearest_bert_embedding(test_token)
         print(f'nearest token of {test_token} : {nearest_token}')
+
+
+if __name__ == '__main__':
+    run_all_process_bert_embedding_table()

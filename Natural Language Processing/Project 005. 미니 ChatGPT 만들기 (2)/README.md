@@ -41,7 +41,8 @@
 * **모델 설명 (```mini_chatgpt_model```)**
   * ChatGPT와 같은 챗봇에서 답변을 출력하는 것과 같은 역할을 하는 NLP 모델
   * 입력 : 학습 데이터에서, 입력 데이터에 해당하는 30 + 30 = 60개의 token의 ID
-  * 출력 : 학습 데이터에서, 출력 데이터에 해당하는 1개의 token에 대해 **BERT 모델** 의 임베딩에 근거한 임베딩 결과 (크기: embedding size = 128)
+  * 출력 : 학습 데이터에서, 출력 데이터에 해당하는 1개의 token에 대해 **BERT 모델** 의 임베딩에 근거한 임베딩 결과 (크기: ```embedding size``` = **128**)
+    * BERT embedding의 원래 dimension은 768 이지만, 이 중 **첫 128개의 element** 만을 이용
     * vocab에 있는 각 단어의 **BERT 모델** 에 의한 임베딩 벡터를 저장한 **BERT embedding table** 에서, 출력 벡터와 가장 가까운 임베딩 벡터에 해당하는 token을 최종 출력 
   * **생성형 출력** 을 위한 처리
     * 출력 벡터와 임베딩 벡터 간 Cosine Similarity를 계산할 때, 벡터의 각 (대응되는) 성분별 가중치를 둔다. 
@@ -51,7 +52,7 @@
     * 입력 데이터에서 상대방의 말에 해당하는 마지막 30 token을 **token ID -> token-wise embedding -> LSTM -> Dense -> input-A** 로 구성
     * 입력 데이터에서 현재 말하는 중인 자신의 말에 해당하는 마지막 30 token을 **token ID -> token-wise embedding -> LSTM -> Dense -> input-B** 로 구성
     * 위 **input-A**, **input-B** 에 해당하는 내용에 대해 **("input-A" + "input-B" concatenation) -> Dense Layers -> output** 을 적용
-      * output 부분 : ```output (with embedding size)``` : embedding table 기준, 출력 벡터와 가장 가까운 임베딩 벡터에 해당하는 token 출력
+      * output 부분 : ```output (dimension = embedding size = 128)``` : embedding table 기준, 출력 벡터와 가장 가까운 임베딩 벡터에 해당하는 token 출력
 
 ## 실행 순서
 ```

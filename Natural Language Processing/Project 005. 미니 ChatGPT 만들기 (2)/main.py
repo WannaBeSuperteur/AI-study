@@ -1,5 +1,6 @@
 from generate_data import generate_data
 from tokenize_data import tokenize_file_content
+from add_bert_embedding_dict import run_all_process_bert_embedding_table
 from train import run_all_process
 import os
 
@@ -14,6 +15,11 @@ if __name__ == '__main__':
     if 'train_data.csv' not in file_list:
         print('creating train data ...')
         generate_data(tokens)
+
+    # BERT embedding table 생성
+    if 'bert_embedding_dict.csv' not in file_list:
+        print('create BERT embedding table ...')
+        run_all_process_bert_embedding_table()
 
     # 메인 모델 학습
     if 'mini_chatgpt_model' not in file_list:
