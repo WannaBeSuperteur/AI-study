@@ -1,3 +1,156 @@
+# model 4 (2024.03.03 05:04)
+
+## 모델 설정 및 코드
+* 데이터셋 생성 방식 변경 적용
+* 이외는 **model 3** 과 모두 동일
+
+## 모델 학습 (fit) 로그 (```train.py``` 실행)
+
+**최초 10회 epochs**
+```
+Epoch 1/180
+699/699 [==============================] - 57s 77ms/step - loss: 5.9118 - val_loss: 5.7094 - lr: 0.0010
+Epoch 2/180
+699/699 [==============================] - 62s 88ms/step - loss: 5.2957 - val_loss: 5.4968 - lr: 0.0010
+Epoch 3/180
+699/699 [==============================] - 59s 84ms/step - loss: 4.9160 - val_loss: 5.5363 - lr: 0.0010
+Epoch 4/180
+699/699 [==============================] - 61s 87ms/step - loss: 4.6447 - val_loss: 5.6069 - lr: 0.0010
+Epoch 5/180
+699/699 [==============================] - 55s 79ms/step - loss: 4.4237 - val_loss: 5.6599 - lr: 0.0010
+Epoch 6/180
+699/699 [==============================] - 55s 79ms/step - loss: 4.2384 - val_loss: 5.7974 - lr: 0.0010
+Epoch 7/180
+699/699 [==============================] - 55s 79ms/step - loss: 4.0784 - val_loss: 5.9082 - lr: 0.0010
+Epoch 8/180
+699/699 [==============================] - 55s 79ms/step - loss: 3.9075 - val_loss: 6.0698 - lr: 0.0010
+Epoch 9/180
+699/699 [==============================] - 56s 80ms/step - loss: 3.7626 - val_loss: 6.1821 - lr: 0.0010
+Epoch 10/180
+699/699 [==============================] - 55s 79ms/step - loss: 3.6111 - val_loss: 6.3420 - lr: 0.0010
+```
+
+**마지막 10회 epochs**
+```
+Epoch 171/180
+699/699 [==============================] - 86s 123ms/step - loss: 0.5765 - val_loss: 11.1129 - lr: 6.2500e-05
+Epoch 172/180
+699/699 [==============================] - 92s 132ms/step - loss: 0.5743 - val_loss: 11.1167 - lr: 6.2500e-05
+Epoch 173/180
+699/699 [==============================] - 90s 128ms/step - loss: 0.5667 - val_loss: 11.1291 - lr: 6.2500e-05
+Epoch 174/180
+699/699 [==============================] - 90s 128ms/step - loss: 0.5684 - val_loss: 11.1234 - lr: 6.2500e-05
+Epoch 175/180
+699/699 [==============================] - 94s 135ms/step - loss: 0.5655 - val_loss: 11.1238 - lr: 6.2500e-05
+Epoch 176/180
+699/699 [==============================] - 95s 136ms/step - loss: 0.5705 - val_loss: 11.1218 - lr: 6.2500e-05
+Epoch 177/180
+699/699 [==============================] - 94s 135ms/step - loss: 0.5779 - val_loss: 11.1103 - lr: 6.2500e-05
+Epoch 178/180
+699/699 [==============================] - 89s 127ms/step - loss: 0.5826 - val_loss: 11.1275 - lr: 6.2500e-05
+Epoch 179/180
+699/699 [==============================] - 90s 129ms/step - loss: 0.5721 - val_loss: 11.1235 - lr: 6.2500e-05
+Epoch 180/180
+699/699 [==============================] - 92s 131ms/step - loss: 0.5631 - val_loss: 11.1194 - lr: 6.2500e-05
+```
+
+## 대화 테스트 로그 (```test.py``` 실행)
+현재 AI 답변은 출력된 token 을 단순히 공백으로 연결한 것이며, 실제 서비스로 배포할 때는 해당 부분을 픽스해야 합니다.
+
+```
+input text :
+What is your favorite season?
+AI output :
+okayish , i 'm flying by quicker than i expected . how are you up to ?
+
+input text :
+I am fine.
+AI output :
+what are you up to today ?
+
+input text :
+Up to?
+AI output :
+i 'm actual -ly a hard , but i would love hawaii .
+
+input text :
+When did you go to hawaii?
+AI output :
+asian food is a spinoff from a cylinder where about you ?
+
+input text :
+Cylinder?
+AI output :
+thank you ? do you have homemade noodle soup ?
+
+input text :
+No, I don't have it.
+AI output :
+i am quite decent with a laughter !
+
+input text :
+Good bye!
+AI output :
+i love hawaii . what types of food do you live ?
+
+input text :
+I like chicken.
+AI output :
+ok , very reality is real -ly a robot , i 'm close to common , yay !
+
+input text :
+What do you mean?
+AI output :
+i 'm a hard for a rest of the close to skills to try .
+
+input text :
+I'm OK. Thank you.
+AI output :
+that 's cool ! what is this saturday ?
+
+input text :
+Yesterday.
+```
+
+```
+input text :
+What did you do yesterday?
+yesterday 는 vocab 에 없으므로 lately 로 대체됨
+AI output :
+i watched a few lately , but nothing is as avatar . what are you up to ?
+
+input text :
+I have nothing. What will you do today?
+AI output :
+i 'm real -ly enjoy the avenger movies
+
+input text :
+Avenger movies?
+AI output :
+yeah . maybe at a full time ! but which make you 're a hokkaido or something else ?
+
+input text :
+What is hokkaido?
+AI output :
+i 've only got a couple weeks haha
+
+input text :
+Ok. ttyl
+AI output :
+yeah that is awesome ! what do you like to ask other else ?
+
+input text :
+ttyl
+AI output :
+hyderabad ! i hear too much on a project . i 'm copying you well off \u0001f642 i actual -ly have a lot about different books
+```
+
+## 총평
+* AI가 "Hi!" 를 출력하는 빈도가 실제로 많이 줄어들었다.
+* AI가 답변을 생성하는 부분이 자연스러운 것도 맞다.
+* 그러나, 질문의 의도에 맞지 않는 답변을 하는 것은 동일하기 때문에 이 부분을 개선해야 한다.
+* **질문 부분을 token-wise embedding -> LSTM -> Flatten -> Embedding**, **답변 부분을 token-wise embedding -> LSTM -> Flatten -> Embedding** 각각 적용해서, 다음 token을 출력하는 것으로!!
+
 # model 3 (2024.03.02 09:17)
 
 ## 모델 설정 및 코드
