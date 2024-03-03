@@ -3,48 +3,71 @@ import pandas as pd
 from tokenize_data import tokenize_file_content
 
 
-INPUT_SIZE = 36
-CHECK_PERSON_CHANGE = 30
+INPUT_SIZE_EACH = 30
+
+
+# <person-change> 토큰을 기준으로 대화 구분
+def split_conversation(tokens):
+    result = []
+    current_turn = []
+
+    for token in tokens:
+        if token == '<person-change>':
+            result.append(current_turn)
+            current_turn = []
+
+        else:
+            current_turn.append(token)
+
+    return result
 
 
 # 학습 데이터 생성
 def generate_data(tokens, verbose=False):
     df = pd.DataFrame()
+    splitted_conversation = split_conversation(tokens)
 
-    for i in range(len(tokens) - INPUT_SIZE):
-        if i % 500 == 0 and verbose:
+    for i in range(len(splitted_conversation) - 1):
+        if i % 125 == 0 and verbose:
             print(i)
+
+        current_turn = splitted_conversation[i + 1]
+        last_turn = splitted_conversation[i]
+
+        # 이어지는 대화 턴이 "hi !", "hi ." 인 경우 제외
+        if current_turn in [['hi', '!'], ['hi', '.']]:
+            continue
+
+        # 직전 턴
+        if len(last_turn) < INPUT_SIZE_EACH:
+            last_turn_rest = INPUT_SIZE_EACH - len(last_turn)
+            last_turn = ['<null>'] * last_turn_rest + last_turn
+
+        elif len(last_turn) > INPUT_SIZE_EACH:
+            last_turn = last_turn[-INPUT_SIZE_EACH:]
+
+        # 현재 턴
+        for j in range(1, len(current_turn) + 1):
+            current_turn_until_now = current_turn[:j]
             
-        data_input = tokens[i:i + INPUT_SIZE + 1]
-        data_row = ' '.join(data_input)
+            if len(current_turn_until_now) < INPUT_SIZE_EACH + 1:
+                current_turn_rest = (INPUT_SIZE_EACH + 1) - len(current_turn_until_now)
+                current_turn_until_now = ['<null>'] * current_turn_rest + current_turn_until_now
 
-        # 새로운 row 추가
-        new_row = {'data': [data_row]}
-        new_row = pd.DataFrame(new_row)
-        df = pd.concat([df, new_row])
+            elif len(current_turn_until_now) > INPUT_SIZE_EACH + 1:
+                current_turn_until_now = current_turn_until_now[-(INPUT_SIZE_EACH + 1):]
+                
+            data_row = ' '.join(last_turn) + ' ' + ' '.join(current_turn_until_now)
+            new_row = {'data': [data_row]}
+            new_row = pd.DataFrame(new_row)
+            df = pd.concat([df, new_row])
 
-        # 입력 데이터 중 <Person-Change> 가 있으면 그 전의 모든 token을 <Null> 로 교체한 새로운 row 추가
-        # 실제로는 입력 데이터의 최초 30개 token 중 <Person-Change> 가 있어야 함
-        data_input_first_30 = tokens[i + 1:i + CHECK_PERSON_CHANGE]
-        
-        if '<person-change>' in data_input_first_30:
-            data_row_with_null = []
-            is_person_change_detected = False
-            
-            for j in range(INPUT_SIZE, -1, -1):
-                if is_person_change_detected:
-                    data_row_with_null = ['<null>'] + data_row_with_null
-                else:
-                    data_row_with_null = [data_input[j]] + data_row_with_null
-                    if data_input[j] == '<person-change>' and j < CHECK_PERSON_CHANGE:
-                        is_person_change_detected = True
-
-            data_row_with_null = ' '.join(data_row_with_null)
-
-            # <Null> 을 포함한 새로운 row 추가
-            new_row_with_null = {'data': [data_row_with_null]}
-            new_row_with_null = pd.DataFrame(new_row_with_null)
-            df = pd.concat([df, new_row_with_null])
+            # 다음 예측이 turn 종료인 경우 <person-change> 토큰 추가
+            if j == len(current_turn):
+                data_row_for_pc = ' '.join(last_turn) + ' ' + ' '.join(current_turn_until_now[1:]) + ' <person-change>'
+                new_row_for_pc = {'data': [data_row_for_pc]}
+                new_row_for_pc = pd.DataFrame(new_row_for_pc)
+                df = pd.concat([df, new_row_for_pc])
 
     df.to_csv('train_data.csv')
     

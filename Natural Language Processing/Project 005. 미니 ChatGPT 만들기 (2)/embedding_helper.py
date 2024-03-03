@@ -1,33 +1,22 @@
 import pandas as pd
 import numpy as np
 import tensorflow as tf
-
-from sentence_transformers import SentenceTransformer
-
-# fastest model from https://www.sbert.net/docs/pretrained_models.html
-sbert_model = SentenceTransformer('paraphrase-MiniLM-L3-v2')
-
-SBERT_EMBED_SIZE_TO_USE = 128
+import time
+from numpy import dot
+from numpy.linalg import norm
 
 
 # 단어를 사전순으로 정렬하여 첫 단어부터 0, 1, ... 로 매긴 dict 반환
 # 예: {'a': 0, 'about': 1, 'and': 2, ...}
 def get_token_ids():
+    start_time = time.time()
     train_data = pd.read_csv('train_data.csv', index_col=0)
     token_list = []
-    row_idx = 0
 
     for _, row in train_data.iterrows():
         tokens = row['data'].split(' ')
-        
-        if row_idx >= len(train_data) - 2:
-            for token in tokens:
-                token_list.append(token)
-                
-        else:
-            token_list.append(tokens[0])
-
-        row_idx += 1
+        for token in tokens:
+            token_list.append(token)
 
     token_list = list(set(token_list))
     token_list.sort()
@@ -36,6 +25,7 @@ def get_token_ids():
     for i, token in enumerate(token_list):
         token_ids[token] = i
 
+    print(f'{time.time() - start_time} seconds for getting token ids')
     return token_ids
 
 
@@ -59,15 +49,16 @@ def encode_one_hot(token_ids, token):
     return result
 
 
-# 임베딩 모델의 encoder (임베딩을 하는 부분) 로딩
-def load_embedding_encoder():
-    embedding_model = tf.keras.models.load_model('embedding_model')
-    embedding_encoder = embedding_model.encoder
-    return embedding_encoder
+# cosine similarity
+def cos_sim(x, y, weight=None):
+    n = len(x)
+
+    if weight is not None:
+        x_weighted = [x[i] * weight[i] for i in range(n)]
+        y_weighted = [y[i] * weight[i] for i in range(n)]
+        return dot(x_weighted, y_weighted) / (norm(x_weighted) * norm(y_weighted))
+    else:
+        return dot(x, y) / (norm(x) * norm(y))
 
 
-# 각 token에 대한, 본 프로젝트에서 개발한 임베딩 모델에 의한 임베딩 배열 (크기 24)
-def get_embedding_of_token(token, embedding_encoder):
-    sbert_embedding = sbert_model.encode(token)[:SBERT_EMBED_SIZE_TO_USE]
-    model_embedding = embedding_encoder(np.array([sbert_embedding]))
-    return model_embedding
+
