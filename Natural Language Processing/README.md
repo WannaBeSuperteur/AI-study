@@ -12,7 +12,7 @@ Transformer, BERT, S-BERT 부터 시작해서, 최종적으로는 Mini Chat-GPT�
   * 3차 : 2024.02.08 ~ 02.13
     * Project 003. Python 코드 자동 수정
 * 프로젝트 (2024.02.25 ~ 04.07)
-  * Mini ChatGPT 만들기 (생성형 AI를 이용) : 2024.02.25 ~ 03.10, ```Project 004. 미니 ChatGPT 만들기``` ```Project 005. 미니 ChatGPT 만들기 (2)```
+  * Mini ChatGPT 만들기 (생성형 AI를 이용) : 2024.02.25 ~ 03.03, ```Project 004. 미니 ChatGPT 만들기``` ```Project 005. 미니 ChatGPT 만들기 (2)```
   * Python 코드 개행해야 하는지 판단하는 AI 만들기 : 2024.03.11 ~ 03.24
   * 텍스트에 이모지 추가하는 AI 만들기 : 2024.03.25 ~ 04.07
 
@@ -36,8 +36,8 @@ Transformer, BERT, S-BERT 부터 시작해서, 최종적으로는 Mini Chat-GPT�
   * word embedding model (CBOW와 유사한 방식) 을 통한 토큰 임베딩, 딥러닝 모델이 평균으로 수렴하는 이슈의 원인 및 해결 방안 파악
 * **Project 004. 미니 ChatGPT 만들기** (2024.02.25 ~ 2024.02.29, 5일)
   * 생성형 언어 모델 (Generative Language Model), word embedding, tokenize 및 다음 token 예측
-* **Project 005. 미니 ChatGPT 만들기 (2)** (2024.03.01 ~ 2024.03.10, 10일)
-  * 생성형 언어 모델 (Generative Language Model), word embedding, Embedding and LSTM layer of Keras, tokenize, 다음 token 예측
+* **Project 005. 미니 ChatGPT 만들기 (2)** (2024.03.01 ~ 2024.03.03, 10일)
+  * 생성형 언어 모델 (Generative Language Model), word embedding, BERT embedding, Embedding and LSTM layer of Keras, tokenize, 다음 token 예측, 실험 노트 작성
 * **Project 006. Python 코드 개행해야 하는지 판단하기** (2024.03.11 ~ 2024.03.24, 14일)
   * 추가 예정
 * **Project 007. 텍스트에 이모지 추가하는 AI 만들기** (2024.03.25 ~ 2024.04.07, 14일)
