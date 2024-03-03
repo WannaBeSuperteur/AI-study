@@ -50,8 +50,8 @@
     * **생성형 출력** 을 위해, 위 수식에 따라 변환된 출력값 $O'$ 에서 **값이 가장 큰 index에 대응되는 token** 이 아닌, **값이 일정 threshold (예: 0.05) 이상인 index의 모든 token을, 해당 값에 비례하여 확률적으로** 출력
       * 예를 들어, $O' = [0.02, 0.5, 0.25, 0.03, 0.01, 0.04, 0.15]$ (vocab size = 7) 이고 해당 threshold가 0.05일 때, 0.5에 해당하는 index의 token을 출력할 확률은 100% 가 아니라 **0.5 / (0.5 + 0.25 + 0.15) = 55.6%**  
   * 모델 구조 :
-    * 입력 데이터에서 상대방의 말에 해당하는 마지막 30 token을 **token ID -> token-wise embedding -> LSTM -> Flatten -> 전체를 한번에 Embedding -> A** 로 구성
-    * 입력 데이터에서 현재 말하는 중인 자신의 말에 해당하는 마지막 30 token을 **token ID -> token-wise embedding -> LSTM -> Flatten -> 전체를 한번에 Embedding -> B** 로 구성
+    * 입력 데이터에서 상대방의 말에 해당하는 마지막 30 token을 **token ID -> token-wise embedding -> LSTM -> Dense -> A** 로 구성
+    * 입력 데이터에서 현재 말하는 중인 자신의 말에 해당하는 마지막 30 token을 **token ID -> token-wise embedding -> LSTM -> Dense -> B** 로 구성
     * 위 **A**, **B** 에 해당하는 내용에 대해 **(A + B concatenation) -> Dense Layers -> output (with vocab size) -> softmax로 token 출력** 을 적용
 
 ## 실행 순서

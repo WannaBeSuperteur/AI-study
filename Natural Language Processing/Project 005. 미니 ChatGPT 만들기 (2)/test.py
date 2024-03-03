@@ -8,7 +8,7 @@ import tensorflow as tf
 import numpy as np
 import random
 
-NUM_INPUT_TOKENS = 36
+NUM_INPUT_TOKENS_EACH = 30
 ing_map, ly_map = get_maps()
 token_ids = get_token_ids()
 
@@ -32,11 +32,11 @@ def tokenize_for_test(text, fill_rest_null=True):
 
     text_tokens = len(text.split(' '))
 
-    if text_tokens > NUM_INPUT_TOKENS - 1:
-        text = ' '.join(text.split(' ')[-(NUM_INPUT_TOKENS - 1):])
+    if text_tokens > NUM_INPUT_TOKENS_EACH - 1: # '-1' for adding <person-change> token later
+        text = ' '.join(text.split(' ')[-(NUM_INPUT_TOKENS_EACH - 1):])
     
-    if fill_rest_null and text_tokens < NUM_INPUT_TOKENS - 1:
-        rest = (NUM_INPUT_TOKENS - 1) - text_tokens
+    if fill_rest_null and text_tokens < NUM_INPUT_TOKENS_EACH - 1:
+        rest = (NUM_INPUT_TOKENS_EACH - 1) - text_tokens
         text = '<null> ' * rest + text
 
     # vocab에 없는 토큰 처리 후 반환
@@ -126,7 +126,7 @@ if __name__ == '__main__':
     current_turn_outputs = []
     
     next_output = ''
-    verbose_for_test = False
+    verbose_for_test = True
 
     while True:
 

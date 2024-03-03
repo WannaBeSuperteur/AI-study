@@ -8,10 +8,10 @@ from tokenize_data import get_maps, tokenize_line
 import tensorflow as tf
 from tensorflow.keras import layers, optimizers
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
-from tensorflow.keras.layers import Dense, LSTM, Bidirectional, Embedding, LeakyReLU, Dropout
+from tensorflow.keras.layers import Dense, LSTM, Bidirectional, Embedding, LeakyReLU, Dropout, Flatten, concatenate
 
 
-INPUT_TOKEN_CNT = 36 # 학습 데이터 row 당 입력 토큰 개수
+INPUT_TOKEN_CNT_EACH = 30 # 학습 데이터 row 당 각 발화자의 turn에 대한 입력 토큰 개수
 TKN_EMBEDDING_DIM = 128 # token embedding dimension
 VOCAB_SIZE = None
 
@@ -22,7 +22,7 @@ class MiniChatGPTModel(tf.keras.Model):
     
     def __init__(self, dropout_rate=0.45):
         super().__init__()
-        global VOCAB_SIZE, INPUT_TOKEN_CNT
+        global VOCAB_SIZE, INPUT_TOKEN_CNT_EACH
 
         L2 = tf.keras.regularizers.l2(0.001)
         self.dropout = Dropout(rate=dropout_rate)
@@ -31,25 +31,41 @@ class MiniChatGPTModel(tf.keras.Model):
         self.tkn_embedding = Embedding(
             input_dim=VOCAB_SIZE,
             output_dim=TKN_EMBEDDING_DIM,
-            input_length=INPUT_TOKEN_CNT
+            input_length=INPUT_TOKEN_CNT_EACH
         )
-        
-        self.BIDRC_LSTM_0 = Bidirectional(LSTM(128))
-        self.dense = Dense(192, activation=LeakyReLU(alpha=0.1))
+
+        # LSTM
+        self.BIDRC_LSTM_LAST = Bidirectional(LSTM(64))
+        self.BIDRC_LSTM_CURRENT = Bidirectional(LSTM(64))
+
+        # last turn, current turn Dense
+        self.last_turn_dense = Dense(48, activation=LeakyReLU(alpha=0.1))
+        self.current_turn_dense = Dense(48, activation=LeakyReLU(alpha=0.1))
+
+        # dense layers
+        self.dense = Dense(128, activation=LeakyReLU(alpha=0.1))
         self.final = Dense(VOCAB_SIZE, activation='softmax')
 
     def call(self, inputs, training):
-        positions = tf.range(start=0, limit=INPUT_TOKEN_CNT, delta=1)
-        
-        embed_tkn = self.tkn_embedding(inputs)
 
-        intermediate_0 = self.dropout(embed_tkn)
-        intermediate_0 = self.BIDRC_LSTM_0(intermediate_0)
+        inputs_last_turn, inputs_current_turn = tf.split(inputs, [INPUT_TOKEN_CNT_EACH, INPUT_TOKEN_CNT_EACH], axis=1)
 
-        intermediate_1 = self.dropout(intermediate_0)
-        intermediate_1 = self.dense(intermediate_1)
-        
-        outputs = self.final(intermediate_1)
+        # for last turn
+        embed_tkn_last_turn = self.tkn_embedding(inputs_last_turn)
+        lstm_last_turn = self.BIDRC_LSTM_LAST(embed_tkn_last_turn)
+        dense_last_turn = self.last_turn_dense(lstm_last_turn)
+
+        # for current turn
+        embed_tkn_current_turn = self.tkn_embedding(inputs_current_turn)
+        lstm_current_turn = self.BIDRC_LSTM_CURRENT(embed_tkn_current_turn)
+        dense_current_turn = self.current_turn_dense(lstm_current_turn)
+
+        # concatenation, ...
+        AB_concat = tf.keras.layers.Concatenate()([dense_last_turn, dense_current_turn])
+        AB_dense = self.dense(AB_concat)
+
+        # final output
+        outputs = self.final(AB_dense)
         return outputs
 
 
@@ -95,7 +111,7 @@ def train_model(input_data_all, output_data_all):
     model.fit(
         train_input, train_output,
         callbacks=[early_stopping, lr_reduced],
-        epochs=180,
+        epochs=3,
         validation_data=(valid_input, valid_output)
     )
 
