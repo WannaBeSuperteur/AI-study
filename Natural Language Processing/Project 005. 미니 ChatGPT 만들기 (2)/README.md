@@ -24,15 +24,14 @@
 ## 데이터 전처리 및 생성 과정
 * tokenize 방법
   * 문장 부호 및 단어 간 공백 단위로 tokenize
-  * 말하는 사람이 한 사람에서 다른 사람으로 전환되는 부분은 특별한 token을 생성
-    * 예: ```Person 1: Natural Language Processing gives machine a life. Do you agree?, Person 2: Yes, ChatGPT is the best example!``` 에 대해, token 구성은 ```[..., "life", ".", "Do", "you", "agree", "?", "<Person_Change>", "Yes", ",", "ChatGPT", "is", ...]``` 가 된다. 이때 ```<Person_Change>``` 라는 특별한 token이 삽입되었다.
 * 데이터 생성 방법
-  * 학습 데이터 전체를 처음부터 읽어 나가면서, **```Human 1: Hi!``` 로 시작하는 각 대화 다이얼로그에 대해, 해당 다이얼로그의 모든 각 token** 을 시작점으로,
-    * 해당 token 부터 그것을 제외한 이전 36개 token의, 연속된 37개의 token을 추출
-      * ```Human 1: Hi!``` 에 해당하는 token의 이전 token은 존재하지 않는데, 37개 token 추출 시 이렇게 존재하지 않는 부분의 토큰은 모두 ```<null>``` 토큰으로 변경
-    * 37개의 token 중 첫 36개 token은 입력 데이터로, 마지막 1개 token은 출력 데이터로 지정
-    * 첫 36개 token에 근거하여 마지막 1개 token을 예측하는 모델을 생성하도록 데이터 구성
-    * 단, **37개 토큰 중 마지막 4개 토큰에서 ```["<person-change>", "hi"]``` 순서로 token 이 detect 되는 경우, 모델이 응답으로 "hi!" 를 지나치게 자주 출력하는 현상을 방지하기 위해 학습 데이터에서 제외**
+  * 학습 데이터 전체를 처음부터 읽어 나가면서, 다음과 같이 데이터 생성
+    * ```Human B```가 말하는 중인 특정 시점에서, 그 직전의 ```Human A``` 의 말에서 **마지막 30개** 의 token을 추출하여 오른쪽부터 배치 + 이후 ```Human B``` 가 현재까지 말한 내용에서 마지막 **30 (학습용) + 1 (예측용) = 31개** 의 token을 추출하여 오른쪽부터 배치
+    * token의 개수가 30개 미만인 경우, 앞쪽의 token은 ```<null>``` 이라는 특별한 token 으로 지정
+    * 예를 들어, 학습 데이터의 row 중 ```<null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> that 's come -ing up soon ! <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> true ! the volunteers have already sent out some emails and collected some funds . now , we``` 를 보면,
+      * 앞의 30개 token인 ```<null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> that 's come -ing up soon !``` 은 직전 발화자 (A) 의 말
+      * 뒤의 30개 token인 ```<null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> true ! the volunteers have already sent out some emails and collected some funds . now ,``` 는 현재 발화자 (B) 의 현재까지의 말
+      * 마지막 token인 ```we``` 는 현재 발화자 (B) 가 다음으로 말할, 이어지는 토큰
   * 위와 같은 방법으로 구성한 데이터셋에서, 첫 90%는 train data, 마지막 10%는 validation data
     * train, valid 데이터 구분은 데이터를 지정하거나 실제 Tensorflow를 이용하여 학습할 때 split_ratio 등을 이용하여 적용한다.
   * 위 데이터는 ```train_data.csv``` 파일에 저장한다.
@@ -40,7 +39,7 @@
 ## 머신러닝 모델 설명
 * 각 token에 해당하는 word 를 저장하고 one-hot encoding 할 수 있는 **dictionary (=vocab)** 필요
 * **모델 설명** (실질적으로 ChatGPT에서 답변을 출력하는 역할을 하는 NLP 모델)
-  * 입력 : 학습 데이터에서, 입력 데이터에 해당하는 36개의 token의 ID
+  * 입력 : 학습 데이터에서, 입력 데이터에 해당하는 30 + 30 = 60개의 token의 ID
   * 출력 : 학습 데이터에서, 출력 데이터에 해당하는 1개의 token에 대해 그 ID를 이용한 one-hot vector (크기: vocab) 
     * 출력값으로 가장 적절한 1개의 token을 예측하며, 가장 큰 값에 해당하는 ID의 token을 최종 출력
     * **생성형 출력** 을 위해, 다음과 같은 행렬 및 연산을 이용
@@ -50,7 +49,10 @@
       * $\displaystyle O'^{i} = O^i \times \Sigma_{d=0}^{D-1} (|A_{i,d}| \times B_{d}), i=0,1,...,V-1$ (단, $O^i, O'^i$ 는 각각 $O$, $O'$ 의 index $i$ 의 값)
     * **생성형 출력** 을 위해, 위 수식에 따라 변환된 출력값 $O'$ 에서 **값이 가장 큰 index에 대응되는 token** 이 아닌, **값이 일정 threshold (예: 0.05) 이상인 index의 모든 token을, 해당 값에 비례하여 확률적으로** 출력
       * 예를 들어, $O' = [0.02, 0.5, 0.25, 0.03, 0.01, 0.04, 0.15]$ (vocab size = 7) 이고 해당 threshold가 0.05일 때, 0.5에 해당하는 index의 token을 출력할 확률은 100% 가 아니라 **0.5 / (0.5 + 0.25 + 0.15) = 55.6%**  
-  * 모델 구조 : 입력 데이터에 해당하는 token 들을 **token ID -> embedding -> LSTM -> Dense Layers -> output (with vocab size) -> softmax로 token 출력** 을 적용
+  * 모델 구조 :
+    * 입력 데이터에서 상대방의 말에 해당하는 마지막 30 token을 **token ID -> token-wise embedding -> LSTM -> Flatten -> 전체를 한번에 Embedding -> A** 로 구성
+    * 입력 데이터에서 현재 말하는 중인 자신의 말에 해당하는 마지막 30 token을 **token ID -> token-wise embedding -> LSTM -> Flatten -> 전체를 한번에 Embedding -> B** 로 구성
+    * 위 **A**, **B** 에 해당하는 내용에 대해 **(A + B concatenation) -> Dense Layers -> output (with vocab size) -> softmax로 token 출력** 을 적용
 
 ## 실행 순서
 ```
@@ -79,3 +81,4 @@ python test.py
 |NLP-P5-7|```ing```|```fix```|240301||모델 성능 향상을 위한 arctitecture, tokenizer 등 수정|
 |NLP-P5-8|```done```|```fix```|240302|240302|NLP-P5-7 의 하위 branch로, 데이터셋 구성 방식 수정 (다이얼로그 구분, null token 관련)|
 |NLP-P5-9|```done```|```fix```|240302|240303|NLP-P5-7 의 하위 브랜치로, vocab에 존재하지 않는 단어 처리|
+|NLP-P5-10|```ing```|```fix```|240303||NLP-P5-7의 하위 브랜치로, 데이터셋 구성 방식 2차 변경 및 이에 따른 모델 구조 변경|

@@ -3,71 +3,61 @@ import pandas as pd
 from tokenize_data import tokenize_file_content
 
 
-INPUT_SIZE = 36
+INPUT_SIZE_EACH = 30
 
 
-# "Hi ! <person-change>" 체크
-def is_hi(token_sequence):
-    n = len(token_sequence)
+# <person-change> 토큰을 기준으로 대화 구분
+def split_conversation(tokens):
+    result = []
+    current_turn = []
 
-    for i in range(n-2):
-        if token_sequence[i] == 'hi' and token_sequence[i+1] == '!' and token_sequence[i+2] == '<person-change>':
-            return True
-    return False
+    for token in tokens:
+        if token == '<person-change>':
+            result.append(current_turn)
+            current_turn = []
 
+        else:
+            current_turn.append(token)
 
-# "<person-change> Hi" 체크
-def is_hi_at_the_last(token_sequence):
-    n = len(token_sequence)
-
-    for i in range(n-1):
-        if token_sequence[i] == '<person-change>' and token_sequence[i+1] == 'hi':
-            return True
-    return False
+    return result
 
 
 # 학습 데이터 생성
 def generate_data(tokens, verbose=False):
     df = pd.DataFrame()
+    splitted_conversation = split_conversation(tokens)
 
-    for i in range(len(tokens) - INPUT_SIZE):
-        if i % 750 == 0 and verbose:
+    for i in range(len(splitted_conversation) - 1):
+        if i % 125 == 0 and verbose:
             print(i)
-            
-        data_input = tokens[i:i + INPUT_SIZE + 1]
-        data_row = ' '.join(data_input)
 
-        # 입력 데이터 중 "Hi ! <Person-Change>" 가 있으면 그 전의 모든 token을 <Null> 로 교체한 새로운 row 추가
-        data_input_except_first = tokens[i + 1:i + INPUT_SIZE]
+        current_turn = splitted_conversation[i + 1]
+        last_turn = splitted_conversation[i]
 
-        # 마지막 4개 token에서 "<Person-CHange> Hi" 가 발견되면 학습 데이터에서 제외
-        if is_hi_at_the_last(data_input[-4:]):
+        # 이어지는 대화 턴이 "hi !", "hi ." 인 경우 제외
+        if current_turn in [['hi', '!'], ['hi', '.']]:
             continue
 
-        # 학습 데이터에 추가
-        if is_hi(data_input_except_first):
-            data_row_with_null = []
-            is_hi_detected = False
+        # 직전 턴
+        if len(last_turn) < INPUT_SIZE_EACH:
+            last_turn_rest = INPUT_SIZE_EACH - len(last_turn)
+            last_turn = ['<null>'] * last_turn_rest + last_turn
+
+        elif len(last_turn) > INPUT_SIZE_EACH:
+            last_turn = last_turn[-INPUT_SIZE_EACH:]
+
+        # 현재 턴
+        for j in range(1, len(current_turn) + 1):
+            current_turn_until_now = current_turn[:j]
             
-            for j in range(INPUT_SIZE, -1, -1):
-                if is_hi_detected:
-                    data_row_with_null = ['<null>'] + data_row_with_null
-                else:
-                    data_row_with_null = [data_input[j]] + data_row_with_null
+            if len(current_turn_until_now) < INPUT_SIZE_EACH + 1:
+                current_turn_rest = (INPUT_SIZE_EACH + 1) - len(current_turn_until_now)
+                current_turn_until_now = ['<null>'] * current_turn_rest + current_turn_until_now
 
-                    # check if 'Hi ! <Person-Change>' detected 
-                    if len(data_input) >= j+3 and is_hi(data_input[j : j+3]):
-                        is_hi_detected = True
-
-            data_row_with_null = ' '.join(data_row_with_null)
-
-            # <Null> 을 포함한 새로운 row 추가
-            new_row_with_null = {'data': [data_row_with_null]}
-            new_row_with_null = pd.DataFrame(new_row_with_null)
-            df = pd.concat([df, new_row_with_null])
-
-        else:
-            # 새로운 row 추가
+            elif len(current_turn_until_now) > INPUT_SIZE_EACH + 1:
+                current_turn_until_now = current_turn_until_now[-(INPUT_SIZE_EACH + 1):]
+                
+            data_row = ' '.join(last_turn) + ' ' + ' '.join(current_turn_until_now)
             new_row = {'data': [data_row]}
             new_row = pd.DataFrame(new_row)
             df = pd.concat([df, new_row])
