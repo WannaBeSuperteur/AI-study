@@ -2,7 +2,11 @@
 * Dataset: [Human Conversation training data](https://www.kaggle.com/datasets/projjal1/human-conversation-training-data)
   * Human 1, Human 2 라는 두 사람이 대화를 나누는 것에 대한 학습 데이터이다.
   * 다운로드 버튼을 클릭하여 ```archive.zip``` 파일을 다운받은 후, 그 파일의 압축을 풀어서 나온 ```archive/human_chat.txt``` 파일이 학습 데이터이다.
-* 수행 기간: 2024.03.01 ~ 2024.03.10 (10일)
+* 수행 기간: 2024.03.01 ~ 2024.03.03 (3일)
+  * 모델 1 (성능 그나마 좋음) : next token에 대한 one-hot 예측 벡터 출력 방식
+    * [2024.03.03 17:48 KST commit](https://github.com/WannaBeSuperteur/AI-study/tree/b3d9f22e29ff040cee7db7265726cb77f5297759)
+  * 모델 2 (최종 반영) : next token에 대한 embedding을 예측하여 출력 후, vocab에서 가장 가까운 word embedding을 찾는 방식
+    * **현재 브랜치에서 사용 가능**
 
 ## 파일 및 코드 설명
 * ```tokenize_data.py``` : 학습 데이터에 대한 tokenize 진행
@@ -62,7 +66,7 @@ python test.py
 ## branch info
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
-|NLP-P5-master|||240301|240310|마스터 브랜치|
+|NLP-P5-master|||240301|240303|마스터 브랜치|
 |NLP-P5-1|```done```|```fix```|240301|240301|tokenizer 개선|
 |NLP-P5-2|```done```|```feat```|240301|240301|학습 데이터 생성|
 |NLP-P5-3|```done```|```feat```|240301|240301|모델 구성 및 해당 모델의 학습 실시|
