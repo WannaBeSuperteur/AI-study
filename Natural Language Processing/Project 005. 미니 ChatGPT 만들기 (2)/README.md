@@ -4,7 +4,8 @@
   * 다운로드 버튼을 클릭하여 ```archive.zip``` 파일을 다운받은 후, 그 파일의 압축을 풀어서 나온 ```archive/human_chat.txt``` 파일이 학습 데이터이다.
 * 수행 기간: 2024.03.01 ~ 2024.03.03 (3일)
   * 모델 1 (성능 그나마 좋음) : next token에 대한 one-hot 예측 벡터 출력 방식
-    * [2024.03.03 17:48 KST commit](https://github.com/WannaBeSuperteur/AI-study/tree/b3d9f22e29ff040cee7db7265726cb77f5297759)
+    * [2024.03.03 17:48 KST commit](https://github.com/WannaBeSuperteur/AI-study/tree/b3d9f22e29ff040cee7db7265726cb77f5297759/Natural%20Language%20Processing/Project%20005.%20%EB%AF%B8%EB%8B%88%20ChatGPT%20%EB%A7%8C%EB%93%A4%EA%B8%B0%20(2))
+    * [Download AI-Study Repository at this time](https://github.com/WannaBeSuperteur/AI-study/archive/b3d9f22e29ff040cee7db7265726cb77f5297759.zip)
   * 모델 2 (최종 반영) : next token에 대한 embedding을 예측하여 출력 후, vocab에서 가장 가까운 word embedding을 찾는 방식
     * **현재 브랜치에서 사용 가능**
 
