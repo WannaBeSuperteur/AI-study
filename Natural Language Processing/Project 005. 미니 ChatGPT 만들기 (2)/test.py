@@ -2,13 +2,13 @@ from embedding_helper import get_token_ids, get_token_arr
 from tokenize_data import tokenize_line, get_maps
 from train import test_model
 from add_bert_embedding_dict import find_nearest_bert_embedding
+from train import INPUT_TOKEN_CNT_EACH, TKN_EMBEDDING_DIM
 
 import math
 import tensorflow as tf
 import numpy as np
 import random
 
-NUM_INPUT_TOKENS_EACH = 30
 ing_map, ly_map = get_maps()
 token_ids = get_token_ids()
 
@@ -32,17 +32,16 @@ def tokenize_for_test(text, fill_rest_null=True):
 
     text_tokens = len(text.split(' '))
 
-    if text_tokens > NUM_INPUT_TOKENS_EACH - 1: # '-1' for adding <person-change> token later
-        text = ' '.join(text.split(' ')[-(NUM_INPUT_TOKENS_EACH - 1):])
+    if text_tokens > INPUT_TOKEN_CNT_EACH:
+        text = ' '.join(text.split(' ')[-INPUT_TOKEN_CNT_EACH:])
     
-    if fill_rest_null and text_tokens < NUM_INPUT_TOKENS_EACH - 1:
-        rest = (NUM_INPUT_TOKENS_EACH - 1) - text_tokens
+    if fill_rest_null and text_tokens < INPUT_TOKEN_CNT_EACH:
+        rest = INPUT_TOKEN_CNT_EACH - text_tokens
         text = '<null> ' * rest + text
 
     # vocab에 없는 토큰 처리 후 반환
     text = handle_tokens_not_in_vocab(text)
-    
-    return text + ' <person-change>'
+    return text
 
 
 # 사용자 입력
@@ -54,16 +53,12 @@ def get_user_input(fill_rest_null=True):
 # 생성형 출력을 위해, embedding array A 저장
 def get_embedding_array_A(mini_chatgpt_model):
     vocab_size = len(token_ids)
-    A = np.zeros((vocab_size, NUM_INPUT_TOKENS))
+    A = np.zeros((vocab_size, TKN_EMBEDDING_DIM))
 
     for token, idx in token_ids.items():
         embedding = mini_chatgpt_model.tkn_embedding(np.array([idx]).astype(np.int32))
         embedding = embedding.numpy()[0]
-
-        try:
-            A[idx] = embedding
-        except:
-            A[idx] = embedding[:NUM_INPUT_TOKENS]
+        A[idx] = embedding
 
     return A
 
@@ -76,7 +71,7 @@ def restore_next_output_rank(next_output_rank, A, B):
         token = next_output_rank[i][0]
         vocab_idx = token_ids[token]
 
-        AB_sum_product = sum([abs(A[vocab_idx][d]) * B[d] for d in range(NUM_INPUT_TOKENS)])
+        AB_sum_product = sum([abs(A[vocab_idx][d]) * B[d] for d in range(TKN_EMBEDDING_DIM)])
         next_output_rank[i][1] = next_output_rank[i][1] * AB_sum_product
 
     next_output_rank.sort(key=lambda x:x[1], reverse=True)
@@ -115,18 +110,21 @@ if __name__ == '__main__':
 
     # next output rank를 생성형 예측으로 만들기 위한 embedding layer A와 random init 배열 B
     A = get_embedding_array_A(mini_chatgpt_model)
-    B = np.random.uniform(0.5, 1.5, NUM_INPUT_TOKENS)
+    B = np.random.uniform(0.5, 1.5, TKN_EMBEDDING_DIM)
 
     print(f'embedding array A: ({np.shape(A)})\n{A}\n')
     print(f'random array B: ({np.shape(B)})\n{B}\n')
 
     # 사용자 입력
-    tokenized_input = get_user_input()
+    tokenized_input = get_user_input() + (' <null>' * INPUT_TOKEN_CNT_EACH)
     all_outputs = []
     current_turn_outputs = []
     
     next_output = ''
-    verbose_for_test = True
+    verbose_for_test = False
+
+    if verbose_for_test:
+        print(f'initial tokenized input: {tokenized_input}')
 
     while True:
 
@@ -135,55 +133,49 @@ if __name__ == '__main__':
             ai_output = ' '.join(current_turn_outputs[:-1])
             print(f'AI output :\n{ai_output}')
             current_turn_outputs = []
-            
-            tokenized_input = tokenized_input + ' ' + get_user_input(fill_rest_null=False)
-            tokenized_input = ' '.join(tokenized_input.split(' ')[-NUM_INPUT_TOKENS:])
+
+            # update tokenized input based on user input
+            tokenized_input = get_user_input() + (' <null>' * INPUT_TOKEN_CNT_EACH)
 
         if verbose_for_test:
             print(f'tokenized input : {tokenized_input}')
         
         # 다음 토큰 예측
-        try:
-            next_output_rank = test_model(
-                tokenized_input,
-                model=mini_chatgpt_model,
-                additional_tokenize=False,
-                is_return=True,
-                token_arr=token_arr,
-                token_ids=token_ids,
-                verbose=False
-            )
+        next_output_rank = test_model(
+            tokenized_input,
+            model=mini_chatgpt_model,
+            additional_tokenize=False,
+            is_return=True,
+            token_arr=token_arr,
+            token_ids=token_ids,
+            verbose=False
+        )
 
-            if verbose_for_test:
-                for i in range(10):
-                    print(next_output_rank[i])
+        if verbose_for_test:
+            for i in range(10):
+                print(next_output_rank[i])
 
-            # 재정렬 후 다음 토큰 예측
-            restore_next_output_rank(next_output_rank, A, B)
+        # 재정렬 후 다음 토큰 예측
+        restore_next_output_rank(next_output_rank, A, B)
 
-            if verbose_for_test:
-                print('')
+        if verbose_for_test:
+            print('')
 
-            if verbose_for_test:
-                for i in range(10):
-                    print(next_output_rank[i])
+        if verbose_for_test:
+            for i in range(10):
+                print(next_output_rank[i])
 
-            # 다음 토큰을 확률적으로 선택
-            next_output = choose_one_token(
-                next_output_rank,
-                verbose=(verbose_for_test and len(all_outputs)==0)
-            )
+        # 다음 토큰을 확률적으로 선택
+        next_output = choose_one_token(
+            next_output_rank,
+            verbose=(verbose_for_test and len(all_outputs)==0)
+        )
             
-            all_outputs.append(next_output)
-            current_turn_outputs.append(next_output)
+        all_outputs.append(next_output)
+        current_turn_outputs.append(next_output)
+
+        last_turn = ' '.join(tokenized_input.split(' ')[:INPUT_TOKEN_CNT_EACH])
+        current_turn = ' '.join(tokenized_input.split(' ')[INPUT_TOKEN_CNT_EACH + 1:])
             
-            tokenized_input = ' '.join(tokenized_input.split(' ')[1:]) + ' ' + next_output
+        tokenized_input = last_turn + ' ' + current_turn + ' ' + next_output
 
-        except Exception as e:
-            if 'KeyError:' in str(e):
-                print('다음 단어가 사전에 없습니다:', e.split("'")[1])
-            else:
-                print(f'error: {e}')
-            break
-
-    print('all outputs:', ' '.join(all_outputs))

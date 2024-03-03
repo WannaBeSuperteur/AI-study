@@ -214,21 +214,21 @@ def test_model(text, model, additional_tokenize=True, is_return=False, verbose=F
     if additional_tokenize:
         ing_map, ly_map = get_maps()
         tokenized_line = tokenize_line(text, ing_map, ly_map)
-        tokens = (tokenized_line.split(' ') + ['<person-change>'])
+        tokenIzed_line_split = tokenized_line.split(' ')
+
+        if len(tokenIzed_line_split) < INPUT_TOKEN_CNT_EACH:
+            rest = INPUT_TOKEN_CNT_EACH - len(tokenIzed_line_split)
+            tokenized_line = ('<null> ' * rest) + tokenized_line
+            
+        tokens = (tokenized_line.split(' ') + ['<null>'] * INPUT_TOKEN_CNT_EACH)
     else:
         tokens = text.split(' ')
 
     if verbose:
         print(f'\ntokens: {tokens}')
+        print(f'original tokenized text: {text}')
 
     tokens_id = [token_ids[t] for t in tokens]
-
-    if verbose:
-        print(f'ID of tokens: {tokens_id}')
-
-    if len(tokens_id) < INPUT_TOKEN_CNT:
-        rest = INPUT_TOKEN_CNT - len(tokens_id)
-        tokens_id = ([token_ids['<null>']] * rest) + tokens_id
 
     if verbose:
         print(f'ID of tokens: {tokens_id}')
@@ -268,16 +268,20 @@ if __name__ == '__main__':
         run_all_process()
 
     # 메인 모델 테스트 (each example text has 16 tokens)
+    token_ids = get_token_ids()
+    
     example_texts = [
         'what was the most number of people you have ever met during a working day ?',
-        'i know him very well . <person-change> is him your friend ? if so , it',
-        'how can i do for you ? <person-change> can you buy me a book ?'
+        'i know him very well .',
+        'how can i do for you ?',
+        'how are you ?',
+        'hello !'
     ]
 
     mini_chatgpt_model = tf.keras.models.load_model('mini_chatgpt_model')
     
     for example_text in example_texts:
         try:
-            test_model(example_text, model=mini_chatgpt_model, verbose=True)
+            test_model(example_text, model=mini_chatgpt_model, verbose=True, token_ids=token_ids)
         except Exception as e:
             print(f'error: {e}')
