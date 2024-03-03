@@ -11,11 +11,11 @@
 * ```embedding_helper.py``` : token의 one-hot encoding, dictionary에서의 index 값으로 변환 등 임베딩 관련 함수
 * ```train.py``` : 모델에 대한 학습 실시
   * 필요 파일 : ```train_data.csv```
-  * 출력 파일 : ```embedding_result.csv``` (생성형 출력을 위한 token 별 embedding 결과)
-  * 출력 모델 : ```mini_chatgpt_model``` (모델)
-* ```test.py``` : 학습으로 만들어진 모델 테스트
-  * 필요 파일 : ```embedding_result.csv``` (생성형 출력을 위한 token 별 embedding 결과), ```bert_embedding_dict.csv``` (vocab 의 모든 token에 대한 BERT embedding 결과)
-  * 필요 모델 : ```mini_chatgpt_model```
+  * 출력 파일 : ```embedding_result.csv``` (**embedding table**, token 별 embedding 결과)
+  * 출력 모델 : ```model_for_embedding``` **(임베딩용 모델)**, ```mini_chatgpt_model``` **(실제 모델)**
+* ```test.py``` : 학습으로 만들어진 **실제 모델** 테스트
+  * 필요 파일 : ```embedding_result.csv``` (**embedding table**, token 별 embedding 결과), ```bert_embedding_dict.csv``` (vocab 의 모든 token에 대한 BERT embedding 결과)
+  * 필요 모델 : ```mini_chatgpt_model``` (실제 모델)
 * ```add_bert_embedding_dict.py``` : vocab 의 모든 token에 대한 BERT embedding 결과 저장
   * 필요 파일 : ```train_data.csv``` (학습 데이터, vocab 추출용)
   * 출력 파일 : ```bert_embedding_dict.csv``` (vocab 의 모든 token에 대한 BERT embedding 결과)
@@ -39,21 +39,28 @@
 
 ## 머신러닝 모델 설명
 * 각 token에 해당하는 word 를 저장하고 one-hot encoding 할 수 있는 **dictionary (=vocab)** 필요
-* **모델 설명** (실질적으로 ChatGPT에서 답변을 출력하는 역할을 하는 NLP 모델)
-  * 입력 : 학습 데이터에서, 입력 데이터에 해당하는 30 + 30 = 60개의 token의 ID
-  * 출력 : 학습 데이터에서, 출력 데이터에 해당하는 1개의 token에 대해 그 ID를 이용한 one-hot vector (크기: vocab) 
-    * 출력값으로 가장 적절한 1개의 token을 예측하며, 가장 큰 값에 해당하는 ID의 token을 최종 출력
-    * **생성형 출력** 을 위해, 다음과 같은 행렬 및 연산을 이용
-      * 모델 중 word embedding 하는 부분을 따로 떼어내서, 해당 부분에 각 token를 넣어서 embedding 된 결과를 저장한 **(vocab size x embedding dimension)** 차원의 행렬 **A** (```embedding_results.csv``` 파일로 저장)
-      * embedding 의 각 원소에 대한 가중치를 담은 **(embedding dimension)** 차원의 randomly initialized 된 배열 **B**
-      * 모델의 원래 출력값을 $O$라고 할 때, 다음과 같이 각 index $i$에 대해 변환된 출력값 $O'$ 를 이용 (단, $v = 0,1,...,V-1$, $d = 0,1,...,D-1$, $V$ = (vocab size), $D$ = (embedding dimension), $i$ 는 출력값 $O$ 의 해당 단어의 index)
-      * $\displaystyle O'^{i} = O^i \times \Sigma_{d=0}^{D-1} (|A_{i,d}| \times B_{d}), i=0,1,...,V-1$ (단, $O^i, O'^i$ 는 각각 $O$, $O'$ 의 index $i$ 의 값)
-    * **생성형 출력** 을 위해, 위 수식에 따라 변환된 출력값 $O'$ 에서 **값이 가장 큰 index에 대응되는 token** 이 아닌, **값이 일정 threshold (예: 0.05) 이상인 index의 모든 token을, 해당 값에 비례하여 확률적으로** 출력
-      * 예를 들어, $O' = [0.02, 0.5, 0.25, 0.03, 0.01, 0.04, 0.15]$ (vocab size = 7) 이고 해당 threshold가 0.05일 때, 0.5에 해당하는 index의 token을 출력할 확률은 100% 가 아니라 **0.5 / (0.5 + 0.25 + 0.15) = 55.6%**  
+* **임베딩용 모델 (```model_for_embedding```)** : 실제 모델의 출력을 위해 각 token을 임베딩하는 모델
+* **실제 모델 (```mini_chatgpt_model```)** : 실질적으로 ChatGPT에서 답변을 출력하는 역할을 하는 NLP 모델
+* **모델 설명**
+  * **임베딩용 모델**
+    * 입력 : 학습 데이터에서, 입력 데이터에 해당하는 30 + 30 = 60개의 token의 ID
+    * 출력 : 학습 데이터에서, 출력 데이터에 해당하는 1개의 token에 대해 그 ID를 이용한 one-hot vector (크기: vocab) 
+      * 출력값으로 가장 적절한 1개의 token을 예측하며, 가장 큰 값에 해당하는 ID의 token을 최종 출력
+  * **실제 모델**
+    * 입력 : 임베딩용 모델과 동일
+    * 출력 : 학습 데이터에서, 출력 데이터에 해당하는 1개의 token에 대해 **임베딩용 모델** 의 임베딩에 근거한 임베딩 결과 (크기: embedding size = 128)
+      * vocab에 있는 각 단어의 **임베딩용 모델** 에 의한 임베딩 벡터를 저장한 embedding table 에서, 출력 벡터와 가장 가까운 임베딩 벡터에 해당하는 token을 최종 출력 
+  * **실제 모델** 의 **생성형 출력** 을 위한 처리
+    * 출력 벡터와 임베딩 벡터 간 거리를 계산할 때, 벡터의 각 (대응되는) 성분별 가중치를 둔다. 
+    * 거리가 가장 가까운 토큰이 아닌, 각 임베딩 벡터 별 (=token 별) **```1 / (거리의 제곱)``` 의 값이 일정 threshold (예: 0.05) 이상인 모든 token을, 해당 값에 비례하여 확률적으로** 출력
+      * 예를 들어, ```1 / (거리의 제곱)``` 의 값을 저장한 배열이 [0.02, 0.5, 0.25, 0.03, 0.01, 0.04, 0.15] (vocab size = 7) 이고 해당 threshold가 0.05일 때, 0.5에 해당하는 index의 token을 출력할 확률은 100% 가 아니라 **0.5 / (0.5 + 0.25 + 0.15) = 55.6%**  
   * 모델 구조 :
     * 입력 데이터에서 상대방의 말에 해당하는 마지막 30 token을 **token ID -> token-wise embedding -> LSTM -> Dense -> input-A** 로 구성
     * 입력 데이터에서 현재 말하는 중인 자신의 말에 해당하는 마지막 30 token을 **token ID -> token-wise embedding -> LSTM -> Dense -> input-B** 로 구성
-    * 위 **input-A**, **input-B** 에 해당하는 내용에 대해 **("input-A" + "input-B" concatenation) -> Dense Layers -> output (with vocab size) -> softmax로 token 출력** 을 적용
+    * 위 **input-A**, **input-B** 에 해당하는 내용에 대해 **("input-A" + "input-B" concatenation) -> Dense Layers -> output** 을 적용
+    * output 부분 설명
+      * **임베딩용 모델** : ```output (with vocab size) -> softmax로 vocab size 크기의 벡터 출력``` : 해당 출력 벡터에서 가장 큰 값에 해당하는 token 출력
+      * **실제 모델** : ```output (with embedding size)``` : embedding table 기준, 출력 벡터와 가장 가까운 임베딩 벡터에 해당하는 token 출력
 
 ## 실행 순서
 ```
@@ -82,4 +89,5 @@ python test.py
 |NLP-P5-7|```ing```|```fix```|240301||모델 성능 향상을 위한 arctitecture, tokenizer 등 수정|
 |NLP-P5-8|```done```|```fix```|240302|240302|NLP-P5-7 의 하위 branch로, 데이터셋 구성 방식 수정 (다이얼로그 구분, null token 관련)|
 |NLP-P5-9|```done```|```fix```|240302|240303|NLP-P5-7 의 하위 브랜치로, vocab에 존재하지 않는 단어 처리|
-|NLP-P5-10|```done```|```fix```|240303|240303|NLP-P5-7의 하위 브랜치로, 데이터셋 구성 방식 2차 변경 및 이에 따른 모델 구조 변경|
+|NLP-P5-10|```done```|```fix```|240303|240303|NLP-P5-7 의 하위 브랜치로, 데이터셋 구성 방식 2차 변경 및 이에 따른 모델 구조 변경|
+|NLP-P5-11|```ing```|```fix```|240303||NLP-P5-7 의 하위 브랜치로, 임베딩을 예측하는 2번째 모델 학습|

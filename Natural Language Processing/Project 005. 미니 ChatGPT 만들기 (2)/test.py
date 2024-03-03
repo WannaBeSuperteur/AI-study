@@ -1,8 +1,9 @@
-from embedding_helper import get_token_ids, get_token_arr
+from embedding_helper import get_token_ids, get_token_arr, validate_embedding, print_most_similar_tokens
 from tokenize_data import tokenize_line, get_maps
 from train import test_model
-from add_bert_embedding_dict import find_nearest_bert_embedding
 from train import INPUT_TOKEN_CNT_EACH, TKN_EMBEDDING_DIM
+
+from add_bert_embedding_dict import find_nearest_bert_embedding
 
 import math
 import tensorflow as tf
@@ -114,6 +115,15 @@ if __name__ == '__main__':
 
     print(f'embedding array A: ({np.shape(A)})\n{A}\n')
     print(f'random array B: ({np.shape(B)})\n{B}\n')
+
+    # 임베딩 검증 (유사어 간 cos-similarity, 가장 가까운 token)
+    token_pairs_for_valid_embed = [["'m", "am"], ["'s", "is"], ["n't", "not"], ["one", "two"], ["what", "which"],
+                                   ["make", "super"], ["deep", "food"], ["what", "could"], ["song", "to"], ["listen", "where"]]
+    validate_embedding(A, token_ids, token_pairs_for_valid_embed)
+    
+    tokens_for_valid_embed = ['good', 'i', 'am', 'is', 'are', 'his', 'her', 'where', 'when']
+    for token in tokens_for_valid_embed:
+        print_most_similar_tokens(A, token_ids, token_arr, token)
 
     # 사용자 입력
     tokenized_input = get_user_input() + (' <null>' * INPUT_TOKEN_CNT_EACH)
