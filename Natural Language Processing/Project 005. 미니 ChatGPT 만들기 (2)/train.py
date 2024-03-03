@@ -51,8 +51,8 @@ class MiniChatGPTModel(tf.keras.Model):
         )
 
         # LSTM
-        self.BIDRC_LSTM_LAST = Bidirectional(LSTM(64))
-        self.BIDRC_LSTM_CURRENT = Bidirectional(LSTM(64))
+        self.BIDRC_LSTM_LAST = Bidirectional(LSTM(units=64, dropout=0.3, return_state=True, return_sequences=True))
+        self.BIDRC_LSTM_CURRENT = Bidirectional(LSTM(units=64, dropout=0.3, return_state=True, return_sequences=True))
 
         # last turn, current turn Dense
         self.last_turn_dense = Dense(48, activation=LeakyReLU(alpha=0.1))
@@ -62,19 +62,26 @@ class MiniChatGPTModel(tf.keras.Model):
         self.dense = Dense(128, activation=LeakyReLU(alpha=0.1))
         self.final = Dense(TKN_EMBEDDING_DIM, activation='tanh_mul')
 
+        # flatten
+        self.flatten = tf.keras.layers.Flatten()
+
 
     def call(self, inputs, training):
         inputs_last_turn, inputs_current_turn = tf.split(inputs, [INPUT_TOKEN_CNT_EACH, INPUT_TOKEN_CNT_EACH], axis=1)
 
         # for last turn
         embed_tkn_last_turn = self.tkn_embedding(inputs_last_turn)
-        lstm_last_turn = self.BIDRC_LSTM_LAST(embed_tkn_last_turn)
-        dense_last_turn = self.last_turn_dense(lstm_last_turn)
+        lstm_last_turn, last_forward_h, last_forward_c, last_backward_h, last_backward_c = self.BIDRC_LSTM_LAST(embed_tkn_last_turn)
+        lstm_last_turn_concat = tf.keras.layers.Concatenate()([self.flatten(lstm_last_turn), last_forward_h, last_forward_c, last_backward_h, last_backward_c])
+        
+        dense_last_turn = self.last_turn_dense(lstm_last_turn_concat)
 
         # for current turn
         embed_tkn_current_turn = self.tkn_embedding(inputs_current_turn)
-        lstm_current_turn = self.BIDRC_LSTM_CURRENT(embed_tkn_current_turn)
-        dense_current_turn = self.current_turn_dense(lstm_current_turn)
+        lstm_current_turn, cur_forward_h, cur_forward_c, cur_backward_h, cur_backward_c = self.BIDRC_LSTM_CURRENT(embed_tkn_current_turn)
+        lstm_current_turn_concat = tf.keras.layers.Concatenate()([self.flatten(lstm_current_turn), cur_forward_h, cur_forward_c, cur_backward_h, cur_backward_c])
+        
+        dense_current_turn = self.current_turn_dense(lstm_current_turn_concat)
 
         # concatenation, ...
         AB_concat = tf.keras.layers.Concatenate()([dense_last_turn, dense_current_turn])
@@ -89,7 +96,7 @@ class MiniChatGPTModel(tf.keras.Model):
 def define_model():
     optimizer = optimizers.Adam(0.001, decay=1e-6) # RMSProp 적용 시 train loss 발산 (확인 필요)
     early_stopping = EarlyStopping(monitor='val_loss', mode='min', patience=500)
-    lr_reduced = ReduceLROnPlateau(monitor='val_loss', mode='min', patience=40, factor=0.5)
+    lr_reduced = ReduceLROnPlateau(monitor='val_loss', mode='min', patience=20, factor=0.8)
         
     model = MiniChatGPTModel()
     return model, optimizer, early_stopping, lr_reduced
@@ -129,7 +136,7 @@ def train_model(input_data_all, output_data_all):
     model.fit(
         train_input, train_output,
         callbacks=[early_stopping, lr_reduced],
-        epochs=3,
+        epochs=80,
         validation_data=(valid_input, valid_output)
     )
 

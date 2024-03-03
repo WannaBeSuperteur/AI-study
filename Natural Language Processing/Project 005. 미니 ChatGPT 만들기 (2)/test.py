@@ -66,13 +66,13 @@ def restore_next_output_rank(next_output_rank, A, B):
     next_output_rank.sort(key=lambda x:x[1], reverse=True)
 
 
-# 생성형 AI로 만들기 위해, 다음 토큰을 확률적으로 선택 (단, threshold는 token 별 weight의 최댓값의 50% 이하만 가능)
-def choose_one_token(next_output_rank, threshold=0.3, verbose=False):
+# 생성형 AI로 만들기 위해, 다음 토큰을 확률적으로 선택
+def choose_one_token(next_output_rank, threshold=0.85, verbose=False):
     candidates = []
     candidate_probs = []
 
     max_weight = max([rank[1] for rank in next_output_rank])
-    threshold = min(threshold, 0.5 * max_weight)
+    threshold = min(threshold, 0.9 * max_weight)
 
     if verbose:
         print(f'maximum weight:\n{max_weight}')
@@ -151,8 +151,8 @@ def run_user_test(verbose_for_test=False):
             if option == 'with weight':
                 next_output_rank_with_weight = next_output_rank
 
-            print(f'\nnext output rank {option} :')
             if verbose_for_test:
+                print(f'\nnext output rank {option} :')
                 for i in range(16):
                     print(next_output_rank[i])
 
@@ -164,6 +164,7 @@ def run_user_test(verbose_for_test=False):
             
         all_outputs.append(next_output)
         current_turn_outputs.append(next_output)
+        print(current_turn_outputs)
 
         last_turn = ' '.join(tokenized_input.split(' ')[:INPUT_TOKEN_CNT_EACH])
         current_turn = ' '.join(tokenized_input.split(' ')[INPUT_TOKEN_CNT_EACH + 1:])
@@ -184,6 +185,6 @@ if __name__ == '__main__':
     
     validate_bert(bert_embedding_dict_np)
 
-    # 사용자 입력
-    run_user_test(verbose_for_test=True)
+    # 사용자 입력 테스트
+    run_user_test(verbose_for_test=False)
 
