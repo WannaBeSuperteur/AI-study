@@ -62,6 +62,13 @@ def generate_data(tokens, verbose=False):
             new_row = pd.DataFrame(new_row)
             df = pd.concat([df, new_row])
 
+            # 다음 예측이 turn 종료인 경우 <person-change> 토큰 추가
+            if j == len(current_turn):
+                data_row_for_pc = ' '.join(last_turn) + ' ' + ' '.join(current_turn_until_now[1:]) + ' <person-change>'
+                new_row_for_pc = {'data': [data_row_for_pc]}
+                new_row_for_pc = pd.DataFrame(new_row_for_pc)
+                df = pd.concat([df, new_row_for_pc])
+
     df.to_csv('train_data.csv')
     
 

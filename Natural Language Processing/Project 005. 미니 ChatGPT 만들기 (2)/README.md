@@ -32,6 +32,7 @@
       * 앞의 30개 token인 ```<null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> that 's come -ing up soon !``` 은 직전 발화자 (A) 의 말
       * 뒤의 30개 token인 ```<null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> <null> true ! the volunteers have already sent out some emails and collected some funds . now ,``` 는 현재 발화자 (B) 의 현재까지의 말
       * 마지막 token인 ```we``` 는 현재 발화자 (B) 가 다음으로 말할, 이어지는 토큰
+      * 마지막 token이 ```<person-change>``` 인 경우, 해당 턴 종료를 의미
   * 위와 같은 방법으로 구성한 데이터셋에서, 첫 90%는 train data, 마지막 10%는 validation data
     * train, valid 데이터 구분은 데이터를 지정하거나 실제 Tensorflow를 이용하여 학습할 때 split_ratio 등을 이용하여 적용한다.
   * 위 데이터는 ```train_data.csv``` 파일에 저장한다.
