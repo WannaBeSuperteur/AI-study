@@ -5,7 +5,7 @@
 * 수행 기간: 2024.03.01 ~ 2024.03.03 (3일)
   * 모델 1 (성능 그나마 좋음) : next token에 대한 one-hot 예측 벡터 출력 방식
     * [2024.03.03 17:48 KST commit](https://github.com/WannaBeSuperteur/AI-study/tree/b3d9f22e29ff040cee7db7265726cb77f5297759/Natural%20Language%20Processing/Project%20005.%20%EB%AF%B8%EB%8B%88%20ChatGPT%20%EB%A7%8C%EB%93%A4%EA%B8%B0%20(2))
-    * [Download AI-Study Repository at this time](https://github.com/WannaBeSuperteur/AI-study/archive/b3d9f22e29ff040cee7db7265726cb77f5297759.zip)
+    * [Download AI-Study Repository at this time (38.4 MB)](https://github.com/WannaBeSuperteur/AI-study/archive/b3d9f22e29ff040cee7db7265726cb77f5297759.zip)
   * 모델 2 (최종 반영) : next token에 대한 embedding을 예측하여 출력 후, vocab에서 가장 가까운 word embedding을 찾는 방식
     * **현재 브랜치에서 사용 가능**
 
@@ -83,7 +83,7 @@ python test.py
 |NLP-P5-4|```done```|```feat```|240301|240301|전처리, 학습, 테스트의 모든 과정을 진행하는 ```main.py``` 파일 작성|
 |NLP-P5-5|```done```|```fix```|240301|240301|모델 성능 향상을 위한 architecture 수정 (1차)|
 |NLP-P5-6|```done```|```feat```|240301|240301|모델 정성평가용으로, 사용자가 입력하면 모델을 통해 답변을 출력하는 부분 작성|
-|NLP-P5-7|```ing```|```fix```|240301||모델 성능 향상을 위한 arctitecture, tokenizer 등 수정|
+|NLP-P5-7|```ing```|```fix```|240301|240303|모델 성능 향상을 위한 arctitecture, tokenizer 등 수정|
 |NLP-P5-8|```done```|```fix```|240302|240302|NLP-P5-7 의 하위 branch로, 데이터셋 구성 방식 수정 (다이얼로그 구분, null token 관련)|
 |NLP-P5-9|```done```|```fix```|240302|240303|NLP-P5-7 의 하위 브랜치로, vocab에 존재하지 않는 단어 처리|
 |NLP-P5-10|```done```|```fix```|240303|240303|NLP-P5-7 의 하위 브랜치로, 데이터셋 구성 방식 2차 변경 및 이에 따른 모델 구조 변경|
