@@ -65,9 +65,10 @@ python test.py
 ## 성능지표 결과
 * 성능 측정지표 : 정성 평가로 진행
   * ```test.py``` 파일 실행 시, 입력 문장을 받은 후, **메인 모델** 이 출력하는 답변을 확인할 수 있음
-  * 이때, **메인 모델** 은 다음 token 예측을 15회 정도 또는 마침표 / ```<Person-Change>``` 토큰이 올 때까지 반복하여, 예측한 token을 모두 연결하여 완전한 문장을 출력하게 한다.
+  * 이때, **메인 모델** 은 다음 token 예측을 ```<Person-Change>``` 토큰이 올 때까지 반복하여, 예측한 token을 모두 연결하여 완전한 문장을 출력하게 한다.
 * ```test.py``` 실행 시 vocab에 존재하지 않는 token 처리
   * vocab 내의 모든 token의 BERT Embedding을 사전에 저장한 ```bert_embedding_dict.csv``` 의 데이터를 근거로, 해당 token과 Euclidean Distance가 가장 가까운 vocab 내의 token으로 대체하여 처리
+* 현재 **가장 최근의 상대방의 발화 내용에 따라서만** 응답하도록 AI 데이터셋이 설계되었다.
 
 ## branch info
 |branch|status|type|start|end|description|
