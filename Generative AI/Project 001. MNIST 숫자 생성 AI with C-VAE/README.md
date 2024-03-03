@@ -20,6 +20,10 @@
   * VAE 참고 : [Variational Auto-Encoder](https://github.com/WannaBeSuperteur/AI-study/blob/main/Generative%20AI/Basics_Variational%20Auto%20Encoder.md)
   * Conditional VAE (C-VAE) 는 VAE를 통해 생성하려는 데이터에 **제약 조건** 을 추가한 형태의 모델
   * 예를 들어, MNIST 아라비아 숫자 데이터 (그림) 를 학습한 VAE, C-VAE 모델이 있다고 할 때, 기존의 VAE가 **아라비아 숫자를 하나 생성해 주는** 역할을 수행했다면, C-VAE 모델은 **숫자 5를 하나 생성해 주는** 역할을 수행할 수 있다.
+* Conditional VAE 모델의 제약 조건
+  * 숫자 값의 class (```0```, ```1```, ..., ```9```) 를 나타내는 one-hot vector **(10)**
+  * **white 성분 비율** : 이미지의 전체 픽셀에 대해 white 성분 값 (0~255) 의 평균을 255로 나눈 값
+    * 실제로는 해당 값을 ```x -> (x - 0.075) * 10.0 을 0.0 ~ 1.0 범위로 clipping 한 값``` 으로 처리한 값을 사용
 * 모델 구조 **(추후 작성)**
   * 전체 모델 ```cvae_model```
   * 인코더 모델 ```cvae_encoder_model```

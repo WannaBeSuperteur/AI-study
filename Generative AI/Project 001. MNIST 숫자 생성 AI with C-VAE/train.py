@@ -33,7 +33,9 @@ def noise_maker(noise_args):
 
 
 # CVAE Model
-# 입력 이미지 (bs, 28, 28) -> (bs, 28, 28, 1), 입력 class (10,), 출력 이미지 (bs, 28, 28) (bs: batch size)
+# 입력 이미지 (bs, 28, 28) -> (bs, 28, 28, 1)
+# 입력 condition (class 10, color info 1) (11,)
+# 출력 이미지 (bs, 28, 28) (bs: batch size)
 
 # ref-1: https://www.kaggle.com/code/mersico/cvae-from-scratch
 # ref-2: https://github.com/ekzhang/vae-cnn-mnist/blob/master/MNIST%20Convolutional%20VAE%20with%20Label%20Input.ipynb
@@ -77,7 +79,7 @@ class CVAE_Model:
         input_image = layers.Input(batch_shape=(BATCH_SIZE, INPUT_IMG_SIZE, INPUT_IMG_SIZE))
         input_image_reshaped = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 1))(input_image)
         
-        input_class = layers.Input(shape=(NUM_CLASSES,))
+        input_condition = layers.Input(shape=(NUM_CLASSES + 1,))
         
         enc_c0 = self.encoder_cnn0(input_image_reshaped)
         enc_c0 = self.dropout(enc_c0)
@@ -86,7 +88,7 @@ class CVAE_Model:
         enc_c2 = self.encoder_cnn2(enc_c1)
         enc_flatten = self.flatten(enc_c2)
 
-        enc_merged = layers.concatenate([enc_flatten, input_class])
+        enc_merged = layers.concatenate([enc_flatten, input_condition])
         enc_d0 = self.encoder_dense0(enc_merged)
 
         # encoder (additional stream)
@@ -103,9 +105,9 @@ class CVAE_Model:
 
         # decoder
         latent_for_decoder = layers.Input(shape=(HIDDEN_DIMS,))
-        class_for_decoder = layers.Input(shape=(NUM_CLASSES,))
+        condition_for_decoder = layers.Input(shape=(NUM_CLASSES + 1,))
 
-        dec_merged = layers.concatenate([latent_for_decoder, class_for_decoder])
+        dec_merged = layers.concatenate([latent_for_decoder, condition_for_decoder])
         dec_d0 = self.decoder_dense0(dec_merged)
         dec_d1 = self.decoder_dense1(dec_d0)
         dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 4, INPUT_IMG_SIZE // 4, 160))(dec_d1)
@@ -118,12 +120,12 @@ class CVAE_Model:
         dec_final = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE))(dec_c2)
 
         # define encoder, decoder and cvae model
-        self.encoder = tf.keras.Model([input_image, input_class], self.latent_space, name='encoder')
-        self.decoder = tf.keras.Model([latent_for_decoder, class_for_decoder], dec_final, name='decoder')
+        self.encoder = tf.keras.Model([input_image, input_condition], self.latent_space, name='encoder')
+        self.decoder = tf.keras.Model([latent_for_decoder, condition_for_decoder], dec_final, name='decoder')
 
         self.cvae = tf.keras.Model(
-            inputs=[input_image, input_class, class_for_decoder],
-            outputs=self.decoder([self.encoder([input_image, input_class]), class_for_decoder]),
+            inputs=[input_image, input_condition, condition_for_decoder],
+            outputs=self.decoder([self.encoder([input_image, input_condition]), condition_for_decoder]),
             name='final_cvae'
         )
 
@@ -140,6 +142,7 @@ def create_train_and_valid_data():
 
     train_input = np.zeros((train_n, INPUT_IMG_SIZE, INPUT_IMG_SIZE))
     train_class = np.zeros((train_n, NUM_CLASSES))
+    train_color_info = np.zeros((train_n, 1))
 
     for idx, row in train_df.iterrows():
         if idx % 5000 == 0:
@@ -147,7 +150,7 @@ def create_train_and_valid_data():
 
         # input
         inp = np.array(row['1x1':'28x28'].to_list())
-        inp = inp.reshape((28, 28))
+        inp = inp.reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE))
         inp = inp / 255.0
         train_input[idx] = inp
 
@@ -155,7 +158,10 @@ def create_train_and_valid_data():
         out_class = int(row['label'])
         train_class[idx][out_class] = 1
 
-    return train_input, train_class
+        # output (color info)
+        train_color_info[idx][0] = np.clip((np.sum(inp) / TOTAL_CELLS - 0.075) * 10.0, 0.0, 1.0)
+
+    return train_input, train_class, train_color_info
 
 
 # C-VAE 모델 정의 및 반환
@@ -166,12 +172,15 @@ def define_cvae_model():
 
 
 # C-VAE 모델 학습 실시 및 모델 저장
-def train_cvae_model(train_input, train_class):
+def train_cvae_model(train_input, train_class, train_color_info):
     cvae_model_class, optimizer = define_cvae_model()
     cvae_model_class.cvae.compile(loss=cvae_model_class.vae_loss, optimizer=optimizer)
 
+    # train_class (N, 10), train_color_info (N, 1) -> train_condition (N, 11)
+    train_condition = np.concatenate([train_class, train_color_info], axis=1)
+
     cvae_model_class.cvae.fit(
-        [train_input, train_class, train_class], train_input,
+        [train_input, train_condition, train_condition], train_input,
         epochs=8,
         batch_size=BATCH_SIZE,
         shuffle=True
@@ -197,9 +206,16 @@ if __name__ == '__main__':
     tf.compat.v1.disable_eager_execution()
 
     # 학습 데이터 추출 (이미지 input + 해당 이미지의 class)
-    train_input, train_class = create_train_and_valid_data()
-    print(f'shape of train input: {np.shape(train_input)}')
-    print(f'shape of train class: {np.shape(train_class)}')
+    train_input, train_class, train_color_info = create_train_and_valid_data()
+    
+    print(f'\nshape of train input: {np.shape(train_input)}')
+    print(train_input)
+    
+    print(f'\nshape of train class: {np.shape(train_class)}')
+    print(train_class)
+    
+    print(f'\nshape of train class: {np.shape(train_color_info)}')
+    print(train_color_info)
 
     # 학습 실시 및 모델 저장
-    cvae_encoder, cvae_decoder, cvae_model = train_cvae_model(train_input, train_class)
+    cvae_encoder, cvae_decoder, cvae_model = train_cvae_model(train_input, train_class, train_color_info)

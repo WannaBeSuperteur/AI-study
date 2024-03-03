@@ -19,13 +19,14 @@ def create_img_dir():
         os.makedirs('test_imgs')
 
 
-# 이미지 생성 및 저장
-def generate_image_with_num(num, latent_space=None, prefix='test_number'):
+# 이미지 생성 및 저장 (bold: 굵기 0.0 ~ 1.0)
+def generate_image_with_num(num, bold, latent_space=None, prefix='test_number'):
     if latent_space is None:
         latent_space = np.random.normal(0.0, 1.0, size=(1, HIDDEN_DIMS))
 
-    input_class = np.zeros((1, NUM_CLASSES))
-    input_class[0][num] = 1.0
+    input_class = np.zeros((1, NUM_CLASSES + 1))
+    input_class[0][num] = 1.0 # 숫자
+    input_class[0][10] = bold # 굵기 0.0 ~ 1.0
 
     img = decoder([latent_space, input_class])
     img_np = img.numpy() * 255.0
@@ -38,10 +39,11 @@ if __name__ == '__main__':
 
     # create number image WITHOUT latent space
     for i in range(NUM_CLASSES):
-        generate_image_with_num(i)
+        generate_image_with_num(num=i, bold=0.5)
 
     # create number image WITH latent space
     for i in range(NUM_CLASSES):
-        for j in range(5):
+        for j in range(4):
             latent_space = np.random.normal(0.0, 1.0, size=(1, HIDDEN_DIMS))
-            generate_image_with_num(i, latent_space=latent_space, prefix=f'test_num_with_ls_{j}')
+            for k in range(3):
+                generate_image_with_num(num=i, bold=0.1+0.4*k, latent_space=latent_space, prefix=f'test_num_with_ls_{j}_{k}')
