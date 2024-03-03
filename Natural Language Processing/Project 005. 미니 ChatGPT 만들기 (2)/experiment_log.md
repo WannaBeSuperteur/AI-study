@@ -57,8 +57,62 @@ Epoch 80/80
 
 ## 실험 결과 및 총평
 
+```
+input text :
+Hi!
+['hey']
+['hey', ',']
+['hey', ',', 'how']
+['hey', ',', 'how', 'are']
+['hey', ',', 'how', 'are', 'you']
+['hey', ',', 'how', 'are', 'you', '?']
+['hey', ',', 'how', 'are', 'you', '?', '<person-change>']
+AI output :
+hey , how are you ?
+
+input text :
+Hello!
+['gotten']
+['gotten', 'biggest']
+['gotten', 'biggest', 'how']
+['gotten', 'biggest', 'how', 'was']
+['gotten', 'biggest', 'how', 'was', 'doing']
+['gotten', 'biggest', 'how', 'was', 'doing', 'crazy']
+['gotten', 'biggest', 'how', 'was', 'doing', 'crazy', 'the']
+['gotten', 'biggest', 'how', 'was', 'doing', 'crazy', 'the', 'coffee']
+['gotten', 'biggest', 'how', 'was', 'doing', 'crazy', 'the', 'coffee', 'makes']
+['gotten', 'biggest', 'how', 'was', 'doing', 'crazy', 'the', 'coffee', 'makes', 'is']
+['gotten', 'biggest', 'how', 'was', 'doing', 'crazy', 'the', 'coffee', 'makes', 'is', 'crazy']
+['gotten', 'biggest', 'how', 'was', 'doing', 'crazy', 'the', 'coffee', 'makes', 'is', 'crazy', 'of']
+['gotten', 'biggest', 'how', 'was', 'doing', 'crazy', 'the', 'coffee', 'makes', 'is', 'crazy', 'of', 'language']
+['gotten', 'biggest', 'how', 'was', 'doing', 'crazy', 'the', 'coffee', 'makes', 'is', 'crazy', 'of', 'language', '?']
+['gotten', 'biggest', 'how', 'was', 'doing', 'crazy', 'the', 'coffee', 'makes', 'is', 'crazy', 'of', 'language', '?', '<person-change>']
+AI output :
+gotten biggest how was doing crazy the coffee makes is crazy of language ?
+
+input text :
+How are you?
+['i']
+['i', "'m"]
+['i', "'m", 'gotten']
+['i', "'m", 'gotten', 'extremely']
+['i', "'m", 'gotten', 'extremely', 'stick']
+['i', "'m", 'gotten', 'extremely', 'stick', 'gotten']
+['i', "'m", 'gotten', 'extremely', 'stick', 'gotten', 'favorite']
+['i', "'m", 'gotten', 'extremely', 'stick', 'gotten', 'favorite', 'picked']
+['i', "'m", 'gotten', 'extremely', 'stick', 'gotten', 'favorite', 'picked', 'arguing']
+['i', "'m", 'gotten', 'extremely', 'stick', 'gotten', 'favorite', 'picked', 'arguing', 'on']
+['i', "'m", 'gotten', 'extremely', 'stick', 'gotten', 'favorite', 'picked', 'arguing', 'on', 'gotten']
+['i', "'m", 'gotten', 'extremely', 'stick', 'gotten', 'favorite', 'picked', 'arguing', 'on', 'gotten', 'roommate']
+['i', "'m", 'gotten', 'extremely', 'stick', 'gotten', 'favorite', 'picked', 'arguing', 'on', 'gotten', 'roommate', 'gotten']
+['i', "'m", 'gotten', 'extremely', 'stick', 'gotten', 'favorite', 'picked', 'arguing', 'on', 'gotten', 'roommate', 'gotten', 'saying']
+['i', "'m", 'gotten', 'extremely', 'stick', 'gotten', 'favorite', 'picked', 'arguing', 'on', 'gotten', 'roommate', 'gotten', 'saying', '<person-change>']
+AI output :
+i 'm gotten extremely stick gotten favorite picked arguing on gotten roommate gotten saying
+```
+
 * 기존의 one-hot 방식에 비해 **AI의 응답이 많이 어색하다.**
-* **one-hot 방식으로 회귀 필요**
+* **one-hot 방식 출력 기반 모델로 회귀 필요**
 
 # model 5 (2024.03.03 13:10)
 
