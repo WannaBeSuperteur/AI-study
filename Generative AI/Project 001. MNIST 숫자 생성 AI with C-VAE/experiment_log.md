@@ -1,3 +1,69 @@
+# Model 5 (2024.03.05 02:47)
+## 이전 모델과의 차이점
+* Model 4에서 epoch 만 1 + 8 -> 1 + 40 으로 증가
+
+## 실험 로그
+* epochs : **1 + 40**
+* 최종 train loss : **28.9503**
+
+```
+Train on 60000 samples
+2024-03-04 23:57:37.985702: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2024-03-04 23:57:38.039615: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:354] MLIR V1 optimization pass is not enabled
+60000/60000 [==============================] - 289s 5ms/sample - loss: 33.8757
+Train on 60000 samples
+Epoch 1/40
+60000/60000 [==============================] - 281s 5ms/sample - loss: 36.1926
+Epoch 2/40
+60000/60000 [==============================] - 255s 4ms/sample - loss: 34.2066
+Epoch 3/40
+60000/60000 [==============================] - 286s 5ms/sample - loss: 33.1789
+Epoch 4/40
+60000/60000 [==============================] - 297s 5ms/sample - loss: 32.6045
+Epoch 5/40
+60000/60000 [==============================] - 284s 5ms/sample - loss: 32.1233
+Epoch 6/40
+60000/60000 [==============================] - 245s 4ms/sample - loss: 31.6978
+Epoch 7/40
+60000/60000 [==============================] - 245s 4ms/sample - loss: 31.4423
+Epoch 8/40
+60000/60000 [==============================] - 244s 4ms/sample - loss: 31.1532
+Epoch 9/40
+60000/60000 [==============================] - 246s 4ms/sample - loss: 31.0157
+Epoch 10/40
+60000/60000 [==============================] - 245s 4ms/sample - loss: 30.7990
+
+...
+
+Epoch 31/40
+60000/60000 [==============================] - 241s 4ms/sample - loss: 29.2645
+Epoch 32/40
+60000/60000 [==============================] - 241s 4ms/sample - loss: 29.2356
+Epoch 33/40
+60000/60000 [==============================] - 241s 4ms/sample - loss: 29.1760
+Epoch 34/40
+60000/60000 [==============================] - 240s 4ms/sample - loss: 29.1372
+Epoch 35/40
+60000/60000 [==============================] - 241s 4ms/sample - loss: 29.0925
+Epoch 36/40
+60000/60000 [==============================] - 243s 4ms/sample - loss: 29.0821
+Epoch 37/40
+60000/60000 [==============================] - 241s 4ms/sample - loss: 29.0396
+Epoch 38/40
+60000/60000 [==============================] - 241s 4ms/sample - loss: 29.0243
+Epoch 39/40
+60000/60000 [==============================] - 241s 4ms/sample - loss: 28.9945
+Epoch 40/40
+60000/60000 [==============================] - 240s 4ms/sample - loss: 28.9503
+```
+
+## 실험 결과 및 총평
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/409aba67-1176-425d-b983-3c085f0413b4)
+
+* Model 4와 전반적으로 유사
+* epoch를 더 많이 돌려서인지, 어색한 이미지를 생성하는 경향이 Model 4에 비해 약간 줄어든 듯하다.
+
 # Model 4 (2024.03.04 23:29)
 ## 이전 모델과의 차이점
 

@@ -254,7 +254,7 @@ def train_cvae_model(train_input, train_class, train_color_info):
     # 2번째 epoch 부터 학습 계속 진행
     cvae_model_class.cvae.fit(
         [train_input, train_condition, train_condition], train_input,
-        epochs=8,
+        epochs=40,
         batch_size=BATCH_SIZE,
         shuffle=True
     )
