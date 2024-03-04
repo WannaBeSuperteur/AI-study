@@ -7,6 +7,8 @@ from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from keras.losses import mean_squared_error
 import keras.backend as K
 
+import os
+
 
 # to fix error below:
 # TypeError: Could not build a TypeSpec for KerasTensor(type_spec=TensorSpec(shape=(None, 16), dtype=tf.float32, name=None),
@@ -41,14 +43,32 @@ def noise_maker(noise_args):
 # ref-2: https://github.com/ekzhang/vae-cnn-mnist/blob/master/MNIST%20Convolutional%20VAE%20with%20Label%20Input.ipynb
 class CVAE_Model:
 
-    # VAE 의 loss function (kl_loss : KL Divergence, https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence)
-    def vae_loss(self, x, y):
+
+    def get_mse_and_kl_loss(self, x, y):
         x_reshaped = K.reshape(x, shape=(BATCH_SIZE, TOTAL_CELLS))
         y_reshaped = K.reshape(y, shape=(BATCH_SIZE, TOTAL_CELLS))
         mse_loss = TOTAL_CELLS * mean_squared_error(x_reshaped, y_reshaped)
         
         kl_loss = -0.5 * K.sum(1 + self.latent_log_var - K.square(self.latent_mean) - K.exp(self.latent_log_var), axis=-1)
+
+        return mse_loss, kl_loss, y_reshaped
+    
+
+    # VAE 의 loss function (1st epoch only)
+    # kl_loss : KL Divergence, https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence
+    def vae_loss_first_epoch(self, x, y):
+        mse_loss, kl_loss, _ = self.get_mse_and_kl_loss(x, y)
         return mse_loss + kl_loss
+
+
+    # VAE 의 loss function (2nd epoch ~)
+    def vae_loss(self, x, y):
+        mse_loss, kl_loss, y_reshaped = self.get_mse_and_kl_loss(x, y)
+
+        # 출력 이미지에서 회색으로 표시되는 부분을 loss로 처리
+        grey_y_loss = K.sum(K.maximum(0.0, y_reshaped * (1.0 - y_reshaped)))
+
+        return mse_loss + kl_loss + 0.01 * grey_y_loss
     
 
     def __init__(self, dropout_rate=0.45):
@@ -152,8 +172,13 @@ def check_white_ratio_stat(train_df):
 
 
 # mnist_train.csv 파일로부터 학습 데이터 추출
-def create_train_and_valid_data():
-    train_df = pd.read_csv('mnist_train.csv')
+def create_train_and_valid_data(limit=None):
+    if limit is not None:
+        train_df = pd.read_csv('mnist_train.csv')[:limit]
+    else:
+        train_df = pd.read_csv('mnist_train.csv')
+
+
     train_n = len(train_df)
     print(train_df)
 
@@ -199,17 +224,37 @@ def define_cvae_model():
     return model, optimizer
 
 
+# 2nd epoch 부터 Grey Y Loss 적용을 위한 재컴파일
+def recompile_cvae_model(cvae_model_class, optimizer):
+    cvae_model_class.cvae.save_weights('weights_temp.h5')
+    cvae_model_class.cvae.compile(loss=cvae_model_class.vae_loss, optimizer=optimizer)
+    cvae_model_class.cvae.load_weights('weights_temp.h5')
+    os.remove('weights_temp.h5')
+    
+
 # C-VAE 모델 학습 실시 및 모델 저장
 def train_cvae_model(train_input, train_class, train_color_info):
     cvae_model_class, optimizer = define_cvae_model()
-    cvae_model_class.cvae.compile(loss=cvae_model_class.vae_loss, optimizer=optimizer)
+    cvae_model_class.cvae.compile(loss=cvae_model_class.vae_loss_first_epoch, optimizer=optimizer)
 
     # train_class (N, 10), train_color_info (N, 1) -> train_condition (N, 11)
     train_condition = np.concatenate([train_class, train_color_info], axis=1)
 
+    # 첫번째 epoch 학습
     cvae_model_class.cvae.fit(
         [train_input, train_condition, train_condition], train_input,
-        epochs=40,
+        epochs=1,
+        batch_size=BATCH_SIZE,
+        shuffle=True
+    )
+
+    # 2nd epoch 부터 Grey Y Loss 적용을 위한 재컴파일
+    recompile_cvae_model(cvae_model_class, optimizer)
+
+    # 2번째 epoch 부터 학습 계속 진행
+    cvae_model_class.cvae.fit(
+        [train_input, train_condition, train_condition], train_input,
+        epochs=8,
         batch_size=BATCH_SIZE,
         shuffle=True
     )

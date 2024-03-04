@@ -1,3 +1,45 @@
+# Model 4 (2024.03.04 23:29)
+## 이전 모델과의 차이점
+
+**Model 3** 과의 차이점
+* Grey Y Loss (출력되는 이미지 중 흐릿한 부분, 즉 색이 grey인 부분이 있으면 이에 따라 추가적인 loss를 적용)
+  * 단, Grey Y Loss는 2번째 epoch 부터 적용
+
+## 실험 로그
+* epochs : **1 + 8**
+* 최종 train loss : **30.9971**
+
+```
+Train on 60000 samples
+2024-03-04 22:50:30.434268: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2024-03-04 22:50:30.482051: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:354] MLIR V1 optimization pass is not enabled
+60000/60000 [==============================] - 236s 4ms/sample - loss: 34.4008
+Train on 60000 samples
+Epoch 1/8
+60000/60000 [==============================] - 264s 4ms/sample - loss: 35.9727
+Epoch 2/8
+60000/60000 [==============================] - 248s 4ms/sample - loss: 33.8475
+Epoch 3/8
+60000/60000 [==============================] - 248s 4ms/sample - loss: 32.9069
+Epoch 4/8
+60000/60000 [==============================] - 258s 4ms/sample - loss: 32.3094
+Epoch 5/8
+60000/60000 [==============================] - 290s 5ms/sample - loss: 31.8765
+Epoch 6/8
+60000/60000 [==============================] - 273s 5ms/sample - loss: 31.5413
+Epoch 7/8
+60000/60000 [==============================] - 258s 4ms/sample - loss: 31.2416
+Epoch 8/8
+60000/60000 [==============================] - 277s 5ms/sample - loss: 30.9971
+```
+
+## 실험 결과 및 총평
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/d8a8aa7e-977a-4e65-93c9-74f24586b0d7)
+
+* Grey Y Loss 만 적용했을 뿐인데, 단 1 + 8 epochs 만의 학습으로 **이미지의 선명도가 훨씬 좋아졌다.**
+* 아울러, 일부 이미지의 숫자가 어색하게 보이는 부분 (정상적인 숫자에 회색의 짧은 획이 추가된 듯한 이미지) 의 등장 빈도가 현저히 줄어들었다.
+
 # Model 3 (2024.03.04 02:29)
 ## 이전 모델과의 차이점
 * vs Model 2 : epochs 8 -> 40
