@@ -41,13 +41,25 @@
 
 ## 추가 기능
 * 간단한 CNN 모델을 이용하여 숫자 이미지 분류
-* 사용자가 그림판으로 그린 숫자를 해당 모델로 분류한 후, **동일한 latent vector와 white 성분 비율, 즉 동일한 글씨체** 로 나머지 class 에 해당하는 숫자 생성
+  * ```classify_nums.py```
+  * 모델 이름 : ```classify_nums_model```
+* 사용자가 그림판으로 그린 숫자를 해당 CNN 모델로 분류한 후, 해당 숫자 이미지를 **```cvae_encoder_model``` 에 입력하여 그 출력으로 얻은 것과 동일한 latent vector와 white 성분 비율, 즉 동일한 글씨체** 로 나머지 class 에 해당하는 숫자를 ```cvae_decoder_model``` 을 이용하여 생성
   * 예를 들어 사용자가 ```3``` 이라는 숫자를 그렸으면, 나머지 ```0```, ```1```, ```2```, ```4```, ..., ```9``` 숫자 생성
+  * ```generate_other_nums.py```
+  * 필요한 모델 : ```classify_nums_model```, ```cvae_encoder_model```, ```cvae_decoder_model```
 
 ## 실행 순서
 ```
 python train.py
 python test.py
+```
+
+**추가 기능 실행 순서**
+* 반드시 먼저 ```train.py``` 를 실행한 후 그 다음에 아래를 순서대로 실행
+
+```
+python classify_nums.py
+python generate_other_nums.py
 ```
 
 ## 성능지표 결과
