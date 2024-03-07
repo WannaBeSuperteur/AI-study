@@ -1,7 +1,7 @@
 # Generative AI 프로젝트 1. MNIST 숫자 생성 AI with C-VAE
 * Dataset: [MNIST DataSet](https://www.kaggle.com/datasets/oddrationale/mnist-in-csv/data)
   * 위 주소에서 다운로드 받은 ```mnist_train.csv``` 파일이 학습 데이터이다.
-* 수행 기간: 2024.03.02 ~ 2024.03.10 (9일)
+* 수행 기간: 2024.03.02 ~ 2024.03.07 (6일)
 
 ## 파일 및 코드 설명
 * ```mnist_train.csv``` : 학습 데이터셋
@@ -47,6 +47,7 @@
   * 예를 들어 사용자가 ```3``` 이라는 숫자를 그렸으면, 나머지 ```0```, ```1```, ```2```, ```4```, ..., ```9``` 숫자 생성
   * ```generate_other_nums.py```
   * 필요한 모델 : ```classify_nums_model```, ```cvae_encoder_model```, ```cvae_decoder_model```
+  * 필요 파일 : ```number.png``` (사용자가 그린 숫자 그림, 28 x 28 grayscale 이미지, **검은색 배경에 흰 글씨** 이어야 함!!)
 
 ## 실행 순서
 ```
@@ -56,6 +57,10 @@ python test.py
 
 **추가 기능 실행 순서**
 * 반드시 먼저 ```train.py``` 를 실행한 후 그 다음에 아래를 순서대로 실행
+* ```generate_other_nums.py``` 실행 시, 입력 이미지인 ```number.png``` 파일 필요
+* ```generate_other_nums.py``` 실행 시, 출력 이미지 위치는 ```test_imgs/generated_L_A_B.png``` 이다.
+  * ```L``` 은 encoder에 생성된 latent vector의 번호 (0, 1, 2, ..., 7)
+  *  ```A``` 가 0, 1, 2일 때 생성되는 이미지의 white ratio는 각각 0.0, 0.5, 1.0 이고, ```B``` 는 생성되는 이미지가 나타내는 숫자이다.
 
 ```
 python classify_nums.py
@@ -69,9 +74,9 @@ python generate_other_nums.py
 ## branch info
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
-|GAI-P1-master|||240302|240310|마스터 브랜치|
+|GAI-P1-master|||240302|240307|마스터 브랜치|
 |GAI-P1-1|```done```|```feat```|240302|240302|```mnist_train.csv``` 데이터를 C-VAE 모델로 학습|
 |GAI-P1-2|```done```|```feat```|240302|240302|C-VAE 모델 테스트|
 |GAI-P1-3|```done```|```fix```|240302|240305|C-VAE 모델 성능 향상 시도|
 |GAI-P1-4|```done```|```feat```|240306|240307|CNN으로 숫자 분류하는 모델 구현|
-|GAI-P1-5||```feat```|||사용자가 숫자를 그리면 동일한 글씨체로 나머지 숫자 생성 모델 구현|
+|GAI-P1-5|```done```|```feat```|240307|240307|사용자가 숫자를 그리면 동일한 글씨체로 나머지 숫자 생성 모델 구현|
