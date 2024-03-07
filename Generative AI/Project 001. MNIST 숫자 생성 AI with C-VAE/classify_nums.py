@@ -18,40 +18,46 @@ class Classify_Nums_CNN_Model(tf.keras.Model):
 
         # conv + pooling part
         self.conv_0 = tf.keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=[28, 28, 1])
-        self.conv_1 = tf.keras.layers.Conv2D(64, (3, 3), activation='relu')
+        self.conv_1 = tf.keras.layers.Conv2D(32, (3, 3), activation='relu')
 
-        self.conv_2 = tf.keras.layers.Conv2D(96, (3, 3), activation='relu')
-        self.conv_3 = tf.keras.layers.Conv2D(128, (3, 3), activation='relu')
-        self.conv_4 = tf.keras.layers.Conv2D(192, (3, 3), activation='relu')
-        self.conv_5 = tf.keras.layers.Conv2D(256, (3, 3), activation='relu')
+        self.conv_2 = tf.keras.layers.Conv2D(32, (3, 3), activation='relu')
+        self.conv_3 = tf.keras.layers.Conv2D(48, (3, 3), activation='relu')
+        self.conv_4 = tf.keras.layers.Conv2D(64, (3, 3), activation='relu')
+        self.conv_5 = tf.keras.layers.Conv2D(96, (3, 3), activation='relu')
 
         # fully connected part
-        self.dense = tf.keras.layers.Dense(256, activation=tf.keras.layers.LeakyReLU(alpha=0.025),
+        self.dense_0 = tf.keras.layers.Dense(256, activation=tf.keras.layers.LeakyReLU(alpha=0.06),
                                            kernel_regularizer=L2, name='dense_0')
 
-        self.final_dense = tf.keras.layers.Dense(256, activation='softmax',
+        self.dense_1 = tf.keras.layers.Dense(64, activation=tf.keras.layers.LeakyReLU(alpha=0.06),
+                                           kernel_regularizer=L2, name='dense_1')
+
+        self.final_dense = tf.keras.layers.Dense(10, activation='softmax',
                                                  kernel_regularizer=L2, name='dense_final')
 
 
     def call(self, inputs, training):
-        inputs = tf.keras.layers.reshape((28, 28, 1))
+        inputs = tf.keras.layers.Reshape((28, 28, 1))(inputs)
 
         # conv + pooling part : 28 -> 26 -> 24 -> 12 -> 10 -> 8 -> 6 -> 4
         outputs_0 = self.conv_0(inputs)
         outputs_1 = self.conv_1(outputs_0)
-        outputs_2 = self.pooling(output_1)
+        outputs_2 = self.pooling(outputs_1)
 
-        outputs_3 = self.conv_2(output_2)
-        outputs_4 = self.conv_3(output_3)
-        outputs_5 = self.conv_4(output_4)
-        outputs_6 = self.conv_5(output_5)
+        outputs_3 = self.conv_2(outputs_2)
+        outputs_4 = self.conv_3(outputs_3)
+        outputs_5 = self.conv_4(outputs_4)
+        outputs_6 = self.conv_5(outputs_5)
 
         outputs_flatten = self.flatten(outputs_6)
 
         # fully connected part
-        dense_0 = self.dense(outputs_flatten)
-        dense_0 = self.dropout(dense_0)
-        final_output = self.final_dense(dense_0)
+        dense = self.dense_0(outputs_flatten)
+        dense = self.dropout(dense)
+        dense = self.dense_1(dense)
+        dense = self.dropout(dense)
+        
+        final_output = self.final_dense(dense)
 
         return final_output
     
@@ -62,42 +68,27 @@ def define_model():
     early_stopping = EarlyStopping(monitor='val_loss', mode='min', patience=5)
     lr_reduced = ReduceLROnPlateau(monitor='val_loss', mode='min', patience=2)
         
-    model = MainModel()
+    model = Classify_Nums_CNN_Model()
     return model, optimizer, early_stopping, lr_reduced
-
-
-# 모델 학습 및 저장
-def train_model(input_data_all, output_data_all):
-    (train_input, train_output, valid_input, valid_output) = define_data(input_data_all, output_data_all)
-
-    print(f'train input : {np.shape(train_input)}\n{train_input}\n')
-    print(f'valid input : {np.shape(valid_input)}\n{valid_input}\n')
-    print(f'train output : {np.shape(train_output)}\n{train_output}\n')
-    print(f'valid output : {np.shape(valid_output)}\n{valid_output}\n')
-    
-    model, optimizer, early_stopping, lr_reduced = define_model()
-    
-    model.compile(loss='mse', optimizer=optimizer)
-
-    model.fit(
-        train_input, train_output,
-        callbacks=[early_stopping, lr_reduced],
-        epochs=50,
-        validation_data=(valid_input, valid_output)
-    )
-
-    model.summary()
-    model.save('main_model')
-
-    return model
 
 
 # CNN 모델 학습
 def train_cnn_model(train_input, train_class):
     cnn_model, optimizer, early_stopping, lr_reduced = define_model()
-    cnn_model.compile(loss='mse', optimizer=optimizer)
+    cnn_model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
 
-    # TODO : 모델 학습 및 반환
+    print(f'train input : {np.shape(train_input)}\n{train_input}\n')
+    print(f'train class : {np.shape(train_class)}\n{train_class}\n')
+
+    cnn_model.fit(
+        train_input, train_class,
+        callbacks=[early_stopping, lr_reduced],
+        epochs=5,
+        validation_split=0.1
+    )
+
+    cnn_model.summary()
+    return cnn_model
 
 
 if __name__ == '__main__':
@@ -106,7 +97,7 @@ if __name__ == '__main__':
     train_input, train_class, _ = create_train_and_valid_data()    
 
     # CNN 모델 학습
-    cnn_model = train_cnn_model()
+    cnn_model = train_cnn_model(train_input, train_class)
 
     # CNN 모델 저장
     cnn_model.save('classify_nums_model')
