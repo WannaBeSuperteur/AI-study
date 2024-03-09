@@ -41,51 +41,66 @@ class Main_CNN_Model(tf.keras.Model):
         self.conv_split4_2 = tf.keras.layers.Conv2D(64, (3, 3), activation='relu', name='conv_split4_2')
 
         # fully connected part (for output A)
-        self.dense0_0 = tf.keras.layers.Dense(128, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
+        self.dense0_0 = tf.keras.layers.Dense(256, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
                                               kernel_regularizer=L2, name='dense0_0')
 
-        self.dense0_1 = tf.keras.layers.Dense(32, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
+        self.dense0_1 = tf.keras.layers.Dense(64, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
                                               kernel_regularizer=L2, name='dense0_1')
+
+        self.dense0_2 = tf.keras.layers.Dense(16, activation=tf.keras.layers.LeakyReLU(alpha=0.025),
+                                              kernel_regularizer=L2, name='dense0_2')
 
         self.dense0_final = tf.keras.layers.Dense(1, activation='sigmoid',
                                                   kernel_regularizer=L2, name='dense0_final')
 
         # fully connected part (for output B)
-        self.dense1_0 = tf.keras.layers.Dense(128, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
+        self.dense1_0 = tf.keras.layers.Dense(256, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
                                               kernel_regularizer=L2, name='dense1_0')
 
-        self.dense1_1 = tf.keras.layers.Dense(32, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
+        self.dense1_1 = tf.keras.layers.Dense(64, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
                                               kernel_regularizer=L2, name='dense1_1')
+
+        self.dense1_2 = tf.keras.layers.Dense(16, activation=tf.keras.layers.LeakyReLU(alpha=0.025),
+                                              kernel_regularizer=L2, name='dense1_2')
 
         self.dense1_final = tf.keras.layers.Dense(1, activation='sigmoid',
                                                   kernel_regularizer=L2, name='dense1_final')
 
         # fully connected part (for output C)
-        self.dense2_0 = tf.keras.layers.Dense(128, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
+        self.dense2_0 = tf.keras.layers.Dense(256, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
                                               kernel_regularizer=L2, name='dense2_0')
 
-        self.dense2_1 = tf.keras.layers.Dense(32, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
+        self.dense2_1 = tf.keras.layers.Dense(64, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
                                               kernel_regularizer=L2, name='dense2_1')
+
+        self.dense2_2 = tf.keras.layers.Dense(16, activation=tf.keras.layers.LeakyReLU(alpha=0.025),
+                                              kernel_regularizer=L2, name='dense2_2')
 
         self.dense2_final = tf.keras.layers.Dense(1, activation='sigmoid',
                                                   kernel_regularizer=L2, name='dense2_final')
 
         # fully connected part (for output D)
-        self.dense3_0 = tf.keras.layers.Dense(128, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
+        self.dense3_0 = tf.keras.layers.Dense(256, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
                                               kernel_regularizer=L2, name='dense3_0')
 
-        self.dense3_1 = tf.keras.layers.Dense(32, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
+        self.dense3_1 = tf.keras.layers.Dense(64, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
                                               kernel_regularizer=L2, name='dense3_1')
+
+        self.dense3_2 = tf.keras.layers.Dense(16, activation=tf.keras.layers.LeakyReLU(alpha=0.025),
+                                              kernel_regularizer=L2, name='dense3_2')
 
         self.dense3_final = tf.keras.layers.Dense(1, activation='sigmoid',
                                                   kernel_regularizer=L2, name='dense3_final')
 
         # fully connected part (for output E)
-        self.dense4_0 = tf.keras.layers.Dense(128, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
+        self.dense4_0 = tf.keras.layers.Dense(256, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
                                               kernel_regularizer=L2, name='dense4_0')
 
-        self.dense4_1 = tf.keras.layers.Dense(32, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
+        self.dense4_1 = tf.keras.layers.Dense(64, activation=tf.keras.layers.LeakyReLU(alpha=0.05),
                                               kernel_regularizer=L2, name='dense4_1')
+
+        self.dense4_2 = tf.keras.layers.Dense(16, activation=tf.keras.layers.LeakyReLU(alpha=0.025),
+                                              kernel_regularizer=L2, name='dense4_2')
 
         self.dense4_final = tf.keras.layers.Dense(1, activation='sigmoid',
                                                   kernel_regularizer=L2, name='dense4_final')
@@ -130,8 +145,12 @@ class Main_CNN_Model(tf.keras.Model):
         dense_01 = self.dense0_1(dense_00)
         dense_01 = self.dropout(dense_01)
         dense_01 = tf.keras.layers.concatenate([dense_01, inputs_center_4])
+
+        dense_02 = self.dense0_2(dense_01)
+        dense_02 = self.dropout(dense_02)
+        dense_02 = tf.keras.layers.concatenate([dense_02, inputs_center_4])
         
-        dense_0_final = self.dense0_final(dense_01)
+        dense_0_final = self.dense0_final(dense_02)
 
         # fully connected part for output B
         flatten_1 = self.flatten(outputs_12)
@@ -144,7 +163,11 @@ class Main_CNN_Model(tf.keras.Model):
         dense_11 = self.dropout(dense_11)
         dense_11 = tf.keras.layers.concatenate([dense_11, inputs_center_4])
         
-        dense_1_final = self.dense1_final(dense_11)
+        dense_12 = self.dense1_2(dense_11)
+        dense_12 = self.dropout(dense_12)
+        dense_12 = tf.keras.layers.concatenate([dense_12, inputs_center_4])
+        
+        dense_1_final = self.dense1_final(dense_12)
 
         # fully connected part for output C
         flatten_2 = self.flatten(outputs_22)
@@ -157,7 +180,11 @@ class Main_CNN_Model(tf.keras.Model):
         dense_21 = self.dropout(dense_21)
         dense_21 = tf.keras.layers.concatenate([dense_21, inputs_center_4])
         
-        dense_2_final = self.dense2_final(dense_21)
+        dense_22 = self.dense2_2(dense_21)
+        dense_22 = self.dropout(dense_22)
+        dense_22 = tf.keras.layers.concatenate([dense_22, inputs_center_4])
+        
+        dense_2_final = self.dense2_final(dense_22)
 
         # fully connected part for output D
         flatten_3 = self.flatten(outputs_32)
@@ -170,7 +197,11 @@ class Main_CNN_Model(tf.keras.Model):
         dense_31 = self.dropout(dense_31)
         dense_31 = tf.keras.layers.concatenate([dense_31, inputs_center_4])
         
-        dense_3_final = self.dense3_final(dense_31)
+        dense_32 = self.dense3_2(dense_31)
+        dense_32 = self.dropout(dense_32)
+        dense_32 = tf.keras.layers.concatenate([dense_32, inputs_center_4])
+        
+        dense_3_final = self.dense3_final(dense_32)
 
         # fully connected part for output E
         flatten_4 = self.flatten(outputs_42)
@@ -183,7 +214,11 @@ class Main_CNN_Model(tf.keras.Model):
         dense_41 = self.dropout(dense_41)
         dense_41 = tf.keras.layers.concatenate([dense_41, inputs_center_4])
         
-        dense_4_final = self.dense4_final(dense_41)
+        dense_42 = self.dense4_2(dense_41)
+        dense_42 = self.dropout(dense_42)
+        dense_42 = tf.keras.layers.concatenate([dense_42, inputs_center_4])
+        
+        dense_4_final = self.dense4_final(dense_42)
         
         # final concatenation layer
         final_output = tf.keras.layers.concatenate([dense_0_final, dense_1_final, dense_2_final, dense_3_final, dense_4_final])
