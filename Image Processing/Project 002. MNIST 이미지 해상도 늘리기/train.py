@@ -105,6 +105,27 @@ class Main_CNN_Model(tf.keras.Model):
         self.dense4_final = tf.keras.layers.Dense(1, activation='sigmoid',
                                                   kernel_regularizer=L2, name='dense4_final')
 
+        # batch normalization layers
+        self.bn_00 = tf.keras.layers.BatchNormalization()
+        self.bn_01 = tf.keras.layers.BatchNormalization()
+        self.bn_02 = tf.keras.layers.BatchNormalization()
+        
+        self.bn_10 = tf.keras.layers.BatchNormalization()
+        self.bn_11 = tf.keras.layers.BatchNormalization()
+        self.bn_12 = tf.keras.layers.BatchNormalization()
+
+        self.bn_20 = tf.keras.layers.BatchNormalization()
+        self.bn_21 = tf.keras.layers.BatchNormalization()
+        self.bn_22 = tf.keras.layers.BatchNormalization()
+
+        self.bn_30 = tf.keras.layers.BatchNormalization()
+        self.bn_31 = tf.keras.layers.BatchNormalization()
+        self.bn_32 = tf.keras.layers.BatchNormalization()
+
+        self.bn_40 = tf.keras.layers.BatchNormalization()
+        self.bn_41 = tf.keras.layers.BatchNormalization()
+        self.bn_42 = tf.keras.layers.BatchNormalization()
+
 
     def call(self, inputs, training):
         inputs_cnn, inputs_center_4 = tf.split(inputs, [14 * 14, 4], axis=1)
@@ -139,14 +160,17 @@ class Main_CNN_Model(tf.keras.Model):
         flatten_0 = self.flatten(outputs_02)
         
         dense_00 = self.dense0_0(flatten_0)
+        dense_00 = self.bn_00(dense_00)
         dense_00 = self.dropout(dense_00)
         dense_00 = tf.keras.layers.concatenate([dense_00, inputs_center_4])
         
         dense_01 = self.dense0_1(dense_00)
+        dense_01 = self.bn_01(dense_01)
         dense_01 = self.dropout(dense_01)
         dense_01 = tf.keras.layers.concatenate([dense_01, inputs_center_4])
 
         dense_02 = self.dense0_2(dense_01)
+        dense_02 = self.bn_02(dense_02)
         dense_02 = self.dropout(dense_02)
         dense_02 = tf.keras.layers.concatenate([dense_02, inputs_center_4])
         
@@ -156,14 +180,17 @@ class Main_CNN_Model(tf.keras.Model):
         flatten_1 = self.flatten(outputs_12)
         
         dense_10 = self.dense1_0(flatten_1)
+        dense_10 = self.bn_10(dense_10)
         dense_10 = self.dropout(dense_10)
         dense_10 = tf.keras.layers.concatenate([dense_10, inputs_center_4])
         
         dense_11 = self.dense1_1(dense_10)
+        dense_11 = self.bn_11(dense_11)
         dense_11 = self.dropout(dense_11)
         dense_11 = tf.keras.layers.concatenate([dense_11, inputs_center_4])
         
         dense_12 = self.dense1_2(dense_11)
+        dense_12 = self.bn_12(dense_12)
         dense_12 = self.dropout(dense_12)
         dense_12 = tf.keras.layers.concatenate([dense_12, inputs_center_4])
         
@@ -173,14 +200,17 @@ class Main_CNN_Model(tf.keras.Model):
         flatten_2 = self.flatten(outputs_22)
         
         dense_20 = self.dense2_0(flatten_2)
+        dense_20 = self.bn_20(dense_20)
         dense_20 = self.dropout(dense_20)
         dense_20 = tf.keras.layers.concatenate([dense_20, inputs_center_4])
         
         dense_21 = self.dense2_1(dense_20)
+        dense_21 = self.bn_21(dense_21)
         dense_21 = self.dropout(dense_21)
         dense_21 = tf.keras.layers.concatenate([dense_21, inputs_center_4])
         
         dense_22 = self.dense2_2(dense_21)
+        dense_22 = self.bn_22(dense_22)
         dense_22 = self.dropout(dense_22)
         dense_22 = tf.keras.layers.concatenate([dense_22, inputs_center_4])
         
@@ -190,14 +220,17 @@ class Main_CNN_Model(tf.keras.Model):
         flatten_3 = self.flatten(outputs_32)
         
         dense_30 = self.dense3_0(flatten_3)
+        dense_30 = self.bn_30(dense_30)
         dense_30 = self.dropout(dense_30)
         dense_30 = tf.keras.layers.concatenate([dense_30, inputs_center_4])
         
         dense_31 = self.dense3_1(dense_30)
+        dense_31 = self.bn_31(dense_31)
         dense_31 = self.dropout(dense_31)
         dense_31 = tf.keras.layers.concatenate([dense_31, inputs_center_4])
         
         dense_32 = self.dense3_2(dense_31)
+        dense_32 = self.bn_32(dense_32)
         dense_32 = self.dropout(dense_32)
         dense_32 = tf.keras.layers.concatenate([dense_32, inputs_center_4])
         
@@ -207,14 +240,17 @@ class Main_CNN_Model(tf.keras.Model):
         flatten_4 = self.flatten(outputs_42)
         
         dense_40 = self.dense4_0(flatten_4)
+        dense_40 = self.bn_40(dense_40)
         dense_40 = self.dropout(dense_40)
         dense_40 = tf.keras.layers.concatenate([dense_40, inputs_center_4])
         
         dense_41 = self.dense4_1(dense_40)
+        dense_41 = self.bn_41(dense_41)
         dense_41 = self.dropout(dense_41)
         dense_41 = tf.keras.layers.concatenate([dense_41, inputs_center_4])
         
         dense_42 = self.dense4_2(dense_41)
+        dense_42 = self.bn_42(dense_42)
         dense_42 = self.dropout(dense_42)
         dense_42 = tf.keras.layers.concatenate([dense_42, inputs_center_4])
         
@@ -243,7 +279,7 @@ def train_main_model(train_input, train_output):
     cnn_model.fit(
         train_input, train_output,
         callbacks=[early_stopping, lr_reduced],
-        epochs=5,
+        epochs=8,
         validation_split=0.1
     )
 
