@@ -8,6 +8,7 @@ import os
 
 IMAGE_SIZE = 28
 model = tf.keras.models.load_model('main_model')
+model.summary()
 
 
 def create_img_dir():
@@ -96,17 +97,33 @@ def generate_test_data_for_img(model_test_data_for_img):
             input_center_bl = input_cnn[0][CENTER_BOTTOM_LEFT]
             input_center_br = input_cnn[0][CENTER_BOTTOM_RIGHT]
 
+            # position of outputs A, B, C, D and E, respectively (shape of '+')
+            cross_axis_add = [0, 1], [1, 0], [1, 1], [1, 2], [2, 1]
+
+            # all outputs A, B, C, D, E are RGB (0, 0, 0) if mean of centeral pixels are near RGB (0, 0, 0)
+            if sum([input_center_tl, input_center_tr, input_center_bl, input_center_br]) <= 0.1:
+                for axis_add in cross_axis_add:
+                    model_output_sum[2 * i + axis_add[0]][2 * j + axis_add[1]] += 0.0
+                    model_output_cnt[2 * i + axis_add[0]][2 * j + axis_add[1]] += 1
+                continue
+
+            # all outputs A, B, C, D, E are RGB (255, 255, 255) if mean of centeral pixels are near RGB (255, 255, 255)
+            elif sum([input_center_tl, input_center_tr, input_center_bl, input_center_br]) >= 3.0:
+                for axis_add in cross_axis_add:
+                    model_output_sum[2 * i + axis_add[0]][2 * j + axis_add[1]] += 1.0
+                    model_output_cnt[2 * i + axis_add[0]][2 * j + axis_add[1]] += 1
+                continue
+
+            # use model
             input_center = np.array([[input_center_tl, input_center_tr, input_center_bl, input_center_br]])
 
             # input to model
             test_input = np.concatenate([input_cnn, input_center], axis=1)
             test_output = np.array(model(test_input))
 
-            # position of outputs A, B, C, D and E, respectively (shape of '+')
-            cross_axis_add = [0, 1], [1, 0], [1, 1], [1, 2], [2, 1]
-            
+            # modify pixels of new image, using test output
             for idx, axis_add in enumerate(cross_axis_add):
-                model_output_sum[2 * i + axis_add[0]][2 * j + axis_add[1]] = float(test_output[0][idx])
+                model_output_sum[2 * i + axis_add[0]][2 * j + axis_add[1]] += float(test_output[0][idx])
                 model_output_cnt[2 * i + axis_add[0]][2 * j + axis_add[1]] += 1
 
     # final output image
