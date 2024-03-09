@@ -129,6 +129,8 @@ class Main_CNN_Model(tf.keras.Model):
         
         dense_01 = self.dense0_1(dense_00)
         dense_01 = self.dropout(dense_01)
+        dense_01 = tf.keras.layers.concatenate([dense_01, inputs_center_4])
+        
         dense_0_final = self.dense0_final(dense_01)
 
         # fully connected part for output B
@@ -140,6 +142,8 @@ class Main_CNN_Model(tf.keras.Model):
         
         dense_11 = self.dense1_1(dense_10)
         dense_11 = self.dropout(dense_11)
+        dense_11 = tf.keras.layers.concatenate([dense_11, inputs_center_4])
+        
         dense_1_final = self.dense1_final(dense_11)
 
         # fully connected part for output C
@@ -151,6 +155,8 @@ class Main_CNN_Model(tf.keras.Model):
         
         dense_21 = self.dense2_1(dense_20)
         dense_21 = self.dropout(dense_21)
+        dense_21 = tf.keras.layers.concatenate([dense_21, inputs_center_4])
+        
         dense_2_final = self.dense2_final(dense_21)
 
         # fully connected part for output D
@@ -162,6 +168,8 @@ class Main_CNN_Model(tf.keras.Model):
         
         dense_31 = self.dense3_1(dense_30)
         dense_31 = self.dropout(dense_31)
+        dense_31 = tf.keras.layers.concatenate([dense_31, inputs_center_4])
+        
         dense_3_final = self.dense3_final(dense_31)
 
         # fully connected part for output E
@@ -173,6 +181,8 @@ class Main_CNN_Model(tf.keras.Model):
         
         dense_41 = self.dense4_1(dense_40)
         dense_41 = self.dropout(dense_41)
+        dense_41 = tf.keras.layers.concatenate([dense_41, inputs_center_4])
+        
         dense_4_final = self.dense4_final(dense_41)
         
         # final concatenation layer
