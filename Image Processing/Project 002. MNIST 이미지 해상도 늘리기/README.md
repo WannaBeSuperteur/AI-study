@@ -1,7 +1,7 @@
 # Image Processing 프로젝트 2. MNIST 이미지 해상도 늘리기
 * Dataset: [MNIST DataSet](https://www.kaggle.com/datasets/oddrationale/mnist-in-csv/data)
   * 위 주소에서 다운로드 받은 ```mnist_train.csv``` 파일이 학습 데이터, ```mnist_test.csv``` 파일이 테스트 데이터이다.
-* 수행 기간: 2024.03.07 ~ 2024.03.10 (4일)
+* 수행 기간: 2024.03.07 ~ 2024.03.09 (3일)
 
 ## 파일 및 코드 설명
 * ```mnist_train.csv``` : 학습 데이터셋
@@ -68,7 +68,7 @@ python test.py
 ## branch info
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
-|IP-P2-master|||240307|240310|마스터 브랜치|
+|IP-P2-master|||240307|240309|마스터 브랜치|
 |IP-P2-1|```done```|```feat```|240308|240308|데이터 수집 부분 구현|
 |IP-P2-2|```done```|```feat```|240308|240309|모델 학습 부분 구현|
-|IP-P2-3|```ing```|```feat```|240309||모델 테스트 부분 구현|
+|IP-P2-3|```done```|```feat```|240309|240309|모델 테스트 부분 구현 + 학습 성능 향상|

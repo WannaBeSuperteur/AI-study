@@ -279,7 +279,7 @@ def train_main_model(train_input, train_output):
     cnn_model.fit(
         train_input, train_output,
         callbacks=[early_stopping, lr_reduced],
-        epochs=8,
+        epochs=40,
         validation_split=0.1
     )
 
