@@ -25,6 +25,9 @@
   * **white 성분 비율** : 이미지의 전체 픽셀에 대해 white 성분 값 (0~255) 의 평균을 255로 나눈 값
     * 실제로는 해당 값을 ```x -> {(x - (white 성분 비율의 해당 숫자 평균)) / (white 성분 비율의 해당 숫자 표준편차)} * 0.5``` 를 ```-1.0 ~ 1.0``` 범위로 clipping 한 값으로 처리한 값을 사용
     * **해당 숫자** 는 white 성분 비율을 구하려는 이미지가 나타내는 숫자 (0, 1, ..., 9) 를 의미하며, 같은 숫자에 해당하는 이미지만을 대상으로 평균, 표준편차 계산
+
+![image](./grey_y_loss.PNG)
+
 * Conditional VAE 모델의 Loss function
   * Total loss = ```MSE Loss``` + ```KL Divergence``` + ```Grey Y Loss``` (2nd epoch ~)
   * MSE Loss : 모든 cell (28 x 28 = 784개) 에 대한 mean squared error의 합
@@ -34,7 +37,10 @@
     * 단, Grey Y Loss 는 **2번째 epoch부터** 기존 loss에 Grey Y Loss를 더하는 방식으로 적용
       * 1번째 epoch 에서는 기존 ```MSE Loss``` + ```KL Divergence``` 의 값으로 Total Loss를 계산
       * 1번째 epoch 부터 Grey Y Loss 를 적용하면 검은색 이미지를 생성하는 것으로 모델이 수렴하는 현상이 종종 발생
-* 모델 구조 **(추후 작성)**
+
+![image](./model_architecture.PNG)
+
+* 모델 구조 (위 그림 참고)
   * 전체 모델 ```cvae_model```
   * 인코더 모델 ```cvae_encoder_model```
   * 디코더 모델 ```cvae_decoder_model```

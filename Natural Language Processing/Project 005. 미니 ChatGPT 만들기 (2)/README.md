@@ -42,6 +42,8 @@
   * 위 데이터는 ```train_data.csv``` 파일에 저장한다.
 
 ## 머신러닝 모델 설명
+![image](./model_architecture.PNG)
+
 * 각 token에 해당하는 word 를 저장하고 one-hot encoding 할 수 있는 **dictionary (=vocab)** 필요
 * **모델 설명 (```mini_chatgpt_model```)**
   * ChatGPT와 같은 챗봇에서 답변을 출력하는 것과 같은 역할을 하는 NLP 모델
