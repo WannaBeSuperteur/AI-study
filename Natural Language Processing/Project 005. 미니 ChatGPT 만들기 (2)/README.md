@@ -42,6 +42,8 @@
   * 위 데이터는 ```train_data.csv``` 파일에 저장한다.
 
 ## 머신러닝 모델 설명
+* 아래 그림은 [2024.03.03 17:48 KST commit](https://github.com/WannaBeSuperteur/AI-study/tree/b3d9f22e29ff040cee7db7265726cb77f5297759/Natural%20Language%20Processing/Project%20005.%20%EB%AF%B8%EB%8B%88%20ChatGPT%20%EB%A7%8C%EB%93%A4%EA%B8%B0%20(2)) 당시 버전의 모델 구조입니다.
+
 ![image](./model_architecture.PNG)
 
 * 각 token에 해당하는 word 를 저장하고 one-hot encoding 할 수 있는 **dictionary (=vocab)** 필요
