@@ -13,8 +13,12 @@ Transformer, BERT, S-BERT 부터 시작해서, 최종적으로는 Mini Chat-GPT�
     * Project 003. Python 코드 자동 수정
 * 프로젝트 (2024.02.25 ~ 04.07)
   * Mini ChatGPT 만들기 (생성형 AI를 이용) : 2024.02.25 ~ 03.03, ```Project 004. 미니 ChatGPT 만들기``` ```Project 005. 미니 ChatGPT 만들기 (2)```
-  * Python 코드 개행해야 하는지 판단하는 AI 만들기 : 2024.03.11 ~ 03.24
-  * 텍스트에 이모지 추가하는 AI 만들기 : 2024.03.25 ~ 04.07
+  * Python 코드 개행해야 하는지 판단하는 AI 만들기 : 2024.03.11 ~ 03.17
+  * NLP로 폰트 생성 요청 처리하기 : 2024.03.18 ~ 03.24
+    * baseline : [생성형 AI Project 001. MNIST 숫자 생성 AI](https://github.com/WannaBeSuperteur/AI-study/blob/GAI-P1-master/Generative%20AI/Project%20001.%20MNIST%20%EC%88%AB%EC%9E%90%20%EC%83%9D%EC%84%B1%20AI%20with%20C-VAE/README.md)
+  * 질문에 답하는 ReadMe 문서 만들기 : 2024.03.25 ~ 03.31
+  * 미니 ChatGPT 성능 개선 시도하기 : 2024.04.01 ~ 04.07
+    * baseline : [NLP Project 005. 미니 ChatGPT 만들기 (2)](https://github.com/WannaBeSuperteur/AI-study/tree/main/Natural%20Language%20Processing/Project%20005.%20%EB%AF%B8%EB%8B%88%20ChatGPT%20%EB%A7%8C%EB%93%A4%EA%B8%B0%20(2))
 
 **Project Branch Naming Rule :**
 * **NLP-P123-master** 123번째 NLP 관련 프로젝트 (토이 프로젝트 등) 의 master branch 
@@ -38,7 +42,11 @@ Transformer, BERT, S-BERT 부터 시작해서, 최종적으로는 Mini Chat-GPT�
   * 생성형 언어 모델 (Generative Language Model), word embedding, tokenize 및 다음 token 예측
 * **Project 005. 미니 ChatGPT 만들기 (2)** (2024.03.01 ~ 2024.03.03, 3일)
   * 생성형 언어 모델 (Generative Language Model), word embedding, BERT embedding, Embedding and LSTM layer of Keras, tokenize, 다음 token 예측, 실험 노트 작성
-* **Project 006. Python 코드 개행해야 하는지 판단하기** (2024.03.11 ~ 2024.03.24, 14일)
+* **Project 006. Python 코드 개행해야 하는지 판단하기** (2024.03.11 ~ 2024.03.17, 7일)
   * 추가 예정
-* **Project 007. 텍스트에 이모지 추가하는 AI 만들기** (2024.03.25 ~ 2024.04.07, 14일)
+* **Project 007. NLP로 폰트 생성 요청 처리하기** (2024.03.18 ~ 2024.03.24, 7일)
+  * 추가 예정
+* **Project 008. 질문에 답하는 ReadMe 문서 만들기** (2024.03.25 ~ 2024.03.31, 7일)
+  * 추가 예정
+* **Project 009. 미니 ChatGPT 성능 개선 시도하기** (2024.04.01 ~ 2024.04.07, 7일)
   * 추가 예정
