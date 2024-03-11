@@ -26,6 +26,13 @@ Generative AI/Project 001. MNIST 숫자 생성 AI with C-VAE/cvae_encoder_model/
 Generative AI/Project 001. MNIST 숫자 생성 AI with C-VAE/cvae_decoder_model/*
 Generative AI/Project 001. MNIST 숫자 생성 AI with C-VAE/classify_nums_model/*
 Generative AI/Project 001. MNIST 숫자 생성 AI with C-VAE/test_imgs/*
+Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기/*.csv
+Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기/archive.zip
+Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기/archive/*
+Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기/augmentation/*
+Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기/cvae_model/*
+Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기/cvae_encoder_model/*
+Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기/cvae_decoder_model/*
 *.pyc
 __pycache__/
 .idea/*
