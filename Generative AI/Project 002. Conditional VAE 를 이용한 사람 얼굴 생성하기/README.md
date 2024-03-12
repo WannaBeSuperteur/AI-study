@@ -40,18 +40,28 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
     * 해당 조건을 C-VAE 모델에 추가로 입력 시 cell의 개수는 2개 (각각 ```male```일 확률, ```female```일 확률, activation = softmax)
     * 출력 모델 : ```classify_male_or_female```
   * 머리 색 조건
-    * **Face Dataset Of People That Don't Exist** 로부터의 데이터셋 중 남녀 각각 최초 1000장의 사진을 학습 및 validation
+    * **Face Dataset Of People That Don't Exist** 로부터의 데이터셋 중 **남녀 각각 최초 1000장 (이름순)** 의 사진을 학습 및 validation
     * 머리 색이 진할수록 1에 가깝고, 밝을수록 0에 가까운 값을 출력하는 **regression 모델 학습**
+    * 필요 파일 :
+      * ```regression_hair_color_info_male.csv``` (남성 최초 1000장 이름순, 머리 색을 나타내는 0-1 값 정보)
+      * ```regression_hair_color_info_female.csv``` (여성 최초 1000장 이름순, 머리 색을 나타내는 0-1 값 정보)
     * 출력 모델 : ```regression_hair_color```
   * 입을 벌린 정도
     * **머리 색 조건** 에 대한 데이터셋과 동일한 데이터셋을 학습 및 validation
     * 입을 벌린 정도가 클수록 1에 가깝고, 작을수록 (입을 다물었을수록) 0에 가까운 값을 출력하는 **regression 모델 학습**
+    * 필요 파일 :
+      * ```regression_mouth_info_male.csv``` (남성 최초 1000장 이름순, 입을 벌린 정도를 나타내는 0-1 값 정보)
+      * ```regression_mouth_info_female.csv``` (여성 최초 1000장 이름순, 입을 벌린 정도를 나타내는 0-1 값 정보)
     * 출력 모델 : ```regression_mouth```
   * 눈을 뜬 정도
     * **머리 색 조건** 에 대한 데이터셋과 동일한 데이터셋을 학습 및 validation
     * 눈을 뜬 정도가 클수록 1에 가깝고, 눈을 감았을수록 0에 가까운 값을 출력하는 **regression 모델 학습**
+    * 필요 파일 :
+      * ```regression_eyes_info_male.csv``` (남성 최초 1000장 이름순, 눈을 뜬 정도를 나타내는 0-1 값 정보)
+      * ```regression_eyes_info_female.csv``` (여성 최초 1000장 이름순, 눈을 뜬 정도를 나타내는 0-1 값 정보)
     * 출력 모델 : ```regression_eyes```
   * 각각의 모델은 간단한 구조의 Convolutional Neural Network 를 이용
+  * 각각의 모델 학습 시, **남성 최초 901-1000번째, 여성 최초 901-1000번째 이름순** 데이터를 validation 데이터로 이용
 * ```train_cvae_model.py``` : 학습 과정 전체 진행
   * 필요 파일 : resize 및 재배치된 전체 학습 데이터셋 (위 ```resizd_images``` 및 그 내부 디렉토리 구조 참고)
   * 출력 모델 : ```cvae_model``` (Conditional VAE 모델)
@@ -72,6 +82,7 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
   * 머리 색 조건 (```regression_hair_color``` 모델의 출력 결과를 이용)
   * 입을 벌린 정도 (```regression_mouth``` 모델의 출력 결과를 이용)
   * 눈을 뜬 정도 (```regression_eyes``` 모델의 출력 결과를 이용)
+  * 이상 4개 모델의 **학습 및 validation에 사용한 데이터** 에 대해서도 마찬가지로 **해당 모델의 출력 결과를 이용**
 * Conditional VAE 모델의 Loss function
   * Total loss = ```MSE Loss``` + ```KL Divergence``` + ```??? Loss```
     * 단, ```??? Loss``` 는 2nd epoch 부터 적용
