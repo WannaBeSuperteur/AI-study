@@ -109,7 +109,7 @@ python test.py
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
 |GAI-P2-master|||240311|240324|마스터 브랜치|
-|GAI-P2-1||```feat```|||data 재배치 및 resizing, 배경 부분 cropping 실시|
+|GAI-P2-1|```done```|```feat```|240312|240312|data 재배치 및 resizing, 배경 부분 cropping 실시|
 |GAI-P2-2||```feat```|||```성별 조건``` condition을 위한 ```classify_male_or_female``` 모델 학습|
 |GAI-P2-3||```feat```|||```머리 색 조건``` condition을 위한 ```regression_hair_color``` 모델 학습|
 |GAI-P2-4||```feat```|||```입을 벌린 정도``` condition을 위한 ```regression_mouth``` 모델 학습|
