@@ -3,6 +3,8 @@ import numpy as np
 from tensorflow.keras import layers, optimizers
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 
+import os
+
 
 class Classify_Male_Or_Female_CNN_Model(tf.keras.Model):
 
@@ -59,3 +61,81 @@ class Classify_Male_Or_Female_CNN_Model(tf.keras.Model):
         final_output = self.final_dense(dense)
 
         return final_output
+
+
+# 모델 반환
+def define_model():
+    optimizer = optimizers.Adam(0.001, decay=1e-6)
+    early_stopping = EarlyStopping(monitor='val_loss', mode='min', patience=5)
+    lr_reduced = ReduceLROnPlateau(monitor='val_loss', mode='min', patience=2)
+        
+    model = Classify_Male_Or_Female_CNN_Model()
+    return model, optimizer, early_stopping, lr_reduced
+
+
+# CNN 모델 학습
+def train_cnn_model(train_input, train_output):
+    cnn_model, optimizer, early_stopping, lr_reduced = define_model()
+    cnn_model.compile(loss='binary_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+
+    print(f'train input : {np.shape(train_input)}\n{train_input}\n')
+    print(f'train output : {np.shape(train_output)}\n{train_output}\n')
+
+    cnn_model.fit(
+        train_input, train_output,
+        callbacks=[early_stopping, lr_reduced],
+        epochs=5,
+        validation_split=0.1
+    )
+
+    cnn_model.summary()
+    return cnn_model
+
+
+# 학습 데이터 로딩
+def load_training_data():
+    male_images_name = os.listdir('resized_images/second_dataset_male')
+    female_images_name = os.listdir('resized_images/second_dataset_female')
+    
+    train_input = []
+    train_output = []
+    valid_input = []
+    valid_output = []
+
+    # for male images
+    for idx, name in enumerate(male_images_name):
+        if idx % 750 == 0:
+            print(idx)
+            
+        img = cv2.imread('resized_images/second_dataset_male/' + name, cv2.IMREAD_UNCHANGED)
+        train_input.append(np.array(img) / 255.0)
+        train_output.append([1, 0])
+
+    # for female images
+    for idx, name in enumerate(female_images_name):
+        if idx % 750 == 0:
+            print(idx)
+            
+        img = cv2.imread('resized_images/second_dataset_female/' + name, cv2.IMREAD_UNCHANGED)
+        train_input.append(np.array(img) / 255.0)
+        train_output.append([0, 1])
+
+    train_input_return = np.array(train_input)
+    train_output_return = np.array(train_output)
+
+    print(f'shape of valid input : {np.shape(valid_input_return)}')
+    print(f'shape of valid output : {np.shape(valid_output_return)}')
+    
+    return train_input_return, train_output_return
+
+
+if __name__ == '__main__':
+
+    # 학습 데이터 받아오기
+    train_input, train_output = load_training_data()    
+
+    # CNN 모델 학습
+    cnn_model = train_cnn_model(train_input, train_output)
+
+    # CNN 모델 저장
+    cnn_model.save('classify_male_or_female')
