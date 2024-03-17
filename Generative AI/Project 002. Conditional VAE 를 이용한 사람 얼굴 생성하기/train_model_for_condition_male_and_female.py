@@ -84,7 +84,7 @@ def train_cnn_model(train_input, train_output):
     cnn_model.fit(
         train_input, train_output,
         callbacks=[early_stopping, lr_reduced],
-        epochs=20,
+        epochs=15,
         validation_split=0.1
     )
 
