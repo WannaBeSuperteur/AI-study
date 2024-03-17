@@ -1,5 +1,5 @@
 # NLP Project 006. Python 코드 개행 여부 판단
-* 목표: **Python 코드에서, 그 직전 및 직후의 line들의 내용을 근거로, 특정한 2개 line 사이에 개행이 필요한지를 판단하는 AI 모델을 만든다.**
+* 목표: **Python 코드에서, 그 직전 및 직후의 line들의 내용을 근거로, 특정한 2개 line 사이에 개행 (=비어 있는 한 줄) 이 필요한지를 판단하는 AI 모델을 만든다.**
 * Dataset: [Python Code Data](https://www.kaggle.com/datasets/veeralakrishna/python-code-data)
   * 파이썬 코드 전처리 및 tokenize 기준
     * 파이썬 코드에서 각 변수명은 ```var1```, ```var2```, ... 로 대체한다.
@@ -53,7 +53,7 @@ python test.py
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
 |NLP-P6-master|||240317|240319|마스터 브랜치|
-|NLP-P6-1||```feat```|||code snippet을 수집하여 저장|
+|NLP-P6-1|```done```|```feat```|240317|240317|code snippet을 수집하여 저장|
 |NLP-P6-2||```feat```|||수집된 code snippet을 tokenize 하여 모델 학습용 데이터로 저장|
 |NLP-P6-3||```feat```|||개행 여부 판단 모델인 ```main_model``` 학습|
 |NLP-P6-4||```feat```|||개행 여부 판단 모델인 ```main_model``` 테스트|
