@@ -54,6 +54,6 @@ python test.py
 |---|---|---|---|---|---|
 |NLP-P6-master|||240317|240319|마스터 브랜치|
 |NLP-P6-1|```done```|```feat```|240317|240317|code snippet을 수집하여 저장|
-|NLP-P6-2||```feat```|||수집된 code snippet을 tokenize 하여 모델 학습용 데이터로 저장|
+|NLP-P6-2|```done```|```feat```|240317|240317|수집된 code snippet을 tokenize 하여 모델 학습용 데이터로 저장|
 |NLP-P6-3||```feat```|||개행 여부 판단 모델인 ```main_model``` 학습|
 |NLP-P6-4||```feat```|||개행 여부 판단 모델인 ```main_model``` 테스트|
