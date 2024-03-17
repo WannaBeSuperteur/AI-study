@@ -4,6 +4,7 @@ from tensorflow.keras import layers, optimizers
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 
 import os
+import cv2
 
 
 class Classify_Male_Or_Female_CNN_Model(tf.keras.Model):
@@ -18,7 +19,7 @@ class Classify_Male_Or_Female_CNN_Model(tf.keras.Model):
 
         # conv + pooling part
         # 120 -> 118 -> 116 -> 58 -> 56 -> 28 -> 26 -> 13 -> 11
-        self.conv_0 = tf.keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=[120, 120, 1])
+        self.conv_0 = tf.keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=[120, 120, 3])
         self.conv_1 = tf.keras.layers.Conv2D(32, (3, 3), activation='relu')
         self.conv_2 = tf.keras.layers.Conv2D(64, (3, 3), activation='relu')
         self.conv_3 = tf.keras.layers.Conv2D(64, (3, 3), activation='relu')
@@ -36,22 +37,21 @@ class Classify_Male_Or_Female_CNN_Model(tf.keras.Model):
 
 
     def call(self, inputs, training):
-        inputs = tf.keras.layers.Reshape((120, 120, 1))(inputs)
+        inputs = tf.keras.layers.Reshape((120, 120, 3))(inputs)
 
         # conv + pooling part : 120 -> 118 -> 116 -> 58 -> 56 -> 28 -> 26 -> 13 -> 11
         outputs_0 = self.conv_0(inputs)
         outputs_1 = self.conv_1(outputs_0)
-        outputs_2 = self.conv_2(outputs_2)
-        outputs_3 = self.pooling(outputs_2)
+        outputs_2 = self.pooling(outputs_1)
 
-        outputs_4 = self.conv_3(outputs_3)
-        outputs_5 = self.pooling(outputs_4)
+        outputs_3 = self.conv_2(outputs_2)
+        outputs_4 = self.pooling(outputs_3)
 
-        outputs_6 = self.conv_4(outputs_5)
-        outputs_7 = self.pooling(outputs_6)
+        outputs_5 = self.conv_3(outputs_4)
+        outputs_6 = self.pooling(outputs_5)
         
-        outputs_8 = self.conv_5(outputs_7)
-        outputs_flatten = self.flatten(outputs_8)
+        outputs_7 = self.conv_4(outputs_6)
+        outputs_flatten = self.flatten(outputs_7)
 
         # fully connected part
         dense = self.dense_0(outputs_flatten)
@@ -84,7 +84,7 @@ def train_cnn_model(train_input, train_output):
     cnn_model.fit(
         train_input, train_output,
         callbacks=[early_stopping, lr_reduced],
-        epochs=5,
+        epochs=20,
         validation_split=0.1
     )
 
@@ -105,7 +105,7 @@ def load_training_data():
     # for male images
     for idx, name in enumerate(male_images_name):
         if idx % 750 == 0:
-            print(idx)
+            print('male', idx)
             
         img = cv2.imread('resized_images/second_dataset_male/' + name, cv2.IMREAD_UNCHANGED)
         train_input.append(np.array(img) / 255.0)
@@ -114,7 +114,7 @@ def load_training_data():
     # for female images
     for idx, name in enumerate(female_images_name):
         if idx % 750 == 0:
-            print(idx)
+            print('female', idx)
             
         img = cv2.imread('resized_images/second_dataset_female/' + name, cv2.IMREAD_UNCHANGED)
         train_input.append(np.array(img) / 255.0)
@@ -123,8 +123,8 @@ def load_training_data():
     train_input_return = np.array(train_input)
     train_output_return = np.array(train_output)
 
-    print(f'shape of valid input : {np.shape(valid_input_return)}')
-    print(f'shape of valid output : {np.shape(valid_output_return)}')
+    print(f'shape of train input : {np.shape(train_input_return)}')
+    print(f'shape of train output : {np.shape(train_output_return)}')
     
     return train_input_return, train_output_return
 
