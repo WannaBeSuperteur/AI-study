@@ -62,11 +62,15 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
     * 출력 모델 : ```regression_eyes```
   * 각각의 모델은 간단한 구조의 Convolutional Neural Network 를 이용
   * 각각의 모델 학습 시, **남성 최초 901-1000번째, 여성 최초 901-1000번째 이름순** 데이터를 validation 데이터로 이용
+* ```save_condition_data.py``` : 모든 각 이미지의 condition 값을 pandas DataFrame 화
+  * 필요 모델 : ```classify_male_or_female```, ```regression_hair_color```, ```regression_mouth```, ```regression_eyes```
+  * 출력 파일 : ```condition_data.csv``` (모든 각 이미지의 condition 값을 pandas DataFrame 의 csv 형식으로 저장한 파일)
+    * **각 모델의 학습 대상이 되는 이미지에 대해서도, 실제 값인 ground truth 값이 아닌 모델에 의해 예측된 condition 값을 저장** 
 * ```train_cvae_model.py``` : 학습 과정 전체 진행
-  * 필요 파일 : resize 및 재배치된 전체 학습 데이터셋 (위 ```resizd_images``` 및 그 내부 디렉토리 구조 참고)
-  * 출력 모델 : ```cvae_model``` (Conditional VAE 모델)
+  * 필요 파일 : resize 및 재배치된 전체 학습 데이터셋 (위 ```resizd_images``` 및 그 내부 디렉토리 구조 참고), ```condition_data.csv``` (모든 각 이미지의 condition 값)
+  * 출력 모델 : ```cvae_model``` (Conditional VAE 모델), ```cvae_encoder_model``` (C-VAE의 인코더), ```cvae_decoder_model``` (C-VAE의 디코더)
 * ```test_cvae_model.py``` : 이미지의 condition 이 주어지면 해당 condition 을 이용하여 이미지 생성
-  * 필요 모델 : ```cvae_decoder_model``` (디코더), C-VAE의 condition을 위한 분류/회귀 모델들
+  * 필요 모델 : ```cvae_decoder_model``` (디코더), ```classify_male_or_female```, ```regression_hair_color```, ```regression_mouth```, ```regression_eyes```
   * 출력 파일 : ```test_output.png```
 
 ## 데이터 전처리 및 생성 과정
@@ -114,6 +118,7 @@ python test.py
 |GAI-P2-3||```feat```|||```머리 색 조건``` condition을 위한 ```regression_hair_color``` 모델 학습|
 |GAI-P2-4||```feat```|||```입을 벌린 정도``` condition을 위한 ```regression_mouth``` 모델 학습|
 |GAI-P2-5||```feat```|||```눈을 뜬 정도``` condition을 위한 ```regression_eyes``` 모델 학습|
-|GAI-P2-6||```feat```|||C-VAE 모델 학습|
-|GAI-P2-7||```feat```|||C-VAE 모델 테스트 (사람 얼굴 이미지 생성)|
-|GAI-P2-8||```feat```|||C-VAE 모델 성능 개선 (특별한 Loss 추가, 새로운 condition 추가, 모델 구조 변경 등)|
+|GAI-P2-6||```feat```|||condition 데이터를 csv 파일로 저장|
+|GAI-P2-7||```feat```|||C-VAE 모델 학습|
+|GAI-P2-8||```feat```|||C-VAE 모델 테스트 (사람 얼굴 이미지 생성)|
+|GAI-P2-9||```feat```|||C-VAE 모델 성능 개선 (특별한 Loss 추가, 새로운 condition 추가, 모델 구조 변경 등)|
