@@ -29,9 +29,11 @@
   * 출력 파일 : ```train_data_token_id.csv``` (모델 학습용 입력 및 출력 데이터, token ID가 있음) 
 * ```train.py``` : 개행 여부 판단 모델 ```main_model``` 을 학습하는 함수
   * 필요 파일 : ```train_data_token_id.csv```
+  * 출력 파일 : ```train_data_token_id_for_test.csv``` (테스트용 데이터)
   * 출력 모델 : ```main_model```
 * ```test.py``` : ```main_model``` 을 테스트하고 성능지표 결과를 출력하는 함수
   * 필요 모델 : ```main_model```
+  * 필요 파일 : ```train_data_token_id_for_test.csv```
 
 ## 실행 순서
 ```
@@ -60,6 +62,7 @@ python test.py
 |NLP-P6-master|||240317|240319|마스터 브랜치|
 |NLP-P6-1|```done```|```feat```|240317|240317|code snippet을 수집하여 저장|
 |NLP-P6-2|```done```|```feat```|240317|240317|수집된 code snippet을 tokenize 하여 모델 학습용 데이터로 저장|
-|NLP-P6-3||```feat```|||개행 여부 판단 모델인 ```main_model``` 학습|
+|NLP-P6-3|```done```|```feat```|240317|240318|개행 여부 판단 모델인 ```main_model``` 학습|
 |NLP-P6-4|```done```|```fix```|240317|240318|학습 데이터셋에 임의로 개행 (empty line) 추가|
 |NLP-P6-5||```feat```|||개행 여부 판단 모델인 ```main_model``` 테스트|
+
