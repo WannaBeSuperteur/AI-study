@@ -24,6 +24,12 @@ def convert_into_data(lines):
             code = ''
             
         else:
+            # for empty lines
+            if line == '':
+                code += '\n'
+                continue
+
+            # for non-empty lines
             except_comment = line.split('#')[0]
             is_importing = line.startswith('from ') or line.startswith('import ')
             
