@@ -33,7 +33,7 @@
   * 출력 모델 : ```main_model```
 * ```test.py``` : ```main_model``` 을 테스트하고 성능지표 결과를 출력하는 함수
   * 필요 모델 : ```main_model```
-  * 필요 파일 : ```train_data_token_id_for_test.csv```
+  * 필요 파일 : ```train_data_token_id_for_test.csv``` (정량 평가용), ```python_code.txt``` (정성 평가용)
 
 ## 실행 순서
 ```
@@ -45,11 +45,14 @@ python test.py
 ```
 
 ## 성능지표 결과
-```test.py``` 파일을 실행시켜서 다음을 측정 **(개행해야 하는 경우를 positive 로 간주)**
+1. ```test.py``` 파일을 실행시켜서 다음을 측정 **(개행해야 하는 경우를 positive 로 간주)**
 * Accuracy (정확도)
 * Recall ```= TP / (TP + FN)```
 * Precision ```= TP / (TP + FP)```
 * F1 Score ```= 2 * Recall * Precision / (Recall + Precision)```
+
+2. 정성 평가
+* ```test.py``` 코드 실행 시, ```python_code.txt``` 파일의 empty new line을 얼마나 잘 수행하는지를 측정
 
 개념 설명
 * TP = True Positive (예측이 positive, 실제 값도 positive인 것)
@@ -64,5 +67,5 @@ python test.py
 |NLP-P6-2|```done```|```feat```|240317|240317|수집된 code snippet을 tokenize 하여 모델 학습용 데이터로 저장|
 |NLP-P6-3|```done```|```feat```|240317|240318|개행 여부 판단 모델인 ```main_model``` 학습|
 |NLP-P6-4|```done```|```fix```|240317|240318|학습 데이터셋에 임의로 개행 (empty line) 추가|
-|NLP-P6-5||```feat```|||개행 여부 판단 모델인 ```main_model``` 테스트|
+|NLP-P6-5|```ing```|```feat```|240318||개행 여부 판단 모델인 ```main_model``` 테스트|
 
