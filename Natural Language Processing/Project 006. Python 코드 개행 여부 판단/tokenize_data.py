@@ -240,6 +240,18 @@ def save_tokenized_data(input_data, output_data, file_name):
     all_data.to_csv(f'{file_name}.csv')
 
 
+# train 시의 vocab set과 test 시의 vocab set을 matching 시키기 위해 vocab dic 저장
+def save_vocab_dic(token_ids):
+    result = pd.DataFrame()
+
+    for token, idx in token_ids.items():
+        new_row = {'token': [token], 'token_id': [idx]}
+        new_row_df = pd.DataFrame(new_row)
+        result = pd.concat([result, new_row_df])
+
+    result.to_csv('vocab_map.csv')
+
+
 # token ID로 변환 후 저장
 def convert_into_token_id(input_data):
     token_ids = {}
@@ -254,6 +266,9 @@ def convert_into_token_id(input_data):
                 token_ids[input_data[i][j]] = len(token_ids)
                 
             new_input_data[i][j] = token_ids[input_data[i][j]]
+
+    # vocab dic 저장
+    save_vocab_dic(token_ids)
             
     return new_input_data
 

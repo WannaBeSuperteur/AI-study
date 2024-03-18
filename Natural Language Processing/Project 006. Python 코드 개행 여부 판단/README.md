@@ -26,7 +26,8 @@
 * ```tokenize_data.py``` : 수집된 code snippet 들을 tokenize 하여 모델 입력 및 출력 데이터로 저장하는 함수
   * 필요 파일 : ```code_snippets.csv``` 
   * 출력 파일 : ```train_data.csv``` (모델 학습용 입력 및 출력 데이터, token의 값이 그대로 쓰여 있음)
-  * 출력 파일 : ```train_data_token_id.csv``` (모델 학습용 입력 및 출력 데이터, token ID가 있음) 
+  * 출력 파일 : ```train_data_token_id.csv``` (모델 학습용 입력 및 출력 데이터, token ID가 있음)
+  * 출력 파일 : ```vocab_map.csv``` (train, test 시의 vocab set 매칭, 즉 일치를 위한 파일)
 * ```train.py``` : 개행 여부 판단 모델 ```main_model``` 을 학습하는 함수
   * 필요 파일 : ```train_data_token_id.csv```
   * 출력 파일 : ```train_data_token_id_for_test.csv``` (테스트용 데이터)
@@ -34,6 +35,7 @@
 * ```test.py``` : ```main_model``` 을 테스트하고 성능지표 결과를 출력하는 함수
   * 필요 모델 : ```main_model```
   * 필요 파일 : ```train_data_token_id_for_test.csv``` (정량 평가용), ```python_code.txt``` (정성 평가용)
+  * 필요 파일 : ```vocab_map.csv``` (vocab set 매칭용 파일)
 
 ## 실행 순서
 ```
@@ -68,4 +70,4 @@ python test.py
 |NLP-P6-3|```done```|```feat```|240317|240318|개행 여부 판단 모델인 ```main_model``` 학습|
 |NLP-P6-4|```done```|```fix```|240317|240318|학습 데이터셋에 임의로 개행 (empty line) 추가|
 |NLP-P6-5|```ing```|```feat```|240318||개행 여부 판단 모델인 ```main_model``` 테스트|
-
+|NLP-P6-6|```done```|```feat```|240318|240318|train 시의 vocab dic을 test 시에 연동하기 위한 vocab map 추가|
