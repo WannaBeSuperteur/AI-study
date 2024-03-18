@@ -3,7 +3,7 @@ import pandas as pd
 
 # 원본 데이터 읽기
 def read_dataset():
-    f = open('Python_code_data.txt', 'r', encoding='utf-8')
+    f = open('Python_code_data_modified.txt', 'r', encoding='utf-8')
     lines = [line.split('\n')[0] for line in f.readlines()]
     f.close()
 

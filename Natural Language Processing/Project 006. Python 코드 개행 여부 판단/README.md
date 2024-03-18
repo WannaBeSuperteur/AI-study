@@ -17,9 +17,13 @@
 
 ## 파일 및 코드 설명
 * ```Python_code_data.txt``` (데이터셋을 다운받아야 함) : 학습 데이터
+* ```modify_dataset.py``` : 학습 데이터에 empty line 추가
+  * ```Python_code_data.txt``` (원본 데이터) 파일에서 특정 규칙에 따라 empty line을 추가하여, 해당 원본 데이터 파일을 수정하여 ```Python_code_data_modified.txt``` 로 저장
+  * 학습 데이터 원본 파일에 empty line이 불규칙적으로 배치되어 학습이 원활하게 진행되지 않는 문제 해결
 * ```read_code.py``` : 데이터를 읽어서 각 code snippet을 수집하는 함수
+  * 필요 파일 : ```Python_code_data_modified.txt```
   * 출력 파일 : ```code_snippets.csv``` (code snippet을 수집한 결과)
-* ```tokenize.py``` : 수집된 code snippet 들을 tokenize 하여 모델 입력 및 출력 데이터로 저장하는 함수
+* ```tokenize_data.py``` : 수집된 code snippet 들을 tokenize 하여 모델 입력 및 출력 데이터로 저장하는 함수
   * 필요 파일 : ```code_snippets.csv``` 
   * 출력 파일 : ```train_data.csv``` (모델 학습용 입력 및 출력 데이터, token의 값이 그대로 쓰여 있음)
   * 출력 파일 : ```train_data_token_id.csv``` (모델 학습용 입력 및 출력 데이터, token ID가 있음) 
@@ -31,8 +35,9 @@
 
 ## 실행 순서
 ```
+python modify_dataset.py
 python read_code.py
-python tokenize.py
+python tokenize_data.py
 python train.py
 python test.py
 ```
@@ -56,5 +61,5 @@ python test.py
 |NLP-P6-1|```done```|```feat```|240317|240317|code snippet을 수집하여 저장|
 |NLP-P6-2|```done```|```feat```|240317|240317|수집된 code snippet을 tokenize 하여 모델 학습용 데이터로 저장|
 |NLP-P6-3||```feat```|||개행 여부 판단 모델인 ```main_model``` 학습|
-|NLP-P6-4|```ing```|```fix```|240317||학습 데이터셋에 임의로 개행 (empty line) 추가|
+|NLP-P6-4|```done```|```fix```|240317|240318|학습 데이터셋에 임의로 개행 (empty line) 추가|
 |NLP-P6-5||```feat```|||개행 여부 판단 모델인 ```main_model``` 테스트|
