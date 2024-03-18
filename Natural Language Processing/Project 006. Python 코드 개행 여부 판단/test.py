@@ -36,8 +36,8 @@ def run_test(vocab_map, tokenized_lines, main_model):
 
 # 정량 평가 결과의 metric 값 출력
 def print_metrics(test_output, ground_truth):
-    test_output_flatten = test_output.flatten()
-    ground_truth_flatten = ground_truth.flatten()
+    test_output_flatten = np.array(test_output).flatten()
+    ground_truth_flatten = np.array(ground_truth).flatten()
     n = len(test_output_flatten)
 
     TP = 0 # True Positive
@@ -72,9 +72,9 @@ def print_metrics(test_output, ground_truth):
     print(f'False Negative : {FN}')
 
     print(f'\naccuracy  : {accuracy}')
-    print(f'\nrecall    : {recall}')
-    print(f'\nprecision : {nprecision}')
-    print(f'\nF1 score  : {f1_score}')
+    print(f'recall    : {recall}')
+    print(f'precision : {precision}')
+    print(f'F1 score  : {f1_score}')
     
 
 # 정량 평가 실시
@@ -84,14 +84,11 @@ def run_quantitative_test():
     test_data = pd.read_csv('train_data_token_id_for_test.csv', index_col=0)
     print(f'test data:\n{test_data}')
 
-    test_input = np.array(test_data)[:, :-1]
+    test_input = np.array(test_data)[:, :-1].astype(np.int64)
     ground_truth = np.array(test_data)[:, -1:]
     
     # vocab map 가져오기
     vocab_map = pd.read_csv('vocab_map.csv', index_col=0)
-
-    # 코드 토큰화
-    tokenized_lines = tokenize_lines(lines, vocab_map)
 
     # main model을 이용하여 테스트
     main_model = tf.keras.models.load_model('main_model')
