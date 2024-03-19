@@ -17,6 +17,8 @@ def run_test(vocab_map, tokenized_code, original_code, model):
 
     # tokenized code를 line 단위로 split 하기
     tokenized_lines = [x.strip() for x in tokenized_code_lines]
+    for idx, tokenized_line in enumerate(tokenized_lines):
+        print(idx, tokenized_line)
 
     converted_code = original_code[0] + original_code[1]
 
@@ -122,7 +124,7 @@ def run_qualitative_test(model):
     vocab_map = pd.read_csv('vocab_map.csv', index_col=0)
 
     # 코드 토큰화
-    tokenized_code = preprocess_snippet(''.join(lines))
+    tokenized_code = preprocess_snippet(''.join(lines).replace('\t', '    '))
 
     # main model을 이용하여 테스트
     run_test(vocab_map, tokenized_code, original_code=lines, model=model)
