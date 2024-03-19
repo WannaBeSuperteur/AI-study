@@ -67,5 +67,5 @@ python test.py
 |NLP-P6-2|```done```|```feat```|240317|240317|수집된 code snippet을 tokenize 하여 모델 학습용 데이터로 저장|
 |NLP-P6-3|```done```|```feat```|240317|240318|개행 여부 판단 모델인 ```main_model``` 학습|
 |NLP-P6-4|```done```|```fix```|240317|240318|학습 데이터셋에 임의로 개행 (empty line) 추가|
-|NLP-P6-5|```ing```|```feat```|240318||개행 여부 판단 모델인 ```main_model``` 테스트|
+|NLP-P6-5|```done```|```feat```|240318|240319|개행 여부 판단 모델인 ```main_model``` 테스트|
 
