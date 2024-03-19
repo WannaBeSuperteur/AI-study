@@ -161,8 +161,8 @@ def convert_line_to_tokens(line_tokens, direction):
     return line_tokens
 
 
-# 각각의 line 으로부터 전체 input data 만들기
-def get_input_for_line(lines, i):
+# 각각의 line 으로부터 전체 input data, output data 만들기
+def get_input_and_output_for_line(lines, i, line_count):
     before_line_1 = lines[i]
     before_line_2 = lines[i + 1]
     is_empty_line = None
@@ -185,7 +185,7 @@ def get_input_for_line(lines, i):
         input_4 = convert_line_to_tokens(after_line_2.split(' '), direction='start')
         input_merged = input_1 + input_2 + input_3 + input_4
 
-        return input_merged
+        return [input_merged, is_empty_line]
 
     return None
 
@@ -209,9 +209,10 @@ def preprocess_code(code_snippet):
 
     # 입력 데이터셋으로 추가
     for i in range(line_count - 3):
-        input_merged = get_input_for_line(lines, i)
+        input_output_info = get_input_and_output_for_line(lines, i, line_count)
 
-        if input_merged is not None:
+        if input_output_info is not None:
+            input_merged, is_empty_line = input_output_info[0], input_output_info[1]
             output = [1.0] if is_empty_line else [0.0]
 
             input_.append(input_merged)

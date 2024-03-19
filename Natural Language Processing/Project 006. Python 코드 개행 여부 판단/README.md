@@ -12,7 +12,7 @@
       * N-1, N-2 번째 줄을 각각 tokenize 한다.
       * N+1, N+2 번째 줄을 각각 tokenize 한다.
       * 이상의 4개의 줄을 tokenize 한 결과를 입력으로, 개행 여부를 출력으로 하는 모델 ```main_model``` 에 해당 4개의 line을 입력해서, 모델의 출력값으로 개행 여부를 결정한다. 
-* 수행 기간: 2024.03.17 ~ 2024.03.19 (3일)
+* 수행 기간: 2024.03.17 ~ 2024.03.20 (4일)
 * 참고: **일부 코드는 [Python 코드 자동 수정 프로젝트](https://github.com/WannaBeSuperteur/AI-study/tree/GAI-P2-2/Natural%20Language%20Processing/Project%20003.%20Python%20%EC%BD%94%EB%93%9C%20%EC%9E%90%EB%8F%99%20%EC%88%98%EC%A0%95) 의 것을 그대로 복사해서 가져왔습니다.**
 
 ## 파일 및 코드 설명
@@ -64,7 +64,7 @@ python test.py
 ## branch info
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
-|NLP-P6-master|||240317|240319|마스터 브랜치|
+|NLP-P6-master|||240317|240320|마스터 브랜치|
 |NLP-P6-1|```done```|```feat```|240317|240317|code snippet을 수집하여 저장|
 |NLP-P6-2|```done```|```feat```|240317|240317|수집된 code snippet을 tokenize 하여 모델 학습용 데이터로 저장|
 |NLP-P6-3|```done```|```feat```|240317|240318|개행 여부 판단 모델인 ```main_model``` 학습|

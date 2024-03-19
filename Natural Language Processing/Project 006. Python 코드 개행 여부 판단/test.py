@@ -1,5 +1,5 @@
 import tensorflow as tf
-from tokenize_data import preprocess_snippet, convert_line_to_tokens, get_input_for_line
+from tokenize_data import preprocess_snippet, convert_line_to_tokens, get_input_and_output_for_line
 import pandas as pd
 import numpy as np
 
@@ -12,6 +12,8 @@ def run_test(vocab_map, tokenized_code, original_code, model):
     tokenized_code_lines = tokenized_code.split(' (nl) ')
     n = len(tokenized_code_lines)
     print(f'lines: {n}\n')
+
+    print(vocab_map)
 
     # tokenized code를 line 단위로 split 하기
     tokenized_lines = [x.strip() for x in tokenized_code_lines]
@@ -27,7 +29,7 @@ def run_test(vocab_map, tokenized_code, original_code, model):
 
         # 코드를 line 단위로 모델의 입력 데이터 token으로 변환 처리
         # vocab map을 이용하여 token ID로 변환
-        model_input = get_input_for_line(tokenized_lines, i)
+        model_input = get_input_and_output_for_line(tokenized_lines, i, n)[0]
         model_input = [vocab_map[vocab_map['token'] == x].iloc[0]['token_id'] for x in model_input]
         model_input = np.array([model_input])
 
