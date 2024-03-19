@@ -161,6 +161,35 @@ def convert_line_to_tokens(line_tokens, direction):
     return line_tokens
 
 
+# 각각의 line 으로부터 전체 input data 만들기
+def get_input_for_line(lines, i):
+    before_line_1 = lines[i]
+    before_line_2 = lines[i + 1]
+    is_empty_line = None
+
+    if lines[i + 2] == '' and i < line_count - 4:
+        after_line_1 = lines[i + 3]
+        after_line_2 = lines[i + 4]
+        is_empty_line = True
+            
+    elif lines[i + 2] != '':
+        after_line_1 = lines[i + 2]
+        after_line_2 = lines[i + 3]
+        is_empty_line = False
+            
+    # add to dataset
+    if is_empty_line is not None:
+        input_1 = convert_line_to_tokens(before_line_1.split(' '), direction='end')
+        input_2 = convert_line_to_tokens(before_line_2.split(' '), direction='end')
+        input_3 = convert_line_to_tokens(after_line_1.split(' '), direction='start')
+        input_4 = convert_line_to_tokens(after_line_2.split(' '), direction='start')
+        input_merged = input_1 + input_2 + input_3 + input_4
+
+        return input_merged
+
+    return None
+
+
 # 코드 전처리해서 입력 데이터셋으로 추가
 def preprocess_code(code_snippet):
     input_ = []
@@ -180,28 +209,9 @@ def preprocess_code(code_snippet):
 
     # 입력 데이터셋으로 추가
     for i in range(line_count - 3):
-        before_line_1 = lines[i]
-        before_line_2 = lines[i + 1]
-        is_empty_line = None
+        input_merged = get_input_for_line(lines, i)
 
-        if lines[i + 2] == '' and i < line_count - 4:
-            after_line_1 = lines[i + 3]
-            after_line_2 = lines[i + 4]
-            is_empty_line = True
-            
-        elif lines[i + 2] != '':
-            after_line_1 = lines[i + 2]
-            after_line_2 = lines[i + 3]
-            is_empty_line = False
-            
-        # add to dataset
-        if is_empty_line is not None:
-            input_1 = convert_line_to_tokens(before_line_1.split(' '), direction='end')
-            input_2 = convert_line_to_tokens(before_line_2.split(' '), direction='end')
-            input_3 = convert_line_to_tokens(after_line_1.split(' '), direction='start')
-            input_4 = convert_line_to_tokens(after_line_2.split(' '), direction='start')
-            input_merged = input_1 + input_2 + input_3 + input_4
-
+        if input_merged is not None:
             output = [1.0] if is_empty_line else [0.0]
 
             input_.append(input_merged)
