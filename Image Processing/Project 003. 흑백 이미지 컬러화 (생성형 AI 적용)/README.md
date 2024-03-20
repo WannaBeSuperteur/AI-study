@@ -14,6 +14,14 @@ Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
       - n01443537
       - n01484850
       - ...
+
+에서,
+
+Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
+- images
+  - (기존 archive/ImageNet-Mini/images 내부의 모든 폴더에 있는 이미지를 images 폴더에 저장)
+
+로 재배치
 ```
 
 * ```train.py``` : 학습 과정 전체 진행
@@ -37,6 +45,7 @@ Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
 
 ## 실행 순서
 ```
+python cleanup_data.py
 python train.py
 python test.py
 ```
@@ -48,7 +57,7 @@ python test.py
 ## branch info
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
-|IP-P3-master|||240320|240324|마스터 브랜치|
+|IP-P3|||240320|240324|마스터 브랜치|
 |IP-P3-1||```feat```|||데이터 재배치 구현|
 |IP-P3-2||```feat```|||모델 학습 부분 구현|
 |IP-P3-3||```feat```|||모델 테스트 부분 구현|
