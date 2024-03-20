@@ -23,6 +23,14 @@ Image Processing/Project 001. 사과와 토마토 분류/images/*
 Image Processing/Project 002. MNIST 이미지 해상도 늘리기/archive.zip
 Image Processing/Project 002. MNIST 이미지 해상도 늘리기/*.csv
 Image Processing/Project 002. MNIST 이미지 해상도 늘리기/main_model/*
+Image Processing/Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)/archive.zip
+Image Processing/Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)/archive/*
+Image Processing/Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)/*.csv
+Image Processing/Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)/main_vae/*
+Image Processing/Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)/main_vae_encoder/*
+Image Processing/Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)/main_vae_decoder/*
+Image Processing/Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)/image.png
+Image Processing/Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)/output/*
 Generative AI/Project 001. MNIST 숫자 생성 AI with C-VAE/*.csv
 Generative AI/Project 001. MNIST 숫자 생성 AI with C-VAE/*.csv.zip
 Generative AI/Project 001. MNIST 숫자 생성 AI with C-VAE/cvae_model/*
