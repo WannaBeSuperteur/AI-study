@@ -3,7 +3,7 @@ from tokenize_data import preprocess_snippet, convert_line_to_tokens, get_input_
 import pandas as pd
 import numpy as np
 
-WINDOW_SIZE = 10
+WINDOW_SIZE = 14
 
 
 # 정성 평가 : 코드를 쭉 읽으면서,empty new line을 추가해야 하는 부분 찾기

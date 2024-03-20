@@ -10,7 +10,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from tensorflow.keras.layers import Dense, LSTM, Bidirectional, Embedding, LeakyReLU, Dropout, Flatten, concatenate
 from tensorflow.keras.utils import get_custom_objects
 
-INPUT_TOKEN_CNT_EACH = 10 # 각 line 당 입력 토큰 개수
+INPUT_TOKEN_CNT_EACH = 14 # 각 line 당 입력 토큰 개수
 TKN_EMBEDDING_DIM = 32 # token embedding dimension
 VOCAB_SIZE = None
 

@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-INPUT_TOKENS = 10
+INPUT_TOKENS = 14
 
 import keyword
 
