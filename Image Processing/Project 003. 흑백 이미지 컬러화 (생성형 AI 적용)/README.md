@@ -26,6 +26,7 @@ Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
 
 * ```augment_data.py``` : Data Augmentation 실시
   * 필요 파일 : ```images``` 디렉토리 내부의 3,900 여 장의 120 x 120 으로 resize 된 이미지 파일
+  * 실행 결과 : 1장의 이미지에 대해 crop 된 이미지 4장이 추가되어 총 19,600 여 장의 이미지 데이터 확보
 * ```train.py``` : 학습 과정 전체 진행
   * 출력 모델 : ```main_vae```, ```main_vae_encoder```, ```main_vae_decoder```
 * ```test.py``` : 이미지 생성 테스트
@@ -62,7 +63,7 @@ python test.py
 |---|---|---|---|---|---|
 |IP-P3|||240320|240324|마스터 브랜치|
 |IP-P3-1|```done```|```feat```|240320|240320|데이터 재배치 구현|
-|IP-P3-2||```feat```|||데이터 augmentation|
+|IP-P3-2|```done```|```feat```|240320|240320|데이터 augmentation|
 |IP-P3-3||```feat```|||모델 학습 부분 구현|
 |IP-P3-4||```feat```|||모델 테스트 부분 구현|
 |IP-P3-5||```feat```|||모델 성능 향상 시도|
