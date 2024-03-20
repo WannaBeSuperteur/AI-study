@@ -61,6 +61,9 @@ python test.py
 * FN = False Negative (예측은 negative, 실제 값은 positive인 것)
 * FP = False Positive (예측은 positive, 실제 값은 negative인 것)
 
+성능지표 결과
+* ```experiment_logs.txt``` 파일 참고
+
 ## branch info
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
