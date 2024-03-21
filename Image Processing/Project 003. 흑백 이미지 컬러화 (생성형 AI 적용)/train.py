@@ -31,6 +31,9 @@ def noise_maker(noise_args):
 # ref-2: https://github.com/ekzhang/vae-cnn-mnist/blob/master/MNIST%20Convolutional%20VAE%20with%20Label%20Input.ipynb
 class Main_Model:
     def vae_entire_loss(self, x, y):
+        print('shape of y0:', x.shape)
+        print('shape of y1:', y.shape)
+        
         x_reshaped = K.reshape(x, shape=(BATCH_SIZE, 2 * TOTAL_PIXELS))
         y_reshaped = K.reshape(y, shape=(BATCH_SIZE, 2 * TOTAL_PIXELS))
         mse_loss = 2 * TOTAL_PIXELS * mean_squared_error(x_reshaped, y_reshaped)
@@ -226,9 +229,19 @@ def train_model(train_input, train_x_coord, train_y_coord):
     model_class, optimizer = define_model()
     model_class.vae.compile(loss=model_class.vae_entire_loss, optimizer=optimizer)
 
+    train_x_coord_4d = train_x_coord.reshape((-1, INPUT_IMG_SIZE, INPUT_IMG_SIZE, 1))
+    train_y_coord_4d = train_y_coord.reshape((-1, INPUT_IMG_SIZE, INPUT_IMG_SIZE, 1))
+    
+    train_all_coords = np.concatenate([train_x_coord_4d, train_y_coord_4d], axis=3)
+
+    print('input      shape :', np.shape(train_input))
+    print('x   coords shape :', np.shape(train_x_coord))
+    print('y   coords shape :', np.shape(train_y_coord))
+    print('all coords shape :', np.shape(train_all_coords))
+
     # 학습 실시
     model_class.vae.fit(
-        [train_input, train_input], np.concatenate([train_x_coord, train_y_coord], axis=2),
+        [train_input, train_input], train_all_coords,
         epochs=40,
         batch_size=BATCH_SIZE,
         shuffle=True
