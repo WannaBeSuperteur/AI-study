@@ -1,7 +1,7 @@
 import os
 import cv2
 
-RESIZE_DEST = 120
+RESIZE_DEST = 112
 
 
 # images 디렉토리 만들기

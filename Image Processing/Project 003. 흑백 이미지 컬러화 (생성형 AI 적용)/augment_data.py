@@ -1,7 +1,7 @@
 import os
 import cv2
 
-RESIZE_DEST = 120
+RESIZE_DEST = 112
 
 
 # 이미지에 대해 crop augmentation 적용

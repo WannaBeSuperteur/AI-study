@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import math
 
 import tensorflow as tf
 from tensorflow.keras import layers, optimizers
@@ -8,9 +9,10 @@ from keras.losses import mean_squared_error
 import keras.backend as K
 
 import os
+import cv2
 
 
-INPUT_IMG_SIZE = 120
+INPUT_IMG_SIZE = 112
 HIDDEN_DIMS = 60
 TOTAL_PIXELS = INPUT_IMG_SIZE * INPUT_IMG_SIZE
 BATCH_SIZE = 32
@@ -93,12 +95,12 @@ class Main_Model:
         # decoder
         latent_for_decoder = layers.Input(shape=(HIDDEN_DIMS,))
         input_for_decoder = layers.Input(shape=(INPUT_IMG_SIZE, INPUT_IMG_SIZE))
-        input_for_decoder_flatten = input_for_decoder.flatten()
+        input_for_decoder_flatten = self.flatten(input_for_decoder)
 
         dec_merged = layers.concatenate([latent_for_decoder, input_for_decoder_flatten])
         dec_d0 = self.decoder_dense0(dec_merged)
         dec_d1 = self.decoder_dense1(dec_d0)
-        dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 16, INPUT_IMG_SIZE // 16, 160))(dec_d1)
+        dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 16, INPUT_IMG_SIZE // 16, 80))(dec_d1)
 
         dec_c0 = self.decoder_cnn0(dec_reshaped)
         dec_c0 = self.dropout(dec_c0)
@@ -127,18 +129,35 @@ class Main_Model:
 
 # 이미지에서 색상 및 채도 부분 분리해서 readme.md 에서 설명한, 색상과 채도를 나타내는 (x, y) 값으로 반환
 def get_hue_and_saturation(image):
-    pass
+    image_HSV = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    hue_image = image_HSV[:, :, 0]
+    saturation_image = image_HSV[:, :, 1]
+    
+    return hue_image, saturation_image
 
 
 # 입력 이미지 (greyscale) 만들기
 def get_greyscale(image):
-    pass
+    return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+
+# hue, saturation을 x, y로 변환하기
+def convert_hue_saturation_to_coord(hue, saturation):
+    hue_angle = (2.0 * math.pi) * (hue / 180.0)
+    sat_float = saturation / 255.0
+
+    x = sat_float * math.cos(hue_angle)
+    y = sat_float * math.sin(hue_angle)
+
+#    print(hue, saturation, hue_angle, math.cos(hue_angle), math.sin(hue_angle), sat_float, x, y)
+    
+    return x, y
 
 
 # images 디렉토리에서 학습 데이터 추출
 def create_train_and_valid_data(limit=None):
     images = os.listdir('images/')
-    img_count = len(images) // BATCH_SIZE * BATCH_SIZE
+    img_count = min(limit, len(images)) // BATCH_SIZE * BATCH_SIZE
     current_count = 0
 
     train_input = []
@@ -146,12 +165,49 @@ def create_train_and_valid_data(limit=None):
     train_y_coord = []
     
     for image_name in images:
-
-        # read images
         if current_count < img_count:
+            if (current_count % 10 == 0 and current_count < 100) or current_count % 100 == 0:
+                print(current_count)
+
+            # read images
             image = cv2.imread('images/' + image_name, cv2.IMREAD_UNCHANGED)
+            if len(image.shape) == 2:
+                image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
+            
+            greyscale_image = np.array(get_greyscale(image))
+
+            # compute hue and saturation
+            hue_image, saturation_image = get_hue_and_saturation(image)
+
+            if current_count == 0:
+                print('\nhue image example (first image) :')
+                print(hue_image)
+                print('\nsaturation image example (first image) :')
+                print(saturation_image)
+
+            # compute x and y coord
+            coord_x = np.zeros((INPUT_IMG_SIZE, INPUT_IMG_SIZE))
+            coord_y = np.zeros((INPUT_IMG_SIZE, INPUT_IMG_SIZE))
+
+            for i in range(INPUT_IMG_SIZE):
+                for j in range(INPUT_IMG_SIZE):
+                    x, y = convert_hue_saturation_to_coord(hue_image[i][j], saturation_image[i][j])
+                    coord_x[i][j] = x
+                    coord_y[i][j] = y
+
+            # append to train data
+            train_input.append(greyscale_image)
+            train_x_coord.append(coord_x)
+            train_y_coord.append(coord_y)
+
+            current_count += 1
+            
         else:
             break
+
+    train_input = np.array(train_input)
+    train_x_coord = np.array(train_x_coord)
+    train_y_coord = np.array(train_y_coord)
 
     return train_input, train_x_coord, train_y_coord
 
@@ -166,8 +222,8 @@ def define_model():
 # 모델 학습 실시 및 저장
 # train_input                  : 입력 greyscale 이미지
 # train_x_coord, train_y_coord : readme.md 에서 설명한, 색상과 채도를 나타내기 위한 (x, y) 좌표 값
-def train_model(train_input, train_x_coord, train_y_coord, train_color_info):
-    model_class, optimizer = define_cvae_model()
+def train_model(train_input, train_x_coord, train_y_coord):
+    model_class, optimizer = define_model()
     model_class.vae.compile(loss=model_class.vae_entire_loss, optimizer=optimizer)
 
     # 학습 실시
@@ -197,9 +253,10 @@ def train_model(train_input, train_x_coord, train_y_coord, train_color_info):
 
 if __name__ == '__main__':
     tf.compat.v1.disable_eager_execution()
+    np.set_printoptions(linewidth=160)
 
     # 학습 데이터 추출 (이미지의 greyscale 이미지 + 색상, 채도 부분)
-    train_input, train_x_coord, train_y_coord = create_train_and_valid_data()
+    train_input, train_x_coord, train_y_coord = create_train_and_valid_data(limit=100)
     
     print(f'\nshape of train input: {np.shape(train_input)}')
     print(train_input)
@@ -211,4 +268,4 @@ if __name__ == '__main__':
     print(train_y_coord)
 
     # 학습 실시 및 모델 저장
-    cvae_encoder, cvae_decoder, cvae_model = train_cvae_model(train_input, train_x_coord, train_y_coord)
+    cvae_encoder, cvae_decoder, cvae_model = train_model(train_input, train_x_coord, train_y_coord)
