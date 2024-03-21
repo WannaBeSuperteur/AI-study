@@ -31,12 +31,12 @@ def noise_maker(noise_args):
 # ref-2: https://github.com/ekzhang/vae-cnn-mnist/blob/master/MNIST%20Convolutional%20VAE%20with%20Label%20Input.ipynb
 class Main_Model:
     def vae_entire_loss(self, x, y):
-        x_reshaped = K.reshape(x, shape=(BATCH_SIZE, TOTAL_PIXELS))
-        y_reshaped = K.reshape(y, shape=(BATCH_SIZE, TOTAL_PIXELS))
-        mse_loss = TOTAL_CELLS * mean_squared_error(x_reshaped, y_reshaped)
+        x_reshaped = K.reshape(x, shape=(BATCH_SIZE, 2 * TOTAL_PIXELS))
+        y_reshaped = K.reshape(y, shape=(BATCH_SIZE, 2 * TOTAL_PIXELS))
+        mse_loss = 2 * TOTAL_PIXELS * mean_squared_error(x_reshaped, y_reshaped)
         
         kl_loss = -0.5 * K.sum(1 + self.latent_log_var - K.square(self.latent_mean) - K.exp(self.latent_log_var), axis=-1)
-        return mse_loss, kl_loss
+        return mse_loss + kl_loss
 
 
     def __init__(self, dropout_rate=0.45):
@@ -51,19 +51,19 @@ class Main_Model:
         self.encoder_cnn0 = layers.Conv2D(16, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='ec0')
         self.encoder_cnn1 = layers.Conv2D(32, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='ec1')
         self.encoder_cnn2 = layers.Conv2D(32, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='ec2')
-        self.encoder_cnn3 = layers.Conv2D(64, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='ec2')
+        self.encoder_cnn3 = layers.Conv2D(64, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='ec3')
         
         self.encoder_dense0 = layers.Dense(256, activation='relu', name='ed0')
         self.encoder_ad0 = layers.Dense(64, activation='relu', name='ead0') # input 과 직접 연결
 
         # decoder 용 레이어
         self.decoder_dense0 = layers.Dense(320, activation='relu', name='dd0')
-        self.decoder_dense1 = layers.Dense(80 * TOTAL_PIXELS // (16 * 16), activation='relu', name='dd1')
+        self.decoder_dense1 = layers.Dense(80 * TOTAL_PIXELS // (8 * 8), activation='relu', name='dd1')
 
         self.decoder_cnn0 = layers.Conv2DTranspose(40, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dc0')
         self.decoder_cnn1 = layers.Conv2DTranspose(40, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dc1')
         self.decoder_cnn2 = layers.Conv2DTranspose(20, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dc2')
-        self.decoder_cnn3 = layers.Conv2DTranspose(2, (3, 3), strides=1, activation='relu', padding='same', kernel_regularizer=L2, name='dc2')
+        self.decoder_cnn3 = layers.Conv2DTranspose(2, (3, 3), strides=1, activation='tanh', padding='same', kernel_regularizer=L2, name='dc3')
 
         # encoder (main stream)
         input_image = layers.Input(batch_shape=(BATCH_SIZE, INPUT_IMG_SIZE, INPUT_IMG_SIZE))
@@ -100,7 +100,7 @@ class Main_Model:
         dec_merged = layers.concatenate([latent_for_decoder, input_for_decoder_flatten])
         dec_d0 = self.decoder_dense0(dec_merged)
         dec_d1 = self.decoder_dense1(dec_d0)
-        dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 16, INPUT_IMG_SIZE // 16, 80))(dec_d1)
+        dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 8, INPUT_IMG_SIZE // 8, 80))(dec_d1)
 
         dec_c0 = self.decoder_cnn0(dec_reshaped)
         dec_c0 = self.dropout(dec_c0)
@@ -110,7 +110,7 @@ class Main_Model:
         dec_c2 = self.dropout(dec_c2)
         dec_c3 = self.decoder_cnn3(dec_c2)
         
-        dec_final_coord_x_and_y = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE))(dec_c3)
+        dec_final_coord_x_and_y = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 2))(dec_c3)
 
         # define encoder, decoder and cvae model
         self.encoder = tf.keras.Model([input_image], self.latent_space, name='encoder')
@@ -227,8 +227,8 @@ def train_model(train_input, train_x_coord, train_y_coord):
     model_class.vae.compile(loss=model_class.vae_entire_loss, optimizer=optimizer)
 
     # 학습 실시
-    model_class.cvae.fit(
-        [train_input, train_x_coord, train_y_coord], train_input,
+    model_class.vae.fit(
+        [train_input, train_input], np.concatenate([train_x_coord, train_y_coord], axis=2),
         epochs=40,
         batch_size=BATCH_SIZE,
         shuffle=True
@@ -258,14 +258,14 @@ if __name__ == '__main__':
     # 학습 데이터 추출 (이미지의 greyscale 이미지 + 색상, 채도 부분)
     train_input, train_x_coord, train_y_coord = create_train_and_valid_data(limit=100)
     
-    print(f'\nshape of train input: {np.shape(train_input)}')
-    print(train_input)
+    print(f'\nshape of train input: {np.shape(train_input)}, first image :')
+    print(train_input[0])
     
-    print(f'\nshape of train x coord: {np.shape(train_x_coord)}')
-    print(train_x_coord)
+    print(f'\nshape of train x coord: {np.shape(train_x_coord)}, first image :')
+    print(train_x_coord[0])
     
-    print(f'\nshape of train y coord: {np.shape(train_y_coord)}')
-    print(train_y_coord)
+    print(f'\nshape of train y coord: {np.shape(train_y_coord)}, first image :')
+    print(train_y_coord[0])
 
     # 학습 실시 및 모델 저장
     cvae_encoder, cvae_decoder, cvae_model = train_model(train_input, train_x_coord, train_y_coord)
