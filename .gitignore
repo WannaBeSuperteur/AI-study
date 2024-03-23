@@ -30,8 +30,9 @@ Image Processing/Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)/*
 Image Processing/Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)/main_vae/*
 Image Processing/Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)/main_vae_encoder/*
 Image Processing/Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)/main_vae_decoder/*
-Image Processing/Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)/image.png
-Image Processing/Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)/output/*
+Image Processing/Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)/test_images/*
+Image Processing/Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)/test_images_resized/*
+Image Processing/Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)/test_output/*
 Generative AI/Project 001. MNIST 숫자 생성 AI with C-VAE/*.csv
 Generative AI/Project 001. MNIST 숫자 생성 AI with C-VAE/*.csv.zip
 Generative AI/Project 001. MNIST 숫자 생성 AI with C-VAE/cvae_model/*

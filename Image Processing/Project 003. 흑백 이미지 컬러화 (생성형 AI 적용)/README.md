@@ -15,7 +15,7 @@ Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
       - n01484850
       - ...
 
-에서, 모든 이미지를 120 x 120 으로 resize 해서,
+에서, 모든 이미지를 112 x 112 로 resize 해서,
 
 Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
 - images
@@ -25,14 +25,15 @@ Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
 ```
 
 * ```augment_data.py``` : Data Augmentation 실시
-  * 필요 파일 : ```images``` 디렉토리 내부의 3,900 여 장의 120 x 120 으로 resize 된 이미지 파일
+  * 필요 파일 : ```images``` 디렉토리 내부의 3,900 여 장의 112 x 112 로 resize 된 이미지 파일
   * 실행 결과 : 1장의 이미지에 대해 crop 된 이미지 4장이 추가되어 총 19,600 여 장의 이미지 데이터 확보
 * ```train.py``` : 학습 과정 전체 진행
   * 출력 모델 : ```main_vae```, ```main_vae_encoder```, ```main_vae_decoder```
 * ```test.py``` : 이미지 생성 테스트
   * 필요 모델 : ```main_vae_decoder```
-  * 필요 파일 : ```image.png``` (원본 이미지)
-  * 출력 파일 : ```output/image_output.png``` (모델에 의해 출력된 이미지)
+  * 필요 파일 : ```test_images``` 폴더 내부의 이미지 파일들 (원본 이미지)
+  * 출력 파일 : ```test_output``` 폴더 내부의 이미지 파일들 (모델에 의해 출력된 이미지)
+    * ```test_images``` 폴더에 있는 파일들을 crop -> ```112 x 112``` 로 resize 한 후, resize 된 이미지에 대해 테스트 실시 후 결과 파일 출력
 
 ## 머신러닝 모델 설명 (VAE 기반 모델)
 * **Variational Auto-Encoder 기반의, VAE와 유사한 모델**
@@ -66,5 +67,5 @@ python test.py
 |IP-P3-1|```done```|```feat```|240320|240320|데이터 재배치 구현|
 |IP-P3-2|```done```|```feat```|240320|240320|데이터 augmentation|
 |IP-P3-3|```done```|```feat```|240320|240323|모델 학습 부분 구현|
-|IP-P3-4||```feat```|||모델 테스트 부분 구현|
+|IP-P3-4|```ing```|```feat```|240323||모델 테스트 부분 구현|
 |IP-P3-5||```feat```|||모델 성능 향상 시도|
