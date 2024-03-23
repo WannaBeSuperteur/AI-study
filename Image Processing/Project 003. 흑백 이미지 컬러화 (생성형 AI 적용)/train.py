@@ -160,6 +160,10 @@ class Main_Model:
         dec_d3_merged = layers.concatenate([dec_d3_x, dec_d3_y], axis=3)
         dec_final_coord_x_and_y = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 2))(dec_d3_merged)
 
+        print('shape of dec_d3_x:', dec_d3_x.shape)
+        print('shape of dec_d3_y:', dec_d3_y.shape)
+        print('shape of dec_d3_merged:', dec_d3_merged.shape)
+
         # define encoder, decoder and cvae model
         self.encoder = tf.keras.Model([input_image], self.latent_space, name='encoder')
         self.decoder = tf.keras.Model([latent_for_decoder, input_for_decoder], dec_final_coord_x_and_y, name='decoder')
@@ -319,7 +323,7 @@ def train_model(train_input, train_x_coord, train_y_coord):
     # 학습 실시
     model_class.vae.fit(
         [train_input_for_model, train_input_for_model], train_all_coords,
-        epochs=1, # 1 for functionality test, 20 for regular training
+        epochs=20, # 1 for functionality test, 20 for regular training
         batch_size=BATCH_SIZE,
         shuffle=True
     )
@@ -340,7 +344,7 @@ if __name__ == '__main__':
     np.set_printoptions(linewidth=160)
 
     # 학습 데이터 추출 (이미지의 greyscale 이미지 + 색상, 채도 부분)
-    train_input, train_x_coord, train_y_coord = create_train_and_valid_data(limit=320) # 320 for functionality test
+    train_input, train_x_coord, train_y_coord = create_train_and_valid_data(limit=None) # 320 for functionality test
     
     print(f'\nshape of train input: {np.shape(train_input)}, first image :')
     print(train_input[0])
