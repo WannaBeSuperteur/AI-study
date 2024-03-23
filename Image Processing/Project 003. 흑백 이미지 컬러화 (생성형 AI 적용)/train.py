@@ -16,6 +16,7 @@ INPUT_IMG_SIZE = 112
 HIDDEN_DIMS = 60
 TOTAL_PIXELS = INPUT_IMG_SIZE * INPUT_IMG_SIZE
 BATCH_SIZE = 32
+MSE_LOSS_WEIGHT_CONSTANT = 100.0
 
 
 # random normal noise maker for VAE 
@@ -33,10 +34,10 @@ class Main_Model:
     def vae_entire_loss(self, x, y):
         x_reshaped = K.reshape(x, shape=(BATCH_SIZE, 2 * TOTAL_PIXELS))
         y_reshaped = K.reshape(y, shape=(BATCH_SIZE, 2 * TOTAL_PIXELS))
-        mse_loss = 2 * TOTAL_PIXELS * mean_squared_error(x_reshaped, y_reshaped)
+        mse_loss = mean_squared_error(x_reshaped, y_reshaped)
         
         kl_loss = -0.5 * K.sum(1 + self.latent_log_var - K.square(self.latent_mean) - K.exp(self.latent_log_var), axis=-1)
-        return mse_loss + kl_loss
+        return MSE_LOSS_WEIGHT_CONSTANT * mse_loss + kl_loss
 
 
     def __init__(self, dropout_rate=0.45):
@@ -157,7 +158,12 @@ def convert_hue_saturation_to_coord(hue, saturation):
 # images 디렉토리에서 학습 데이터 추출
 def create_train_and_valid_data(limit=None):
     images = os.listdir('images/')
-    img_count = min(limit, len(images)) // BATCH_SIZE * BATCH_SIZE
+
+    if limit is not None:
+        img_count = min(limit, len(images)) // BATCH_SIZE * BATCH_SIZE
+    else:
+        img_count = len(images) // BATCH_SIZE * BATCH_SIZE
+
     current_count = 0
 
     train_input = []
@@ -205,9 +211,9 @@ def create_train_and_valid_data(limit=None):
         else:
             break
 
-    train_input = np.array(train_input) / 255.0
-    train_x_coord = np.array(train_x_coord) / 255.0
-    train_y_coord = np.array(train_y_coord) / 255.0
+    train_input = np.array(train_input)
+    train_x_coord = np.array(train_x_coord)
+    train_y_coord = np.array(train_y_coord)
 
     return train_input, train_x_coord, train_y_coord
 
@@ -223,6 +229,10 @@ def define_model():
 # train_input                  : 입력 greyscale 이미지
 # train_x_coord, train_y_coord : readme.md 에서 설명한, 색상과 채도를 나타내기 위한 (x, y) 좌표 값
 def train_model(train_input, train_x_coord, train_y_coord):
+
+    # normalize image
+    train_input_for_model = train_input / 255.0
+    
     model_class, optimizer = define_model()
     model_class.vae.compile(loss=model_class.vae_entire_loss, optimizer=optimizer)
 
@@ -231,15 +241,15 @@ def train_model(train_input, train_x_coord, train_y_coord):
     
     train_all_coords = np.concatenate([train_x_coord_4d, train_y_coord_4d], axis=3)
 
-    print('input      shape :', np.shape(train_input))
+    print('input      shape :', np.shape(train_input_for_model))
     print('x   coords shape :', np.shape(train_x_coord))
     print('y   coords shape :', np.shape(train_y_coord))
     print('all coords shape :', np.shape(train_all_coords))
 
     # 학습 실시
     model_class.vae.fit(
-        [train_input, train_input], train_all_coords,
-        epochs=10, # 40
+        [train_input_for_model, train_input_for_model], train_all_coords,
+        epochs=5, # 20
         batch_size=BATCH_SIZE,
         shuffle=True
     )
@@ -266,7 +276,7 @@ if __name__ == '__main__':
     np.set_printoptions(linewidth=160)
 
     # 학습 데이터 추출 (이미지의 greyscale 이미지 + 색상, 채도 부분)
-    train_input, train_x_coord, train_y_coord = create_train_and_valid_data(limit=320)
+    train_input, train_x_coord, train_y_coord = create_train_and_valid_data(limit=None) # 320 for functionality test
     
     print(f'\nshape of train input: {np.shape(train_input)}, first image :')
     print(train_input[0])
