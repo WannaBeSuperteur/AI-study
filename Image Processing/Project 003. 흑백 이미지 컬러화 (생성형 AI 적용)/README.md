@@ -34,6 +34,7 @@ Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
   * 필요 파일 : ```test_images``` 폴더 내부의 이미지 파일들 (원본 이미지)
   * 출력 파일 : ```test_output``` 폴더 내부의 이미지 파일들 (모델에 의해 출력된 이미지)
     * ```test_images``` 폴더에 있는 파일들을 crop -> ```112 x 112``` 로 resize 한 후, resize 된 이미지에 대해 테스트 실시 후 결과 파일 출력
+    * ```test_images``` 폴더 내의 이미지 출처 : []()
 
 ## 머신러닝 모델 설명 (VAE 기반 모델)
 * **Variational Auto-Encoder 기반의, VAE와 유사한 모델**
