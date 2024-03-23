@@ -44,8 +44,6 @@ class Main_Model:
 
         # 공통 레이어
         self.flatten = tf.keras.layers.Flatten()
-        self.dropout = tf.keras.layers.Dropout(rate=dropout_rate, name='dropout')
-
         L2 = tf.keras.regularizers.l2(0.001)
 
         # encoder 용 레이어
@@ -60,28 +58,36 @@ class Main_Model:
         # decoder 용 레이어
         # decoder mapping architecture (like U-net) 용 레이어
         self.decoder_map_e0 = layers.Conv2D(16, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_e0')
-        self.decoder_map_e1 = layers.Conv2D(24, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_e1')
-        self.decoder_map_e2 = layers.Conv2D(40, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_e2')
-        self.decoder_map_e3 = layers.Conv2D(64, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_e3')
+        self.decoder_map_e1 = layers.Conv2D(32, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_e1')
+        self.decoder_map_e2 = layers.Conv2D(64, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_e2')
+        self.decoder_map_e3 = layers.Conv2D(128, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_e3')
 
         # latent vector (60) 과 결합하여 (60 + 16 = 76) 으로 만든 이후 decoder_map_d0 레이어로 이동
         self.decoder_map_bottleneck = layers.Dense(16, activation='relu', name='dmap_bottleneck')
+        self.decoder_map_bottleneck_restore = layers.Dense(128 * (INPUT_IMG_SIZE // 16) * (INPUT_IMG_SIZE // 16), activation='relu', name='dmap_bottleneck_restore')
 
-        self.decoder_map_d0 = layers.Conv2DTranspose(64, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d0')
-        self.decoder_map_d1 = layers.Conv2DTranspose(40, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d1')
-        self.decoder_map_d2 = layers.Conv2DTranspose(24, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d2')
-        self.decoder_map_d3 = layers.Conv2DTranspose(16, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d3')
+        # for x coordinate
+        self.decoder_map_d0_x = layers.Conv2DTranspose(64, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d0_x')
+        self.decoder_map_d1_x = layers.Conv2DTranspose(32, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d1_x')
+        self.decoder_map_d2_x = layers.Conv2DTranspose(16, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d2_x')
+        self.decoder_map_d3_x = layers.Conv2DTranspose(1, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d3_x')
+
+        # for y coordinate
+        self.decoder_map_d0_y = layers.Conv2DTranspose(64, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d0_y')
+        self.decoder_map_d1_y = layers.Conv2DTranspose(32, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d1_y')
+        self.decoder_map_d2_y = layers.Conv2DTranspose(16, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d2_y')
+        self.decoder_map_d3_y = layers.Conv2DTranspose(1, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d3_y')
         
         # encoder (main stream)
         input_image = layers.Input(batch_shape=(BATCH_SIZE, INPUT_IMG_SIZE, INPUT_IMG_SIZE))
         input_image_reshaped = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 1))(input_image)
         
         enc_c0 = self.encoder_cnn0(input_image_reshaped)
-        enc_c0 = self.dropout(enc_c0)
+        enc_c0 = layers.Dropout(rate=dropout_rate)(enc_c0)
         enc_c1 = self.encoder_cnn1(enc_c0)
-        enc_c1 = self.dropout(enc_c1)
+        enc_c1 = layers.Dropout(rate=dropout_rate)(enc_c1)
         enc_c2 = self.encoder_cnn2(enc_c1)
-        enc_c2 = self.dropout(enc_c2)
+        enc_c2 = layers.Dropout(rate=dropout_rate)(enc_c2)
         enc_c3 = self.encoder_cnn3(enc_c2)
         
         enc_flatten = self.flatten(enc_c3)
@@ -102,33 +108,57 @@ class Main_Model:
         # decoder
         latent_for_decoder = layers.Input(shape=(HIDDEN_DIMS,))
         input_for_decoder = layers.Input(shape=(INPUT_IMG_SIZE, INPUT_IMG_SIZE))
+        input_for_decoder_ = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 1))(input_for_decoder)
 
         # decoder mapping architecture (like U-net)
-        dec_e0 = self.decoder_map_e0(input_for_decoder)
-        dec_e0 = self.dropout(dec_e0)
+        dec_e0 = self.decoder_map_e0(input_for_decoder_)
+        dec_e0 = layers.Dropout(rate=dropout_rate)(dec_e0)
         dec_e1 = self.decoder_map_e1(dec_e0)
-        dec_e1 = self.dropout(dec_e1)
+        dec_e1 = layers.Dropout(rate=dropout_rate)(dec_e1)
         dec_e2 = self.decoder_map_e2(dec_e1)
-        dec_e2 = self.dropout(dec_e2)
+        dec_e2 = layers.Dropout(rate=dropout_rate)(dec_e2)
         dec_e3 = self.decoder_map_e3(dec_e2)
 
         dec_flatten = self.flatten(dec_e3)
         dec_bn = self.decoder_map_bottleneck(dec_flatten)
         dec_bn_ = layers.concatenate([dec_bn, latent_for_decoder])
+        
+        dec_bn_restored = self.decoder_map_bottleneck_restore(dec_bn_)
+        dec_bn_restored = layers.Reshape((INPUT_IMG_SIZE // 16, INPUT_IMG_SIZE // 16, 128))(dec_bn_restored)
 
-        dec_d0 = self.decoder_map_d0(dec_reshaped)
-        dec_d0 = self.dropout(dec_d0)
-        dec_d1 = self.decoder_map_d1(dec_d0)
-        dec_d1 = self.dropout(dec_d1)
-        dec_d2 = self.decoder_map_d2(dec_d1)
-        dec_d2 = self.dropout(dec_d2)
-        dec_d3 = self.decoder_map_d3(dec_d2)
+        # for x coord
+        dec_d0_x = self.decoder_map_d0_x(dec_bn_restored)
+        dec_d0_x = layers.Add()([dec_d0_x, dec_e2])
+        dec_d0_x = layers.Dropout(rate=dropout_rate)(dec_d0_x)
+        
+        dec_d1_x = self.decoder_map_d1_x(dec_d0_x)
+        dec_d1_x = layers.Add()([dec_d1_x, dec_e1])
+        dec_d1_x = layers.Dropout(rate=dropout_rate)(dec_d1_x)
+        
+        dec_d2_x = self.decoder_map_d2_x(dec_d1_x)
+        dec_d2_x = layers.Add()([dec_d2_x, dec_e0])
+        dec_d2_x = layers.Dropout(rate=dropout_rate)(dec_d2_x)
+        
+        dec_d3_x = self.decoder_map_d3_x(dec_d2_x)
 
-        # (작성중)
+        # for y coord
+        dec_d0_y = self.decoder_map_d0_y(dec_bn_restored)
+        dec_d0_y = layers.Add()([dec_d0_y, dec_e2])
+        dec_d0_y = layers.Dropout(rate=dropout_rate)(dec_d0_y)
+        
+        dec_d1_y = self.decoder_map_d1_y(dec_d0_y)
+        dec_d1_y = layers.Add()([dec_d1_y, dec_e1])
+        dec_d1_y = layers.Dropout(rate=dropout_rate)(dec_d1_y)
+        
+        dec_d2_y = self.decoder_map_d2_y(dec_d1_y)
+        dec_d2_y = layers.Add()([dec_d2_y, dec_e0])
+        dec_d2_y = layers.Dropout(rate=dropout_rate)(dec_d2_y)
+        
+        dec_d3_y = self.decoder_map_d3_y(dec_d2_y)
 
         # decoder merge
-        dec_c3_merged = layers.concatenate([dec_c3, dec_mapping_c3])
-        dec_final_coord_x_and_y = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 2))(dec_c3_merged)
+        dec_d3_merged = layers.concatenate([dec_d3_x, dec_d3_y], axis=3)
+        dec_final_coord_x_and_y = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 2))(dec_d3_merged)
 
         # define encoder, decoder and cvae model
         self.encoder = tf.keras.Model([input_image], self.latent_space, name='encoder')
@@ -242,6 +272,29 @@ def define_model():
     return model, optimizer
 
 
+# model architecture image
+def plot_model_architecture(model, img_file_name):
+    try:
+        tf.keras.utils.plot_model(model, to_file=f'{img_file_name}.png', show_shapes=True)
+    except Exception as e:
+        print(f'model architecture image file generation error : {e}')
+
+
+# 모델 구조 표시
+def show_model_summary(model_class):
+    print('\n === ENCODER ===')
+    model_class.encoder.summary()
+    plot_model_architecture(model_class.encoder, 'encoder')
+
+    print('\n === DECODER ===')
+    model_class.decoder.summary()
+    plot_model_architecture(model_class.decoder, 'decoder')
+
+    print('\n === VAE ===')
+    model_class.vae.summary()
+    plot_model_architecture(model_class.vae, 'vae')
+
+
 # 모델 학습 실시 및 저장
 # train_input                  : 입력 greyscale 이미지
 # train_x_coord, train_y_coord : readme.md 에서 설명한, 색상과 채도를 나타내기 위한 (x, y) 좌표 값
@@ -271,15 +324,8 @@ def train_model(train_input, train_x_coord, train_y_coord):
         shuffle=True
     )
 
-    print('\n === ENCODER ===')
-    model_class.encoder.summary()
-
-    print('\n === DECODER ===')
-    model_class.decoder.summary()
-    tf.keras.utils.plot_model(model_class.decoder, to_file='decoder.png', show_shapes=True)
-
-    print('\n === C-VAE ===')
-    model_class.vae.summary()
+    # 모델 구조 표시
+    show_model_summary(model_class)
 
     # 모델 저장
     model_class.encoder.save('main_vae_encoder')
