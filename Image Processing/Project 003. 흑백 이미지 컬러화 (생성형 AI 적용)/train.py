@@ -31,9 +31,6 @@ def noise_maker(noise_args):
 # ref-2: https://github.com/ekzhang/vae-cnn-mnist/blob/master/MNIST%20Convolutional%20VAE%20with%20Label%20Input.ipynb
 class Main_Model:
     def vae_entire_loss(self, x, y):
-        print('shape of y0:', x.shape)
-        print('shape of y1:', y.shape)
-        
         x_reshaped = K.reshape(x, shape=(BATCH_SIZE, 2 * TOTAL_PIXELS))
         y_reshaped = K.reshape(y, shape=(BATCH_SIZE, 2 * TOTAL_PIXELS))
         mse_loss = 2 * TOTAL_PIXELS * mean_squared_error(x_reshaped, y_reshaped)
@@ -208,9 +205,9 @@ def create_train_and_valid_data(limit=None):
         else:
             break
 
-    train_input = np.array(train_input)
-    train_x_coord = np.array(train_x_coord)
-    train_y_coord = np.array(train_y_coord)
+    train_input = np.array(train_input) / 255.0
+    train_x_coord = np.array(train_x_coord) / 255.0
+    train_y_coord = np.array(train_y_coord) / 255.0
 
     return train_input, train_x_coord, train_y_coord
 
@@ -242,7 +239,7 @@ def train_model(train_input, train_x_coord, train_y_coord):
     # 학습 실시
     model_class.vae.fit(
         [train_input, train_input], train_all_coords,
-        epochs=40,
+        epochs=10, # 40
         batch_size=BATCH_SIZE,
         shuffle=True
     )
@@ -259,9 +256,9 @@ def train_model(train_input, train_x_coord, train_y_coord):
     # 모델 저장
     model_class.encoder.save('main_vae_encoder')
     model_class.decoder.save('main_vae_decoder')
-    model_class.cvae.save('main_vae')
+    model_class.vae.save('main_vae')
     
-    return model_class.encoder, model_class.decoder, model_class.cvae
+    return model_class.encoder, model_class.decoder, model_class.vae
 
 
 if __name__ == '__main__':
@@ -269,7 +266,7 @@ if __name__ == '__main__':
     np.set_printoptions(linewidth=160)
 
     # 학습 데이터 추출 (이미지의 greyscale 이미지 + 색상, 채도 부분)
-    train_input, train_x_coord, train_y_coord = create_train_and_valid_data(limit=100)
+    train_input, train_x_coord, train_y_coord = create_train_and_valid_data(limit=320)
     
     print(f'\nshape of train input: {np.shape(train_input)}, first image :')
     print(train_input[0])
@@ -281,4 +278,4 @@ if __name__ == '__main__':
     print(train_y_coord[0])
 
     # 학습 실시 및 모델 저장
-    cvae_encoder, cvae_decoder, cvae_model = train_model(train_input, train_x_coord, train_y_coord)
+    vae_encoder, vae_decoder, vae_model = train_model(train_input, train_x_coord, train_y_coord)
