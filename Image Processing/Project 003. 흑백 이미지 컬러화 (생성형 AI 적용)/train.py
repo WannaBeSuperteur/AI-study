@@ -58,14 +58,20 @@ class Main_Model:
         self.encoder_ad0 = layers.Dense(64, activation='relu', name='ead0') # input 과 직접 연결
 
         # decoder 용 레이어
-        self.decoder_dense0 = layers.Dense(320, activation='relu', name='dd0')
-        self.decoder_dense1 = layers.Dense(80 * TOTAL_PIXELS // (8 * 8), activation='relu', name='dd1')
+        # decoder mapping architecture (like U-net) 용 레이어
+        self.decoder_map_e0 = layers.Conv2D(16, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_e0')
+        self.decoder_map_e1 = layers.Conv2D(24, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_e1')
+        self.decoder_map_e2 = layers.Conv2D(40, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_e2')
+        self.decoder_map_e3 = layers.Conv2D(64, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_e3')
 
-        self.decoder_cnn0 = layers.Conv2DTranspose(40, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dc0')
-        self.decoder_cnn1 = layers.Conv2DTranspose(40, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dc1')
-        self.decoder_cnn2 = layers.Conv2DTranspose(20, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dc2')
-        self.decoder_cnn3 = layers.Conv2DTranspose(2, (3, 3), strides=1, activation='tanh', padding='same', kernel_regularizer=L2, name='dc3')
+        # latent vector (60) 과 결합하여 (60 + 16 = 76) 으로 만든 이후 decoder_map_d0 레이어로 이동
+        self.decoder_map_bottleneck = layers.Dense(16, activation='relu', name='dmap_bottleneck')
 
+        self.decoder_map_d0 = layers.Conv2DTranspose(64, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d0')
+        self.decoder_map_d1 = layers.Conv2DTranspose(40, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d1')
+        self.decoder_map_d2 = layers.Conv2DTranspose(24, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d2')
+        self.decoder_map_d3 = layers.Conv2DTranspose(16, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d3')
+        
         # encoder (main stream)
         input_image = layers.Input(batch_shape=(BATCH_SIZE, INPUT_IMG_SIZE, INPUT_IMG_SIZE))
         input_image_reshaped = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 1))(input_image)
@@ -96,22 +102,33 @@ class Main_Model:
         # decoder
         latent_for_decoder = layers.Input(shape=(HIDDEN_DIMS,))
         input_for_decoder = layers.Input(shape=(INPUT_IMG_SIZE, INPUT_IMG_SIZE))
-        input_for_decoder_flatten = self.flatten(input_for_decoder)
 
-        dec_merged = layers.concatenate([latent_for_decoder, input_for_decoder_flatten])
-        dec_d0 = self.decoder_dense0(dec_merged)
-        dec_d1 = self.decoder_dense1(dec_d0)
-        dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 8, INPUT_IMG_SIZE // 8, 80))(dec_d1)
+        # decoder mapping architecture (like U-net)
+        dec_e0 = self.decoder_map_e0(input_for_decoder)
+        dec_e0 = self.dropout(dec_e0)
+        dec_e1 = self.decoder_map_e1(dec_e0)
+        dec_e1 = self.dropout(dec_e1)
+        dec_e2 = self.decoder_map_e2(dec_e1)
+        dec_e2 = self.dropout(dec_e2)
+        dec_e3 = self.decoder_map_e3(dec_e2)
 
-        dec_c0 = self.decoder_cnn0(dec_reshaped)
-        dec_c0 = self.dropout(dec_c0)
-        dec_c1 = self.decoder_cnn1(dec_c0)
-        dec_c1 = self.dropout(dec_c1)
-        dec_c2 = self.decoder_cnn2(dec_c1)
-        dec_c2 = self.dropout(dec_c2)
-        dec_c3 = self.decoder_cnn3(dec_c2)
-        
-        dec_final_coord_x_and_y = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 2))(dec_c3)
+        dec_flatten = self.flatten(dec_e3)
+        dec_bn = self.decoder_map_bottleneck(dec_flatten)
+        dec_bn_ = layers.concatenate([dec_bn, latent_for_decoder])
+
+        dec_d0 = self.decoder_map_d0(dec_reshaped)
+        dec_d0 = self.dropout(dec_d0)
+        dec_d1 = self.decoder_map_d1(dec_d0)
+        dec_d1 = self.dropout(dec_d1)
+        dec_d2 = self.decoder_map_d2(dec_d1)
+        dec_d2 = self.dropout(dec_d2)
+        dec_d3 = self.decoder_map_d3(dec_d2)
+
+        # (작성중)
+
+        # decoder merge
+        dec_c3_merged = layers.concatenate([dec_c3, dec_mapping_c3])
+        dec_final_coord_x_and_y = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 2))(dec_c3_merged)
 
         # define encoder, decoder and cvae model
         self.encoder = tf.keras.Model([input_image], self.latent_space, name='encoder')
@@ -249,7 +266,7 @@ def train_model(train_input, train_x_coord, train_y_coord):
     # 학습 실시
     model_class.vae.fit(
         [train_input_for_model, train_input_for_model], train_all_coords,
-        epochs=5, # 20
+        epochs=1, # 1 for functionality test, 20 for regular training
         batch_size=BATCH_SIZE,
         shuffle=True
     )
@@ -259,6 +276,7 @@ def train_model(train_input, train_x_coord, train_y_coord):
 
     print('\n === DECODER ===')
     model_class.decoder.summary()
+    tf.keras.utils.plot_model(model_class.decoder, to_file='decoder.png', show_shapes=True)
 
     print('\n === C-VAE ===')
     model_class.vae.summary()
@@ -276,7 +294,7 @@ if __name__ == '__main__':
     np.set_printoptions(linewidth=160)
 
     # 학습 데이터 추출 (이미지의 greyscale 이미지 + 색상, 채도 부분)
-    train_input, train_x_coord, train_y_coord = create_train_and_valid_data(limit=None) # 320 for functionality test
+    train_input, train_x_coord, train_y_coord = create_train_and_valid_data(limit=320) # 320 for functionality test
     
     print(f'\nshape of train input: {np.shape(train_input)}, first image :')
     print(train_input[0])
