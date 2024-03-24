@@ -17,6 +17,7 @@ HIDDEN_DIMS = 200
 TOTAL_PIXELS = INPUT_IMG_SIZE * INPUT_IMG_SIZE
 BATCH_SIZE = 32
 MSE_LOSS_WEIGHT_CONSTANT = 5.0
+NUM_CLASSES = 16
 
 
 # random normal noise maker for VAE 
@@ -54,6 +55,7 @@ class Main_Model:
         
         self.encoder_dense0 = layers.Dense(256, activation='relu', name='ed0')
         self.encoder_ad0 = layers.Dense(64, activation='relu', name='ead0') # input 과 직접 연결
+        self.encoder_ad_class = layers.Dense(64, activation='relu', name='ead_class') # input 과 직접 연결
 
         # decoder 용 레이어
         # decoder mapping architecture (like U-net) 용 레이어
@@ -80,6 +82,7 @@ class Main_Model:
         
         # encoder (main stream)
         input_image = layers.Input(batch_shape=(BATCH_SIZE, INPUT_IMG_SIZE, INPUT_IMG_SIZE))
+        input_class = layers.Input(batch_shape=(BATCH_SIZE, NUM_CLASSES))
         input_image_reshaped = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 1))(input_image)
         
         enc_c0 = self.encoder_cnn0(input_image_reshaped)
@@ -94,11 +97,14 @@ class Main_Model:
         enc_d0 = self.encoder_dense0(enc_flatten)
 
         # encoder (additional stream)
+        enc_flatten_for_class = self.flatten(input_class)
+        enc_ad_class = self.encoder_ad_class(enc_flatten_for_class)
+        
         enc_flatten_for_ad = self.flatten(input_image)
         enc_ad0 = self.encoder_ad0(enc_flatten_for_ad)
 
         # encoder (concatenated)
-        end_d0_ad0 = layers.concatenate([enc_d0, enc_ad0])
+        end_d0_ad0 = layers.concatenate([enc_d0, enc_ad0, enc_ad_class])
 
         # latent space
         self.latent_mean = layers.Dense(HIDDEN_DIMS, name='lm')(end_d0_ad0)
@@ -109,6 +115,8 @@ class Main_Model:
         latent_for_decoder = layers.Input(shape=(HIDDEN_DIMS,))
         input_for_decoder = layers.Input(shape=(INPUT_IMG_SIZE, INPUT_IMG_SIZE))
         input_for_decoder_ = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 1))(input_for_decoder)
+
+        input_class_for_decoder = layers.Input(shape=(NUM_CLASSES))
 
         # decoder mapping architecture (like U-net)
         dec_e0 = self.decoder_map_e0(input_for_decoder_)
@@ -121,7 +129,7 @@ class Main_Model:
 
         dec_flatten = self.flatten(dec_e3)
         dec_bn = self.decoder_map_bottleneck(dec_flatten)
-        dec_bn_ = layers.concatenate([dec_bn, latent_for_decoder])
+        dec_bn_ = layers.concatenate([dec_bn, latent_for_decoder, input_class_for_decoder])
         
         dec_bn_restored = self.decoder_map_bottleneck_restore(dec_bn_)
         dec_bn_restored = layers.Reshape((INPUT_IMG_SIZE // 16, INPUT_IMG_SIZE // 16, 128))(dec_bn_restored)
@@ -165,12 +173,12 @@ class Main_Model:
         print('shape of dec_d3_merged:', dec_d3_merged.shape)
 
         # define encoder, decoder and cvae model
-        self.encoder = tf.keras.Model([input_image], self.latent_space, name='encoder')
-        self.decoder = tf.keras.Model([latent_for_decoder, input_for_decoder], dec_final_coord_x_and_y, name='decoder')
+        self.encoder = tf.keras.Model([input_image, input_class], self.latent_space, name='encoder')
+        self.decoder = tf.keras.Model([latent_for_decoder, input_for_decoder, input_class_for_decoder], dec_final_coord_x_and_y, name='decoder')
 
         self.vae = tf.keras.Model(
-            inputs=[input_image, input_for_decoder],
-            outputs=self.decoder([self.encoder([input_image]), input_for_decoder]),
+            inputs=[input_image, input_class, input_for_decoder, input_class_for_decoder],
+            outputs=self.decoder([self.encoder([input_image, input_class]), input_for_decoder, input_class_for_decoder]),
             name='final_vae'
         )
 
@@ -218,6 +226,7 @@ def create_train_and_valid_data(limit=None):
     current_count = 0
 
     train_input = []
+    train_class = []
     train_x_coord = []
     train_y_coord = []
     
@@ -252,10 +261,26 @@ def create_train_and_valid_data(limit=None):
                     coord_x[i][j] = x
                     coord_y[i][j] = y
 
+            # class
+            class_no = int(image_name.split('_')[1])
+            class_arr = np.zeros((NUM_CLASSES))
+            class_arr[class_no] = 1.0
+
             # append to train data
             train_input.append(greyscale_image)
             train_x_coord.append(coord_x)
             train_y_coord.append(coord_y)
+            train_class.append(class_arr)
+
+            if current_count == 0:
+                print('\ntrain input example (first image) :')
+                print(greyscale_image)
+                print('\ntrain x coord example (first image) :')
+                print(coord_x)
+                print('\ntrain y coord example (first image) :')
+                print(coord_y)
+                print('\ntrain class example (first image) :')
+                print(class_arr)
 
             current_count += 1
             
@@ -265,8 +290,9 @@ def create_train_and_valid_data(limit=None):
     train_input = np.array(train_input)
     train_x_coord = np.array(train_x_coord)
     train_y_coord = np.array(train_y_coord)
+    train_class = np.array(train_class)
 
-    return train_input, train_x_coord, train_y_coord
+    return train_input, train_x_coord, train_y_coord, train_class
 
 
 # 모델 정의 및 반환
@@ -302,7 +328,7 @@ def show_model_summary(model_class):
 # 모델 학습 실시 및 저장
 # train_input                  : 입력 greyscale 이미지
 # train_x_coord, train_y_coord : readme.md 에서 설명한, 색상과 채도를 나타내기 위한 (x, y) 좌표 값
-def train_model(train_input, train_x_coord, train_y_coord):
+def train_model(train_input, train_x_coord, train_y_coord, train_class):
 
     # normalize image
     train_input_for_model = train_input / 255.0
@@ -316,13 +342,14 @@ def train_model(train_input, train_x_coord, train_y_coord):
     train_all_coords = np.concatenate([train_x_coord_4d, train_y_coord_4d], axis=3)
 
     print('input      shape :', np.shape(train_input_for_model))
+    print('class      shape :', np.shape(train_class))
     print('x   coords shape :', np.shape(train_x_coord))
     print('y   coords shape :', np.shape(train_y_coord))
     print('all coords shape :', np.shape(train_all_coords))
 
     # 학습 실시
     model_class.vae.fit(
-        [train_input_for_model, train_input_for_model], train_all_coords,
+        [train_input_for_model, train_class, train_input_for_model, train_class], train_all_coords,
         epochs=5, # 1 for functionality test, 5 for regular training
         batch_size=BATCH_SIZE,
         shuffle=True
@@ -344,7 +371,7 @@ if __name__ == '__main__':
     np.set_printoptions(linewidth=160)
 
     # 학습 데이터 추출 (이미지의 greyscale 이미지 + 색상, 채도 부분)
-    train_input, train_x_coord, train_y_coord = create_train_and_valid_data(limit=None) # 320 for functionality test
+    train_input, train_x_coord, train_y_coord, train_class = create_train_and_valid_data(limit=None) # 320 for functionality test
     
     print(f'\nshape of train input: {np.shape(train_input)}, first image :')
     print(train_input[0])
@@ -356,4 +383,4 @@ if __name__ == '__main__':
     print(train_y_coord[0])
 
     # 학습 실시 및 모델 저장
-    vae_encoder, vae_decoder, vae_model = train_model(train_input, train_x_coord, train_y_coord)
+    vae_encoder, vae_decoder, vae_model = train_model(train_input, train_x_coord, train_y_coord, train_class)

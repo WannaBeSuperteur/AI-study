@@ -1,5 +1,5 @@
 # Image Processing 프로젝트 3. 흑백 이미지 컬러화 (생성형 AI 적용)
-* Dataset: [Mini-ImageNet](https://www.kaggle.com/datasets/deeptrial/miniimagenet/data)
+* Dataset: [Flowers](https://www.kaggle.com/datasets/l3llff/flowers)
 * 수행 기간: 2024.03.20 ~ 2024.03.24 (5일)
 
 ## 파일 및 코드 설명
@@ -8,14 +8,14 @@
 ```
 Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
 - archive
-  - ImageNet-Mini
-    - images
-      - n01440764
-      - n01443537
-      - n01484850
-      - ...
+  - flowers
+    - astilbe
+      - 737 images
+    - bellflower
+      - 873 images
+    ...
 
-에서, 모든 이미지를 112 x 112 로 resize 해서,
+에서, 각 디렉토리별 마지막 100장 (test 용도로 사용) 을 제외한 모든 이미지를 112 x 112 로 resize 해서,
 
 Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
 - images
@@ -27,6 +27,7 @@ Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
 * ```augment_data.py``` : Data Augmentation 실시
   * 필요 파일 : ```images``` 디렉토리 내부의 3,900 여 장의 112 x 112 로 resize 된 이미지 파일
   * 실행 결과 : 1장의 이미지에 대해 crop 된 이미지 4장이 추가되어 총 19,600 여 장의 이미지 데이터 확보
+  * **Flowers 데이터셋은 데이터가 충분히 많기 때문에 실행하지 않음**
 * ```train.py``` : 학습 과정 전체 진행
   * 출력 모델 : ```main_vae```, ```main_vae_encoder```, ```main_vae_decoder```
 * ```test.py``` : 이미지 생성 테스트
@@ -34,7 +35,6 @@ Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
   * 필요 파일 : ```test_images``` 폴더 내부의 이미지 파일들 (원본 이미지)
   * 출력 파일 : ```test_output``` 폴더 내부의 이미지 파일들 (모델에 의해 출력된 이미지)
     * ```test_images``` 폴더에 있는 파일들을 crop -> ```112 x 112``` 로 resize 한 후, resize 된 이미지에 대해 테스트 실시 후 결과 파일 출력
-    * ```test_images``` 폴더 내의 이미지 출처 : [Fruits262 Dataset on Kaggle](https://www.kaggle.com/datasets/aelchimminut/fruits262)
 
 ## 머신러닝 모델 설명 (VAE 기반 모델)
 * **Variational Auto-Encoder 기반의, VAE와 유사한 모델**
@@ -52,7 +52,6 @@ Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
 ## 실행 순서
 ```
 python cleanup_data.py
-python augment_data.py
 python train.py
 python test.py
 ```
