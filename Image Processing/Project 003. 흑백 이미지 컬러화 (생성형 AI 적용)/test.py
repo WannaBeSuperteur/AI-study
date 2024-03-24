@@ -5,6 +5,8 @@ import os
 import tensorflow as tf
 import math
 
+from test_helper import create_hsv_image
+
 RESIZE_HEIGHT = 144
 RESIZE_WIDTH = 112
 CROP_HEIGHT = (RESIZE_HEIGHT - RESIZE_WIDTH) // 2
@@ -45,47 +47,15 @@ def create_test_resized_and_output_dir():
         pass
 
 
-# compute hue
-def compute_hue(x, y):
-    if x == 0:
-        if y > 0:
-            return 45.0
-        else:
-            return 135.0
-
-    # 제1, 2 사분면
-    elif y >= 0:
-        return np.arctan2(y, x) * (180.0 / math.pi) / 2.0
-
-    # 제3, 4 사분면
-    else:
-        return (np.arctan2(y, x) + 2.0 * math.pi) * (180.0 / math.pi) / 2.0
-
-
 # 최종 테스트 이미지 생성
 def generate_test_result_image(image, coord_x, coord_y, img_name):
-    hsv_array = np.zeros((RESIZE_WIDTH, RESIZE_WIDTH, 3))
-
     print('\n ==== coord_x ====')
     print(coord_x)
 
     print('\n ==== coord_y ====')
     print(coord_y)
 
-    for i in range(RESIZE_WIDTH):
-        for j in range(RESIZE_WIDTH):
-            i_ = i // 8
-            j_ = j // 8
-            
-            hue = compute_hue(coord_x[i_][j_], coord_y[i_][j_])
-            saturation = math.sqrt(coord_x[i_][j_] * coord_x[i_][j_] + coord_y[i_][j_] * coord_y[i_][j_])
-            brightness = image[0][i][j]
-
-            hsv_array[i][j][0] = hue
-            hsv_array[i][j][1] = saturation
-            hsv_array[i][j][2] = 255.0 * brightness
-
-    hsv_array = np.array(hsv_array).astype(np.float32)
+    hsv_array = create_hsv_image(image, coord_x, coord_y, img_size=RESIZE_WIDTH)
 
     print('\n ==== HSV ====')
     print(hsv_array)

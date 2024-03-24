@@ -30,6 +30,7 @@ Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
   * **Flowers 데이터셋은 데이터가 충분히 많기 때문에 실행하지 않음**
 * ```train.py``` : 학습 과정 전체 진행
   * 출력 모델 : ```main_vae```, ```main_vae_encoder```, ```main_vae_decoder```
+  * 참고 : ```train.py``` 실행 시 ```input_convert_test_result``` 디렉토리 및 그 안에 이미지들이 생성되는데, 해당 이미지들은 각 input image 에 대해 **test 시의 결과 이미지를 생성하기 위해 실시하는 변환** 을 그대로 실시한 테스트 이미지로, 실제 모델 학습과 무관 
 * ```test.py``` : 이미지 생성 테스트
   * 필요 모델 : ```main_vae_decoder```
   * 필요 파일 : ```test_images``` 폴더 내부의 이미지 파일들 (원본 이미지)

@@ -11,6 +11,7 @@ import keras.backend as K
 import os
 import cv2
 
+from test_helper import create_hsv_image
 
 INPUT_IMG_SIZE = 112
 COLORIZE_MAP_SIZE = INPUT_IMG_SIZE // 8
@@ -255,6 +256,19 @@ def create_train_and_valid_data(limit=None):
                 print('\ntrain class example (first image) :')
                 print(class_arr)
 
+            # test 이미지에 대한 결과 이미지 생성 테스트
+            if current_count < 30:
+                hsv_array = create_hsv_image(
+                    image= 0.5 + greyscale_image.reshape((-1, INPUT_IMG_SIZE, INPUT_IMG_SIZE)) / (4.0 * 255.0),
+                    coord_x=coord_x,
+                    coord_y=coord_y,
+                    img_size=INPUT_IMG_SIZE
+                )
+                convert_test_image = cv2.cvtColor(hsv_array, cv2.COLOR_HSV2BGR)
+
+                cv2.imwrite(f'input_convert_test_result/{image_name}_original.png', image)
+                cv2.imwrite(f'input_convert_test_result/{image_name}.png', convert_test_image)
+
             current_count += 1
             
         else:
@@ -324,7 +338,7 @@ def train_model(train_input, train_x_coord, train_y_coord, train_class):
     # 학습 실시
     model_class.vae.fit(
         [train_input_for_model, train_class, train_input_for_model, train_class], train_all_coords_,
-        epochs=5, # 1 for functionality test, 5 for regular training
+        epochs=1, # 1 for functionality test, 5 for regular training
         batch_size=BATCH_SIZE,
         shuffle=True
     )
@@ -340,12 +354,21 @@ def train_model(train_input, train_x_coord, train_y_coord, train_class):
     return model_class.encoder, model_class.decoder, model_class.vae
 
 
+# input_convert_test_result 디렉토리 생성
+def create_input_convert_test_result_dir():
+    try:
+        os.makedirs('input_convert_test_result')
+    except:
+        pass
+
+
 if __name__ == '__main__':
     tf.compat.v1.disable_eager_execution()
     np.set_printoptions(linewidth=200)
+    create_input_convert_test_result_dir()
 
     # 학습 데이터 추출 (이미지의 greyscale 이미지 + 색상, 채도 부분)
-    train_input, train_x_coord, train_y_coord, train_class = create_train_and_valid_data(limit=None) # 320 for functionality test
+    train_input, train_x_coord, train_y_coord, train_class = create_train_and_valid_data(limit=320) # 320 for functionality test
     
     print(f'\nshape of train input: {np.shape(train_input)}, first image :')
     print(train_input[0])
