@@ -74,8 +74,11 @@ def generate_test_result_image(image, coord_x, coord_y, img_name):
 
     for i in range(RESIZE_WIDTH):
         for j in range(RESIZE_WIDTH):
-            hue = compute_hue(coord_x[i][j], coord_y[i][j])
-            saturation = math.sqrt(coord_x[i][j] * coord_x[i][j] + coord_y[i][j] * coord_y[i][j])
+            i_ = i // 8
+            j_ = j // 8
+            
+            hue = compute_hue(coord_x[i_][j_], coord_y[i_][j_])
+            saturation = math.sqrt(coord_x[i_][j_] * coord_x[i_][j_] + coord_y[i_][j_] * coord_y[i_][j_])
             brightness = image[0][i][j]
 
             hsv_array[i][j][0] = hue
@@ -125,7 +128,7 @@ def run_test():
 
 
 if __name__ == '__main__':
-    np.set_printoptions(linewidth=160)
+    np.set_printoptions(linewidth=250)
 
     create_test_resized_and_output_dir()
     crop_and_resize()

@@ -13,11 +13,15 @@ import cv2
 
 
 INPUT_IMG_SIZE = 112
-HIDDEN_DIMS = 200
+COLORIZE_MAP_SIZE = INPUT_IMG_SIZE // 8
 TOTAL_PIXELS = INPUT_IMG_SIZE * INPUT_IMG_SIZE
+
+HIDDEN_DIMS = 200
 BATCH_SIZE = 32
 MSE_LOSS_WEIGHT_CONSTANT = 5.0
+
 NUM_CLASSES = 16
+
 
 
 # random normal noise maker for VAE 
@@ -33,8 +37,8 @@ def noise_maker(noise_args):
 # ref-2: https://github.com/ekzhang/vae-cnn-mnist/blob/master/MNIST%20Convolutional%20VAE%20with%20Label%20Input.ipynb
 class Main_Model:
     def vae_entire_loss(self, x, y):
-        x_reshaped = K.reshape(x, shape=(BATCH_SIZE, 2 * TOTAL_PIXELS))
-        y_reshaped = K.reshape(y, shape=(BATCH_SIZE, 2 * TOTAL_PIXELS))
+        x_reshaped = K.reshape(x, shape=(BATCH_SIZE, COLORIZE_MAP_SIZE * COLORIZE_MAP_SIZE * 2))
+        y_reshaped = K.reshape(y, shape=(BATCH_SIZE, COLORIZE_MAP_SIZE * COLORIZE_MAP_SIZE * 2))
         mse_loss = mean_squared_error(x_reshaped, y_reshaped)
         
         kl_loss = -0.5 * K.sum(1 + self.latent_log_var - K.square(self.latent_mean) - K.exp(self.latent_log_var), axis=-1)
@@ -58,27 +62,16 @@ class Main_Model:
         self.encoder_ad_class = layers.Dense(64, activation='relu', name='ead_class') # input 과 직접 연결
 
         # decoder 용 레이어
-        # decoder mapping architecture (like U-net) 용 레이어
+        # decoder mapping architecture 용 레이어
         self.decoder_map_e0 = layers.Conv2D(16, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_e0')
         self.decoder_map_e1 = layers.Conv2D(32, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_e1')
         self.decoder_map_e2 = layers.Conv2D(64, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_e2')
-        self.decoder_map_e3 = layers.Conv2D(128, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_e3')
+        self.decoder_map_e3 = layers.Conv2D(64, (3, 3), strides=1, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_e3')
 
-        # latent vector (200) 과 결합하여 (200 + 100 = 300) 으로 만든 이후 decoder_map_d0 레이어로 이동
-        self.decoder_map_bottleneck = layers.Dense(100, activation='relu', name='dmap_bottleneck')
-        self.decoder_map_bottleneck_restore = layers.Dense(128 * (INPUT_IMG_SIZE // 16) * (INPUT_IMG_SIZE // 16), activation='relu', name='dmap_bottleneck_restore')
-
-        # for x coordinate
-        self.decoder_map_d0_x = layers.Conv2DTranspose(64, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d0_x')
-        self.decoder_map_d1_x = layers.Conv2DTranspose(32, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d1_x')
-        self.decoder_map_d2_x = layers.Conv2DTranspose(16, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d2_x')
-        self.decoder_map_d3_x = layers.Conv2DTranspose(1, (3, 3), strides=2, activation='tanh', padding='same', kernel_regularizer=L2, name='dmap_d3_x')
-
-        # for y coordinate
-        self.decoder_map_d0_y = layers.Conv2DTranspose(64, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d0_y')
-        self.decoder_map_d1_y = layers.Conv2DTranspose(32, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d1_y')
-        self.decoder_map_d2_y = layers.Conv2DTranspose(16, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d2_y')
-        self.decoder_map_d3_y = layers.Conv2DTranspose(1, (3, 3), strides=2, activation='tanh', padding='same', kernel_regularizer=L2, name='dmap_d3_y')
+        # latent vector (200) 과 결합하여 (200 + 160 = 360) 으로 만든 이후 decoder_map_d0 레이어로 이동 -> final
+        self.decoder_map_bottleneck = layers.Dense(160, activation='relu', name='dmap_bottleneck')
+        self.decoder_map_bottleneck_restore_0 = layers.Dense(64 * (COLORIZE_MAP_SIZE // 2) * (COLORIZE_MAP_SIZE // 2), activation='relu', name='dmap_bottleneck_restore_0')
+        self.decoder_map_bottleneck_restore_1 = layers.Dense(2 * COLORIZE_MAP_SIZE * COLORIZE_MAP_SIZE, activation='tanh', name='dmap_bottleneck_restore_1')
         
         # encoder (main stream)
         input_image = layers.Input(batch_shape=(BATCH_SIZE, INPUT_IMG_SIZE, INPUT_IMG_SIZE))
@@ -130,51 +123,17 @@ class Main_Model:
         dec_flatten = self.flatten(dec_e3)
         dec_bn = self.decoder_map_bottleneck(dec_flatten)
         dec_bn_ = layers.concatenate([dec_bn, latent_for_decoder, input_class_for_decoder])
-        
-        dec_bn_restored = self.decoder_map_bottleneck_restore(dec_bn_)
-        dec_bn_restored = layers.Reshape((INPUT_IMG_SIZE // 16, INPUT_IMG_SIZE // 16, 128))(dec_bn_restored)
 
-        # for x coord
-        dec_d0_x = self.decoder_map_d0_x(dec_bn_restored)
-        dec_d0_x = layers.Add()([dec_d0_x, dec_e2])
-        dec_d0_x = layers.Dropout(rate=dropout_rate)(dec_d0_x)
+        # final
+        dec_bn_restored_0 = self.decoder_map_bottleneck_restore_0(dec_bn_)
+        dec_bn_restored_0 = layers.Dropout(rate=dropout_rate)(dec_bn_restored_0)
+        dec_bn_restored_1 = self.decoder_map_bottleneck_restore_1(dec_bn_restored_0)
         
-        dec_d1_x = self.decoder_map_d1_x(dec_d0_x)
-        dec_d1_x = layers.Add()([dec_d1_x, dec_e1])
-        dec_d1_x = layers.Dropout(rate=dropout_rate)(dec_d1_x)
-        
-        dec_d2_x = self.decoder_map_d2_x(dec_d1_x)
-        dec_d2_x = layers.Add()([dec_d2_x, dec_e0])
-        dec_d2_x = layers.Dropout(rate=dropout_rate)(dec_d2_x)
-        
-        dec_d3_x = self.decoder_map_d3_x(dec_d2_x)
-
-        # for y coord
-        dec_d0_y = self.decoder_map_d0_y(dec_bn_restored)
-        dec_d0_y = layers.Add()([dec_d0_y, dec_e2])
-        dec_d0_y = layers.Dropout(rate=dropout_rate)(dec_d0_y)
-        
-        dec_d1_y = self.decoder_map_d1_y(dec_d0_y)
-        dec_d1_y = layers.Add()([dec_d1_y, dec_e1])
-        dec_d1_y = layers.Dropout(rate=dropout_rate)(dec_d1_y)
-        
-        dec_d2_y = self.decoder_map_d2_y(dec_d1_y)
-        dec_d2_y = layers.Add()([dec_d2_y, dec_e0])
-        dec_d2_y = layers.Dropout(rate=dropout_rate)(dec_d2_y)
-        
-        dec_d3_y = self.decoder_map_d3_y(dec_d2_y)
-
-        # decoder merge
-        dec_d3_merged = layers.concatenate([dec_d3_x, dec_d3_y], axis=3)
-        dec_final_coord_x_and_y = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 2))(dec_d3_merged)
-
-        print('shape of dec_d3_x:', dec_d3_x.shape)
-        print('shape of dec_d3_y:', dec_d3_y.shape)
-        print('shape of dec_d3_merged:', dec_d3_merged.shape)
+        dec_final = layers.Reshape((COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 2))(dec_bn_restored_1)
 
         # define encoder, decoder and cvae model
         self.encoder = tf.keras.Model([input_image, input_class], self.latent_space, name='encoder')
-        self.decoder = tf.keras.Model([latent_for_decoder, input_for_decoder, input_class_for_decoder], dec_final_coord_x_and_y, name='decoder')
+        self.decoder = tf.keras.Model([latent_for_decoder, input_for_decoder, input_class_for_decoder], dec_final, name='decoder')
 
         self.vae = tf.keras.Model(
             inputs=[input_image, input_class, input_for_decoder, input_class_for_decoder],
@@ -252,14 +211,28 @@ def create_train_and_valid_data(limit=None):
                 print(saturation_image)
 
             # compute x and y coord
-            coord_x = np.zeros((INPUT_IMG_SIZE, INPUT_IMG_SIZE))
-            coord_y = np.zeros((INPUT_IMG_SIZE, INPUT_IMG_SIZE))
+            coord_x_all = np.zeros((INPUT_IMG_SIZE, INPUT_IMG_SIZE))
+            coord_y_all = np.zeros((INPUT_IMG_SIZE, INPUT_IMG_SIZE))
 
             for i in range(INPUT_IMG_SIZE):
                 for j in range(INPUT_IMG_SIZE):
                     x, y = convert_hue_saturation_to_coord(hue_image[i][j], saturation_image[i][j])
-                    coord_x[i][j] = x
-                    coord_y[i][j] = y
+                    coord_x_all[i][j] = x
+                    coord_y_all[i][j] = y
+
+            coord_x = np.zeros((COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE))
+            coord_y = np.zeros((COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE))
+
+            # 8 x 8 영역별 평균으로 coord_x, coord_y 계산 (112 x 112 이미지에 대해 각각 14 x 14)
+            for i in range(COLORIZE_MAP_SIZE):
+                for j in range(COLORIZE_MAP_SIZE):
+                    i_start = i * 8
+                    i_end = (i + 1) * 8
+                    j_start = j * 8
+                    j_end = (j + 1) * 8
+
+                    coord_x[i][j] = coord_x_all[i_start:i_end, j_start:j_end].mean()
+                    coord_y[i][j] = coord_y_all[i_start:i_end, j_start:j_end].mean()
 
             # class
             class_no = int(image_name.split('_')[1])
@@ -336,10 +309,11 @@ def train_model(train_input, train_x_coord, train_y_coord, train_class):
     model_class, optimizer = define_model()
     model_class.vae.compile(loss=model_class.vae_entire_loss, optimizer=optimizer)
 
-    train_x_coord_4d = train_x_coord.reshape((-1, INPUT_IMG_SIZE, INPUT_IMG_SIZE, 1))
-    train_y_coord_4d = train_y_coord.reshape((-1, INPUT_IMG_SIZE, INPUT_IMG_SIZE, 1))
+    train_x_coord_4d = train_x_coord.reshape((-1, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 1))
+    train_y_coord_4d = train_y_coord.reshape((-1, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 1))
     
     train_all_coords = np.concatenate([train_x_coord_4d, train_y_coord_4d], axis=3)
+    train_all_coords_ = train_all_coords.reshape((-1, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 2))
 
     print('input      shape :', np.shape(train_input_for_model))
     print('class      shape :', np.shape(train_class))
@@ -349,7 +323,7 @@ def train_model(train_input, train_x_coord, train_y_coord, train_class):
 
     # 학습 실시
     model_class.vae.fit(
-        [train_input_for_model, train_class, train_input_for_model, train_class], train_all_coords,
+        [train_input_for_model, train_class, train_input_for_model, train_class], train_all_coords_,
         epochs=5, # 1 for functionality test, 5 for regular training
         batch_size=BATCH_SIZE,
         shuffle=True
@@ -368,7 +342,7 @@ def train_model(train_input, train_x_coord, train_y_coord, train_class):
 
 if __name__ == '__main__':
     tf.compat.v1.disable_eager_execution()
-    np.set_printoptions(linewidth=160)
+    np.set_printoptions(linewidth=200)
 
     # 학습 데이터 추출 (이미지의 greyscale 이미지 + 색상, 채도 부분)
     train_input, train_x_coord, train_y_coord, train_class = create_train_and_valid_data(limit=None) # 320 for functionality test
