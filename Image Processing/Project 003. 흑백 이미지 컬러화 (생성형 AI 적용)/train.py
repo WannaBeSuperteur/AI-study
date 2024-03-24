@@ -13,7 +13,7 @@ import cv2
 
 
 INPUT_IMG_SIZE = 112
-HIDDEN_DIMS = 60
+HIDDEN_DIMS = 200
 TOTAL_PIXELS = INPUT_IMG_SIZE * INPUT_IMG_SIZE
 BATCH_SIZE = 32
 MSE_LOSS_WEIGHT_CONSTANT = 5.0
@@ -62,21 +62,21 @@ class Main_Model:
         self.decoder_map_e2 = layers.Conv2D(64, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_e2')
         self.decoder_map_e3 = layers.Conv2D(128, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_e3')
 
-        # latent vector (60) 과 결합하여 (60 + 16 = 76) 으로 만든 이후 decoder_map_d0 레이어로 이동
-        self.decoder_map_bottleneck = layers.Dense(16, activation='relu', name='dmap_bottleneck')
+        # latent vector (200) 과 결합하여 (200 + 100 = 300) 으로 만든 이후 decoder_map_d0 레이어로 이동
+        self.decoder_map_bottleneck = layers.Dense(100, activation='relu', name='dmap_bottleneck')
         self.decoder_map_bottleneck_restore = layers.Dense(128 * (INPUT_IMG_SIZE // 16) * (INPUT_IMG_SIZE // 16), activation='relu', name='dmap_bottleneck_restore')
 
         # for x coordinate
         self.decoder_map_d0_x = layers.Conv2DTranspose(64, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d0_x')
         self.decoder_map_d1_x = layers.Conv2DTranspose(32, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d1_x')
         self.decoder_map_d2_x = layers.Conv2DTranspose(16, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d2_x')
-        self.decoder_map_d3_x = layers.Conv2DTranspose(1, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d3_x')
+        self.decoder_map_d3_x = layers.Conv2DTranspose(1, (3, 3), strides=2, activation='tanh', padding='same', kernel_regularizer=L2, name='dmap_d3_x')
 
         # for y coordinate
         self.decoder_map_d0_y = layers.Conv2DTranspose(64, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d0_y')
         self.decoder_map_d1_y = layers.Conv2DTranspose(32, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d1_y')
         self.decoder_map_d2_y = layers.Conv2DTranspose(16, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d2_y')
-        self.decoder_map_d3_y = layers.Conv2DTranspose(1, (3, 3), strides=2, activation='relu', padding='same', kernel_regularizer=L2, name='dmap_d3_y')
+        self.decoder_map_d3_y = layers.Conv2DTranspose(1, (3, 3), strides=2, activation='tanh', padding='same', kernel_regularizer=L2, name='dmap_d3_y')
         
         # encoder (main stream)
         input_image = layers.Input(batch_shape=(BATCH_SIZE, INPUT_IMG_SIZE, INPUT_IMG_SIZE))
