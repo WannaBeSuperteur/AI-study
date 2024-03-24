@@ -6,17 +6,17 @@ import math
 def compute_hue(x, y):
     if x == 0:
         if y > 0:
-            return 45.0
+            return 90.0
         else:
-            return 135.0
+            return 270.0
 
     # 제1, 2 사분면
     elif y >= 0:
-        return np.arctan2(y, x) * (180.0 / math.pi) / 2.0
+        return np.arctan2(y, x) * (180.0 / math.pi)
 
     # 제3, 4 사분면
     else:
-        return (np.arctan2(y, x) + 2.0 * math.pi) * (180.0 / math.pi) / 2.0
+        return (np.arctan2(y, x) + 2.0 * math.pi) * (180.0 / math.pi)
     
 
 def create_hsv_image(image, coord_x, coord_y, img_size):

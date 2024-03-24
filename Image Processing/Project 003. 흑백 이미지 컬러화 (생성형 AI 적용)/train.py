@@ -179,9 +179,9 @@ def create_train_and_valid_data(limit=None):
     images = os.listdir('images/')
 
     if limit is not None:
-        img_count = min(limit, len(images)) // BATCH_SIZE * BATCH_SIZE
+        img_count = min(limit, len(images))
     else:
-        img_count = len(images) // BATCH_SIZE * BATCH_SIZE
+        img_count = len(images)
 
     current_count = 0
 
@@ -197,11 +197,12 @@ def create_train_and_valid_data(limit=None):
 
             # read images
             image = cv2.imread('images/' + image_name, cv2.IMREAD_UNCHANGED)
-            if len(image.shape) == 2:
-                image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
-            
-            greyscale_image = np.array(get_greyscale(image))
 
+            try:
+                greyscale_image = np.array(get_greyscale(image))
+            except:
+                continue
+            
             # compute hue and saturation
             hue_image, saturation_image = get_hue_and_saturation(image)
 
@@ -247,6 +248,7 @@ def create_train_and_valid_data(limit=None):
             train_class.append(class_arr)
 
             if current_count == 0:
+                print(f'\nfirst image name: {image_name}')
                 print('\ntrain input example (first image) :')
                 print(greyscale_image)
                 print('\ntrain x coord example (first image) :')
@@ -274,10 +276,12 @@ def create_train_and_valid_data(limit=None):
         else:
             break
 
-    train_input = np.array(train_input)
-    train_x_coord = np.array(train_x_coord)
-    train_y_coord = np.array(train_y_coord)
-    train_class = np.array(train_class)
+    final_img_count = len(train_input) // BATCH_SIZE * BATCH_SIZE
+
+    train_input = np.array(train_input)[:final_img_count]
+    train_x_coord = np.array(train_x_coord)[:final_img_count]
+    train_y_coord = np.array(train_y_coord)[:final_img_count]
+    train_class = np.array(train_class)[:final_img_count]
 
     return train_input, train_x_coord, train_y_coord, train_class
 
@@ -338,7 +342,7 @@ def train_model(train_input, train_x_coord, train_y_coord, train_class):
     # 학습 실시
     model_class.vae.fit(
         [train_input_for_model, train_class, train_input_for_model, train_class], train_all_coords_,
-        epochs=1, # 1 for functionality test, 5 for regular training
+        epochs=5, # 1 for functionality test, 5 for regular training
         batch_size=BATCH_SIZE,
         shuffle=True
     )
@@ -368,7 +372,7 @@ if __name__ == '__main__':
     create_input_convert_test_result_dir()
 
     # 학습 데이터 추출 (이미지의 greyscale 이미지 + 색상, 채도 부분)
-    train_input, train_x_coord, train_y_coord, train_class = create_train_and_valid_data(limit=320) # 320 for functionality test
+    train_input, train_x_coord, train_y_coord, train_class = create_train_and_valid_data(limit=None) # 320 for functionality test
     
     print(f'\nshape of train input: {np.shape(train_input)}, first image :')
     print(train_input[0])
