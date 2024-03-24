@@ -16,7 +16,7 @@ INPUT_IMG_SIZE = 112
 HIDDEN_DIMS = 60
 TOTAL_PIXELS = INPUT_IMG_SIZE * INPUT_IMG_SIZE
 BATCH_SIZE = 32
-MSE_LOSS_WEIGHT_CONSTANT = 100.0
+MSE_LOSS_WEIGHT_CONSTANT = 5.0
 
 
 # random normal noise maker for VAE 
@@ -323,7 +323,7 @@ def train_model(train_input, train_x_coord, train_y_coord):
     # 학습 실시
     model_class.vae.fit(
         [train_input_for_model, train_input_for_model], train_all_coords,
-        epochs=20, # 1 for functionality test, 20 for regular training
+        epochs=5, # 1 for functionality test, 5 for regular training
         batch_size=BATCH_SIZE,
         shuffle=True
     )
