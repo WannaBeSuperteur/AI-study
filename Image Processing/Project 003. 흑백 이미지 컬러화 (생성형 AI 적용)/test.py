@@ -47,6 +47,58 @@ def create_test_resized_and_output_dir():
         pass
 
 
+# hue, brightness 와 saturation = max(R, G, B) - min(R, G, B) 을 이용하여 이미지 복원
+def restore_final_image(hsv_array, img_size):
+    final_image = np.zeros((img_size, img_size, 3))
+    
+    for i in range(img_size):
+        for j in range(img_size):
+            hue = hsv_array[i][j][0]
+            saturation = hsv_array[i][j][1] * 255.0
+            brightness = hsv_array[i][j][2] # brightness = value
+
+            rgb_max = brightness + saturation / 2.0
+            rgb_min = brightness - saturation / 2.0
+            rgb_mid_ratio = abs((hue % 120.0) - 60.0) / 60.0
+            rgb_mid = rgb_min + (rgb_max - rgb_min) * rgb_mid_ratio
+
+            if hue < 60:
+                R = rgb_max
+                G = rgb_mid
+                B = rgb_min
+
+            elif hue < 120:
+                R = rgb_mid
+                G = rgb_max
+                B = rgb_min
+
+            elif hue < 180:
+                R = rgb_min
+                G = rgb_max
+                B = rgb_mid
+
+            elif hue < 240:
+                R = rgb_min
+                G = rgb_mid
+                B = rgb_max
+
+            elif hue < 300:
+                R = rgb_mid
+                G = rgb_min
+                B = rgb_max
+
+            else:
+                R = rgb_max
+                G = rgb_min
+                B = rgb_mid
+
+            final_image[i][j][0] = B
+            final_image[i][j][1] = G
+            final_image[i][j][2] = R
+
+    return final_image
+
+
 # 최종 테스트 이미지 생성
 def generate_test_result_image(image, coord_x, coord_y, img_name):
     print('\n ==== coord_x ====')
@@ -60,7 +112,8 @@ def generate_test_result_image(image, coord_x, coord_y, img_name):
     print('\n ==== HSV ====')
     print(hsv_array)
     
-    final_image = cv2.cvtColor(hsv_array, cv2.COLOR_HSV2BGR)
+#    final_image = cv2.cvtColor(hsv_array, cv2.COLOR_HSV2BGR)
+    final_image = restore_final_image(hsv_array, img_size=RESIZE_WIDTH)
 
     print('\n ==== final image ====')
     print(final_image)

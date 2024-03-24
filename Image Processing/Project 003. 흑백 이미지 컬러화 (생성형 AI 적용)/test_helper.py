@@ -19,6 +19,8 @@ def compute_hue(x, y):
         return (np.arctan2(y, x) + 2.0 * math.pi) * (180.0 / math.pi)
     
 
+# create HSV array from image
+# saturation is proportion to max(R, G, B) - min(R, G, B)
 def create_hsv_image(image, coord_x, coord_y, img_size):
     hsv_array = np.zeros((img_size, img_size, 3))
     

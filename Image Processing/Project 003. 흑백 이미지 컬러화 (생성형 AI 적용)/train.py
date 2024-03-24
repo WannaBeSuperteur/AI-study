@@ -147,11 +147,23 @@ class Main_Model:
         return self.vae(inputs)
 
 
+# compute this project's own saturation using max(R, G, B) - min(R, G, B)
+def compute_own_saturation(image):
+    saturation = np.zeros((INPUT_IMG_SIZE, INPUT_IMG_SIZE))
+
+    for i in range(INPUT_IMG_SIZE):
+        for j in range(INPUT_IMG_SIZE):
+            saturation[i][j] = max(image[i][j]) - min(image[i][j])
+
+    return saturation
+
+
 # 이미지에서 색상 및 채도 부분 분리해서 readme.md 에서 설명한, 색상과 채도를 나타내는 (x, y) 값으로 반환
+# saturation is proportion to max(R, G, B) - min(R, G, B)
 def get_hue_and_saturation(image):
     image_HSV = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     hue_image = image_HSV[:, :, 0]
-    saturation_image = image_HSV[:, :, 1]
+    saturation_image = compute_own_saturation(image)
     
     return hue_image, saturation_image
 
@@ -342,7 +354,7 @@ def train_model(train_input, train_x_coord, train_y_coord, train_class):
     # 학습 실시
     model_class.vae.fit(
         [train_input_for_model, train_class, train_input_for_model, train_class], train_all_coords_,
-        epochs=5, # 1 for functionality test, 5 for regular training
+        epochs=10, # 1 for functionality test, 10 for regular training
         batch_size=BATCH_SIZE,
         shuffle=True
     )
