@@ -18,7 +18,7 @@ def save_all_images():
     imgs_dirs = os.listdir(imgs_dir_root)
 
     for class_no, dir_ in enumerate(imgs_dirs):
-        if dir_ == 'tulip':
+        if dir_ == 'black_eyed_susan':
             imgs_dir = imgs_dir_root + '/' + dir_
             imgs = os.listdir(imgs_dir)[:-100]
 

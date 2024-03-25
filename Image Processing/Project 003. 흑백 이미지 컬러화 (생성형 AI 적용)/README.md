@@ -15,11 +15,11 @@ Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
       - 873 images
     ...
 
-에서, ```archive/flowers/tulip``` 디렉토리의 마지막 100장 (test 용도로 사용) 을 제외한 모든 이미지 (948장) 를 112 x 112 로 resize 해서,
+에서, ```archive/flowers/black_eyed_susan``` 디렉토리의 마지막 100장 (test 용도로 사용) 을 제외한 모든 이미지 (900장) 를 112 x 112 로 resize 해서,
 
 Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
 - images
-  - (기존 ```archive/flowers/tulip```  디렉토리 내부에 있는 이미지를 images 폴더에 저장)
+  - (기존 ```archive/flowers/black_eyed_susan``` 디렉토리 내부에 있는 이미지를 images 폴더에 저장)
 
 로 재배치
 ```
