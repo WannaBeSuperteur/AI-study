@@ -17,11 +17,9 @@ INPUT_IMG_SIZE = 112
 COLORIZE_MAP_SIZE = INPUT_IMG_SIZE // 8
 TOTAL_PIXELS = INPUT_IMG_SIZE * INPUT_IMG_SIZE
 
-HIDDEN_DIMS = 200
+HIDDEN_DIMS = 120
 BATCH_SIZE = 32
 MSE_LOSS_WEIGHT_CONSTANT = 100.0
-
-# TODO : change into CNN
 
 NUM_CLASSES = 16
 
@@ -56,76 +54,179 @@ class Main_Model:
 
         # encoder 용 레이어
         # level 0 : 이미지 전체
-        self.encoder_lvl0_0 = layers.Dense(64, activation='relu', name='en_lv0_0')
-        self.encoder_lvl0_1 = layers.Dense(32, activation='relu', name='en_lv0_1')
+        self.encoder_lvl0_0 = layers.Conv2D(16, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv0_0')
+        self.encoder_lvl0_1 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv0_1')
+        self.encoder_lvl0_2 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv0_2')
+        self.encoder_lvl0_3 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv0_3')
+        self.encoder_lvl0_4 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv0_4')
+
+        self.encoder_lvl0_5 = layers.Dense(128, activation='relu', name='en_lv0_5')
+        self.encoder_lvl0_6 = layers.Dense(32, activation='relu', name='en_lv0_6')
         
         # level 1 : 주변 56 x 56 영역 (상하좌우 +24 pixels)
-        self.encoder_lvl1_0 = layers.Dense(64, activation='relu', name='en_lv1_0')
-        self.encoder_lvl1_1 = layers.Dense(32, activation='relu', name='en_lv1_1')
+        self.encoder_lvl1_0 = layers.Conv2D(16, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv1_0')
+        self.encoder_lvl1_1 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv1_1')
+        self.encoder_lvl1_2 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv1_2')
+        self.encoder_lvl1_3 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv1_3')
+        self.encoder_lvl1_4 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv1_4')
+
+        self.encoder_lvl1_5 = layers.Dense(128, activation='relu', name='en_lv1_5')
+        self.encoder_lvl1_6 = layers.Dense(32, activation='relu', name='en_lv1_6')
 
         # level 2 : 주변 28 x 28 영역 (상하좌우 +10 pixels)
-        self.encoder_lvl2_0 = layers.Dense(64, activation='relu', name='en_lv2_0')
-        self.encoder_lvl2_1 = layers.Dense(32, activation='relu', name='en_lv2_1')
+        self.encoder_lvl2_0 = layers.Conv2D(16, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv2_0')
+        self.encoder_lvl2_1 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv2_1')
+        self.encoder_lvl2_2 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv2_2')
+        self.encoder_lvl2_3 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv2_3')
+        self.encoder_lvl2_4 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv2_4')
+
+        self.encoder_lvl2_5 = layers.Dense(128, activation='relu', name='en_lv2_5')
+        self.encoder_lvl2_6 = layers.Dense(32, activation='relu', name='en_lv2_6')
 
         # level 3 : 주변 14 x 14 영역 (상하좌우 +3 pixels)
-        self.encoder_lvl3_0 = layers.Dense(64, activation='relu', name='en_lv3_0')
-        self.encoder_lvl3_1 = layers.Dense(32, activation='relu', name='en_lv3_1')
+        self.encoder_lvl3_0 = layers.Conv2D(16, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv3_0')
+        self.encoder_lvl3_1 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv3_1')
+        self.encoder_lvl3_2 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv3_2')
+        self.encoder_lvl3_3 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv3_3')
+        self.encoder_lvl3_4 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv3_4')
+
+        self.encoder_lvl3_5 = layers.Dense(128, activation='relu', name='en_lv3_5')
+        self.encoder_lvl3_6 = layers.Dense(32, activation='relu', name='en_lv3_6')
         
         self.encoder_final_dense = layers.Dense(64, activation='relu', name='en_final')
 
         # decoder 용 레이어
         # level 0 : 이미지 전체
-        self.decoder_lvl0_0 = layers.Dense(64, activation='relu', name='de_lv0_0')
-        self.decoder_lvl0_1 = layers.Dense(32, activation='relu', name='de_lv0_1')
+        self.decoder_lvl0_0 = layers.Conv2D(16, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv0_0')
+        self.decoder_lvl0_1 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv0_1')
+        self.decoder_lvl0_2 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv0_2')
+        self.decoder_lvl0_3 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv0_3')
+        self.decoder_lvl0_4 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv0_4')
+
+        self.decoder_lvl0_5 = layers.Dense(128, activation='relu', name='de_lv0_5')
+        self.decoder_lvl0_6 = layers.Dense(32, activation='relu', name='de_lv0_6')
         
         # level 1 : 주변 56 x 56 영역 (상하좌우 +24 pixels)
-        self.decoder_lvl1_0 = layers.Dense(64, activation='relu', name='de_lv1_0')
-        self.decoder_lvl1_1 = layers.Dense(32, activation='relu', name='de_lv1_1')
+        self.decoder_lvl1_0 = layers.Conv2D(16, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv1_0')
+        self.decoder_lvl1_1 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv1_1')
+        self.decoder_lvl1_2 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv1_2')
+        self.decoder_lvl1_3 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv1_3')
+        self.decoder_lvl1_4 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv1_4')
+
+        self.decoder_lvl1_5 = layers.Dense(128, activation='relu', name='de_lv1_5')
+        self.decoder_lvl1_6 = layers.Dense(32, activation='relu', name='de_lv1_6')
 
         # level 2 : 주변 28 x 28 영역 (상하좌우 +10 pixels)
-        self.decoder_lvl2_0 = layers.Dense(64, activation='relu', name='de_lv2_0')
-        self.decoder_lvl2_1 = layers.Dense(32, activation='relu', name='de_lv2_1')
+        self.decoder_lvl2_0 = layers.Conv2D(16, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv2_0')
+        self.decoder_lvl2_1 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv2_1')
+        self.decoder_lvl2_2 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv2_2')
+        self.decoder_lvl2_3 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv2_3')
+        self.decoder_lvl2_4 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv2_4')
+
+        self.decoder_lvl2_5 = layers.Dense(128, activation='relu', name='de_lv2_5')
+        self.decoder_lvl2_6 = layers.Dense(32, activation='relu', name='de_lv2_6')
 
         # level 3 : 주변 14 x 14 영역 (상하좌우 +3 pixels)
-        self.decoder_lvl3_0 = layers.Dense(64, activation='relu', name='de_lv3_0')
-        self.decoder_lvl3_1 = layers.Dense(32, activation='relu', name='de_lv3_1')
+        self.decoder_lvl3_0 = layers.Conv2D(16, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv3_0')
+        self.decoder_lvl3_1 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv3_1')
+        self.decoder_lvl3_2 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv3_2')
+        self.decoder_lvl3_3 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv3_3')
+        self.decoder_lvl3_4 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv3_4')
 
-        # latent vector (200) 과 결합하여 (200 + 32 + 32 + 32 + 32 = 328) 으로 만들기!
+        self.decoder_lvl3_5 = layers.Dense(128, activation='relu', name='de_lv3_5')
+        self.decoder_lvl3_6 = layers.Dense(32, activation='relu', name='de_lv3_6')
+
+        # latent vector (120) 과 결합하여 (120 + 32 + 32 + 32 + 32 = 248) 으로 만들기!
         self.decoder_dense = layers.Dense(96, activation='relu', name='de_dense')
         self.decoder_dense_final = layers.Dense(2, activation='tanh', name='de_final')
         
         # encoder (input and flattening)
         input_image_lv0 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='en_lv0_input')
-        input_image_lv0_ = layers.Flatten(name='en_lv0_flatten')(input_image_lv0)
-        
         input_image_lv1 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='en_lv1_input')
-        input_image_lv1_ = layers.Flatten(name='en_lv1_flatten')(input_image_lv1)
-        
         input_image_lv2 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='en_lv2_input')
-        input_image_lv2_ = layers.Flatten(name='en_lv2_flatten')(input_image_lv2)
-        
         input_image_lv3 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='en_lv3_input')
-        input_image_lv3_ = layers.Flatten(name='en_lv3_flatten')(input_image_lv3)
 
-        # encoder (dense layers)
+        input_image_lv0_ = layers.Reshape((COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 1), name='en_lv0_reshape')(input_image_lv0)
+        input_image_lv1_ = layers.Reshape((COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 1), name='en_lv1_reshape')(input_image_lv1)
+        input_image_lv2_ = layers.Reshape((COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 1), name='en_lv2_reshape')(input_image_lv2)
+        input_image_lv3_ = layers.Reshape((COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 1), name='en_lv3_reshape')(input_image_lv3)
+        
+        # encoder (conv + dense layers)
+
+        # level 0
         input_image_lv0_0 = self.encoder_lvl0_0(input_image_lv0_)
         input_image_lv0_0 = layers.Dropout(rate=dropout_rate)(input_image_lv0_0)
         input_image_lv0_1 = self.encoder_lvl0_1(input_image_lv0_0)
+        input_image_lv0_1 = layers.Dropout(rate=dropout_rate)(input_image_lv0_1)
+        input_image_lv0_2 = self.encoder_lvl0_2(input_image_lv0_1)
+        input_image_lv0_2 = layers.Dropout(rate=dropout_rate)(input_image_lv0_2)
+        input_image_lv0_3 = self.encoder_lvl0_3(input_image_lv0_2)
+        input_image_lv0_3 = layers.Dropout(rate=dropout_rate)(input_image_lv0_3)
+        input_image_lv0_4 = self.encoder_lvl0_4(input_image_lv0_3)
+        input_image_lv0_4 = layers.Dropout(rate=dropout_rate)(input_image_lv0_4)
 
+        input_image_lv0_4 = layers.Flatten(name='en_lv0_flatten')(input_image_lv0_4)
+
+        input_image_lv0_5 = self.encoder_lvl0_5(input_image_lv0_4)
+        input_image_lv0_5 = layers.Dropout(rate=dropout_rate)(input_image_lv0_5)
+        input_image_lv0_6 = self.encoder_lvl0_6(input_image_lv0_5)
+
+        # level 1
         input_image_lv1_0 = self.encoder_lvl1_0(input_image_lv1_)
         input_image_lv1_0 = layers.Dropout(rate=dropout_rate)(input_image_lv1_0)
         input_image_lv1_1 = self.encoder_lvl1_1(input_image_lv1_0)
+        input_image_lv1_1 = layers.Dropout(rate=dropout_rate)(input_image_lv1_1)
+        input_image_lv1_2 = self.encoder_lvl1_2(input_image_lv1_1)
+        input_image_lv1_2 = layers.Dropout(rate=dropout_rate)(input_image_lv1_2)
+        input_image_lv1_3 = self.encoder_lvl1_3(input_image_lv1_2)
+        input_image_lv1_3 = layers.Dropout(rate=dropout_rate)(input_image_lv1_3)
+        input_image_lv1_4 = self.encoder_lvl1_4(input_image_lv1_3)
+        input_image_lv1_4 = layers.Dropout(rate=dropout_rate)(input_image_lv1_4)
 
+        input_image_lv1_4 = layers.Flatten(name='en_lv1_flatten')(input_image_lv1_4)
+
+        input_image_lv1_5 = self.encoder_lvl1_5(input_image_lv1_4)
+        input_image_lv1_5 = layers.Dropout(rate=dropout_rate)(input_image_lv1_5)
+        input_image_lv1_6 = self.encoder_lvl1_6(input_image_lv1_5)
+
+        # level 2
         input_image_lv2_0 = self.encoder_lvl2_0(input_image_lv2_)
         input_image_lv2_0 = layers.Dropout(rate=dropout_rate)(input_image_lv2_0)
         input_image_lv2_1 = self.encoder_lvl2_1(input_image_lv2_0)
+        input_image_lv2_1 = layers.Dropout(rate=dropout_rate)(input_image_lv2_1)
+        input_image_lv2_2 = self.encoder_lvl2_2(input_image_lv2_1)
+        input_image_lv2_2 = layers.Dropout(rate=dropout_rate)(input_image_lv2_2)
+        input_image_lv2_3 = self.encoder_lvl2_3(input_image_lv2_2)
+        input_image_lv2_3 = layers.Dropout(rate=dropout_rate)(input_image_lv2_3)
+        input_image_lv2_4 = self.encoder_lvl2_4(input_image_lv2_3)
+        input_image_lv2_4 = layers.Dropout(rate=dropout_rate)(input_image_lv2_4)
 
+        input_image_lv2_4 = layers.Flatten(name='en_lv2_flatten')(input_image_lv2_4)
+
+        input_image_lv2_5 = self.encoder_lvl2_5(input_image_lv2_4)
+        input_image_lv2_5 = layers.Dropout(rate=dropout_rate)(input_image_lv2_5)
+        input_image_lv2_6 = self.encoder_lvl2_6(input_image_lv2_5)
+
+        # level 3
         input_image_lv3_0 = self.encoder_lvl3_0(input_image_lv3_)
         input_image_lv3_0 = layers.Dropout(rate=dropout_rate)(input_image_lv3_0)
         input_image_lv3_1 = self.encoder_lvl3_1(input_image_lv3_0)
+        input_image_lv3_1 = layers.Dropout(rate=dropout_rate)(input_image_lv3_1)
+        input_image_lv3_2 = self.encoder_lvl3_2(input_image_lv3_1)
+        input_image_lv3_2 = layers.Dropout(rate=dropout_rate)(input_image_lv3_2)
+        input_image_lv3_3 = self.encoder_lvl3_3(input_image_lv3_2)
+        input_image_lv3_3 = layers.Dropout(rate=dropout_rate)(input_image_lv3_3)
+        input_image_lv3_4 = self.encoder_lvl3_4(input_image_lv3_3)
+        input_image_lv3_4 = layers.Dropout(rate=dropout_rate)(input_image_lv3_4)
+
+        input_image_lv3_4 = layers.Flatten(name='en_lv3_flatten')(input_image_lv3_4)
+
+        input_image_lv3_5 = self.encoder_lvl3_5(input_image_lv3_4)
+        input_image_lv3_5 = layers.Dropout(rate=dropout_rate)(input_image_lv3_5)
+        input_image_lv3_6 = self.encoder_lvl3_6(input_image_lv3_5)
 
         # encoder (final)
-        input_image_merged = layers.concatenate([input_image_lv0_1, input_image_lv1_1, input_image_lv2_1, input_image_lv3_1])
+        input_image_merged = layers.concatenate([input_image_lv0_6, input_image_lv1_6, input_image_lv2_6, input_image_lv3_6])
         input_image_final_dense = self.encoder_final_dense(input_image_merged)
 
         # latent space
@@ -135,38 +236,93 @@ class Main_Model:
 
         # decoder (input and flattening)
         de_input_image_lv0 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='de_lv0_input')
-        de_input_image_lv0_ = layers.Flatten(name='de_lv0_flatten')(de_input_image_lv0)
-        
         de_input_image_lv1 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='de_lv1_input')
-        de_input_image_lv1_ = layers.Flatten(name='de_lv1_flatten')(de_input_image_lv1)
-        
         de_input_image_lv2 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='de_lv2_input')
-        de_input_image_lv2_ = layers.Flatten(name='de_lv2_flatten')(de_input_image_lv2)
-        
         de_input_image_lv3 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='de_lv3_input')
-        de_input_image_lv3_ = layers.Flatten(name='de_lv3_flatten')(de_input_image_lv3)
 
+        de_input_image_lv0_ = layers.Reshape((COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 1), name='de_lv0_reshape')(de_input_image_lv0)
+        de_input_image_lv1_ = layers.Reshape((COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 1), name='de_lv1_reshape')(de_input_image_lv1)
+        de_input_image_lv2_ = layers.Reshape((COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 1), name='de_lv2_reshape')(de_input_image_lv2)
+        de_input_image_lv3_ = layers.Reshape((COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 1), name='de_lv3_reshape')(de_input_image_lv3)
+        
         latent_for_decoder = layers.Input(shape=(HIDDEN_DIMS,))
 
-        # decoder (dense layers)
+        # decoder (conv + dense layers)
+
+        # level 0
         de_input_image_lv0_0 = self.decoder_lvl0_0(de_input_image_lv0_)
         de_input_image_lv0_0 = layers.Dropout(rate=dropout_rate)(de_input_image_lv0_0)
         de_input_image_lv0_1 = self.decoder_lvl0_1(de_input_image_lv0_0)
+        de_input_image_lv0_1 = layers.Dropout(rate=dropout_rate)(de_input_image_lv0_1)
+        de_input_image_lv0_2 = self.decoder_lvl0_2(de_input_image_lv0_1)
+        de_input_image_lv0_2 = layers.Dropout(rate=dropout_rate)(de_input_image_lv0_2)
+        de_input_image_lv0_3 = self.decoder_lvl0_3(de_input_image_lv0_2)
+        de_input_image_lv0_3 = layers.Dropout(rate=dropout_rate)(de_input_image_lv0_3)
+        de_input_image_lv0_4 = self.decoder_lvl0_4(de_input_image_lv0_3)
+        de_input_image_lv0_4 = layers.Dropout(rate=dropout_rate)(de_input_image_lv0_4)
 
+        de_input_image_lv0_4 = layers.Flatten(name='de_lv0_flatten')(de_input_image_lv0_4)
+
+        de_input_image_lv0_5 = self.decoder_lvl0_5(de_input_image_lv0_4)
+        de_input_image_lv0_5 = layers.Dropout(rate=dropout_rate)(de_input_image_lv0_5)
+        de_input_image_lv0_6 = self.decoder_lvl0_6(de_input_image_lv0_5)
+
+        # level 1
         de_input_image_lv1_0 = self.decoder_lvl1_0(de_input_image_lv1_)
         de_input_image_lv1_0 = layers.Dropout(rate=dropout_rate)(de_input_image_lv1_0)
         de_input_image_lv1_1 = self.decoder_lvl1_1(de_input_image_lv1_0)
+        de_input_image_lv1_1 = layers.Dropout(rate=dropout_rate)(de_input_image_lv1_1)
+        de_input_image_lv1_2 = self.decoder_lvl1_2(de_input_image_lv1_1)
+        de_input_image_lv1_2 = layers.Dropout(rate=dropout_rate)(de_input_image_lv1_2)
+        de_input_image_lv1_3 = self.decoder_lvl1_3(de_input_image_lv1_2)
+        de_input_image_lv1_3 = layers.Dropout(rate=dropout_rate)(de_input_image_lv1_3)
+        de_input_image_lv1_4 = self.decoder_lvl1_4(de_input_image_lv1_3)
+        de_input_image_lv1_4 = layers.Dropout(rate=dropout_rate)(de_input_image_lv1_4)
 
+        de_input_image_lv1_4 = layers.Flatten(name='de_lv1_flatten')(de_input_image_lv1_4)
+
+        de_input_image_lv1_5 = self.decoder_lvl1_5(de_input_image_lv1_4)
+        de_input_image_lv1_5 = layers.Dropout(rate=dropout_rate)(de_input_image_lv1_5)
+        de_input_image_lv1_6 = self.decoder_lvl1_6(de_input_image_lv1_5)
+
+        # level 2
         de_input_image_lv2_0 = self.decoder_lvl2_0(de_input_image_lv2_)
         de_input_image_lv2_0 = layers.Dropout(rate=dropout_rate)(de_input_image_lv2_0)
         de_input_image_lv2_1 = self.decoder_lvl2_1(de_input_image_lv2_0)
+        de_input_image_lv2_1 = layers.Dropout(rate=dropout_rate)(de_input_image_lv2_1)
+        de_input_image_lv2_2 = self.decoder_lvl2_2(de_input_image_lv2_1)
+        de_input_image_lv2_2 = layers.Dropout(rate=dropout_rate)(de_input_image_lv2_2)
+        de_input_image_lv2_3 = self.decoder_lvl2_3(de_input_image_lv2_2)
+        de_input_image_lv2_3 = layers.Dropout(rate=dropout_rate)(de_input_image_lv2_3)
+        de_input_image_lv2_4 = self.decoder_lvl2_4(de_input_image_lv2_3)
+        de_input_image_lv2_4 = layers.Dropout(rate=dropout_rate)(de_input_image_lv2_4)
 
+        de_input_image_lv2_4 = layers.Flatten(name='de_lv2_flatten')(de_input_image_lv2_4)
+
+        de_input_image_lv2_5 = self.decoder_lvl2_5(de_input_image_lv2_4)
+        de_input_image_lv2_5 = layers.Dropout(rate=dropout_rate)(de_input_image_lv2_5)
+        de_input_image_lv2_6 = self.decoder_lvl2_6(de_input_image_lv2_5)
+
+        # level 3
         de_input_image_lv3_0 = self.decoder_lvl3_0(de_input_image_lv3_)
         de_input_image_lv3_0 = layers.Dropout(rate=dropout_rate)(de_input_image_lv3_0)
         de_input_image_lv3_1 = self.decoder_lvl3_1(de_input_image_lv3_0)
+        de_input_image_lv3_1 = layers.Dropout(rate=dropout_rate)(de_input_image_lv3_1)
+        de_input_image_lv3_2 = self.decoder_lvl3_2(de_input_image_lv3_1)
+        de_input_image_lv3_2 = layers.Dropout(rate=dropout_rate)(de_input_image_lv3_2)
+        de_input_image_lv3_3 = self.decoder_lvl3_3(de_input_image_lv3_2)
+        de_input_image_lv3_3 = layers.Dropout(rate=dropout_rate)(de_input_image_lv3_3)
+        de_input_image_lv3_4 = self.decoder_lvl3_4(de_input_image_lv3_3)
+        de_input_image_lv3_4 = layers.Dropout(rate=dropout_rate)(de_input_image_lv3_4)
+
+        de_input_image_lv3_4 = layers.Flatten(name='de_lv3_flatten')(de_input_image_lv3_4)
+
+        de_input_image_lv3_5 = self.decoder_lvl3_5(de_input_image_lv3_4)
+        de_input_image_lv3_5 = layers.Dropout(rate=dropout_rate)(de_input_image_lv3_5)
+        de_input_image_lv3_6 = self.decoder_lvl3_6(de_input_image_lv3_5)
 
         # decoder (final)
-        de_input_image_merged = layers.concatenate([de_input_image_lv0_1, de_input_image_lv1_1, de_input_image_lv2_1, de_input_image_lv3_1, latent_for_decoder])
+        de_input_image_merged = layers.concatenate([de_input_image_lv0_6, de_input_image_lv1_6, de_input_image_lv2_6, de_input_image_lv3_6, latent_for_decoder])
 
         de_input_image_dense = self.decoder_dense(de_input_image_merged)
         de_input_image_dense = layers.Dropout(rate=dropout_rate)(de_input_image_dense)        
@@ -439,7 +595,7 @@ def train_model(train_input_lv0, train_input_lv1, train_input_lv2, train_input_l
             train_input_lv0_for_model, train_input_lv1_for_model, train_input_lv2_for_model, train_input_lv3_for_model
         ],
         train_all_coords_,
-        epochs=20, # 1 for functionality test, 20 for regular training
+        epochs=3, # 1 for functionality test, 20 for regular training
         batch_size=BATCH_SIZE,
         shuffle=True
     )
@@ -469,7 +625,7 @@ if __name__ == '__main__':
     create_input_convert_test_result_dir()
 
     # 학습 데이터 추출 (이미지의 greyscale 이미지 + 색상, 채도 부분)
-    train_input_lv0, train_input_lv1, train_input_lv2, train_input_lv3, train_x_coord, train_y_coord = create_train_and_valid_data(limit=200) # 50 for functionality test
+    train_input_lv0, train_input_lv1, train_input_lv2, train_input_lv3, train_x_coord, train_y_coord = create_train_and_valid_data(limit=100) # 30 for functionality test
     
     print(f'\nshape of train input lv0: {np.shape(train_input_lv0)}, first image :')
     print(train_input_lv0[0])
