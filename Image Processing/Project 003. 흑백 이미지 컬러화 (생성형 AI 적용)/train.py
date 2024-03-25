@@ -90,7 +90,7 @@ class Main_Model:
 
         # latent vector (200) 과 결합하여 (200 + 128 + 128 + 128 + 128 = 712) 으로 만들기!
         self.decoder_dense = layers.Dense(256, activation='relu', name='de_dense')
-        self.decoder_dense_final = layers.Dense(2, activation='relu', name='de_final')
+        self.decoder_dense_final = layers.Dense(2, activation='tanh', name='de_final')
         
         # encoder (input and flattening)
         input_image_lv0 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='en_lv0_input')
