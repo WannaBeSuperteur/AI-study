@@ -102,6 +102,8 @@ def restore_final_image(hsv_array, img_size):
 
 # 최종 테스트 이미지 생성
 def generate_test_result_image(image, coord_x, coord_y, img_name):
+    print(f'\nimage name : {img_name}')
+    
     print('\n ==== coord_x ====')
     print(coord_x)
 
