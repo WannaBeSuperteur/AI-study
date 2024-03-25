@@ -5,11 +5,12 @@ import os
 import tensorflow as tf
 import math
 
-from test_helper import create_hsv_image
+from test_helper import create_hsv_image, create_lv_1_2_3_images
 
 RESIZE_HEIGHT = 144
 RESIZE_WIDTH = 112
 CROP_HEIGHT = (RESIZE_HEIGHT - RESIZE_WIDTH) // 2
+COLORIZE_MAP_SIZE = RESIZE_WIDTH // 8
 
 HIDDEN_DIMS = 200
 BATCH_SIZE = 32
@@ -123,24 +124,62 @@ def generate_test_result_image(image, coord_x, coord_y, img_name):
 
 # 개별 이미지에 대한 테스트 실시
 def run_test_for_img(path):
+    print(f'run test for image {path} ...')
+    
     image = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
     image = np.reshape(image, (1, RESIZE_WIDTH, RESIZE_WIDTH))
     image = image / 255.0
     
-    image_class = np.zeros((1, NUM_CLASSES))
-    image_class_no = int(path.split('/')[-1].split('_')[1])
-    image_class[0][image_class_no] = 1.0
-
-    for i in range(5):
+    image_resized = cv2.resize(image[0], (COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE))
+    image_resized = np.array([image_resized])
+    
+    for t in range(5):
         latent_space = np.random.normal(0.0, 1.0, size=(1, HIDDEN_DIMS))
+        coord_x_and_y = np.zeros((1, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 2))
 
-        coord_x_and_y = decoder_model([latent_space, image, image_class])
-        coord_x_and_y = np.array(coord_x_and_y)
+        # find x and y coord values for each 8 x 8 area
+        for i in range(COLORIZE_MAP_SIZE):
+            for j in range(COLORIZE_MAP_SIZE):
+
+                # generate lv1 ~ lv3 image
+                lv1_image, lv2_image, lv3_image = create_lv_1_2_3_images(
+                    image_size=RESIZE_WIDTH,
+                    color_map_size=COLORIZE_MAP_SIZE,
+                    greyscale_image=image[0],
+                    i_start=i * 8,
+                    j_start=j * 8
+                )
+
+                # reshape lv1 ~ lv3 image for model
+                lv1_image = np.reshape(lv1_image, (-1, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE))
+                lv2_image = np.reshape(lv2_image, (-1, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE))
+                lv3_image = np.reshape(lv3_image, (-1, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE))
+
+                if t == 0 and i == 0 and j == 0:
+                    print(f'shape of latent space  : {np.shape(latent_space)}')
+                    print(f'shape of image_resized : {np.shape(image_resized)}')
+                    print(f'shape of lv1_image     : {np.shape(lv1_image)}')
+                    print(f'shape of lv2_image     : {np.shape(lv2_image)}')
+                    print(f'shape of lv3_image     : {np.shape(lv3_image)}')
+
+                # decoder output -> x, y coord value
+                coord_x_y = decoder_model([
+                    latent_space, image_resized, lv1_image, lv2_image, lv3_image
+                ])
+
+                if t == 0 and i == 0 and j == 0:
+                    print(coord_x_y)
+                    print(f'shape of coord_x_and_y : {np.shape(coord_x_and_y)}')
+                    print(f'shape of coord_x_y     : {np.shape(coord_x_y)}')
+                
+                coord_x_and_y[0][i][j][0] = coord_x_y[0][0] # x coord value
+                coord_x_and_y[0][i][j][1] = coord_x_y[0][1] # y coord value
+
         coord_x = coord_x_and_y[0, :, :, 0]
         coord_y = coord_x_and_y[0, :, :, 1]
 
         # 최종 테스트 이미지 만들기
-        generate_test_result_image(image, coord_x, coord_y, img_name=f'{path.split("/")[-1]}_{i}')
+        generate_test_result_image(image, coord_x, coord_y, img_name=f'{path.split("/")[-1]}_{t}')
 
 
 # 테스트 실시

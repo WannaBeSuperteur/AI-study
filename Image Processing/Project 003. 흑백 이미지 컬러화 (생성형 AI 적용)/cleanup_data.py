@@ -18,13 +18,14 @@ def save_all_images():
     imgs_dirs = os.listdir(imgs_dir_root)
 
     for class_no, dir_ in enumerate(imgs_dirs):
-        imgs_dir = imgs_dir_root + '/' + dir_
-        imgs = os.listdir(imgs_dir)[:-100]
+        if dir_ == 'tulip':
+            imgs_dir = imgs_dir_root + '/' + dir_
+            imgs = os.listdir(imgs_dir)[:-100]
 
-        for img_name in imgs:
-            image = cv2.imread(imgs_dir + '/' + img_name, cv2.IMREAD_UNCHANGED)
-            image = cv2.resize(image, (RESIZE_DEST, RESIZE_DEST))
-            cv2.imwrite('images/class_' + str(class_no) + '_' + img_name, image)
+            for img_name in imgs:
+                image = cv2.imread(imgs_dir + '/' + img_name, cv2.IMREAD_UNCHANGED)
+                image = cv2.resize(image, (RESIZE_DEST, RESIZE_DEST))
+                cv2.imwrite('images/class_' + str(class_no) + '_' + img_name, image)
 
 
 if __name__ == '__main__':

@@ -15,18 +15,18 @@ Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
       - 873 images
     ...
 
-에서, 각 디렉토리별 마지막 100장 (test 용도로 사용) 을 제외한 모든 이미지를 112 x 112 로 resize 해서,
+에서, ```archive/flowers/tulip``` 디렉토리의 마지막 100장 (test 용도로 사용) 을 제외한 모든 이미지 (948장) 를 112 x 112 로 resize 해서,
 
 Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
 - images
-  - (기존 archive/ImageNet-Mini/images 내부의 모든 폴더에 있는 이미지를 images 폴더에 저장)
+  - (기존 ```archive/flowers/tulip```  디렉토리 내부에 있는 이미지를 images 폴더에 저장)
 
 로 재배치
 ```
 
 * ```augment_data.py``` : Data Augmentation 실시
-  * 필요 파일 : ```images``` 디렉토리 내부의 3,900 여 장의 112 x 112 로 resize 된 이미지 파일
-  * 실행 결과 : 1장의 이미지에 대해 crop 된 이미지 4장이 추가되어 총 19,600 여 장의 이미지 데이터 확보
+  * 필요 파일 : ```images``` 디렉토리 내부의 112 x 112 로 resize 된 이미지 파일
+  * 실행 결과 : 1장의 이미지에 대해 crop 된 이미지 4장이 추가되어 기존 데이터 개수 대비 전체 5배의 이미지 데이터 확보
   * **Flowers 데이터셋은 데이터가 충분히 많기 때문에 실행하지 않음**
 * ```train.py``` : 학습 과정 전체 진행
   * 출력 모델 : ```main_vae```, ```main_vae_encoder```, ```main_vae_decoder```
