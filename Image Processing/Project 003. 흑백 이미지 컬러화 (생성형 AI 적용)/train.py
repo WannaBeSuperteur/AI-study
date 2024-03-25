@@ -54,42 +54,42 @@ class Main_Model:
 
         # encoder 용 레이어
         # level 0 : 이미지 전체
-        self.encoder_lvl0_0 = layers.Dense(192, activation='relu', name='en_lv0_0')
-        self.encoder_lvl0_1 = layers.Dense(128, activation='relu', name='en_lv0_1')
+        self.encoder_lvl0_0 = layers.Dense(64, activation='relu', name='en_lv0_0')
+        self.encoder_lvl0_1 = layers.Dense(32, activation='relu', name='en_lv0_1')
         
         # level 1 : 주변 56 x 56 영역 (상하좌우 +24 pixels)
-        self.encoder_lvl1_0 = layers.Dense(192, activation='relu', name='en_lv1_0')
-        self.encoder_lvl1_1 = layers.Dense(128, activation='relu', name='en_lv1_1')
+        self.encoder_lvl1_0 = layers.Dense(64, activation='relu', name='en_lv1_0')
+        self.encoder_lvl1_1 = layers.Dense(32, activation='relu', name='en_lv1_1')
 
         # level 2 : 주변 28 x 28 영역 (상하좌우 +10 pixels)
-        self.encoder_lvl2_0 = layers.Dense(192, activation='relu', name='en_lv2_0')
-        self.encoder_lvl2_1 = layers.Dense(128, activation='relu', name='en_lv2_1')
+        self.encoder_lvl2_0 = layers.Dense(64, activation='relu', name='en_lv2_0')
+        self.encoder_lvl2_1 = layers.Dense(32, activation='relu', name='en_lv2_1')
 
         # level 3 : 주변 14 x 14 영역 (상하좌우 +3 pixels)
-        self.encoder_lvl3_0 = layers.Dense(192, activation='relu', name='en_lv3_0')
-        self.encoder_lvl3_1 = layers.Dense(128, activation='relu', name='en_lv3_1')
+        self.encoder_lvl3_0 = layers.Dense(64, activation='relu', name='en_lv3_0')
+        self.encoder_lvl3_1 = layers.Dense(32, activation='relu', name='en_lv3_1')
         
-        self.encoder_final_dense = layers.Dense(256, activation='relu', name='en_final')
+        self.encoder_final_dense = layers.Dense(64, activation='relu', name='en_final')
 
         # decoder 용 레이어
         # level 0 : 이미지 전체
-        self.decoder_lvl0_0 = layers.Dense(192, activation='relu', name='de_lv0_0')
-        self.decoder_lvl0_1 = layers.Dense(128, activation='relu', name='de_lv0_1')
+        self.decoder_lvl0_0 = layers.Dense(64, activation='relu', name='de_lv0_0')
+        self.decoder_lvl0_1 = layers.Dense(32, activation='relu', name='de_lv0_1')
         
         # level 1 : 주변 56 x 56 영역 (상하좌우 +24 pixels)
-        self.decoder_lvl1_0 = layers.Dense(192, activation='relu', name='de_lv1_0')
-        self.decoder_lvl1_1 = layers.Dense(128, activation='relu', name='de_lv1_1')
+        self.decoder_lvl1_0 = layers.Dense(64, activation='relu', name='de_lv1_0')
+        self.decoder_lvl1_1 = layers.Dense(32, activation='relu', name='de_lv1_1')
 
         # level 2 : 주변 28 x 28 영역 (상하좌우 +10 pixels)
-        self.decoder_lvl2_0 = layers.Dense(192, activation='relu', name='de_lv2_0')
-        self.decoder_lvl2_1 = layers.Dense(128, activation='relu', name='de_lv2_1')
+        self.decoder_lvl2_0 = layers.Dense(64, activation='relu', name='de_lv2_0')
+        self.decoder_lvl2_1 = layers.Dense(32, activation='relu', name='de_lv2_1')
 
         # level 3 : 주변 14 x 14 영역 (상하좌우 +3 pixels)
-        self.decoder_lvl3_0 = layers.Dense(192, activation='relu', name='de_lv3_0')
-        self.decoder_lvl3_1 = layers.Dense(128, activation='relu', name='de_lv3_1')
+        self.decoder_lvl3_0 = layers.Dense(64, activation='relu', name='de_lv3_0')
+        self.decoder_lvl3_1 = layers.Dense(32, activation='relu', name='de_lv3_1')
 
-        # latent vector (200) 과 결합하여 (200 + 128 + 128 + 128 + 128 = 712) 으로 만들기!
-        self.decoder_dense = layers.Dense(256, activation='relu', name='de_dense')
+        # latent vector (200) 과 결합하여 (200 + 32 + 32 + 32 + 32 = 328) 으로 만들기!
+        self.decoder_dense = layers.Dense(96, activation='relu', name='de_dense')
         self.decoder_dense_final = layers.Dense(2, activation='tanh', name='de_final')
         
         # encoder (input and flattening)
@@ -437,7 +437,7 @@ def train_model(train_input_lv0, train_input_lv1, train_input_lv2, train_input_l
             train_input_lv0_for_model, train_input_lv1_for_model, train_input_lv2_for_model, train_input_lv3_for_model
         ],
         train_all_coords_,
-        epochs=1, # 1 for functionality test, 10 for regular training
+        epochs=5, # 1 for functionality test, 10 for regular training
         batch_size=BATCH_SIZE,
         shuffle=True
     )
