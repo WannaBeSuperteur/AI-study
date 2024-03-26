@@ -60,7 +60,7 @@ def restore_final_image(hsv_array, img_size):
 
             rgb_max = brightness + saturation / 2.0
             rgb_min = brightness - saturation / 2.0
-            rgb_mid_ratio = abs((hue % 120.0) - 60.0) / 60.0
+            rgb_mid_ratio = 1.0 - abs((hue % 120.0) - 60.0) / 60.0
             rgb_mid = rgb_min + (rgb_max - rgb_min) * rgb_mid_ratio
 
             if hue < 60:
@@ -102,7 +102,7 @@ def restore_final_image(hsv_array, img_size):
 
 # add gaussian blur
 def add_gaussian_blur(image_2d):
-    return cv2.GaussianBlur(image_2d, ksize=(0, 0), sigmaX=3, sigmaY=3)
+    return cv2.GaussianBlur(image_2d, ksize=(0, 0), sigmaX=2, sigmaY=2)
 
 
 # 최종 테스트 이미지 생성
