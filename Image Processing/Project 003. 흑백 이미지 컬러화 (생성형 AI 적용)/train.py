@@ -145,6 +145,7 @@ class Main_Model:
         input_image_lv1 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='en_lv1_input')
         input_image_lv2 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='en_lv2_input')
         input_image_lv3 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='en_lv3_input')
+        input_image_position = layers.Input(batch_shape=(BATCH_SIZE, 2), name='en_position')
 
         input_image_lv0_ = layers.Reshape((COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 1), name='en_lv0_reshape')(input_image_lv0)
         input_image_lv1_ = layers.Reshape((COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 1), name='en_lv1_reshape')(input_image_lv1)
@@ -226,7 +227,7 @@ class Main_Model:
         input_image_lv3_6 = self.encoder_lvl3_6(input_image_lv3_5)
 
         # encoder (final)
-        input_image_merged = layers.concatenate([input_image_lv0_6, input_image_lv1_6, input_image_lv2_6, input_image_lv3_6])
+        input_image_merged = layers.concatenate([input_image_lv0_6, input_image_lv1_6, input_image_lv2_6, input_image_lv3_6, input_image_position])
         input_image_final_dense = self.encoder_final_dense(input_image_merged)
 
         # latent space
@@ -239,6 +240,7 @@ class Main_Model:
         de_input_image_lv1 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='de_lv1_input')
         de_input_image_lv2 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='de_lv2_input')
         de_input_image_lv3 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='de_lv3_input')
+        de_input_image_position = layers.Input(batch_shape=(BATCH_SIZE, 2), name='de_position')
 
         de_input_image_lv0_ = layers.Reshape((COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 1), name='de_lv0_reshape')(de_input_image_lv0)
         de_input_image_lv1_ = layers.Reshape((COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 1), name='de_lv1_reshape')(de_input_image_lv1)
@@ -322,27 +324,27 @@ class Main_Model:
         de_input_image_lv3_6 = self.decoder_lvl3_6(de_input_image_lv3_5)
 
         # decoder (final)
-        de_input_image_merged = layers.concatenate([de_input_image_lv0_6, de_input_image_lv1_6, de_input_image_lv2_6, de_input_image_lv3_6, latent_for_decoder])
+        de_input_image_merged = layers.concatenate([de_input_image_lv0_6, de_input_image_lv1_6, de_input_image_lv2_6, de_input_image_lv3_6, latent_for_decoder, de_input_image_position])
 
         de_input_image_dense = self.decoder_dense(de_input_image_merged)
         de_input_image_dense = layers.Dropout(rate=dropout_rate)(de_input_image_dense)        
         de_input_image_final_dense = self.decoder_dense_final(de_input_image_dense)
 
         # define encoder, decoder and cvae model
-        self.encoder = tf.keras.Model([input_image_lv0, input_image_lv1, input_image_lv2, input_image_lv3], self.latent_space, name='encoder')
-        self.decoder = tf.keras.Model([latent_for_decoder, de_input_image_lv0, de_input_image_lv1, de_input_image_lv2, de_input_image_lv3],
+        self.encoder = tf.keras.Model([input_image_lv0, input_image_lv1, input_image_lv2, input_image_lv3, input_image_position], self.latent_space, name='encoder')
+        self.decoder = tf.keras.Model([latent_for_decoder, de_input_image_lv0, de_input_image_lv1, de_input_image_lv2, de_input_image_lv3, de_input_image_position],
                                       de_input_image_final_dense, name='decoder')
 
         self.vae = tf.keras.Model(
             inputs=[
-                input_image_lv0, input_image_lv1, input_image_lv2, input_image_lv3,
-                de_input_image_lv0, de_input_image_lv1, de_input_image_lv2, de_input_image_lv3
+                input_image_lv0, input_image_lv1, input_image_lv2, input_image_lv3, input_image_position,
+                de_input_image_lv0, de_input_image_lv1, de_input_image_lv2, de_input_image_lv3, de_input_image_position
             ],
             outputs=self.decoder([
                 self.encoder([
-                    input_image_lv0, input_image_lv1, input_image_lv2, input_image_lv3
+                    input_image_lv0, input_image_lv1, input_image_lv2, input_image_lv3, input_image_position
                 ]),
-                de_input_image_lv0, de_input_image_lv1, de_input_image_lv2, de_input_image_lv3
+                de_input_image_lv0, de_input_image_lv1, de_input_image_lv2, de_input_image_lv3, de_input_image_position
             ]),
             name='final_vae'
         )
@@ -402,11 +404,14 @@ def create_train_and_valid_data(limit=None):
 
     current_count = 0
 
+    # model inputs
     train_input_lv0 = [] # resize 112 x 112 entire image -> 14 x 14
     train_input_lv1 = [] # resize 56 x 56 area -> 14 x 14
     train_input_lv2 = [] # resize 28 x 28 area -> 14 x 14
     train_input_lv3 = [] # 14 x 14 area
-    
+    train_position = [] # position (y, x) of "8 x 8 pixel box", 0 <= x < 14, 0 <= y < 14
+
+    # model outputs
     train_x_coord = []
     train_y_coord = []
     
@@ -497,6 +502,8 @@ def create_train_and_valid_data(limit=None):
                         print('\nx, y coord (of first image) :')
                         print(coord_x[i][j], coord_y[i][j])
 
+                    train_position.append([i / (COLORIZE_MAP_SIZE - 1), j / (COLORIZE_MAP_SIZE - 1)])
+
             # test 이미지에 대한 결과 이미지 생성 테스트
             if current_count < 30:
                 hsv_array = create_hsv_image(
@@ -517,14 +524,18 @@ def create_train_and_valid_data(limit=None):
 
     final_img_count = len(train_input_lv0) // BATCH_SIZE * BATCH_SIZE
 
+    # model inputs
     train_input_lv0 = np.array(train_input_lv0)[:final_img_count]
     train_input_lv1 = np.array(train_input_lv1)[:final_img_count]
     train_input_lv2 = np.array(train_input_lv2)[:final_img_count]
     train_input_lv3 = np.array(train_input_lv3)[:final_img_count]
+    train_position = np.array(train_position)[:final_img_count]
+
+    # model outputs
     train_x_coord = np.array(train_x_coord)[:final_img_count]
     train_y_coord = np.array(train_y_coord)[:final_img_count]
     
-    return train_input_lv0, train_input_lv1, train_input_lv2, train_input_lv3, train_x_coord, train_y_coord
+    return train_input_lv0, train_input_lv1, train_input_lv2, train_input_lv3, train_position, train_x_coord, train_y_coord
 
 
 # 모델 정의 및 반환
@@ -560,7 +571,7 @@ def show_model_summary(model_class):
 # 모델 학습 실시 및 저장
 # train_input_lv0, 1, 2, 3     : 입력 greyscale 이미지
 # train_x_coord, train_y_coord : readme.md 에서 설명한, 색상과 채도를 나타내기 위한 (x, y) 좌표 값
-def train_model(train_input_lv0, train_input_lv1, train_input_lv2, train_input_lv3, train_x_coord, train_y_coord):
+def train_model(train_input_lv0, train_input_lv1, train_input_lv2, train_input_lv3, train_position, train_x_coord, train_y_coord):
 
     # normalize image
     train_input_lv0_for_model = train_input_lv0 / 255.0
@@ -581,6 +592,7 @@ def train_model(train_input_lv0, train_input_lv1, train_input_lv2, train_input_l
     print('input lv 1 shape :', np.shape(train_input_lv1_for_model))
     print('input lv 2 shape :', np.shape(train_input_lv2_for_model))
     print('input lv 3 shape :', np.shape(train_input_lv3_for_model))
+    print('input pos  shape :', np.shape(train_position))
     
     print('x   coords shape :', np.shape(train_x_coord))
     print('y   coords shape :', np.shape(train_y_coord))
@@ -591,8 +603,8 @@ def train_model(train_input_lv0, train_input_lv1, train_input_lv2, train_input_l
     # 학습 실시
     model_class.vae.fit(
         [
-            train_input_lv0_for_model, train_input_lv1_for_model, train_input_lv2_for_model, train_input_lv3_for_model,
-            train_input_lv0_for_model, train_input_lv1_for_model, train_input_lv2_for_model, train_input_lv3_for_model
+            train_input_lv0_for_model, train_input_lv1_for_model, train_input_lv2_for_model, train_input_lv3_for_model, train_position,
+            train_input_lv0_for_model, train_input_lv1_for_model, train_input_lv2_for_model, train_input_lv3_for_model, train_position
         ],
         train_all_coords_,
         epochs=3, # 1 for functionality test, 20 for regular training
@@ -625,7 +637,7 @@ if __name__ == '__main__':
     create_input_convert_test_result_dir()
 
     # 학습 데이터 추출 (이미지의 greyscale 이미지 + 색상, 채도 부분)
-    train_input_lv0, train_input_lv1, train_input_lv2, train_input_lv3, train_x_coord, train_y_coord = create_train_and_valid_data(limit=50) # 30 for functionality test
+    train_input_lv0, train_input_lv1, train_input_lv2, train_input_lv3, train_position, train_x_coord, train_y_coord = create_train_and_valid_data(limit=50) # 30 for functionality test
     
     print(f'\nshape of train input lv0: {np.shape(train_input_lv0)}, first image :')
     print(train_input_lv0[0])
@@ -639,8 +651,11 @@ if __name__ == '__main__':
     print(f'\nshape of train input lv3: {np.shape(train_input_lv3)}, first image :')
     print(train_input_lv3[0])
 
+    print(f'\nshape of train position: {np.shape(train_position)}, first image :')
+    print(train_position[:100])
+
     # 학습 실시 및 모델 저장
     vae_encoder, vae_decoder, vae_model = train_model(
-        train_input_lv0, train_input_lv1, train_input_lv2, train_input_lv3,
+        train_input_lv0, train_input_lv1, train_input_lv2, train_input_lv3, train_position,
         train_x_coord, train_y_coord
     )

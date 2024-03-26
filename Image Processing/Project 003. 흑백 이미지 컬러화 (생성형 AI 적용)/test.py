@@ -169,16 +169,19 @@ def run_test_for_img(path):
                 lv2_image = np.reshape(lv2_image, (-1, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE))
                 lv3_image = np.reshape(lv3_image, (-1, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE))
 
+                position = np.array([[i / (COLORIZE_MAP_SIZE - 1), j / (COLORIZE_MAP_SIZE - 1)]])
+
                 if t == 0 and i == 0 and j == 0:
                     print(f'shape of latent space  : {np.shape(latent_space)}')
                     print(f'shape of image_resized : {np.shape(image_resized)}')
                     print(f'shape of lv1_image     : {np.shape(lv1_image)}')
                     print(f'shape of lv2_image     : {np.shape(lv2_image)}')
                     print(f'shape of lv3_image     : {np.shape(lv3_image)}')
+                    print(f'shape of position      : {np.shape(position)}')
 
                 # decoder output -> x, y coord value
                 coord_x_y = decoder_model([
-                    latent_space, image_resized, lv1_image, lv2_image, lv3_image
+                    latent_space, image_resized, lv1_image, lv2_image, lv3_image, position
                 ])
 
                 if t == 0 and i == 0 and j == 0:
