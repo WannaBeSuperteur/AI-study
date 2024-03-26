@@ -8,21 +8,16 @@
 ```
 Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
 - archive
-  - Landscape Classification
-    - Landscape Classification
-      - Testing Data
-      - TFrecords
-      - Training Data
-        - Coast
-        - Desert
-        - ...
+  - flowers
+    - astilbe
+    - bellflower
     ...
 
-에서, ```archive/Landscape Classification/Landscape Classification/Training Data/Desert``` 디렉토리의 마지막 100장 (test 용도로 사용) 을 제외한 모든 이미지 (854장) 를 112 x 112 로 resize 해서,
+에서, ```archive/flowers/rose``` 디렉토리의 마지막 100장 (test 용도로 사용) 을 제외한 모든 이미지 (899장) 를 112 x 112 로 resize 해서,
 
 Project 003. 흑백 이미지 컬러화 (생성형 AI 적용)
 - images
-  - (기존 ```archive/flowers/iris``` 디렉토리 내부에 있는 이미지를 images 폴더에 저장)
+  - (기존 ```archive/flowers/rose``` 디렉토리 내부에 있는 이미지를 images 폴더에 저장)
 
 로 재배치
 ```
