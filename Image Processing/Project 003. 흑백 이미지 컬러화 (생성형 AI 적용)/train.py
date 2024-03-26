@@ -57,40 +57,40 @@ class Main_Model:
         self.encoder_lvl0_0 = layers.Conv2D(16, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv0_0')
         self.encoder_lvl0_1 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv0_1')
         self.encoder_lvl0_2 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv0_2')
-        self.encoder_lvl0_3 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv0_3')
-        self.encoder_lvl0_4 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv0_4')
+        self.encoder_lvl0_3 = layers.Conv2D(48, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv0_3')
+        self.encoder_lvl0_4 = layers.Conv2D(48, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv0_4')
 
-        self.encoder_lvl0_5 = layers.Dense(128, activation='relu', name='en_lv0_5')
+        self.encoder_lvl0_5 = layers.Dense(96, activation='relu', name='en_lv0_5')
         self.encoder_lvl0_6 = layers.Dense(32, activation='relu', name='en_lv0_6')
         
         # level 1 : 주변 56 x 56 영역 (상하좌우 +24 pixels)
         self.encoder_lvl1_0 = layers.Conv2D(16, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv1_0')
         self.encoder_lvl1_1 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv1_1')
         self.encoder_lvl1_2 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv1_2')
-        self.encoder_lvl1_3 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv1_3')
-        self.encoder_lvl1_4 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv1_4')
+        self.encoder_lvl1_3 = layers.Conv2D(48, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv1_3')
+        self.encoder_lvl1_4 = layers.Conv2D(48, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv1_4')
 
-        self.encoder_lvl1_5 = layers.Dense(128, activation='relu', name='en_lv1_5')
+        self.encoder_lvl1_5 = layers.Dense(96, activation='relu', name='en_lv1_5')
         self.encoder_lvl1_6 = layers.Dense(32, activation='relu', name='en_lv1_6')
 
         # level 2 : 주변 28 x 28 영역 (상하좌우 +10 pixels)
         self.encoder_lvl2_0 = layers.Conv2D(16, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv2_0')
         self.encoder_lvl2_1 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv2_1')
         self.encoder_lvl2_2 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv2_2')
-        self.encoder_lvl2_3 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv2_3')
-        self.encoder_lvl2_4 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv2_4')
+        self.encoder_lvl2_3 = layers.Conv2D(48, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv2_3')
+        self.encoder_lvl2_4 = layers.Conv2D(48, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv2_4')
 
-        self.encoder_lvl2_5 = layers.Dense(128, activation='relu', name='en_lv2_5')
+        self.encoder_lvl2_5 = layers.Dense(96, activation='relu', name='en_lv2_5')
         self.encoder_lvl2_6 = layers.Dense(32, activation='relu', name='en_lv2_6')
 
         # level 3 : 주변 14 x 14 영역 (상하좌우 +3 pixels)
         self.encoder_lvl3_0 = layers.Conv2D(16, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv3_0')
         self.encoder_lvl3_1 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv3_1')
         self.encoder_lvl3_2 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv3_2')
-        self.encoder_lvl3_3 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv3_3')
-        self.encoder_lvl3_4 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv3_4')
+        self.encoder_lvl3_3 = layers.Conv2D(48, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv3_3')
+        self.encoder_lvl3_4 = layers.Conv2D(48, (3, 3), activation='relu', kernel_regularizer=L2, name='en_lv3_4')
 
-        self.encoder_lvl3_5 = layers.Dense(128, activation='relu', name='en_lv3_5')
+        self.encoder_lvl3_5 = layers.Dense(96, activation='relu', name='en_lv3_5')
         self.encoder_lvl3_6 = layers.Dense(32, activation='relu', name='en_lv3_6')
         
         self.encoder_final_dense = layers.Dense(64, activation='relu', name='en_final')
@@ -100,40 +100,40 @@ class Main_Model:
         self.decoder_lvl0_0 = layers.Conv2D(16, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv0_0')
         self.decoder_lvl0_1 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv0_1')
         self.decoder_lvl0_2 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv0_2')
-        self.decoder_lvl0_3 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv0_3')
-        self.decoder_lvl0_4 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv0_4')
+        self.decoder_lvl0_3 = layers.Conv2D(48, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv0_3')
+        self.decoder_lvl0_4 = layers.Conv2D(48, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv0_4')
 
-        self.decoder_lvl0_5 = layers.Dense(128, activation='relu', name='de_lv0_5')
+        self.decoder_lvl0_5 = layers.Dense(96, activation='relu', name='de_lv0_5')
         self.decoder_lvl0_6 = layers.Dense(32, activation='relu', name='de_lv0_6')
         
         # level 1 : 주변 56 x 56 영역 (상하좌우 +24 pixels)
         self.decoder_lvl1_0 = layers.Conv2D(16, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv1_0')
         self.decoder_lvl1_1 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv1_1')
         self.decoder_lvl1_2 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv1_2')
-        self.decoder_lvl1_3 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv1_3')
-        self.decoder_lvl1_4 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv1_4')
+        self.decoder_lvl1_3 = layers.Conv2D(48, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv1_3')
+        self.decoder_lvl1_4 = layers.Conv2D(48, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv1_4')
 
-        self.decoder_lvl1_5 = layers.Dense(128, activation='relu', name='de_lv1_5')
+        self.decoder_lvl1_5 = layers.Dense(96, activation='relu', name='de_lv1_5')
         self.decoder_lvl1_6 = layers.Dense(32, activation='relu', name='de_lv1_6')
 
         # level 2 : 주변 28 x 28 영역 (상하좌우 +10 pixels)
         self.decoder_lvl2_0 = layers.Conv2D(16, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv2_0')
         self.decoder_lvl2_1 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv2_1')
         self.decoder_lvl2_2 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv2_2')
-        self.decoder_lvl2_3 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv2_3')
-        self.decoder_lvl2_4 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv2_4')
+        self.decoder_lvl2_3 = layers.Conv2D(48, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv2_3')
+        self.decoder_lvl2_4 = layers.Conv2D(48, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv2_4')
 
-        self.decoder_lvl2_5 = layers.Dense(128, activation='relu', name='de_lv2_5')
+        self.decoder_lvl2_5 = layers.Dense(96, activation='relu', name='de_lv2_5')
         self.decoder_lvl2_6 = layers.Dense(32, activation='relu', name='de_lv2_6')
 
         # level 3 : 주변 14 x 14 영역 (상하좌우 +3 pixels)
         self.decoder_lvl3_0 = layers.Conv2D(16, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv3_0')
         self.decoder_lvl3_1 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv3_1')
         self.decoder_lvl3_2 = layers.Conv2D(32, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv3_2')
-        self.decoder_lvl3_3 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv3_3')
-        self.decoder_lvl3_4 = layers.Conv2D(64, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv3_4')
+        self.decoder_lvl3_3 = layers.Conv2D(48, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv3_3')
+        self.decoder_lvl3_4 = layers.Conv2D(48, (3, 3), activation='relu', kernel_regularizer=L2, name='de_lv3_4')
 
-        self.decoder_lvl3_5 = layers.Dense(128, activation='relu', name='de_lv3_5')
+        self.decoder_lvl3_5 = layers.Dense(96, activation='relu', name='de_lv3_5')
         self.decoder_lvl3_6 = layers.Dense(32, activation='relu', name='de_lv3_6')
 
         # latent vector (120) 과 결합하여 (120 + 32 + 32 + 32 + 32 = 248) 으로 만들기!
@@ -595,7 +595,7 @@ def train_model(train_input_lv0, train_input_lv1, train_input_lv2, train_input_l
             train_input_lv0_for_model, train_input_lv1_for_model, train_input_lv2_for_model, train_input_lv3_for_model
         ],
         train_all_coords_,
-        epochs=3, # 1 for functionality test, 20 for regular training
+        epochs=12, # 1 for functionality test, 20 for regular training
         batch_size=BATCH_SIZE,
         shuffle=True
     )
@@ -625,7 +625,7 @@ if __name__ == '__main__':
     create_input_convert_test_result_dir()
 
     # 학습 데이터 추출 (이미지의 greyscale 이미지 + 색상, 채도 부분)
-    train_input_lv0, train_input_lv1, train_input_lv2, train_input_lv3, train_x_coord, train_y_coord = create_train_and_valid_data(limit=100) # 30 for functionality test
+    train_input_lv0, train_input_lv1, train_input_lv2, train_input_lv3, train_x_coord, train_y_coord = create_train_and_valid_data(limit=None) # 30 for functionality test
     
     print(f'\nshape of train input lv0: {np.shape(train_input_lv0)}, first image :')
     print(train_input_lv0[0])

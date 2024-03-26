@@ -100,6 +100,11 @@ def restore_final_image(hsv_array, img_size):
     return final_image
 
 
+# add gaussian blur
+def add_gaussian_blur(image_2d):
+    return cv2.GaussianBlur(image_2d, ksize=(0, 0), sigmaX=3, sigmaY=3)
+
+
 # 최종 테스트 이미지 생성
 def generate_test_result_image(image, coord_x, coord_y, img_name):
     print(f'\nimage name : {img_name}')
@@ -113,6 +118,13 @@ def generate_test_result_image(image, coord_x, coord_y, img_name):
     hsv_array = create_hsv_image(image, coord_x, coord_y, img_size=RESIZE_WIDTH)
 
     print('\n ==== HSV ====')
+    print(hsv_array)
+
+    # add gaussian blur
+    hsv_array[:, :, 0] = add_gaussian_blur(hsv_array[:, :, 0]) # hue
+    hsv_array[:, :, 1] = add_gaussian_blur(hsv_array[:, :, 1]) # saturation
+
+    print('\n ==== HSV with Gaussian blur ====')
     print(hsv_array)
     
 #    final_image = cv2.cvtColor(hsv_array, cv2.COLOR_HSV2BGR)
