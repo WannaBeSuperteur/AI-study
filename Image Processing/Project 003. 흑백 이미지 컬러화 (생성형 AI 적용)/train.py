@@ -41,9 +41,13 @@ class Main_Model:
         x_reshaped = K.reshape(x, shape=(BATCH_SIZE, 2))
         y_reshaped = K.reshape(y, shape=(BATCH_SIZE, 2))
         mse_loss = mean_squared_error(x_reshaped, y_reshaped)
+
+        saturation_a = K.square(x_reshaped[:, 0]) + K.square(x_reshaped[:, 1])
+        saturation_b = K.square(y_reshaped[:, 0]) + K.square(y_reshaped[:, 1])
+        saturation_loss = K.square(saturation_a - saturation_b)
         
         kl_loss = -0.5 * K.sum(1 + self.latent_log_var - K.square(self.latent_mean) - K.exp(self.latent_log_var), axis=-1)
-        return MSE_LOSS_WEIGHT_CONSTANT * mse_loss + kl_loss
+        return MSE_LOSS_WEIGHT_CONSTANT * mse_loss + kl_loss + saturation_loss
 
 
     def __init__(self, dropout_rate=0.45):
