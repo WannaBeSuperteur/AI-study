@@ -105,6 +105,38 @@ def add_gaussian_blur(image_2d):
     return cv2.GaussianBlur(image_2d, ksize=(0, 0), sigmaX=2, sigmaY=2)
 
 
+# add gaussian blur to final image
+def add_gaussian_blur_to_final_image(final_image, img_name):
+    blurred_final_image = np.array(final_image)
+    brightness_of_pixels = np.zeros((RESIZE_WIDTH, RESIZE_WIDTH))
+
+    # 이미지의 모든 픽셀의 brightness를 같게
+    for i in range(RESIZE_WIDTH):
+        for j in range(RESIZE_WIDTH):
+            colors = blurred_final_image[i][j]
+            
+            max_color = max(colors)
+            min_color = min(colors)
+            brightness = (max_color + min_color) / 2.0
+            brightness_of_pixels[i][j] = brightness
+
+            for k in range(3):
+                blurred_final_image[i][j][k] = blurred_final_image[i][j][k] - brightness + 127.0
+
+    # blur 적용
+    blurred_final_image = cv2.GaussianBlur(blurred_final_image, ksize=(0, 0), sigmaX=2, sigmaY=2)
+
+    # brightness 복구
+    for i in range(RESIZE_WIDTH):
+        for j in range(RESIZE_WIDTH):
+            brightness = brightness_of_pixels[i][j]
+            
+            for k in range(3):
+                blurred_final_image[i][j][k] = blurred_final_image[i][j][k] + brightness - 127.0
+
+    return blurred_final_image
+
+
 # 최종 테스트 이미지 생성
 def generate_test_result_image(image, coord_x, coord_y, img_name):
     print(f'\nimage name : {img_name}')
@@ -119,18 +151,17 @@ def generate_test_result_image(image, coord_x, coord_y, img_name):
 
     print('\n ==== HSV ====')
     print(hsv_array)
-
-    # add gaussian blur
-    hsv_array[:, :, 0] = add_gaussian_blur(hsv_array[:, :, 0]) # hue
-    hsv_array[:, :, 1] = add_gaussian_blur(hsv_array[:, :, 1]) # saturation
-
-    print('\n ==== HSV with Gaussian blur ====')
-    print(hsv_array)
     
 #    final_image = cv2.cvtColor(hsv_array, cv2.COLOR_HSV2BGR)
     final_image = restore_final_image(hsv_array, img_size=RESIZE_WIDTH)
 
     print('\n ==== final image ====')
+    print(final_image)
+
+    # add gaussian blur to final image
+    final_image = add_gaussian_blur_to_final_image(final_image, img_name)
+
+    print('\n ==== final image with Gaussian blur ====')
     print(final_image)
     
     cv2.imwrite(f'test_output/{img_name}.png', final_image)
