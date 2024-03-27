@@ -20,7 +20,7 @@ TOTAL_PIXELS = INPUT_IMG_SIZE * INPUT_IMG_SIZE
 
 HIDDEN_DIMS = 120
 BATCH_SIZE = 32
-MSE_LOSS_WEIGHT_CONSTANT = 4.0
+MSE_LOSS_WEIGHT_CONSTANT = 2.5
 
 NUM_CLASSES = 16
 
@@ -173,7 +173,10 @@ class Main_Model:
 
         input_image_lv0_4 = layers.Flatten(name='en_lv0_flatten')(input_image_lv0_4)
 
-        input_image_lv0_5 = self.encoder_lvl0_5(input_image_lv0_4)
+        input_image_lv0_0_flatten = layers.Flatten(name='en_lv0_input_flatten')(input_image_lv0_)
+        input_image_lv0_4_ = layers.concatenate([input_image_lv0_4, input_image_lv0_0_flatten])
+        input_image_lv0_5 = self.encoder_lvl0_5(input_image_lv0_4_)
+        
         input_image_lv0_5 = layers.Dropout(rate=dropout_rate)(input_image_lv0_5)
         input_image_lv0_6 = self.encoder_lvl0_6(input_image_lv0_5)
 
@@ -191,7 +194,10 @@ class Main_Model:
 
         input_image_lv1_4 = layers.Flatten(name='en_lv1_flatten')(input_image_lv1_4)
 
-        input_image_lv1_5 = self.encoder_lvl1_5(input_image_lv1_4)
+        input_image_lv1_0_flatten = layers.Flatten(name='en_lv1_input_flatten')(input_image_lv1_)
+        input_image_lv1_4_ = layers.concatenate([input_image_lv1_4, input_image_lv1_0_flatten])
+        input_image_lv1_5 = self.encoder_lvl1_5(input_image_lv1_4_)
+        
         input_image_lv1_5 = layers.Dropout(rate=dropout_rate)(input_image_lv1_5)
         input_image_lv1_6 = self.encoder_lvl1_6(input_image_lv1_5)
 
@@ -209,7 +215,10 @@ class Main_Model:
 
         input_image_lv2_4 = layers.Flatten(name='en_lv2_flatten')(input_image_lv2_4)
 
-        input_image_lv2_5 = self.encoder_lvl2_5(input_image_lv2_4)
+        input_image_lv2_0_flatten = layers.Flatten(name='en_lv2_input_flatten')(input_image_lv2_)
+        input_image_lv2_4_ = layers.concatenate([input_image_lv2_4, input_image_lv2_0_flatten])
+        input_image_lv2_5 = self.encoder_lvl2_5(input_image_lv2_4_)
+        
         input_image_lv2_5 = layers.Dropout(rate=dropout_rate)(input_image_lv2_5)
         input_image_lv2_6 = self.encoder_lvl2_6(input_image_lv2_5)
 
@@ -227,7 +236,10 @@ class Main_Model:
 
         input_image_lv3_4 = layers.Flatten(name='en_lv3_flatten')(input_image_lv3_4)
 
-        input_image_lv3_5 = self.encoder_lvl3_5(input_image_lv3_4)
+        input_image_lv3_0_flatten = layers.Flatten(name='en_lv3_input_flatten')(input_image_lv3_)
+        input_image_lv3_4_ = layers.concatenate([input_image_lv3_4, input_image_lv3_0_flatten])
+        input_image_lv3_5 = self.encoder_lvl3_5(input_image_lv3_4_)
+
         input_image_lv3_5 = layers.Dropout(rate=dropout_rate)(input_image_lv3_5)
         input_image_lv3_6 = self.encoder_lvl3_6(input_image_lv3_5)
 
@@ -270,7 +282,10 @@ class Main_Model:
 
         de_input_image_lv0_4 = layers.Flatten(name='de_lv0_flatten')(de_input_image_lv0_4)
 
-        de_input_image_lv0_5 = self.decoder_lvl0_5(de_input_image_lv0_4)
+        de_input_image_lv0_0_flatten = layers.Flatten(name='de_lv0_input_flatten')(de_input_image_lv0_)
+        de_input_image_lv0_4_ = layers.concatenate([de_input_image_lv0_4, de_input_image_lv0_0_flatten])
+        de_input_image_lv0_5 = self.decoder_lvl0_5(de_input_image_lv0_4_)
+        
         de_input_image_lv0_5 = layers.Dropout(rate=dropout_rate)(de_input_image_lv0_5)
         de_input_image_lv0_6 = self.decoder_lvl0_6(de_input_image_lv0_5)
 
@@ -288,7 +303,10 @@ class Main_Model:
 
         de_input_image_lv1_4 = layers.Flatten(name='de_lv1_flatten')(de_input_image_lv1_4)
 
-        de_input_image_lv1_5 = self.decoder_lvl1_5(de_input_image_lv1_4)
+        de_input_image_lv1_0_flatten = layers.Flatten(name='de_lv1_input_flatten')(de_input_image_lv1_)
+        de_input_image_lv1_4_ = layers.concatenate([de_input_image_lv1_4, de_input_image_lv1_0_flatten])
+        de_input_image_lv1_5 = self.decoder_lvl1_5(de_input_image_lv1_4_)
+        
         de_input_image_lv1_5 = layers.Dropout(rate=dropout_rate)(de_input_image_lv1_5)
         de_input_image_lv1_6 = self.decoder_lvl1_6(de_input_image_lv1_5)
 
@@ -306,7 +324,10 @@ class Main_Model:
 
         de_input_image_lv2_4 = layers.Flatten(name='de_lv2_flatten')(de_input_image_lv2_4)
 
-        de_input_image_lv2_5 = self.decoder_lvl2_5(de_input_image_lv2_4)
+        de_input_image_lv2_0_flatten = layers.Flatten(name='de_lv2_input_flatten')(de_input_image_lv2_)
+        de_input_image_lv2_4_ = layers.concatenate([de_input_image_lv2_4, de_input_image_lv2_0_flatten])
+        de_input_image_lv2_5 = self.decoder_lvl2_5(de_input_image_lv2_4_)
+        
         de_input_image_lv2_5 = layers.Dropout(rate=dropout_rate)(de_input_image_lv2_5)
         de_input_image_lv2_6 = self.decoder_lvl2_6(de_input_image_lv2_5)
 
@@ -324,7 +345,10 @@ class Main_Model:
 
         de_input_image_lv3_4 = layers.Flatten(name='de_lv3_flatten')(de_input_image_lv3_4)
 
-        de_input_image_lv3_5 = self.decoder_lvl3_5(de_input_image_lv3_4)
+        de_input_image_lv3_0_flatten = layers.Flatten(name='de_lv3_input_flatten')(de_input_image_lv3_)
+        de_input_image_lv3_4_ = layers.concatenate([de_input_image_lv3_4, de_input_image_lv3_0_flatten])
+        de_input_image_lv3_5 = self.decoder_lvl3_5(de_input_image_lv3_4_)
+        
         de_input_image_lv3_5 = layers.Dropout(rate=dropout_rate)(de_input_image_lv3_5)
         de_input_image_lv3_6 = self.decoder_lvl3_6(de_input_image_lv3_5)
 
@@ -612,7 +636,7 @@ def train_model(train_input_lv0, train_input_lv1, train_input_lv2, train_input_l
             train_input_lv0_for_model, train_input_lv1_for_model, train_input_lv2_for_model, train_input_lv3_for_model, train_position
         ],
         train_all_coords_,
-        epochs=5, # 1 for functionality test, 20 for regular training
+        epochs=5, # 1 for functionality test, 10 for regular training
         batch_size=BATCH_SIZE,
         shuffle=True
     )

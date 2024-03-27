@@ -1,6 +1,6 @@
 # Image Processing 프로젝트 3. 흑백 이미지 컬러화 (생성형 AI 적용)
 * Dataset: [Flowers](https://www.kaggle.com/datasets/l3llff/flowers)
-* 수행 기간: 2024.03.20 ~ 2024.03.27 (8일)
+* 수행 기간: 2024.03.20 ~ 2024.03.28 (9일)
 
 ## 파일 및 코드 설명
 * ```cleanup_data.py``` : 본 프로젝트용 학습 및 테스트 데이터를 다음과 같이 재배치
@@ -62,7 +62,7 @@ python test.py
 ## branch info
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
-|IP-P3|||240320|240327|마스터 브랜치|
+|IP-P3|||240320|240328|마스터 브랜치|
 |IP-P3-1|```done```|```feat```|240320|240320|데이터 재배치 구현|
 |IP-P3-2|```done```|```feat```|240320|240320|데이터 augmentation|
 |IP-P3-3|```done```|```feat```|240320|240323|모델 학습 부분 구현|
