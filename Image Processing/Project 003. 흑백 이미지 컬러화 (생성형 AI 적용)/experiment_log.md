@@ -1,3 +1,54 @@
+# Model 4 : concatenate 직후 layer 뉴런 96 -> 128개 및 MSE Loss 가중치 2.0 적용 (2024.03.28 0시)
+* 처음 **100장** 의 이미지만 이용하여 학습
+* epoch **5회**
+* MSE Loss 가중치 : **2.0**
+
+## 직전 모델 (Model 3) 대비 변동 사항
+* MSE Loss 가중치를 **4.0 -> 2.0** 으로 조정
+* skip connection 직후에 이어지는 concatenate layer 의 직후의 layer 뉴런 개수를 **96개 -> 128개** 로 증가
+  * 해당 레이어: ```{en,de}_lv{0,1,2,3}_5``` (총 8개)
+
+## 학습 로그
+* 최종 Loss : **0.0732**
+
+```
+2024-03-27 23:52:02.976041: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:354] MLIR V1 optimization pass is not enabled
+19584/19584 [==============================] - 108s 6ms/sample - loss: 0.2842
+Epoch 2/5
+19584/19584 [==============================] - 114s 6ms/sample - loss: 0.0987
+Epoch 3/5
+19584/19584 [==============================] - 119s 6ms/sample - loss: 0.0921
+Epoch 4/5
+19584/19584 [==============================] - 121s 6ms/sample - loss: 0.0830
+Epoch 5/5
+19584/19584 [==============================] - 137s 7ms/sample - loss: 0.0732
+```
+
+## 모델 구조
+* Encoder 파라미터 개수 **729,392 개** (Model 2, 3 대비 21.2% 증가)
+* Decoder 파라미터 개수 **729,698 개** (Model 2, 3 대비 21.2% 증가)
+* 전체 모델 파라미터 개수 **1,459,090 개** (Model 2, 3 대비 21.2% 증가)
+
+**Encoder 구조**
+
+![encoder](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/fbd441c1-4a09-4234-92bf-320380452a83)
+
+**Decoder 구조**
+
+![decoder](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/cd18bd13-ffb6-4001-b07c-d7b6dc982037)
+
+**VAE 기반 모델의 전체 구조**
+
+![vae](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/a42fc7f6-e28d-46ae-87c3-3560214503a8)
+
+## 테스트 결과 및 총평
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/899338cb-cd3c-4511-a258-7e830a7b0d16)
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/db8934d3-48f5-4efb-8ac1-0924d35df372)
+
+Model 2와 Model 3의 중간 정도의 성능을 보인다.
+
 # Model 3 : skip connection 추가 적용 및 MSE Loss 가중치 4.0 적용 (2024.03.27 22시)
 * 처음 **100장** 의 이미지만 이용하여 학습
 * epoch **5회**

@@ -20,7 +20,7 @@ TOTAL_PIXELS = INPUT_IMG_SIZE * INPUT_IMG_SIZE
 
 HIDDEN_DIMS = 120
 BATCH_SIZE = 32
-MSE_LOSS_WEIGHT_CONSTANT = 4.0
+MSE_LOSS_WEIGHT_CONSTANT = 2.0
 
 NUM_CLASSES = 16
 
@@ -65,7 +65,7 @@ class Main_Model:
         self.encoder_lvl0_3 = layers.Conv2D(48, (3, 3), activation=silu, kernel_regularizer=L2, name='en_lv0_3')
         self.encoder_lvl0_4 = layers.Conv2D(48, (3, 3), activation=silu, kernel_regularizer=L2, name='en_lv0_4')
 
-        self.encoder_lvl0_5 = layers.Dense(96, activation=silu, name='en_lv0_5')
+        self.encoder_lvl0_5 = layers.Dense(128, activation=silu, name='en_lv0_5')
         self.encoder_lvl0_6 = layers.Dense(32, activation=silu, name='en_lv0_6')
         
         # level 1 : 주변 56 x 56 영역 (상하좌우 +24 pixels)
@@ -75,7 +75,7 @@ class Main_Model:
         self.encoder_lvl1_3 = layers.Conv2D(48, (3, 3), activation=silu, kernel_regularizer=L2, name='en_lv1_3')
         self.encoder_lvl1_4 = layers.Conv2D(48, (3, 3), activation=silu, kernel_regularizer=L2, name='en_lv1_4')
 
-        self.encoder_lvl1_5 = layers.Dense(96, activation=silu, name='en_lv1_5')
+        self.encoder_lvl1_5 = layers.Dense(128, activation=silu, name='en_lv1_5')
         self.encoder_lvl1_6 = layers.Dense(32, activation=silu, name='en_lv1_6')
 
         # level 2 : 주변 28 x 28 영역 (상하좌우 +10 pixels)
@@ -85,7 +85,7 @@ class Main_Model:
         self.encoder_lvl2_3 = layers.Conv2D(48, (3, 3), activation=silu, kernel_regularizer=L2, name='en_lv2_3')
         self.encoder_lvl2_4 = layers.Conv2D(48, (3, 3), activation=silu, kernel_regularizer=L2, name='en_lv2_4')
 
-        self.encoder_lvl2_5 = layers.Dense(96, activation=silu, name='en_lv2_5')
+        self.encoder_lvl2_5 = layers.Dense(128, activation=silu, name='en_lv2_5')
         self.encoder_lvl2_6 = layers.Dense(32, activation=silu, name='en_lv2_6')
 
         # level 3 : 주변 14 x 14 영역 (상하좌우 +3 pixels)
@@ -95,7 +95,7 @@ class Main_Model:
         self.encoder_lvl3_3 = layers.Conv2D(48, (3, 3), activation=silu, kernel_regularizer=L2, name='en_lv3_3')
         self.encoder_lvl3_4 = layers.Conv2D(48, (3, 3), activation=silu, kernel_regularizer=L2, name='en_lv3_4')
 
-        self.encoder_lvl3_5 = layers.Dense(96, activation=silu, name='en_lv3_5')
+        self.encoder_lvl3_5 = layers.Dense(128, activation=silu, name='en_lv3_5')
         self.encoder_lvl3_6 = layers.Dense(32, activation=silu, name='en_lv3_6')
         
         self.encoder_final_dense = layers.Dense(64, activation=silu, name='en_final')
@@ -108,7 +108,7 @@ class Main_Model:
         self.decoder_lvl0_3 = layers.Conv2D(48, (3, 3), activation=silu, kernel_regularizer=L2, name='de_lv0_3')
         self.decoder_lvl0_4 = layers.Conv2D(48, (3, 3), activation=silu, kernel_regularizer=L2, name='de_lv0_4')
 
-        self.decoder_lvl0_5 = layers.Dense(96, activation=silu, name='de_lv0_5')
+        self.decoder_lvl0_5 = layers.Dense(128, activation=silu, name='de_lv0_5')
         self.decoder_lvl0_6 = layers.Dense(32, activation=silu, name='de_lv0_6')
         
         # level 1 : 주변 56 x 56 영역 (상하좌우 +24 pixels)
@@ -118,7 +118,7 @@ class Main_Model:
         self.decoder_lvl1_3 = layers.Conv2D(48, (3, 3), activation=silu, kernel_regularizer=L2, name='de_lv1_3')
         self.decoder_lvl1_4 = layers.Conv2D(48, (3, 3), activation=silu, kernel_regularizer=L2, name='de_lv1_4')
 
-        self.decoder_lvl1_5 = layers.Dense(96, activation=silu, name='de_lv1_5')
+        self.decoder_lvl1_5 = layers.Dense(128, activation=silu, name='de_lv1_5')
         self.decoder_lvl1_6 = layers.Dense(32, activation=silu, name='de_lv1_6')
 
         # level 2 : 주변 28 x 28 영역 (상하좌우 +10 pixels)
@@ -128,7 +128,7 @@ class Main_Model:
         self.decoder_lvl2_3 = layers.Conv2D(48, (3, 3), activation=silu, kernel_regularizer=L2, name='de_lv2_3')
         self.decoder_lvl2_4 = layers.Conv2D(48, (3, 3), activation=silu, kernel_regularizer=L2, name='de_lv2_4')
 
-        self.decoder_lvl2_5 = layers.Dense(96, activation=silu, name='de_lv2_5')
+        self.decoder_lvl2_5 = layers.Dense(128, activation=silu, name='de_lv2_5')
         self.decoder_lvl2_6 = layers.Dense(32, activation=silu, name='de_lv2_6')
 
         # level 3 : 주변 14 x 14 영역 (상하좌우 +3 pixels)
@@ -138,7 +138,7 @@ class Main_Model:
         self.decoder_lvl3_3 = layers.Conv2D(48, (3, 3), activation=silu, kernel_regularizer=L2, name='de_lv3_3')
         self.decoder_lvl3_4 = layers.Conv2D(48, (3, 3), activation=silu, kernel_regularizer=L2, name='de_lv3_4')
 
-        self.decoder_lvl3_5 = layers.Dense(96, activation=silu, name='de_lv3_5')
+        self.decoder_lvl3_5 = layers.Dense(128, activation=silu, name='de_lv3_5')
         self.decoder_lvl3_6 = layers.Dense(32, activation=silu, name='de_lv3_6')
 
         # latent vector (120) 과 결합하여 (120 + 32 + 32 + 32 + 32 = 248) 으로 만들기!
