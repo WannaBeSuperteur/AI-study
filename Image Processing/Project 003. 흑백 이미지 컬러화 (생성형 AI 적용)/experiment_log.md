@@ -1,3 +1,60 @@
+# Model 5 : Model 4와 동일, 전체 이미지 및 epoch 16회 (2024.03.28 05시)
+* **전체** 이미지만 이용하여 학습
+* epoch **16회**
+* MSE Loss 가중치 : **2.5**
+
+## 직전 모델 (Model 4) 대비 변동 사항
+없음
+
+## 학습 로그
+* 최종 Loss : **0.0536**
+
+```
+Epoch 1/16
+2024-03-28 00:42:06.268189: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2024-03-28 00:42:06.492955: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:354] MLIR V1 optimization pass is not enabled
+176192/176192 [==============================] - 1095s 6ms/sample - loss: 0.1339
+Epoch 2/16
+176192/176192 [==============================] - 1103s 6ms/sample - loss: 0.0885
+Epoch 3/16
+176192/176192 [==============================] - 1101s 6ms/sample - loss: 0.0798
+Epoch 4/16
+176192/176192 [==============================] - 1124s 6ms/sample - loss: 0.0744
+Epoch 5/16
+176192/176192 [==============================] - 1093s 6ms/sample - loss: 0.0704
+Epoch 6/16
+176192/176192 [==============================] - 1096s 6ms/sample - loss: 0.0663
+Epoch 7/16
+176192/176192 [==============================] - 1105s 6ms/sample - loss: 0.0639
+Epoch 8/16
+176192/176192 [==============================] - 1096s 6ms/sample - loss: 0.0623
+Epoch 9/16
+176192/176192 [==============================] - 1095s 6ms/sample - loss: 0.0602
+Epoch 10/16
+176192/176192 [==============================] - 1126s 6ms/sample - loss: 0.0628
+Epoch 11/16
+176192/176192 [==============================] - 1144s 6ms/sample - loss: 0.0580
+Epoch 12/16
+176192/176192 [==============================] - 1173s 7ms/sample - loss: 0.0566
+Epoch 13/16
+176192/176192 [==============================] - 1136s 6ms/sample - loss: 0.0560
+Epoch 14/16
+176192/176192 [==============================] - 1123s 6ms/sample - loss: 0.0551
+Epoch 15/16
+176192/176192 [==============================] - 1094s 6ms/sample - loss: 0.0545
+Epoch 16/16
+176192/176192 [==============================] - 1096s 6ms/sample - loss: 0.0536
+```
+
+## 테스트 결과 및 총평
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/f25a905a-59b0-46a9-bb65-16f49a350bd8)
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/82580c3d-1e32-457f-b6ed-88328b5b7388)
+
+빨간색으로 칠해진 부분 (장미) 이 직사각형 또는 정사각형에 가까운데, 해당 부분을 수정해야 한다.
+
 # Model 4 : concatenate 직후 layer 뉴런 96 -> 128개 및 MSE Loss 가중치 2.0 적용 (2024.03.28 0시)
 * 처음 **100장** 의 이미지만 이용하여 학습
 * epoch **5회**
