@@ -12,7 +12,7 @@ from keras.activations import silu # SiLU(x) = Swish(x) = x * sigmoid(x)
 import os
 import cv2
 
-from test_helper import create_hsv_image, create_lv_1_2_3_images
+from test_helper import create_hsv_image, create_lv_1_2_3_images, compute_positional_values
 
 INPUT_IMG_SIZE = 112
 COLORIZE_MAP_SIZE = INPUT_IMG_SIZE // 8
@@ -150,7 +150,7 @@ class Main_Model:
         input_image_lv1 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='en_lv1_input')
         input_image_lv2 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='en_lv2_input')
         input_image_lv3 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='en_lv3_input')
-        input_image_position = layers.Input(batch_shape=(BATCH_SIZE, 2), name='en_position')
+        input_image_position = layers.Input(batch_shape=(BATCH_SIZE, 7), name='en_position')
 
         input_image_lv0_ = layers.Reshape((COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 1), name='en_lv0_reshape')(input_image_lv0)
         input_image_lv1_ = layers.Reshape((COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 1), name='en_lv1_reshape')(input_image_lv1)
@@ -257,7 +257,7 @@ class Main_Model:
         de_input_image_lv1 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='de_lv1_input')
         de_input_image_lv2 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='de_lv2_input')
         de_input_image_lv3 = layers.Input(batch_shape=(BATCH_SIZE, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE), name='de_lv3_input')
-        de_input_image_position = layers.Input(batch_shape=(BATCH_SIZE, 2), name='de_position')
+        de_input_image_position = layers.Input(batch_shape=(BATCH_SIZE, 7), name='de_position')
 
         de_input_image_lv0_ = layers.Reshape((COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 1), name='de_lv0_reshape')(de_input_image_lv0)
         de_input_image_lv1_ = layers.Reshape((COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE, 1), name='de_lv1_reshape')(de_input_image_lv1)
@@ -438,7 +438,7 @@ def create_train_and_valid_data(limit=None):
     train_input_lv1 = [] # resize 56 x 56 area -> 14 x 14
     train_input_lv2 = [] # resize 28 x 28 area -> 14 x 14
     train_input_lv3 = [] # 14 x 14 area
-    train_position = [] # position (y, x) of "8 x 8 pixel box", 0 <= x < 14, 0 <= y < 14
+    train_position = [] # 7 positional values of "8 x 8 pixel box", 0 <= x < 14, 0 <= y < 14
 
     # model outputs
     train_x_coord = []
@@ -531,7 +531,9 @@ def create_train_and_valid_data(limit=None):
                         print('\nx, y coord (of first image) :')
                         print(coord_x[i][j], coord_y[i][j])
 
-                    train_position.append([i / (COLORIZE_MAP_SIZE - 1), j / (COLORIZE_MAP_SIZE - 1)])
+                    # y/x position, distance from center / each 4 corner points
+                    positional_values = compute_positional_values(i, j, COLORIZE_MAP_SIZE)
+                    train_position.append(positional_values)
 
             # test 이미지에 대한 결과 이미지 생성 테스트
             if current_count < 30:
@@ -636,7 +638,7 @@ def train_model(train_input_lv0, train_input_lv1, train_input_lv2, train_input_l
             train_input_lv0_for_model, train_input_lv1_for_model, train_input_lv2_for_model, train_input_lv3_for_model, train_position
         ],
         train_all_coords_,
-        epochs=16, # 1 for functionality test, 16 for regular training
+        epochs=5, # 1 for functionality test, 16 for regular training
         batch_size=BATCH_SIZE,
         shuffle=True
     )
@@ -666,7 +668,7 @@ if __name__ == '__main__':
     create_input_convert_test_result_dir()
 
     # 학습 데이터 추출 (이미지의 greyscale 이미지 + 색상, 채도 부분)
-    train_input_lv0, train_input_lv1, train_input_lv2, train_input_lv3, train_position, train_x_coord, train_y_coord = create_train_and_valid_data(limit=None) # 30 for functionality test
+    train_input_lv0, train_input_lv1, train_input_lv2, train_input_lv3, train_position, train_x_coord, train_y_coord = create_train_and_valid_data(limit=100) # 30 for functionality test
     
     print(f'\nshape of train input lv0: {np.shape(train_input_lv0)}, first image :')
     print(train_input_lv0[0])

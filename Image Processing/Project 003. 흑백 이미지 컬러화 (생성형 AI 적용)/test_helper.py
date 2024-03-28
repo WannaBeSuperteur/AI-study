@@ -92,3 +92,28 @@ def create_lv_1_2_3_images(image_size, color_map_size, greyscale_image, i_start,
     )
     
     return lv1_image_resized, lv2_image_resized, lv3_image
+
+
+# compute positional values between 0 and 1
+# y/x position, distance from center / each 4 corner points
+def compute_positional_values(i, j, color_map_size):
+    pos_max = color_map_size - 1
+
+    # y/x position
+    y_position = i / pos_max
+    x_position = j / pos_max
+
+    # each 4 corner                    
+    dist_corner_max = math.sqrt(2 * pos_max * pos_max)
+
+    dist_top_left = math.sqrt(i * i + j * j) / dist_corner_max
+    dist_top_right = math.sqrt(i * i + (pos_max - j) * (pos_max - j)) / dist_corner_max
+    dist_bottom_left = math.sqrt((pos_max - i) * (pos_max - i) + j * j) / dist_corner_max
+    dist_bottom_right = math.sqrt((pos_max - i) * (pos_max - i) + (pos_max - j) * (pos_max - j)) / dist_corner_max
+
+    # center
+    pos_center = pos_max / 2.0
+    dist_center_max = dist_corner_max / 2.0
+    dist_center = math.sqrt((i - pos_center) * (i - pos_center) + (j - pos_center) * (j - pos_center)) / dist_center_max 
+
+    return [y_position, x_position, dist_top_left, dist_top_right, dist_bottom_left, dist_bottom_right, dist_center]

@@ -1,5 +1,57 @@
+# Model 6 : input positional info 추가 (2024.03.28 22시)
+* 처음 **100장** 의 이미지만 이용하여 학습
+* epoch **5회**
+* MSE Loss 가중치 : **2.5**
+
+## 직전 모델 (Model 5) 대비 변동 사항
+* positional info를 기존 x좌표 상댓값 (0~1 범위), y좌표 상댓값 (0~1 범위) 외에 다음을 추가
+  * 4개의 각 corner point와의 거리의 상댓값 (0~1 범위)
+  * center point와의 거리의 상댓값 (0~1 범위)
+* 모든 상댓값은 각 point에서의 해당 값을 모든 point에서의 해당 값들을 기준으로 min-max normalization 시킨 값임
+
+## 학습 로그
+* 최종 Loss : **0.0796** (Model 2 대비 **3.0%** 감소)
+
+```
+2024-03-28 22:05:47.489291: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:354] MLIR V1 optimization pass is not enabled
+19584/19584 [==============================] - 125s 6ms/sample - loss: 0.3032
+Epoch 2/5
+19584/19584 [==============================] - 130s 7ms/sample - loss: 0.1140
+Epoch 3/5
+19584/19584 [==============================] - 124s 6ms/sample - loss: 0.1010
+Epoch 4/5
+19584/19584 [==============================] - 135s 7ms/sample - loss: 0.0896
+Epoch 5/5
+19584/19584 [==============================] - 136s 7ms/sample - loss: 0.0796
+```
+
+## 모델 구조
+* Encoder 파라미터 개수 **729,712 개** (Model 4, 5 대비 0.04% 증가)
+* Decoder 파라미터 개수 **730,178 개** (Model 4, 5 대비 0.07% 증가)
+* 전체 모델 파라미터 개수 **1,459,890 개** (Model 4, 5 대비 0.05% 증가)
+
+**Encoder 구조**
+
+![encoder](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/90e56601-2444-4718-89f5-91665c1ba795)
+
+**Decoder 구조**
+
+![decoder](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/a4fc29e5-f2a8-4b5d-8485-55b6c3e941e8)
+
+**전체 모델 구조**
+
+![vae](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/b81bd569-9338-473c-8651-dd00df0f6ab1)
+
+## 테스트 결과 및 총평
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/7eda8341-31fb-4416-a467-fb38dbbe31cd)
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/e17f8022-7455-4680-968a-cdbaa3c915c1)
+
+전반적으로 Model 2 와 유사한 수준의 성능을 보인다.
+
 # Model 5 : Model 4와 동일, 전체 이미지 및 epoch 16회 (2024.03.28 05시)
-* **전체** 이미지만 이용하여 학습
+* **전체** 이미지를 대상으로 학습
 * epoch **16회**
 * MSE Loss 가중치 : **2.5**
 
@@ -53,7 +105,7 @@ Epoch 16/16
 
 ![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/82580c3d-1e32-457f-b6ed-88328b5b7388)
 
-빨간색으로 칠해진 부분 (장미) 이 직사각형 또는 정사각형에 가까운데, 해당 부분을 수정해야 한다.
+전체 이미지 사용 및 학습 epoch의 증가 등으로 **녹색 영역이 이전 모델들에 비해 늘어난 점** 은 긍정적으로 평가된다. 단, 빨간색으로 칠해진 부분 (장미) 이 직사각형 또는 정사각형에 가까운데, 해당 부분을 수정해야 한다.
 
 # Model 4 : concatenate 직후 layer 뉴런 96 -> 128개 및 MSE Loss 가중치 2.0 적용 (2024.03.28 0시)
 * 처음 **100장** 의 이미지만 이용하여 학습
@@ -149,7 +201,7 @@ Epoch 5/5
 * MSE Loss 가중치 : **2.5**
 * 일부 이미지에 대해 빨간색으로 칠해진 부분 근처에서 색상 그라데이션이 어색한 부분은 딥러닝 모델이 아닌 **test image 생성 알고리즘** 이슈이며 현재 해결한 상태임.
 
-## 직전 모델 (Model 2) 대비 변동 사항
+## 직전 모델 (Model 1) 대비 변동 사항
 **2024.03.27 20시** (SiLU activation function 적용) 에서, Encoder 및 Decoder 로 입력되는 14 x 14 이미지의 정보 (총 8개) 를 flatten 해서 concatenated layer 로 직접 전달하는 **skip connection** 을 추가하여 적용
 
 ## 학습 로그

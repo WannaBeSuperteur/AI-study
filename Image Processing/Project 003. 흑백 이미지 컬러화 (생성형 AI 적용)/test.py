@@ -5,7 +5,7 @@ import os
 import tensorflow as tf
 import math
 
-from test_helper import create_hsv_image, create_lv_1_2_3_images
+from test_helper import create_hsv_image, create_lv_1_2_3_images, compute_positional_values
 
 RESIZE_HEIGHT = 144
 RESIZE_WIDTH = 112
@@ -200,7 +200,9 @@ def run_test_for_img(path):
                 lv2_image = np.reshape(lv2_image, (-1, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE))
                 lv3_image = np.reshape(lv3_image, (-1, COLORIZE_MAP_SIZE, COLORIZE_MAP_SIZE))
 
-                position = np.array([[i / (COLORIZE_MAP_SIZE - 1), j / (COLORIZE_MAP_SIZE - 1)]])
+                # y/x position, distance from center / each 4 corner points
+                positional_values = compute_positional_values(i, j, COLORIZE_MAP_SIZE)
+                position = np.array([positional_values])
 
                 if t == 0 and i == 0 and j == 0:
                     print(f'shape of latent space  : {np.shape(latent_space)}')
