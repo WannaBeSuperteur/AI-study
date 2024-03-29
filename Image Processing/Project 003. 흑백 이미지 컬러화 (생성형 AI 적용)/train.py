@@ -638,7 +638,7 @@ def train_model(train_input_lv0, train_input_lv1, train_input_lv2, train_input_l
             train_input_lv0_for_model, train_input_lv1_for_model, train_input_lv2_for_model, train_input_lv3_for_model, train_position
         ],
         train_all_coords_,
-        epochs=5, # 1 for functionality test, 16 for regular training
+        epochs=20, # 1 for functionality test, 20 for regular training
         batch_size=BATCH_SIZE,
         shuffle=True
     )
@@ -668,7 +668,7 @@ if __name__ == '__main__':
     create_input_convert_test_result_dir()
 
     # 학습 데이터 추출 (이미지의 greyscale 이미지 + 색상, 채도 부분)
-    train_input_lv0, train_input_lv1, train_input_lv2, train_input_lv3, train_position, train_x_coord, train_y_coord = create_train_and_valid_data(limit=100) # 30 for functionality test
+    train_input_lv0, train_input_lv1, train_input_lv2, train_input_lv3, train_position, train_x_coord, train_y_coord = create_train_and_valid_data(limit=None) # 30 for functionality test
     
     print(f'\nshape of train input lv0: {np.shape(train_input_lv0)}, first image :')
     print(train_input_lv0[0])

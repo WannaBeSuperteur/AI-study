@@ -1,12 +1,77 @@
+# Model 7 : Model 6과 동일, 전체 이미지 및 epoch 20회 (2024.03.29 06시)
+* **전체** 이미지를 대상으로 학습
+* epoch **20회**
+* MSE Loss 가중치 : **2.5**
+
+## 직전 모델 (Model 6) 대비 변동 사항
+없음
+
+## 학습 로그
+* 최종 Loss : **0.0507**
+
+```
+Epoch 1/20
+2024-03-29 00:08:56.686025: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2024-03-29 00:08:56.929156: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:354] MLIR V1 optimization pass is not enabled
+176192/176192 [==============================] - 1106s 6ms/sample - loss: 0.1323
+Epoch 2/20
+176192/176192 [==============================] - 1108s 6ms/sample - loss: 0.0887
+Epoch 3/20
+176192/176192 [==============================] - 1107s 6ms/sample - loss: 0.0793
+Epoch 4/20
+176192/176192 [==============================] - 1106s 6ms/sample - loss: 0.0733
+Epoch 5/20
+176192/176192 [==============================] - 1102s 6ms/sample - loss: 0.0694
+Epoch 6/20
+176192/176192 [==============================] - 1099s 6ms/sample - loss: 0.0665
+Epoch 7/20
+176192/176192 [==============================] - 1101s 6ms/sample - loss: 0.0634
+Epoch 8/20
+176192/176192 [==============================] - 1095s 6ms/sample - loss: 0.0618
+Epoch 9/20
+176192/176192 [==============================] - 1093s 6ms/sample - loss: 0.0599
+Epoch 10/20
+176192/176192 [==============================] - 1114s 6ms/sample - loss: 0.0586
+Epoch 11/20
+176192/176192 [==============================] - 1096s 6ms/sample - loss: 0.0573
+Epoch 12/20
+176192/176192 [==============================] - 1172s 7ms/sample - loss: 0.0561
+Epoch 13/20
+176192/176192 [==============================] - 1126s 6ms/sample - loss: 0.0556
+Epoch 14/20
+176192/176192 [==============================] - 1131s 6ms/sample - loss: 0.0542
+Epoch 15/20
+176192/176192 [==============================] - 1101s 6ms/sample - loss: 0.0535
+Epoch 16/20
+176192/176192 [==============================] - 1099s 6ms/sample - loss: 0.0528
+Epoch 17/20
+176192/176192 [==============================] - 1103s 6ms/sample - loss: 0.0522
+Epoch 18/20
+176192/176192 [==============================] - 1097s 6ms/sample - loss: 0.0521
+Epoch 19/20
+176192/176192 [==============================] - 1124s 6ms/sample - loss: 0.0511
+Epoch 20/20
+176192/176192 [==============================] - 1112s 6ms/sample - loss: 0.0507
+```
+
+## 테스트 결과 및 총평
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/b99ecdd7-468b-4bf7-9bdc-58fdc3f54a9d)
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/3f66a1a9-f29d-445e-90c1-75d3af5c76b0)
+
+Model 5와 유사한 수준의 성능을 보이며, 빨간색 영역이 직사각형, 정사각형으로 표시되는 문제점은 일정 부분 해결된 듯하다.
+
 # Model 6 : input positional info 추가 (2024.03.28 22시)
 * 처음 **100장** 의 이미지만 이용하여 학습
 * epoch **5회**
 * MSE Loss 가중치 : **2.5**
 
 ## 직전 모델 (Model 5) 대비 변동 사항
-* positional info를 기존 x좌표 상댓값 (0~1 범위), y좌표 상댓값 (0~1 범위) 외에 다음을 추가
-  * 4개의 각 corner point와의 거리의 상댓값 (0~1 범위)
-  * center point와의 거리의 상댓값 (0~1 범위)
+* positional info를 기존 x좌표 상댓값 (0-1 범위), y좌표 상댓값 (0-1 범위) 외에 다음을 추가
+  * 4개의 각 corner point와의 거리의 상댓값 (0-1 범위)
+  * center point와의 거리의 상댓값 (0-1 범위)
 * 모든 상댓값은 각 point에서의 해당 값을 모든 point에서의 해당 값들을 기준으로 min-max normalization 시킨 값임
 
 ## 학습 로그
