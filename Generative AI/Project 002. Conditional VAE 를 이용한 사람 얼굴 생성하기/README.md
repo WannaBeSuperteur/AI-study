@@ -50,6 +50,7 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
     * 필요 파일 :
       * ```regression_hair_color_info_male.csv``` (```resized_images/second_dataset_male``` 의 이미지 중 최초 1000장 이름순, 머리 색을 나타내는 0-1 값 정보)
       * ```regression_hair_color_info_female.csv``` (```resized_images/second_dataset_female``` 의 이미지 중 최초 1000장 이름순, 머리 색을 나타내는 0-1 값 정보)
+      * 이상의 2개의 csv 파일은 본 repository에서는 txt 파일로 저장되어 있음
       * ```male_or_female_classify_result_for_all_images.csv``` (모든 이미지에 대한 각 성별일 확률에 대한 정보로, "머리 색 조건" 모델의 input 값으로 사용)
     * 출력 모델 : ```regression_hair_color```
 
@@ -60,6 +61,7 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
     * 필요 파일 :
       * ```regression_mouth_info_male.csv``` (```resized_images/second_dataset_male``` 의 이미지 중 최초 1000장 이름순, 입을 벌린 정도를 나타내는 0-1 값 정보)
       * ```regression_mouth_info_female.csv``` (```resized_images/second_dataset_female``` 의 이미지 중 최초 1000장 이름순, 입을 벌린 정도를 나타내는 0-1 값 정보)
+      * 이상의 2개의 csv 파일은 본 repository에서는 txt 파일로 저장되어 있음
       * ```male_or_female_classify_result_for_all_images.csv``` (모든 이미지에 대한 각 성별일 확률에 대한 정보로, "입을 벌린 정도" 모델의 input 값으로 사용)
     * 출력 모델 : ```regression_mouth```
 
@@ -70,6 +72,7 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
     * 필요 파일 :
       * ```regression_eyes_info_male.csv``` (```resized_images/second_dataset_male``` 의 이미지 중 최초 1000장 이름순, 눈을 뜬 정도를 나타내는 0-1 값 정보)
       * ```regression_eyes_info_female.csv``` (```resized_images/second_dataset_female``` 의 이미지 중 최초 1000장 이름순, 눈을 뜬 정도를 나타내는 0-1 값 정보)
+      * 이상의 2개의 csv 파일은 본 repository에서는 txt 파일로 저장되어 있음
       * ```male_or_female_classify_result_for_all_images.csv``` (모든 이미지에 대한 각 성별일 확률에 대한 정보로, "눈을 뜬 정도" 모델의 input 값으로 사용)
     * 출력 모델 : ```regression_eyes```
 

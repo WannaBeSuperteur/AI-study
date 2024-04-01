@@ -42,7 +42,7 @@ class Regression_Hair_Color_Model(tf.keras.Model):
 
 
     def call(self, inputs, training):
-        inputs_img, inputs_gender = tf.split(inputs, [IMG_SIZE * IMG_SIZE * 3, 1], axis=1)
+        inputs_img, inputs_gender = tf.split(inputs, [IMG_SIZE * IMG_SIZE * 3, 2], axis=1)
         inputs_img = tf.keras.layers.Reshape((IMG_SIZE, IMG_SIZE, 3))(inputs_img)
 
         # conv + pooling part : 120 -> 118 -> 116 -> 58 -> 56 -> 28 -> 26 -> 13 -> 11
@@ -113,11 +113,11 @@ def get_gender_prob_data(male_img_names, female_img_names):
     gender_prob_2k = []
 
     for name in male_img_names:
-        gender_prob_of_img = gender_prob[name]
+        gender_prob_of_img = gender_prob['resized_images/second_dataset_male/' + name]
         gender_prob_2k.append([gender_prob_of_img['prob_male'], gender_prob_of_img['prob_female']])
 
     for name in female_img_names:
-        gender_prob_of_img = gender_prob[name]
+        gender_prob_of_img = gender_prob['resized_images/second_dataset_female/' + name]
         gender_prob_2k.append([gender_prob_of_img['prob_male'], gender_prob_of_img['prob_female']])
 
     return np.array(gender_prob_2k)
