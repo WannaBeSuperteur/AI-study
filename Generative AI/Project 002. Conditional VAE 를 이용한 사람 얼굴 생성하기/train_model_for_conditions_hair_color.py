@@ -37,7 +37,7 @@ class Regression_Hair_Color_Model(tf.keras.Model):
         self.dense_1 = tf.keras.layers.Dense(64, activation=tf.keras.layers.LeakyReLU(alpha=0.06),
                                            kernel_regularizer=L2, name='dense_1')
 
-        self.final_dense = tf.keras.layers.Dense(2, activation='softmax',
+        self.final_dense = tf.keras.layers.Dense(1, activation='sigmoid',
                                                  kernel_regularizer=L2, name='dense_final')
 
 
@@ -66,7 +66,7 @@ class Regression_Hair_Color_Model(tf.keras.Model):
         dense = self.dropout(dense)
         dense = self.dense_1(dense) # 64
         dense = self.dropout(dense)
-        final_output = self.final_dense(dense) # 2
+        final_output = self.final_dense(dense) # 1
 
         return final_output
 
@@ -84,7 +84,7 @@ def define_model():
 # CNN 모델 학습
 def train_cnn_model(train_input_img, train_input_gender_prob, train_output):
     cnn_model, optimizer, early_stopping, lr_reduced = define_model()
-    cnn_model.compile(loss='mse', optimizer=optimizer, metrics=['mse'])
+    cnn_model.compile(loss='mse', optimizer=optimizer)
 
     print(f'train input (image)       : {np.shape(train_input_img)}\n{train_input_img}\n')
     print(f'train input (gender prob) : {np.shape(train_input_gender_prob)}\n{train_input_gender_prob}\n')
@@ -97,7 +97,7 @@ def train_cnn_model(train_input_img, train_input_gender_prob, train_output):
     cnn_model.fit(
         train_input, train_output,
         callbacks=[early_stopping, lr_reduced],
-        epochs=15,
+        epochs=2,
         validation_split=0.1
     )
 
@@ -147,13 +147,33 @@ def load_training_data():
     return train_input_img, train_input_gender_prob, train_output
 
 
+# model prediction 이 평균 (또는 특정) 값으로 수렴했는지 (=학습이 전혀 안 된 상태인지) 검사
+# 성능 정량 평가가 아니므로, test data 가 아닌 train data 중 일부를 이용하여 체크
+def is_converged_to_avg(cnn_model, N_imgs=15):
+    train_input_img, train_input_gender_prob, _ = load_training_data() 
+    
+    train_input_img_ = np.reshape(train_input_img[:N_imgs], (-1, IMG_SIZE * IMG_SIZE * 3))
+    train_input_gender_prob_ = np.reshape(train_input_gender_prob[:N_imgs], (-1, 2))
+
+    train_input = np.concatenate((train_input_img_, train_input_gender_prob_), axis=1)
+    print(cnn_model(train_input))
+
+
 if __name__ == '__main__':
 
-    # 학습 데이터 받아오기
-    train_input_img, train_input_gender_prob, train_output = load_training_data()    
+    if 'regression_hair_color' in os.listdir():
+        cnn_model = tf.keras.models.load_model('regression_hair_color')
 
-    # CNN 모델 학습
-    cnn_model = train_cnn_model(train_input_img, train_input_gender_prob, train_output)
+    else:
 
-    # CNN 모델 저장
-    cnn_model.save('regression_hair_color')
+        # 학습 데이터 받아오기
+        train_input_img, train_input_gender_prob, train_output = load_training_data()    
+
+        # CNN 모델 학습
+        cnn_model = train_cnn_model(train_input_img, train_input_gender_prob, train_output)
+
+        # CNN 모델 저장
+        cnn_model.save('regression_hair_color')
+
+    # 모델 테스트 (평균값으로 수렴 여부)
+    is_converged_to_avg(cnn_model)
