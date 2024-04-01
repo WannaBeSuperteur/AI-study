@@ -3,7 +3,7 @@
   * [Person Face Dataset (thispersondoesnotexist)](https://www.kaggle.com/datasets/almightyj/person-face-dataset-thispersondoesnotexist)
   * [Face Dataset Of People That Don't Exist](https://www.kaggle.com/datasets/bwandowando/all-these-people-dont-exist)
   * 모두 https://thispersondoesnotexist.com/ 로부터 생성된 데이터
-* 수행 기간: 2024.03.11 ~ 2024.03.24 (14일)
+* 수행 기간: 2024.03.11 ~ 03.17 + 2024.04.01 ~ 04.04 (11일)
 
 ## 파일 및 코드 설명
 * 학습 데이터셋 구조 (다운받은 데이터를 아래와 같이 배치), **전체 16,873 장**
@@ -41,7 +41,7 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
     * 출력 모델 : ```classify_male_or_female```
     * 출력 파일 : ```male_or_female_classify_result_for_all_images.csv```
       * **resized_image** 디렉토리에 있는 **모든 이미지 (학습 데이터 포함)** 에 대한 각 성별일 확률을 저장한 csv 파일
-      * 본 repository에는 ```male_or_female_classify_result_for_all_images.txt``` 파일로 저장되어 있으며, csv 로 이름 변경하여 사용 가능
+      * 본 repository에는 ```male_or_female_classify_result_for_all_images.txt``` 파일로 저장되어 있으며, csv 로 확장자 변경하여 사용 가능
 * ```train_model_for_conditions_hair_color.py``` : C-VAE의 condition을 위한 머리 색 regression 모델 학습
   * 머리 색 조건
     * **Face Dataset Of People That Don't Exist** 로부터의 데이터셋 중 **남녀 각각 최초 1000장 (이름순)** 의 사진을 학습 및 validation
@@ -75,7 +75,8 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
   * 출력 파일 : ```condition_data.csv```
     * 모든 각 이미지의 condition 값을 pandas DataFrame 의 csv 형식으로 저장한 파일
     * 성별에 대한 예측값은 ```male_or_female_classify_result_for_all_images.csv``` 파일에 저장된 값을 사용
-    * **각 모델의 학습 대상이 되는 이미지에 대해서도, 실제 값인 ground truth 값이 아닌 모델에 의해 예측된 condition 값을 저장** 
+    * **각 모델의 학습 대상이 되는 이미지에 대해서도, 실제 값인 ground truth 값이 아닌 모델에 의해 예측된 condition 값을 저장**
+    * 본 repository에서는 ```condition_data.txt``` 파일로 저장되어 있으며, csv 로 확장자 변경하여 사용 가능 
 * ```train_cvae_model.py``` : 학습 과정 전체 진행
   * 필요 파일 : resize 및 재배치된 전체 학습 데이터셋 (위 ```resizd_images``` 및 그 내부 디렉토리 구조 참고), ```condition_data.csv``` (모든 각 이미지의 condition 값)
   * 출력 모델 : ```cvae_model``` (Conditional VAE 모델), ```cvae_encoder_model``` (C-VAE의 인코더), ```cvae_decoder_model``` (C-VAE의 디코더)
@@ -128,10 +129,10 @@ python test.py
 ## branch info
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
-|GAI-P2-master|||240311|240324|마스터 브랜치|
+|GAI-P2-master|||240311|240404|마스터 브랜치|
 |GAI-P2-1|```done```|```feat```|240312|240312|data 재배치 및 resizing, 배경 부분 cropping 실시|
 |GAI-P2-2|```done```|```feat```|240313|240317|```성별 조건``` condition을 위한 ```classify_male_or_female``` 모델 학습|
-|GAI-P2-3||```feat```|||```머리 색 조건``` condition을 위한 ```regression_hair_color``` 모델 학습|
+|GAI-P2-3|```ing```|```feat```|240401||```머리 색 조건``` condition을 위한 ```regression_hair_color``` 모델 학습|
 |GAI-P2-4||```feat```|||```입을 벌린 정도``` condition을 위한 ```regression_mouth``` 모델 학습|
 |GAI-P2-5||```feat```|||```눈을 뜬 정도``` condition을 위한 ```regression_eyes``` 모델 학습|
 |GAI-P2-6||```feat```|||condition 데이터를 csv 파일로 저장|
