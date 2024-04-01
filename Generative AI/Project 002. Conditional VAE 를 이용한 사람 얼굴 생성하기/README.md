@@ -39,6 +39,9 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
     * **Face Dataset Of People That Don't Exist** 로부터의 데이터셋을 이용하여 **성별 예측 분류 모델 학습**
     * 해당 조건을 C-VAE 모델에 추가로 입력 시 cell의 개수는 2개 (각각 ```male```일 확률, ```female```일 확률, activation = softmax)
     * 출력 모델 : ```classify_male_or_female```
+    * 출력 파일 : ```male_or_female_classify_result_for_all_images.csv```
+      * **resized_image** 디렉토리에 있는 **모든 이미지 (학습 데이터 포함)** 에 대한 각 성별일 확률을 저장한 csv 파일
+      * 본 repository에는 ```male_or_female_classify_result_for_all_images.txt``` 파일로 저장되어 있으며, csv 로 이름 변경하여 사용 가능
 * ```train_model_for_conditions_hair_color.py``` : C-VAE의 condition을 위한 머리 색 regression 모델 학습
   * 머리 색 조건
     * **Face Dataset Of People That Don't Exist** 로부터의 데이터셋 중 **남녀 각각 최초 1000장 (이름순)** 의 사진을 학습 및 validation
@@ -46,6 +49,7 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
     * 필요 파일 :
       * ```regression_hair_color_info_male.csv``` (남성 최초 1000장 이름순, 머리 색을 나타내는 0-1 값 정보)
       * ```regression_hair_color_info_female.csv``` (여성 최초 1000장 이름순, 머리 색을 나타내는 0-1 값 정보)
+      * ```male_or_female_classify_result_for_all_images.csv``` (모든 이미지에 대한 각 성별일 확률에 대한 정보로, "머리 색 조건" 모델의 input 값으로 사용)
     * 출력 모델 : ```regression_hair_color```
 * ```train_model_for_conditions_mouth.py``` : C-VAE의 condition을 위한 입을 벌린 정도 regression 모델 학습
   * 입을 벌린 정도
@@ -54,6 +58,7 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
     * 필요 파일 :
       * ```regression_mouth_info_male.csv``` (남성 최초 1000장 이름순, 입을 벌린 정도를 나타내는 0-1 값 정보)
       * ```regression_mouth_info_female.csv``` (여성 최초 1000장 이름순, 입을 벌린 정도를 나타내는 0-1 값 정보)
+      * ```male_or_female_classify_result_for_all_images.csv``` (모든 이미지에 대한 각 성별일 확률에 대한 정보로, "입을 벌린 정도" 모델의 input 값으로 사용)
     * 출력 모델 : ```regression_mouth```
 * ```train_model_for_conditions_eyes.py``` : C-VAE의 condition을 위한 눈을 뜬 정도 regression 모델 학습
   * 눈을 뜬 정도
@@ -62,12 +67,14 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
     * 필요 파일 :
       * ```regression_eyes_info_male.csv``` (남성 최초 1000장 이름순, 눈을 뜬 정도를 나타내는 0-1 값 정보)
       * ```regression_eyes_info_female.csv``` (여성 최초 1000장 이름순, 눈을 뜬 정도를 나타내는 0-1 값 정보)
+      * ```male_or_female_classify_result_for_all_images.csv``` (모든 이미지에 대한 각 성별일 확률에 대한 정보로, "눈을 뜬 정도" 모델의 input 값으로 사용)
     * 출력 모델 : ```regression_eyes```
-  * 각각의 모델은 간단한 구조의 Convolutional Neural Network 를 이용
-  * 각각의 모델 학습 시, **남성 최초 901-1000번째, 여성 최초 901-1000번째 이름순** 데이터를 validation 데이터로 이용
 * ```save_condition_data.py``` : 모든 각 이미지의 condition 값을 pandas DataFrame 화
-  * 필요 모델 : ```classify_male_or_female```, ```regression_hair_color```, ```regression_mouth```, ```regression_eyes```
-  * 출력 파일 : ```condition_data.csv``` (모든 각 이미지의 condition 값을 pandas DataFrame 의 csv 형식으로 저장한 파일)
+  * 필요 모델 : ```regression_hair_color```, ```regression_mouth```, ```regression_eyes```
+  * 필요 파일 : ```male_or_female_classify_result_for_all_images.csv``` (모든 이미지에 대한 성별 예측 정보)
+  * 출력 파일 : ```condition_data.csv```
+    * 모든 각 이미지의 condition 값을 pandas DataFrame 의 csv 형식으로 저장한 파일
+    * 성별에 대한 예측값은 ```male_or_female_classify_result_for_all_images.csv``` 파일에 저장된 값을 사용
     * **각 모델의 학습 대상이 되는 이미지에 대해서도, 실제 값인 ground truth 값이 아닌 모델에 의해 예측된 condition 값을 저장** 
 * ```train_cvae_model.py``` : 학습 과정 전체 진행
   * 필요 파일 : resize 및 재배치된 전체 학습 데이터셋 (위 ```resizd_images``` 및 그 내부 디렉토리 구조 참고), ```condition_data.csv``` (모든 각 이미지의 condition 값)
@@ -75,6 +82,9 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
 * ```test_cvae_model.py``` : 이미지의 condition 이 주어지면 해당 condition 을 이용하여 이미지 생성
   * 필요 모델 : ```cvae_decoder_model``` (디코더), ```classify_male_or_female```, ```regression_hair_color```, ```regression_mouth```, ```regression_eyes```
   * 출력 파일 : ```test_output.png```
+* **머리 색 조건, 입을 벌린 정도, 눈을 뜬 정도** 모델에 대한 추가 설명
+  * 각각의 모델은 간단한 구조의 Convolutional Neural Network 를 이용
+  * 각각의 모델 학습 시, **남성 최초 901-1000번째, 여성 최초 901-1000번째 이름순** 데이터를 validation 데이터로 이용
 
 ## 데이터 전처리 및 생성 과정
 * 이미지 리사이징 후 데이터셋 재배치 진행

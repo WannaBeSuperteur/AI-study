@@ -5,6 +5,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 
 import os
 import cv2
+import pandas as pd
 
 
 class Classify_Male_Or_Female_CNN_Model(tf.keras.Model):
@@ -129,13 +130,56 @@ def load_training_data():
     return train_input_return, train_output_return
 
 
+# 이미지에 대한 성별 예측 결과 추가
+def add_predict_results(image_name, image_dir, predict_result, cnn_model):
+    img_path = image_dir + '/' + image_name
+    
+    img = cv2.imread(img_path, cv2.IMREAD_UNCHANGED)
+    img = img.reshape((1, img.shape[0], img.shape[1], 3)) # (120, 120, 3) -> (1, 120, 120, 3)
+    img = img / 255.0
+    
+    prediction = np.array(cnn_model(img))
+
+    prediction_result = {'image_path': [img_path], 'prob_male': [prediction[0][0]], 'prob_female': [prediction[0][1]]}
+    prediction_result = pd.DataFrame(prediction_result)
+    predict_result = pd.concat([predict_result, prediction_result])
+
+    if len(predict_result) % 250 == 0:
+        print(len(predict_result))
+
+    return predict_result
+
+
+# 모든 이미지에 대해 각 성별일 확률 예측 및 그 결과 저장
+def predict_male_or_female_for_all_images(cnn_model):
+    print('prediction start ...')
+    
+    predict_result = pd.DataFrame()
+
+    image_dirs = ['resized_images/first_dataset', 'resized_images/second_dataset_male', 'resized_images/second_dataset_female']
+
+    for image_dir in image_dirs:
+        for image_name in os.listdir(image_dir):
+            predict_result = add_predict_results(image_name, image_dir, predict_result, cnn_model)
+
+    predict_result.to_csv('male_or_female_classify_result_for_all_images.csv')
+
+
 if __name__ == '__main__':
 
-    # 학습 데이터 받아오기
-    train_input, train_output = load_training_data()    
+    if 'classify_male_or_female' in os.listdir():
+        cnn_model = tf.keras.models.load_model('classify_male_or_female')
 
-    # CNN 모델 학습
-    cnn_model = train_cnn_model(train_input, train_output)
+    else:
 
-    # CNN 모델 저장
-    cnn_model.save('classify_male_or_female')
+        # 학습 데이터 받아오기
+        train_input, train_output = load_training_data()    
+
+        # CNN 모델 학습
+        cnn_model = train_cnn_model(train_input, train_output)
+
+        # CNN 모델 저장
+        cnn_model.save('classify_male_or_female')
+
+    # 모든 이미지에 대해 각 성별일 확률 예측
+    predict_male_or_female_for_all_images(cnn_model)
