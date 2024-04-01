@@ -34,11 +34,12 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
     - Face Dataset Of People That Don't Exist 3,860 장 (resized)
 ```
 
-* ```train_models_for_conditions.py``` : C-VAE의 condition을 위한 분류/회귀 모델들을 학습
+* ```train_model_for_conditions_male_or_female.py``` : C-VAE의 condition을 위한 성별 classify 모델 학습
   * 성별 조건
     * **Face Dataset Of People That Don't Exist** 로부터의 데이터셋을 이용하여 **성별 예측 분류 모델 학습**
     * 해당 조건을 C-VAE 모델에 추가로 입력 시 cell의 개수는 2개 (각각 ```male```일 확률, ```female```일 확률, activation = softmax)
     * 출력 모델 : ```classify_male_or_female```
+* ```train_model_for_conditions_hair_color.py``` : C-VAE의 condition을 위한 머리 색 regression 모델 학습
   * 머리 색 조건
     * **Face Dataset Of People That Don't Exist** 로부터의 데이터셋 중 **남녀 각각 최초 1000장 (이름순)** 의 사진을 학습 및 validation
     * 머리 색이 진할수록 1에 가깝고, 밝을수록 0에 가까운 값을 출력하는 **regression 모델 학습**
@@ -46,6 +47,7 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
       * ```regression_hair_color_info_male.csv``` (남성 최초 1000장 이름순, 머리 색을 나타내는 0-1 값 정보)
       * ```regression_hair_color_info_female.csv``` (여성 최초 1000장 이름순, 머리 색을 나타내는 0-1 값 정보)
     * 출력 모델 : ```regression_hair_color```
+* ```train_model_for_conditions_mouth.py``` : C-VAE의 condition을 위한 입을 벌린 정도 regression 모델 학습
   * 입을 벌린 정도
     * **머리 색 조건** 에 대한 데이터셋과 동일한 데이터셋을 학습 및 validation
     * 입을 벌린 정도가 클수록 1에 가깝고, 작을수록 (입을 다물었을수록) 0에 가까운 값을 출력하는 **regression 모델 학습**
@@ -53,6 +55,7 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
       * ```regression_mouth_info_male.csv``` (남성 최초 1000장 이름순, 입을 벌린 정도를 나타내는 0-1 값 정보)
       * ```regression_mouth_info_female.csv``` (여성 최초 1000장 이름순, 입을 벌린 정도를 나타내는 0-1 값 정보)
     * 출력 모델 : ```regression_mouth```
+* ```train_model_for_conditions_eyes.py``` : C-VAE의 condition을 위한 눈을 뜬 정도 regression 모델 학습
   * 눈을 뜬 정도
     * **머리 색 조건** 에 대한 데이터셋과 동일한 데이터셋을 학습 및 validation
     * 눈을 뜬 정도가 클수록 1에 가깝고, 눈을 감았을수록 0에 가까운 값을 출력하는 **regression 모델 학습**
@@ -100,7 +103,10 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
 ## 실행 순서
 ```
 python resize_and_sort_data.py
-python train_models_for_conditions.py
+python train_model_for_condition_male_or_female.py
+python train_model_for_condition_hair_color.py
+python train_model_for_condition_mouth.py
+python train_model_for_condition_eyes.py
 python train.py
 python test.py
 ```
@@ -114,7 +120,7 @@ python test.py
 |---|---|---|---|---|---|
 |GAI-P2-master|||240311|240324|마스터 브랜치|
 |GAI-P2-1|```done```|```feat```|240312|240312|data 재배치 및 resizing, 배경 부분 cropping 실시|
-|GAI-P2-2||```feat```|||```성별 조건``` condition을 위한 ```classify_male_or_female``` 모델 학습|
+|GAI-P2-2|```done```|```feat```|240313|240317|```성별 조건``` condition을 위한 ```classify_male_or_female``` 모델 학습|
 |GAI-P2-3||```feat```|||```머리 색 조건``` condition을 위한 ```regression_hair_color``` 모델 학습|
 |GAI-P2-4||```feat```|||```입을 벌린 정도``` condition을 위한 ```regression_mouth``` 모델 학습|
 |GAI-P2-5||```feat```|||```눈을 뜬 정도``` condition을 위한 ```regression_eyes``` 모델 학습|
