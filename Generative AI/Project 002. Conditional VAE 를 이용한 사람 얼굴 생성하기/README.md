@@ -143,7 +143,7 @@ python test.py
 |GAI-P2-1|```done```|```feat```|240312|240312|data 재배치 및 resizing, 배경 부분 cropping 실시|
 |GAI-P2-2|```done```|```feat```|240313|240317|```성별 조건``` condition을 위한 ```classify_male_or_female``` 모델 학습|
 |GAI-P2-3|```done```|```feat```|240401|240402|```머리 색 조건``` condition을 위한 ```regression_hair_color``` 모델 학습|
-|GAI-P2-4||```feat```|||```입을 벌린 정도``` condition을 위한 ```regression_mouth``` 모델 학습|
+|GAI-P2-4|```ing```|```feat```|240402||```입을 벌린 정도``` condition을 위한 ```regression_mouth``` 모델 학습|
 |GAI-P2-5||```feat```|||```눈을 뜬 정도``` condition을 위한 ```regression_eyes``` 모델 학습|
 |GAI-P2-6||```feat```|||condition 데이터를 csv 파일로 저장|
 |GAI-P2-7||```feat```|||C-VAE 모델 학습|
