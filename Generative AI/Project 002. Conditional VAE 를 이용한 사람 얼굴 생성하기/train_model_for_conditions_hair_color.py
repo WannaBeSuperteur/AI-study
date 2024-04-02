@@ -97,7 +97,7 @@ def train_cnn_model(train_input_img, train_input_gender_prob, train_output):
     cnn_model.fit(
         train_input, train_output,
         callbacks=[early_stopping, lr_reduced],
-        epochs=2,
+        epochs=40,
         validation_split=0.1
     )
 
