@@ -152,12 +152,12 @@ def load_training_data():
     # read output data
     mouth_male = read_output('regression_mouth_info_male.csv')
     mouth_female = read_output('regression_mouth_info_female.csv')
-    all_hair_colors = np.concatenate((mouth_male, mouth_female), axis=0)
+    all_mouth_info = np.concatenate((mouth_male, mouth_female), axis=0)
 
     # create dataset
     train_input_img = np.array(cropped_all_images)
     train_input_gender_prob = get_gender_prob_data(male_img_names, female_img_names)
-    train_output = np.array(all_hair_colors)
+    train_output = np.array(all_mouth_info)
 
     print(f'shape of train input (images)      : {np.shape(train_input_img)}')
     print(f'shape of train input (gender prob) : {np.shape(train_input_gender_prob)}')
