@@ -132,6 +132,11 @@ python train.py
 python test.py
 ```
 
+## 테스트 코드
+* ```test_compute_mse_for_all_mean.py```
+  * regression output 값 정보를 저장한 csv 파일 (예: ```regression_hair_color_info_male.csv```) 에서, **모든 output 값을 해당 파일의 모든 output 값의 평균값으로 예측** 했을 때의 MSE (mean square error) 값을 출력한다.
+  * 파일 이름은 ```file_name``` 변수에 저장되어 있으며, 다른 파일을 테스트하려면 해당 변수의 값을 수정한 후 테스트하면 된다.
+
 ## 성능지표 결과
 * 성능 측정지표 : 정성 평가로 진행
   * ```test.py``` 파일 실행 시, 디코더 모델 (```cvae_decoder_model```) 에 condition을 입력 받은 후, 모델이 출력하는 이미지 ```test_output.png``` 파일을 확인할 수 있음
