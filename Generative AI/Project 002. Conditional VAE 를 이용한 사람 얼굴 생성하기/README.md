@@ -128,6 +128,7 @@ python train_model_for_condition_male_or_female.py
 python train_model_for_condition_hair_color.py
 python train_model_for_condition_mouth.py
 python train_model_for_condition_eyes.py
+python save_condition_data.py
 python train.py
 python test.py
 ```
@@ -150,7 +151,7 @@ python test.py
 |GAI-P2-3|```done```|```feat```|240401|240402|```머리 색 조건``` condition을 위한 ```regression_hair_color``` 모델 학습|
 |GAI-P2-4|```done```|```feat```|240402|240402|```입을 벌린 정도``` condition을 위한 ```regression_mouth``` 모델 학습|
 |GAI-P2-5|```done```|```feat```|240402|240404|```눈을 뜬 정도``` condition을 위한 ```regression_eyes``` 모델 학습|
-|GAI-P2-6||```feat```|||condition 데이터를 csv 파일로 저장|
+|GAI-P2-6|```done```|```feat```|240404|240404|condition 데이터를 csv 파일로 저장|
 |GAI-P2-7||```feat```|||C-VAE 모델 학습|
 |GAI-P2-8||```feat```|||C-VAE 모델 테스트 (사람 얼굴 이미지 생성)|
 |GAI-P2-9||```feat```|||C-VAE 모델 성능 개선 (특별한 Loss 추가, 새로운 condition 추가, 모델 구조 변경 등)|

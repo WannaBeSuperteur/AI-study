@@ -128,7 +128,8 @@ def get_gender_prob_data(male_img_names, female_img_names):
 
 
 # 이미지를 가로 4등분, 세로 4등분하여 16등분했을 때,
-# 가로로 위쪽에서 2, 3번째 줄과 세로로 위쪽에서 2번째 줄의 교차점 (16등분 중 총 2개 영역) 에 해당하는 부분만 있는 이미지로 crop
+# 가로로 위쪽에서 2, 3번째 줄과 세로로 위쪽에서 2번째 줄 + (3번째 줄의 가장 위 2 pixels) 의 교차점
+# (16등분 중 총 2개 영역 + 2 pixels 추가 영역) 에 해당하는 부분만 있는 이미지로 crop
 def crop_images(all_images):
     img_count = len(all_images)
     cropped_all_images = np.zeros((img_count, IMG_HEIGHT, IMG_WIDTH, 3))
