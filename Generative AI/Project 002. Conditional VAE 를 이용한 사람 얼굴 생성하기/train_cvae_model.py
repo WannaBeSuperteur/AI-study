@@ -169,7 +169,7 @@ def train_cvae_model(train_input, train_info):
     # 학습 실시
     cvae_model_class.cvae.fit(
         [train_input, train_info, train_info], train_input,
-        epochs=8,
+        epochs=16,
         batch_size=BATCH_SIZE,
         callbacks=[scheduler_callback],
         shuffle=True
@@ -239,7 +239,7 @@ if __name__ == '__main__':
     np.set_printoptions(suppress=True, linewidth=160)
 
     # 학습 데이터 추출 (이미지 input + 해당 이미지의 class)
-    train_input, train_info = create_train_and_valid_data(limit=1000)
+    train_input, train_info = create_train_and_valid_data(limit=3000)
     
     print(f'\nshape of train input: {np.shape(train_input)}')
     print(train_input)
