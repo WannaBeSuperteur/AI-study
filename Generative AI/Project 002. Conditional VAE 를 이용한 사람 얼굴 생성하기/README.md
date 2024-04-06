@@ -88,6 +88,7 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
 * ```train_cvae_model.py``` : 학습 과정 전체 진행
   * 필요 파일 : resize 및 재배치된 전체 학습 데이터셋 (위 ```resizd_images``` 및 그 내부 디렉토리 구조 참고), ```condition_data.csv``` (모든 각 이미지의 condition 값)
   * 출력 모델 : ```cvae_model``` (Conditional VAE 모델), ```cvae_encoder_model``` (C-VAE의 인코더), ```cvae_decoder_model``` (C-VAE의 디코더)
+  * decoder 모델 모의 테스트용 파일 : ```decoder_mock_test.py```
 
 * ```test_cvae_model.py``` : 이미지의 condition 이 주어지면 해당 condition 을 이용하여 이미지 생성
   * 필요 모델 : ```cvae_decoder_model``` (디코더), ```classify_male_or_female```, ```regression_hair_color```, ```regression_mouth```, ```regression_eyes```
@@ -152,6 +153,6 @@ python test.py
 |GAI-P2-4|```done```|```feat```|240402|240402|```입을 벌린 정도``` condition을 위한 ```regression_mouth``` 모델 학습|
 |GAI-P2-5|```done```|```feat```|240402|240404|```눈을 뜬 정도``` condition을 위한 ```regression_eyes``` 모델 학습|
 |GAI-P2-6|```done```|```feat```|240404|240404|condition 데이터를 csv 파일로 저장|
-|GAI-P2-7||```feat```|||C-VAE 모델 학습|
+|GAI-P2-7|```ing```|```feat```|240406||C-VAE 모델 학습|
 |GAI-P2-8||```feat```|||C-VAE 모델 테스트 (사람 얼굴 이미지 생성)|
 |GAI-P2-9||```feat```|||C-VAE 모델 성능 개선 (특별한 Loss 추가, 새로운 condition 추가, 모델 구조 변경 등)|
