@@ -142,17 +142,28 @@ class CVAE_Model:
         return self.cvae(inputs)
 
 
+# C-VAE 모델의 learning rate scheduler
+def scheduler(epoch, lr):
+    if epoch < 2:
+        return lr
+    elif lr > 0.000001:
+        return lr * 0.8
+    else:
+        return lr
+
+
 # C-VAE 모델 정의 및 반환
 def define_cvae_model():
     optimizer = optimizers.Adam(0.0001, decay=1e-6)
+    scheduler_callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
     model = CVAE_Model(dropout_rate=0.45) # 실제 모델은 model.cvae
-    return model, optimizer
+    return model, optimizer, scheduler_callback
 
 
 # C-VAE 모델 학습 실시 및 모델 저장
 # train_info = train_condition (N, 5)
 def train_cvae_model(train_input, train_info):
-    cvae_model_class, optimizer = define_cvae_model()
+    cvae_model_class, optimizer, scheduler_callback = define_cvae_model()
     cvae_model_class.cvae.compile(loss=cvae_model_class.vae_loss, optimizer=optimizer)
 
     # 학습 실시
@@ -160,6 +171,7 @@ def train_cvae_model(train_input, train_info):
         [train_input, train_info, train_info], train_input,
         epochs=8,
         batch_size=BATCH_SIZE,
+        callbacks=[scheduler_callback],
         shuffle=True
     )
 
