@@ -12,6 +12,10 @@ def mock_test_decoder(cvae_decoder):
     
     img = cvae_decoder([latent_space, input_info])
     img_np = np.array(img.numpy() * 255.0, dtype=np.uint8)
+
+    print('result image :')
+    print(img_np)
+    
     img_np_rgb = Image.fromarray(img_np[0])
     img_np_rgb.save(f'test_image_mock_test.png')
 

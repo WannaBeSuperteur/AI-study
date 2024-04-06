@@ -21,6 +21,8 @@ NUM_INFO = 5 # male prob, female prob, hair color, mouth, and eyes
 BATCH_SIZE = 32
 HIDDEN_DIMS = 40
 
+MSE_LOSS_WEIGHT = 100
+
 
 # random normal noise maker for VAE 
 def noise_maker(noise_args):
@@ -38,8 +40,8 @@ class CVAE_Model:
     def get_mse_and_kl_loss(self, x, y):
         x_reshaped = K.reshape(x, shape=(BATCH_SIZE, TOTAL_INPUT_IMG_VALUES))
         y_reshaped = K.reshape(y, shape=(BATCH_SIZE, TOTAL_INPUT_IMG_VALUES))
-        mse_loss = TOTAL_CELLS * mean_squared_error(x_reshaped, y_reshaped)
         
+        mse_loss = MSE_LOSS_WEIGHT * mean_squared_error(x_reshaped, y_reshaped)
         kl_loss = -0.5 * K.sum(1 + self.latent_log_var - K.square(self.latent_mean) - K.exp(self.latent_log_var), axis=-1)
 
         return mse_loss, kl_loss, y_reshaped
@@ -217,9 +219,10 @@ def create_train_and_valid_data(limit=None):
 
 if __name__ == '__main__':
     tf.compat.v1.disable_eager_execution()
+    np.set_printoptions(suppress=True, linewidth=160)
 
     # 학습 데이터 추출 (이미지 input + 해당 이미지의 class)
-    train_input, train_info = create_train_and_valid_data(limit=100)
+    train_input, train_info = create_train_and_valid_data(limit=1000)
     
     print(f'\nshape of train input: {np.shape(train_input)}')
     print(train_input)
