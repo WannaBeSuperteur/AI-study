@@ -144,7 +144,7 @@ class CVAE_Model:
 
 # C-VAE 모델 정의 및 반환
 def define_cvae_model():
-    optimizer = optimizers.Adam(0.001, decay=1e-6)
+    optimizer = optimizers.Adam(0.0001, decay=1e-6)
     model = CVAE_Model(dropout_rate=0.45) # 실제 모델은 model.cvae
     return model, optimizer
 
@@ -216,6 +216,11 @@ def create_train_and_valid_data(limit=None):
 
     return train_input, train_info
     
+
+# training time (with CPU) : 25 sample/s -> 11.2  minutes for all 16,800 samples (= 1 epoch)
+#                                            1.5  hours for 8 epochs
+#                                            3.75 hours for 20 epochs
+#                                            7.5  hours for 40 epochs
 
 if __name__ == '__main__':
     tf.compat.v1.disable_eager_execution()
