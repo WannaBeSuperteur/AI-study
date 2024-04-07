@@ -129,8 +129,8 @@ class CVAE_Model:
         enc_d0_ad = layers.concatenate([enc_d0, enc_ad0, enc_ad1, enc_ad2, input_condition])
 
         # latent space
-        self.latent_mean = layers.Dense(HIDDEN_DIMS, name='lm')(enc_d0_ad)
-        self.latent_log_var = layers.Dense(HIDDEN_DIMS, name='llv')(enc_d0_ad)
+        self.latent_mean = layers.Dense(HIDDEN_DIMS, name='lm', activation='tanh')(enc_d0_ad)
+        self.latent_log_var = layers.Dense(HIDDEN_DIMS, name='llv', activation='tanh')(enc_d0_ad)
         self.latent_space = layers.Lambda(noise_maker, output_shape=(HIDDEN_DIMS,), name='ls')([self.latent_mean, self.latent_log_var])
 
         # decoder
