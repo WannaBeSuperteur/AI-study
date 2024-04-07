@@ -69,10 +69,10 @@ class CVAE_Model:
         L2 = tf.keras.regularizers.l2(0.001)
 
         # encoder 용 레이어
-        self.encoder_cnn0 = layers.Conv2D(32, (3, 3), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='ec0')
-        self.encoder_cnn1 = layers.Conv2D(48, (3, 3), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='ec1')
-        self.encoder_cnn2 = layers.Conv2D(64, (3, 3), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='ec2')
-        self.encoder_cnn3 = layers.Conv2D(96, (3, 3), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='ec3')
+        self.encoder_cnn0 = layers.Conv2D(32, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='ec0')
+        self.encoder_cnn1 = layers.Conv2D(48, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='ec1')
+        self.encoder_cnn2 = layers.Conv2D(64, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='ec2')
+        self.encoder_cnn3 = layers.Conv2D(96, (4, 4), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='ec3')
         
         self.encoder_dense0 = layers.Dense(192, activation=silu, name='ed0')
         self.encoder_ad0 = layers.Dense(64, activation=silu, name='ead0') # input image 와 직접 연결
@@ -81,10 +81,10 @@ class CVAE_Model:
         self.decoder_dense0 = layers.Dense(256, activation=silu, name='dd0')
         self.decoder_dense1 = layers.Dense(120 * TOTAL_CELLS // (8 * 8), activation=silu, name='dd1')
 
-        self.decoder_cnn0 = layers.Conv2DTranspose(80, (3, 3), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='dc0')
-        self.decoder_cnn1 = layers.Conv2DTranspose(60, (3, 3), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='dc1')
-        self.decoder_cnn2 = layers.Conv2DTranspose(40, (3, 3), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='dc2')
-        self.decoder_cnn3 = layers.Conv2DTranspose(NUM_CHANNELS, (3, 3), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='dc3')
+        self.decoder_cnn0 = layers.Conv2DTranspose(80, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='dc0')
+        self.decoder_cnn1 = layers.Conv2DTranspose(60, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='dc1')
+        self.decoder_cnn2 = layers.Conv2DTranspose(40, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='dc2')
+        self.decoder_cnn3 = layers.Conv2DTranspose(NUM_CHANNELS, (4, 4), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='dc3')
 
         # encoder (main stream)
         input_image = layers.Input(batch_shape=(BATCH_SIZE, INPUT_IMG_SIZE, INPUT_IMG_SIZE, NUM_CHANNELS))
