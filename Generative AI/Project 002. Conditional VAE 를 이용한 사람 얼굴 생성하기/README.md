@@ -3,7 +3,7 @@
   * [Person Face Dataset (thispersondoesnotexist)](https://www.kaggle.com/datasets/almightyj/person-face-dataset-thispersondoesnotexist)
   * [Face Dataset Of People That Don't Exist](https://www.kaggle.com/datasets/bwandowando/all-these-people-dont-exist)
   * 모두 https://thispersondoesnotexist.com/ 로부터 생성된 데이터
-* 수행 기간: 2024.03.11 ~ 03.17 + 2024.04.01 ~ 04.07 (14일)
+* 수행 기간: 2024.03.11 ~ 03.17 + 2024.04.01 ~ 04.10 (17일)
 
 ## 파일 및 코드 설명
 * 학습 데이터셋 구조 (다운받은 데이터를 아래와 같이 배치), **전체 16,873 장**
@@ -91,8 +91,13 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
   * decoder 모델 모의 테스트용 파일 : ```decoder_mock_test.py```
 
 * ```test_cvae_model.py``` : 이미지의 condition 이 주어지면 해당 condition 을 이용하여 이미지 생성
-  * 필요 모델 : ```cvae_decoder_model``` (디코더), ```classify_male_or_female```, ```regression_hair_color```, ```regression_mouth```, ```regression_eyes```
-  * 출력 파일 : ```test_output.png```
+  * 필요 모델 : ```cvae_decoder_model``` (디코더)
+  * 출력 파일 : ```test_outputs/test_output_{info}_{N}.png```
+    * ```info``` : (남성 ```M``` / 여성 ```F```) + (hair color 5/8/1) + (mouth 0/5/1) + (eyes 5/8/1)
+      * 0/5/1 은 해당 값이 각각 0.0, 0.5, 1.0 임을 의미
+      * 5/8/1 은 해당 값이 각각 0.5, 0.8, 1.0 임을 의미
+    * 예를 들어, ```test_outputs/test_output_F101_{N}.png``` 는 **여성 + 진한 머리 색 (1.0) + 입을 다문 상태 (0.5) + 크게 뜬 눈 (1.0)** 의 이미지를 의미
+    * ```N``` 은 동일 ```info``` 값의 이미지가 여러 장 있을 때, 해당 이미지 각각을 나타내는 이미지 번호
 
 * **머리 색 조건, 입을 벌린 정도, 눈을 뜬 정도** 모델에 대한 추가 설명
   * 각각의 모델은 간단한 구조의 Convolutional Neural Network 를 이용
@@ -130,8 +135,8 @@ python train_model_for_condition_hair_color.py
 python train_model_for_condition_mouth.py
 python train_model_for_condition_eyes.py
 python save_condition_data.py
-python train.py
-python test.py
+python train_cvae_model.py
+python test_cvae_model.py
 ```
 
 ## 테스트 코드
@@ -146,7 +151,7 @@ python test.py
 ## branch info
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
-|GAI-P2-master|||240311|240407|마스터 브랜치|
+|GAI-P2-master|||240311|240410|마스터 브랜치|
 |GAI-P2-1|```done```|```feat```|240312|240312|data 재배치 및 resizing, 배경 부분 cropping 실시|
 |GAI-P2-2|```done```|```feat```|240313|240317|```성별 조건``` condition을 위한 ```classify_male_or_female``` 모델 학습|
 |GAI-P2-3|```done```|```feat```|240401|240402|```머리 색 조건``` condition을 위한 ```regression_hair_color``` 모델 학습|
@@ -154,5 +159,5 @@ python test.py
 |GAI-P2-5|```done```|```feat```|240402|240404|```눈을 뜬 정도``` condition을 위한 ```regression_eyes``` 모델 학습|
 |GAI-P2-6|```done```|```feat```|240404|240404|condition 데이터를 csv 파일로 저장|
 |GAI-P2-7|```done```|```feat```|240406|240407|C-VAE 모델 학습|
-|GAI-P2-8||```feat```|||C-VAE 모델 테스트 (사람 얼굴 이미지 생성)|
+|GAI-P2-8|```done```|```feat```|240407|240407|C-VAE 모델 테스트 (사람 얼굴 이미지 생성)|
 |GAI-P2-9||```feat```|||C-VAE 모델 성능 개선 (특별한 Loss 추가, 새로운 condition 추가, 모델 구조 변경 등)|
