@@ -169,7 +169,7 @@ def train_cvae_model(train_input, train_info):
     # 학습 실시
     cvae_model_class.cvae.fit(
         [train_input, train_info, train_info], train_input,
-        epochs=16,
+        epochs=32,
         batch_size=BATCH_SIZE,
         callbacks=[scheduler_callback],
         shuffle=True
@@ -229,17 +229,17 @@ def create_train_and_valid_data(limit=None):
     return train_input, train_info
     
 
-# training time (with CPU) : 25 sample/s -> 11.2  minutes for all 16,800 samples (= 1 epoch)
-#                                            1.5  hours for 8 epochs
-#                                            3.75 hours for 20 epochs
-#                                            7.5  hours for 40 epochs
+# training time (with CPU) : 25 sample/s -> 11.2  - 12.0 minutes for all 16,800 samples (= 1 epoch)
+#                                            1.5  -  1.6 hours   for 8 epochs
+#                                            3.75 -  4.0 hours   for 20 epochs
+#                                            7.5  -  8.0 hours   for 40 epochs
 
 if __name__ == '__main__':
     tf.compat.v1.disable_eager_execution()
     np.set_printoptions(suppress=True, linewidth=160)
 
     # 학습 데이터 추출 (이미지 input + 해당 이미지의 class)
-    train_input, train_info = create_train_and_valid_data(limit=3000)
+    train_input, train_info = create_train_and_valid_data(limit=None)
     
     print(f'\nshape of train input: {np.shape(train_input)}')
     print(train_input)
