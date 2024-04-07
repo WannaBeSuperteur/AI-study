@@ -19,7 +19,7 @@ TOTAL_INPUT_IMG_VALUES = NUM_CHANNELS * TOTAL_CELLS
 NUM_INFO = 5 # male prob, female prob, hair color, mouth, and eyes
 
 BATCH_SIZE = 32
-HIDDEN_DIMS = 256
+HIDDEN_DIMS = 40
 
 MSE_LOSS_WEIGHT = 100
 
@@ -70,19 +70,19 @@ class CVAE_Model:
 
         # encoder 용 레이어
         self.encoder_cnn0 = layers.Conv2D(32, (3, 3), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='ec0')
-        self.encoder_cnn1 = layers.Conv2D(32, (3, 3), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='ec1')
-        self.encoder_cnn2 = layers.Conv2D(48, (3, 3), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='ec2')
-        self.encoder_cnn3 = layers.Conv2D(64, (3, 3), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='ec3')
+        self.encoder_cnn1 = layers.Conv2D(48, (3, 3), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='ec1')
+        self.encoder_cnn2 = layers.Conv2D(64, (3, 3), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='ec2')
+        self.encoder_cnn3 = layers.Conv2D(96, (3, 3), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='ec3')
         
-        self.encoder_dense0 = layers.Dense(128, activation=silu, name='ed0')
-        self.encoder_ad0 = layers.Dense(32, activation=silu, name='ead0') # input image 와 직접 연결
+        self.encoder_dense0 = layers.Dense(192, activation=silu, name='ed0')
+        self.encoder_ad0 = layers.Dense(64, activation=silu, name='ead0') # input image 와 직접 연결
 
         # decoder 용 레이어
-        self.decoder_dense0 = layers.Dense(160, activation=silu, name='dd0')
-        self.decoder_dense1 = layers.Dense(80 * TOTAL_CELLS // (8 * 8), activation=silu, name='dd1')
+        self.decoder_dense0 = layers.Dense(256, activation=silu, name='dd0')
+        self.decoder_dense1 = layers.Dense(120 * TOTAL_CELLS // (8 * 8), activation=silu, name='dd1')
 
-        self.decoder_cnn0 = layers.Conv2DTranspose(60, (3, 3), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='dc0')
-        self.decoder_cnn1 = layers.Conv2DTranspose(40, (3, 3), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='dc1')
+        self.decoder_cnn0 = layers.Conv2DTranspose(80, (3, 3), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='dc0')
+        self.decoder_cnn1 = layers.Conv2DTranspose(60, (3, 3), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='dc1')
         self.decoder_cnn2 = layers.Conv2DTranspose(40, (3, 3), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='dc2')
         self.decoder_cnn3 = layers.Conv2DTranspose(NUM_CHANNELS, (3, 3), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='dc3')
 
@@ -123,7 +123,7 @@ class CVAE_Model:
         dec_merged = layers.concatenate([latent_for_decoder, condition_for_decoder])
         dec_d0 = self.decoder_dense0(dec_merged)
         dec_d1 = self.decoder_dense1(dec_d0)
-        dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 8, INPUT_IMG_SIZE // 8, 80))(dec_d1)
+        dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 8, INPUT_IMG_SIZE // 8, 120))(dec_d1)
 
         dec_c0 = self.decoder_cnn0(dec_reshaped)
         dec_c0 = self.dropout_dec_c0(dec_c0)
@@ -253,10 +253,10 @@ def create_train_and_valid_data(limit=None):
     return train_input, train_info
     
 
-# training time (with CPU) : 25 sample/s -> 11.2  - 12.0 minutes for all 16,800 samples (= 1 epoch)
-#                                            1.5  -  1.6 hours   for 8 epochs
-#                                            3.75 -  4.0 hours   for 20 epochs
-#                                            7.5  -  8.0 hours   for 40 epochs
+# training time (with CPU) : 20 sample/s -> 14.0  - 15.0 minutes for all 16,800 samples (= 1 epoch)
+#                                            1.87 -  2.0 hours   for 8 epochs
+#                                            4.67 -  5.0 hours   for 20 epochs
+#                                            9.33 - 10.0 hours   for 40 epochs
 
 if __name__ == '__main__':
     tf.compat.v1.disable_eager_execution()

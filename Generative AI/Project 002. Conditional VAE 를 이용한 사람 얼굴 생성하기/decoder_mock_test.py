@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 from PIL import Image
 
-HIDDEN_DIMS = 256
+HIDDEN_DIMS = 40
 
 
 # RGB <-> BGR
