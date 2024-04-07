@@ -126,7 +126,7 @@ class CVAE_Model:
         enc_ad2 = self.encoder_ad2(enc_flatten_for_ad2)
 
         # encoder (concatenated)
-        enc_d0_ad = layers.concatenate([enc_d0, enc_ad0, enc_ad1, enc_ad2])
+        enc_d0_ad = layers.concatenate([enc_d0, enc_ad0, enc_ad1, enc_ad2, input_condition])
 
         # latent space
         self.latent_mean = layers.Dense(HIDDEN_DIMS, name='lm')(enc_d0_ad)
