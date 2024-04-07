@@ -57,11 +57,14 @@ class CVAE_Model:
 
         # 공통 레이어
         self.flatten = tf.keras.layers.Flatten()
-        self.flatten_for_ad = tf.keras.layers.Flatten()
+        self.flatten_for_ad0 = tf.keras.layers.Flatten()
+        self.flatten_for_ad1 = tf.keras.layers.Flatten()
+        self.flatten_for_ad2 = tf.keras.layers.Flatten()
         
         self.dropout_enc_c0 = tf.keras.layers.Dropout(rate=dropout_rate, name='dropout_enc_c0')
         self.dropout_enc_c1 = tf.keras.layers.Dropout(rate=dropout_rate, name='dropout_enc_c1')
         self.dropout_enc_c2 = tf.keras.layers.Dropout(rate=dropout_rate, name='dropout_enc_c2')
+        
         self.dropout_dec_c0 = tf.keras.layers.Dropout(rate=dropout_rate, name='dropout_dec_c0')
         self.dropout_dec_c1 = tf.keras.layers.Dropout(rate=dropout_rate, name='dropout_dec_c1')
         self.dropout_dec_c2 = tf.keras.layers.Dropout(rate=dropout_rate, name='dropout_dec_c2')
@@ -76,6 +79,8 @@ class CVAE_Model:
         
         self.encoder_dense0 = layers.Dense(192, activation=silu, name='ed0')
         self.encoder_ad0 = layers.Dense(64, activation=silu, name='ead0') # input image 와 직접 연결
+        self.encoder_ad1 = layers.Dense(64, activation=silu, name='ead1') # 60 x 60 feature 와 직접 연결
+        self.encoder_ad2 = layers.Dense(64, activation=silu, name='ead2') # 30 x 30 feature 와 직접 연결
 
         # decoder 용 레이어
         self.decoder_dense0 = layers.Dense(256, activation=silu, name='dd0')
@@ -105,15 +110,27 @@ class CVAE_Model:
         enc_d0 = self.encoder_dense0(enc_merged)
 
         # encoder (additional stream)
-        enc_flatten_for_ad = self.flatten_for_ad(input_image)
-        enc_ad0 = self.encoder_ad0(enc_flatten_for_ad)
+        # original 120 x 120 image
+        enc_flatten_for_ad0 = self.flatten_for_ad0(input_image)
+        enc_flatten_for_ad0 = layers.concatenate([enc_flatten_for_ad0, input_condition])
+        enc_ad0 = self.encoder_ad0(enc_flatten_for_ad0)
+
+        # 60 x 60 feature map
+        enc_flatten_for_ad1 = self.flatten_for_ad1(enc_c0)
+        enc_flatten_for_ad1 = layers.concatenate([enc_flatten_for_ad1, input_condition])
+        enc_ad1 = self.encoder_ad1(enc_flatten_for_ad1)
+
+        # 30 x 30 feature map
+        enc_flatten_for_ad2 = self.flatten_for_ad2(enc_c1)
+        enc_flatten_for_ad2 = layers.concatenate([enc_flatten_for_ad2, input_condition])
+        enc_ad2 = self.encoder_ad2(enc_flatten_for_ad2)
 
         # encoder (concatenated)
-        end_d0_ad0 = layers.concatenate([enc_d0, enc_ad0])
+        enc_d0_ad = layers.concatenate([enc_d0, enc_ad0, enc_ad1, enc_ad2])
 
         # latent space
-        self.latent_mean = layers.Dense(HIDDEN_DIMS, name='lm')(end_d0_ad0)
-        self.latent_log_var = layers.Dense(HIDDEN_DIMS, name='llv')(end_d0_ad0)
+        self.latent_mean = layers.Dense(HIDDEN_DIMS, name='lm')(enc_d0_ad)
+        self.latent_log_var = layers.Dense(HIDDEN_DIMS, name='llv')(enc_d0_ad)
         self.latent_space = layers.Lambda(noise_maker, output_shape=(HIDDEN_DIMS,), name='ls')([self.latent_mean, self.latent_log_var])
 
         # decoder
