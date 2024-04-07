@@ -160,4 +160,4 @@ python test_cvae_model.py
 |GAI-P2-6|```done```|```feat```|240404|240404|condition 데이터를 csv 파일로 저장|
 |GAI-P2-7|```done```|```feat```|240406|240407|C-VAE 모델 학습|
 |GAI-P2-8|```done```|```feat```|240407|240407|C-VAE 모델 테스트 (사람 얼굴 이미지 생성)|
-|GAI-P2-9||```feat```|||C-VAE 모델 성능 개선 (특별한 Loss 추가, 새로운 condition 추가, 모델 구조 변경 등)|
+|GAI-P2-9|```ing```|```feat```|240407||C-VAE 모델 성능 개선 (특별한 Loss 추가, 새로운 condition 추가, 모델 구조 변경 등)|

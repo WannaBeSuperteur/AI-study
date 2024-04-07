@@ -19,7 +19,7 @@ TOTAL_INPUT_IMG_VALUES = NUM_CHANNELS * TOTAL_CELLS
 NUM_INFO = 5 # male prob, female prob, hair color, mouth, and eyes
 
 BATCH_SIZE = 32
-HIDDEN_DIMS = 40
+HIDDEN_DIMS = 256
 
 MSE_LOSS_WEIGHT = 100
 
@@ -57,7 +57,14 @@ class CVAE_Model:
 
         # 공통 레이어
         self.flatten = tf.keras.layers.Flatten()
-        self.dropout = tf.keras.layers.Dropout(rate=dropout_rate, name='dropout')
+        self.flatten_for_ad = tf.keras.layers.Flatten()
+        
+        self.dropout_enc_c0 = tf.keras.layers.Dropout(rate=dropout_rate, name='dropout_enc_c0')
+        self.dropout_enc_c1 = tf.keras.layers.Dropout(rate=dropout_rate, name='dropout_enc_c1')
+        self.dropout_enc_c2 = tf.keras.layers.Dropout(rate=dropout_rate, name='dropout_enc_c2')
+        self.dropout_dec_c0 = tf.keras.layers.Dropout(rate=dropout_rate, name='dropout_dec_c0')
+        self.dropout_dec_c1 = tf.keras.layers.Dropout(rate=dropout_rate, name='dropout_dec_c1')
+        self.dropout_dec_c2 = tf.keras.layers.Dropout(rate=dropout_rate, name='dropout_dec_c2')
 
         L2 = tf.keras.regularizers.l2(0.001)
 
@@ -86,11 +93,11 @@ class CVAE_Model:
         input_condition = layers.Input(shape=(NUM_INFO,))
         
         enc_c0 = self.encoder_cnn0(input_image) # input_image_reshaped
-        enc_c0 = self.dropout(enc_c0)
+        enc_c0 = self.dropout_enc_c0(enc_c0)
         enc_c1 = self.encoder_cnn1(enc_c0)
-        enc_c1 = self.dropout(enc_c1)
+        enc_c1 = self.dropout_enc_c1(enc_c1)
         enc_c2 = self.encoder_cnn2(enc_c1)
-        enc_c2 = self.dropout(enc_c2)
+        enc_c2 = self.dropout_enc_c2(enc_c2)
         enc_c3 = self.encoder_cnn3(enc_c2)
         enc_flatten = self.flatten(enc_c3)
 
@@ -98,7 +105,7 @@ class CVAE_Model:
         enc_d0 = self.encoder_dense0(enc_merged)
 
         # encoder (additional stream)
-        enc_flatten_for_ad = self.flatten(input_image)
+        enc_flatten_for_ad = self.flatten_for_ad(input_image)
         enc_ad0 = self.encoder_ad0(enc_flatten_for_ad)
 
         # encoder (concatenated)
@@ -119,11 +126,11 @@ class CVAE_Model:
         dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 8, INPUT_IMG_SIZE // 8, 80))(dec_d1)
 
         dec_c0 = self.decoder_cnn0(dec_reshaped)
-        dec_c0 = self.dropout(dec_c0)
+        dec_c0 = self.dropout_dec_c0(dec_c0)
         dec_c1 = self.decoder_cnn1(dec_c0)
-        dec_c1 = self.dropout(dec_c1)
+        dec_c1 = self.dropout_dec_c1(dec_c1)
         dec_c2 = self.decoder_cnn2(dec_c1)
-        dec_c2 = self.dropout(dec_c2)
+        dec_c2 = self.dropout_dec_c2(dec_c2)
         dec_c3 = self.decoder_cnn3(dec_c2)
         dec_final = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, NUM_CHANNELS))(dec_c3)
 
@@ -160,6 +167,29 @@ def define_cvae_model():
     return model, optimizer, scheduler_callback
 
 
+# model architecture image
+def plot_model_architecture(model, img_file_name):
+    try:
+        tf.keras.utils.plot_model(model, to_file=f'{img_file_name}.png', show_shapes=True)
+    except Exception as e:
+        print(f'model architecture image file generation error : {e}')
+
+
+# 모델 구조 표시
+def show_model_summary(model_class):
+    print('\n === ENCODER ===')
+    model_class.encoder.summary()
+    plot_model_architecture(model_class.encoder, 'encoder')
+
+    print('\n === DECODER ===')
+    model_class.decoder.summary()
+    plot_model_architecture(model_class.decoder, 'decoder')
+
+    print('\n === VAE ===')
+    model_class.cvae.summary()
+    plot_model_architecture(model_class.cvae, 'cvae')
+
+
 # C-VAE 모델 학습 실시 및 모델 저장
 # train_info = train_condition (N, 5)
 def train_cvae_model(train_input, train_info):
@@ -169,20 +199,14 @@ def train_cvae_model(train_input, train_info):
     # 학습 실시
     cvae_model_class.cvae.fit(
         [train_input, train_info, train_info], train_input,
-        epochs=32,
+        epochs=16,
         batch_size=BATCH_SIZE,
         callbacks=[scheduler_callback],
         shuffle=True
     )
 
-    print('\n === ENCODER ===')
-    cvae_model_class.encoder.summary()
-
-    print('\n === DECODER ===')
-    cvae_model_class.decoder.summary()
-
-    print('\n === C-VAE ===')
-    cvae_model_class.cvae.summary()
+    # 모델 구조 표시
+    show_model_summary(cvae_model_class)
     
     cvae_model_class.encoder.save('cvae_encoder_model')
     cvae_model_class.decoder.save('cvae_decoder_model')
@@ -239,7 +263,7 @@ if __name__ == '__main__':
     np.set_printoptions(suppress=True, linewidth=160)
 
     # 학습 데이터 추출 (이미지 input + 해당 이미지의 class)
-    train_input, train_info = create_train_and_valid_data(limit=None)
+    train_input, train_info = create_train_and_valid_data(limit=3000)
     
     print(f'\nshape of train input: {np.shape(train_input)}')
     print(train_input)
