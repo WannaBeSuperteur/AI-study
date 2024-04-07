@@ -253,10 +253,10 @@ def create_train_and_valid_data(limit=None):
     return train_input, train_info
     
 
-# training time (with CPU) : 20 sample/s -> 14.0  - 15.0 minutes for all 16,800 samples (= 1 epoch)
-#                                            1.87 -  2.0 hours   for 8 epochs
-#                                            4.67 -  5.0 hours   for 20 epochs
-#                                            9.33 - 10.0 hours   for 40 epochs
+# training time (with CPU) : 16 sample/s -> 17.5  - 18.75 minutes for all 16,800 samples (= 1 epoch)
+#                                            2.33 -  2.5  hours   for 8 epochs
+#                                            5.83 -  6.25 hours   for 20 epochs
+#                                           11.67 - 12.5  hours   for 40 epochs
 
 if __name__ == '__main__':
     tf.compat.v1.disable_eager_execution()
