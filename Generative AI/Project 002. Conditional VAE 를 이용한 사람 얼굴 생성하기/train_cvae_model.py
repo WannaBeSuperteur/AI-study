@@ -134,21 +134,36 @@ class CVAE_Model:
         self.latent_space = layers.Lambda(noise_maker, output_shape=(HIDDEN_DIMS,), name='ls')([self.latent_mean, self.latent_log_var])
 
         # decoder
-        latent_for_decoder = layers.Input(shape=(HIDDEN_DIMS,))
-        condition_for_decoder = layers.Input(shape=(NUM_INFO,))
+        latent_for_decoder = layers.Input(batch_shape=(BATCH_SIZE, HIDDEN_DIMS)) # shape=(HIDDEN_DIMS,)
+        condition_for_decoder = layers.Input(batch_shape=(BATCH_SIZE, NUM_INFO)) # shape=(NUM_INFO,)
 
         dec_merged = layers.concatenate([latent_for_decoder, condition_for_decoder])
         dec_d0 = self.decoder_dense0(dec_merged)
         dec_d1 = self.decoder_dense1(dec_d0)
         dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 8, INPUT_IMG_SIZE // 8, 120))(dec_d1)
 
-        dec_c0 = self.decoder_cnn0(dec_reshaped)
+        # decoder additional
+        dec_add_c0 = layers.Dense((INPUT_IMG_SIZE // 8) * (INPUT_IMG_SIZE // 8) * 120, name='dec_c0_add', activation=silu)(latent_for_decoder)
+        dec_add_c0_ = layers.Reshape((INPUT_IMG_SIZE // 8, INPUT_IMG_SIZE // 8, 120))(dec_add_c0)
+
+        dec_add_c1 = layers.Dense((INPUT_IMG_SIZE // 4) * (INPUT_IMG_SIZE // 4) * 80, name='dec_c1_add', activation=silu)(latent_for_decoder)
+        dec_add_c1_ = layers.Reshape((INPUT_IMG_SIZE // 4, INPUT_IMG_SIZE // 4, 80))(dec_add_c1)
+
+        dec_add_c2 = layers.Dense((INPUT_IMG_SIZE // 2) * (INPUT_IMG_SIZE // 2) * 60, name='dec_c2_add', activation=silu)(latent_for_decoder)
+        dec_add_c2_ = layers.Reshape((INPUT_IMG_SIZE // 2, INPUT_IMG_SIZE // 2, 60))(dec_add_c2)
+
+        dec_add_c3 = layers.Dense(INPUT_IMG_SIZE * INPUT_IMG_SIZE * 40, name='dec_c3_add', activation=silu)(latent_for_decoder)
+        dec_add_c3_ = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 40))(dec_add_c3)
+        
+        # decoder deconv CNN layers
+        dec_c0 = self.decoder_cnn0(layers.Add()([dec_reshaped, dec_add_c0_]))
         dec_c0 = self.dropout_dec_c0(dec_c0)
-        dec_c1 = self.decoder_cnn1(dec_c0)
+        dec_c1 = self.decoder_cnn1(layers.Add()([dec_c0, dec_add_c1_]))
         dec_c1 = self.dropout_dec_c1(dec_c1)
-        dec_c2 = self.decoder_cnn2(dec_c1)
+        dec_c2 = self.decoder_cnn2(layers.Add()([dec_c1, dec_add_c2_]))
         dec_c2 = self.dropout_dec_c2(dec_c2)
-        dec_c3 = self.decoder_cnn3(dec_c2)
+        dec_c3 = self.decoder_cnn3(layers.Add()([dec_c2, dec_add_c3_]))
+        
         dec_final = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, NUM_CHANNELS))(dec_c3)
 
         # define encoder, decoder and cvae model
@@ -216,7 +231,7 @@ def train_cvae_model(train_input, train_info):
     # 학습 실시
     cvae_model_class.cvae.fit(
         [train_input, train_info, train_info], train_input,
-        epochs=24,
+        epochs=1,
         batch_size=BATCH_SIZE,
         callbacks=[scheduler_callback],
         shuffle=True
@@ -280,7 +295,7 @@ if __name__ == '__main__':
     np.set_printoptions(suppress=True, linewidth=160)
 
     # 학습 데이터 추출 (이미지 input + 해당 이미지의 class)
-    train_input, train_info = create_train_and_valid_data(limit=None)
+    train_input, train_info = create_train_and_valid_data(limit=100)
     
     print(f'\nshape of train input: {np.shape(train_input)}')
     print(train_input)
