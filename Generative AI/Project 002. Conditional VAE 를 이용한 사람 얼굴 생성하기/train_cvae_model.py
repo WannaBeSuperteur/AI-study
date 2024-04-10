@@ -143,16 +143,16 @@ class CVAE_Model:
         dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 8, INPUT_IMG_SIZE // 8, 120))(dec_d1)
 
         # decoder additional
-        dec_add_c0 = layers.Dense((INPUT_IMG_SIZE // 8) * (INPUT_IMG_SIZE // 8) * 120, name='dec_c0_add', activation=silu)(latent_for_decoder)
+        dec_add_c0 = layers.Dense((INPUT_IMG_SIZE // 8) * (INPUT_IMG_SIZE // 8) * 120, name='dec_c0_add', activation=silu)(dec_merged)
         dec_add_c0_ = layers.Reshape((INPUT_IMG_SIZE // 8, INPUT_IMG_SIZE // 8, 120))(dec_add_c0)
 
-        dec_add_c1 = layers.Dense((INPUT_IMG_SIZE // 4) * (INPUT_IMG_SIZE // 4) * 80, name='dec_c1_add', activation=silu)(latent_for_decoder)
+        dec_add_c1 = layers.Dense((INPUT_IMG_SIZE // 4) * (INPUT_IMG_SIZE // 4) * 80, name='dec_c1_add', activation=silu)(dec_merged)
         dec_add_c1_ = layers.Reshape((INPUT_IMG_SIZE // 4, INPUT_IMG_SIZE // 4, 80))(dec_add_c1)
 
-        dec_add_c2 = layers.Dense((INPUT_IMG_SIZE // 2) * (INPUT_IMG_SIZE // 2) * 60, name='dec_c2_add', activation=silu)(latent_for_decoder)
+        dec_add_c2 = layers.Dense((INPUT_IMG_SIZE // 2) * (INPUT_IMG_SIZE // 2) * 60, name='dec_c2_add', activation=silu)(dec_merged)
         dec_add_c2_ = layers.Reshape((INPUT_IMG_SIZE // 2, INPUT_IMG_SIZE // 2, 60))(dec_add_c2)
 
-        dec_add_c3 = layers.Dense(INPUT_IMG_SIZE * INPUT_IMG_SIZE * 40, name='dec_c3_add', activation=silu)(latent_for_decoder)
+        dec_add_c3 = layers.Dense(INPUT_IMG_SIZE * INPUT_IMG_SIZE * 40, name='dec_c3_add', activation=silu)(dec_merged)
         dec_add_c3_ = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 40))(dec_add_c3)
         
         # decoder deconv CNN layers
