@@ -21,7 +21,7 @@ NUM_INFO = 5 # male prob, female prob, hair color, mouth, and eyes
 BATCH_SIZE = 32
 HIDDEN_DIMS = 20
 
-MSE_LOSS_WEIGHT = 500.0
+MSE_LOSS_WEIGHT = 2000.0
 
 
 # random normal noise maker for VAE 
