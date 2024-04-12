@@ -3,7 +3,7 @@ import numpy as np
 from PIL import Image
 import os
 
-HIDDEN_DIMS = 110
+HIDDEN_DIMS = 20
 NUM_IMGS_FOR_EACH_INFO = 3
 
 
