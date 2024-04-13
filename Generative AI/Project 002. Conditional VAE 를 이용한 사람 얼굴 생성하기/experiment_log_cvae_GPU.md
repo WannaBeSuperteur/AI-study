@@ -12,6 +12,72 @@
     * **mouth** (입을 벌린 정도)
     * **eyes** (눈을 뜬 정도)
 
+## MODEL 9 (2024.04.13 12시)
+* 직전 모델과의 차이점 : **Learning rate 초기값 0.0002 -> 0.0004, 감소율 0.99 -> 0.975 로 변경**
+* HIDDEN_DIMS : **76**
+* MSE loss weight : **50000.0 (=50K)**
+* learning rate 초기값 : **0.0004**
+* epoch 4 이후 learning rate 감소율 (직전 epoch 대비 현재 epoch의 learning rate의 비율) : **0.975**
+* 최종 loss : **783.4584**
+* 특징 : Learning rate 설정을 변경하면서 MODEL 8에 비해 학습 시간 약 10% 증가 (전체 24 epochs에 대한 학습 시간 약 36분 -> 39분 예상)
+
+```
+Epoch 1/24
+2024-04-13 12:37:20.623549: I tensorflow/stream_executor/cuda/cuda_dnn.cc:368] Loaded cuDNN version 8907
+2024-04-13 12:37:21.511882: W tensorflow/stream_executor/gpu/asm_compiler.cc:111] *** WARNING *** You are using ptxas 11.0.194, which is older than 11.1. ptxas before 11.1 is known to miscompile XLA code, leading to incorrect results or invalid-address errors.
+
+You may not need to update to CUDA 11.1; cherry-picking the ptxas binary is often sufficient.
+16864/16864 [==============================] - 99s 6ms/sample - loss: 1977.2901 - lr: 4.0000e-04
+Epoch 2/24
+16864/16864 [==============================] - 96s 6ms/sample - loss: 1285.7301 - lr: 4.0000e-04
+Epoch 3/24
+16864/16864 [==============================] - 96s 6ms/sample - loss: 1114.2525 - lr: 4.0000e-04
+Epoch 4/24
+16864/16864 [==============================] - 97s 6ms/sample - loss: 1030.5190 - lr: 4.0000e-04
+Epoch 5/24
+16864/16864 [==============================] - 97s 6ms/sample - loss: 983.8497 - lr: 3.9000e-04
+Epoch 6/24
+16864/16864 [==============================] - 99s 6ms/sample - loss: 955.3330 - lr: 3.8025e-04
+Epoch 7/24
+16864/16864 [==============================] - 97s 6ms/sample - loss: 932.2115 - lr: 3.7074e-04
+Epoch 8/24
+16864/16864 [==============================] - 97s 6ms/sample - loss: 912.2270 - lr: 3.6148e-04
+Epoch 9/24
+16864/16864 [==============================] - 97s 6ms/sample - loss: 897.0994 - lr: 3.5244e-04
+Epoch 10/24
+16864/16864 [==============================] - 97s 6ms/sample - loss: 883.9896 - lr: 3.4363e-04
+Epoch 11/24
+16864/16864 [==============================] - 97s 6ms/sample - loss: 869.7460 - lr: 3.3504e-04
+Epoch 12/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 860.2677 - lr: 3.2666e-04
+Epoch 13/24
+16864/16864 [==============================] - 97s 6ms/sample - loss: 851.4844 - lr: 3.1849e-04
+Epoch 14/24
+16864/16864 [==============================] - 97s 6ms/sample - loss: 842.2469 - lr: 3.1053e-04
+Epoch 15/24
+16864/16864 [==============================] - 97s 6ms/sample - loss: 836.4577 - lr: 3.0277e-04
+Epoch 16/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 827.4164 - lr: 2.9520e-04
+Epoch 17/24
+16864/16864 [==============================] - 97s 6ms/sample - loss: 818.6436 - lr: 2.8782e-04
+Epoch 18/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 813.1003 - lr: 2.8062e-04
+Epoch 19/24
+16864/16864 [==============================] - 97s 6ms/sample - loss: 807.1768 - lr: 2.7361e-04
+Epoch 20/24
+16864/16864 [==============================] - 97s 6ms/sample - loss: 802.6254 - lr: 2.6677e-04
+Epoch 21/24
+16864/16864 [==============================] - 97s 6ms/sample - loss: 796.2873 - lr: 2.6010e-04
+Epoch 22/24
+16864/16864 [==============================] - 97s 6ms/sample - loss: 791.5585 - lr: 2.5360e-04
+Epoch 23/24
+16864/16864 [==============================] - 97s 6ms/sample - loss: 786.2370 - lr: 2.4726e-04
+Epoch 24/24
+16864/16864 [==============================] - 97s 6ms/sample - loss: 783.4584 - lr: 2.4108e-04
+```
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/88336b16-4ef5-40d4-9f70-36b28f508c70)
+
 ## MODEL 8 (2024.04.13 11시)
 * 직전 모델과의 차이점 : **Encoder와 Decoder의 모든 Convolutional Layer에 Batch Normalization 추가**
 * HIDDEN_DIMS : **76**
@@ -75,6 +141,8 @@ Epoch 23/24
 Epoch 24/24
 16864/16864 [==============================] - 89s 5ms/sample - loss: 821.7564 - lr: 1.6358e-04
 ```
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/551f48f7-628b-4bf3-afcf-991f169eb5a3)
 
 ## MODEL 7 (2024.04.13 9시)
 * 직전 모델과의 차이점 : **MSE Loss weight을 8000.0 (=8K) 에서 50000.0 (=50K) 으로, HIDDEN_DIMS 를 40 -> 76 으로 변경**

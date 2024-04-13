@@ -258,14 +258,14 @@ def scheduler(epoch, lr):
     if epoch < 4:
         return lr
     elif lr > 0.0001:
-        return lr * 0.99
+        return lr * 0.975
     else:
         return lr
 
 
 # C-VAE 모델 정의 및 반환
 def define_cvae_model():
-    optimizer = optimizers.Adam(0.0002, decay=1e-6)
+    optimizer = optimizers.Adam(0.0004, decay=1e-6)
     scheduler_callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
     model = CVAE_Model(dropout_rate=0.45) # 실제 모델은 model.cvae
 

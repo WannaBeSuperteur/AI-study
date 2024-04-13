@@ -14,9 +14,9 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
   - Person Face Dataset (thispersondoesnotexist) 10,000 장 (original)
 - ThisPersonDoesNotExist
   - Female
-    - Face Dataset Of People That Don't Exist 3,013 장 (original)
-  - Male
     - Face Dataset Of People That Don't Exist 3,860 장 (original)
+  - Male
+    - Face Dataset Of People That Don't Exist 3,013 장 (original)
 ```
 
 * ```resize_and_sort_data.py``` : 다운받은 데이터셋의 이미지를 리사이징, 명백히 배경에 해당하는 일부분을 cropping 및 재배치
