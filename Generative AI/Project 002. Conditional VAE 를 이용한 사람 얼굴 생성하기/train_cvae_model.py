@@ -4,11 +4,9 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.nn import silu
 from tensorflow.keras import layers, optimizers
-from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from keras.losses import mean_squared_error
 import keras.backend as K
 
-import os
 import cv2
 
 
@@ -73,10 +71,21 @@ class CVAE_Model:
 
         # encoder 용 레이어
         self.encoder_cnn0 = layers.Conv2D(32, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='ec0')
+        self.encoder_bn_cnn0 = layers.BatchNormalization(name='ec0_bn')
+        self.encoder_ac_cnn0 = layers.Activation(silu, name='ec0_ac')
+
         self.encoder_cnn1 = layers.Conv2D(48, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='ec1')
+        self.encoder_bn_cnn1 = layers.BatchNormalization(name='ec1_bn')
+        self.encoder_ac_cnn1 = layers.Activation(silu, name='ec1_ac')
+
         self.encoder_cnn2 = layers.Conv2D(64, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='ec2')
+        self.encoder_bn_cnn2 = layers.BatchNormalization(name='ec2_bn')
+        self.encoder_ac_cnn2 = layers.Activation(silu, name='ec2_ac')
+
         self.encoder_cnn3 = layers.Conv2D(96, (4, 4), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='ec3')
-        
+        self.encoder_bn_cnn3 = layers.BatchNormalization(name='ec3_bn')
+        self.encoder_ac_cnn3 = layers.Activation(silu, name='ec3_ac')
+
         self.encoder_dense0 = layers.Dense(192, activation=silu, name='ed0')
         self.encoder_ad0 = layers.Dense(64, activation=silu, name='ead0') # input image 와 직접 연결
         self.encoder_ad1 = layers.Dense(64, activation=silu, name='ead1') # 60 x 60 feature 와 직접 연결
@@ -87,23 +96,45 @@ class CVAE_Model:
         self.decoder_dense1 = layers.Dense(120 * TOTAL_CELLS // (8 * 8), activation=silu, name='dd1')
 
         self.decoder_cnn0 = layers.Conv2DTranspose(80, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='dc0')
+        self.decoder_bn_cnn0 = layers.BatchNormalization(name='dc0_bn')
+        self.decoder_ac_cnn0 = layers.Activation(silu, name='dc0_ac')
+
         self.decoder_cnn1 = layers.Conv2DTranspose(60, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='dc1')
+        self.decoder_bn_cnn1 = layers.BatchNormalization(name='dc1_bn')
+        self.decoder_ac_cnn1 = layers.Activation(silu, name='dc1_ac')
+
         self.decoder_cnn2 = layers.Conv2DTranspose(40, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='dc2')
+        self.decoder_bn_cnn2 = layers.BatchNormalization(name='dc2_bn')
+        self.decoder_ac_cnn2 = layers.Activation(silu, name='dc2_ac')
+
         self.decoder_cnn3 = layers.Conv2DTranspose(NUM_CHANNELS, (4, 4), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='dc3')
+        self.decoder_bn_cnn3 = layers.BatchNormalization(name='dc3_bn')
+        self.decoder_ac_cnn3 = layers.Activation(silu, name='dc3_ac')
 
         # encoder (main stream)
-        input_image = layers.Input(batch_shape=(BATCH_SIZE, INPUT_IMG_SIZE, INPUT_IMG_SIZE, NUM_CHANNELS))
+        input_image = layers.Input(batch_shape=(BATCH_SIZE, INPUT_IMG_SIZE, INPUT_IMG_SIZE, NUM_CHANNELS), name='ec_input_img')
 #        input_image_reshaped = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, NUM_CHANNELS))(input_image)
         
-        input_condition = layers.Input(shape=(NUM_INFO,))
+        input_condition = layers.Input(shape=(NUM_INFO,), name='ec_input_cond')
         
         enc_c0 = self.encoder_cnn0(input_image) # input_image_reshaped
+        enc_c0 = self.encoder_bn_cnn0(enc_c0)
+        enc_c0 = self.encoder_ac_cnn0(enc_c0)
         enc_c0 = self.dropout_enc_c0(enc_c0)
+
         enc_c1 = self.encoder_cnn1(enc_c0)
+        enc_c1 = self.encoder_bn_cnn1(enc_c1)
+        enc_c1 = self.encoder_ac_cnn1(enc_c1)
         enc_c1 = self.dropout_enc_c1(enc_c1)
+
         enc_c2 = self.encoder_cnn2(enc_c1)
+        enc_c2 = self.encoder_bn_cnn2(enc_c2)
+        enc_c2 = self.encoder_ac_cnn2(enc_c2)
         enc_c2 = self.dropout_enc_c2(enc_c2)
+
         enc_c3 = self.encoder_cnn3(enc_c2)
+        enc_c3 = self.encoder_bn_cnn3(enc_c3)
+        enc_c3 = self.encoder_ac_cnn3(enc_c3)
         enc_flatten = self.flatten(enc_c3)
 
         enc_merged = layers.concatenate([enc_flatten, input_condition])
@@ -134,8 +165,8 @@ class CVAE_Model:
         self.latent_space = layers.Lambda(noise_maker, output_shape=(HIDDEN_DIMS,), name='ls')([self.latent_mean, self.latent_log_var])
 
         # decoder
-        latent_for_decoder = layers.Input(batch_shape=(BATCH_SIZE, HIDDEN_DIMS)) # shape=(HIDDEN_DIMS,)
-        condition_for_decoder = layers.Input(batch_shape=(BATCH_SIZE, NUM_INFO)) # shape=(NUM_INFO,)
+        latent_for_decoder = layers.Input(batch_shape=(BATCH_SIZE, HIDDEN_DIMS), name='dc_input_latent') # shape=(HIDDEN_DIMS,)
+        condition_for_decoder = layers.Input(batch_shape=(BATCH_SIZE, NUM_INFO), name='dc_input_cond') # shape=(NUM_INFO,)
 
         dec_merged = layers.concatenate([latent_for_decoder, condition_for_decoder])
         dec_d0 = self.decoder_dense0(dec_merged)
@@ -157,12 +188,23 @@ class CVAE_Model:
         
         # decoder deconv CNN layers
         dec_c0 = self.decoder_cnn0(layers.Add()([dec_reshaped, dec_add_c0_]))
+        dec_c0 = self.decoder_bn_cnn0(dec_c0)
+        dec_c0 = self.decoder_ac_cnn0(dec_c0)
         dec_c0 = self.dropout_dec_c0(dec_c0)
+
         dec_c1 = self.decoder_cnn1(layers.Add()([dec_c0, dec_add_c1_]))
+        dec_c1 = self.decoder_bn_cnn1(dec_c1)
+        dec_c1 = self.decoder_ac_cnn1(dec_c1)
         dec_c1 = self.dropout_dec_c1(dec_c1)
+
         dec_c2 = self.decoder_cnn2(layers.Add()([dec_c1, dec_add_c2_]))
+        dec_c2 = self.decoder_bn_cnn2(dec_c2)
+        dec_c2 = self.decoder_ac_cnn2(dec_c2)
         dec_c2 = self.dropout_dec_c2(dec_c2)
+
         dec_c3 = self.decoder_cnn3(layers.Add()([dec_c2, dec_add_c3_]))
+        dec_c3 = self.decoder_bn_cnn3(dec_c3)
+        dec_c3 = self.decoder_ac_cnn3(dec_c3)
         
         dec_final = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, NUM_CHANNELS))(dec_c3)
 
@@ -176,6 +218,36 @@ class CVAE_Model:
             name='final_cvae'
         )
 
+    """
+        # to solve error below:
+        # INVALID_ARGUMENT: You must feed a value for placeholder tensor 'input_3' with dtype float and shape [32,76]
+        self.feed_to_solve_invalid_arg(
+            input_img=input_image,
+            input_cond=input_condition,
+            dec_cond=condition_for_decoder,
+            dec_output=dec_final
+        )
+        self.feed_to_solve_invalid_arg_for_decoder(
+            latent_vector=latent_for_decoder,
+            dec_cond=condition_for_decoder,
+            dec_output=dec_final
+        )
+
+    def feed_to_solve_invalid_arg(self, input_img, input_cond, dec_cond, dec_output):
+        with tf.compat.v1.Session() as sess:
+            image = np.random.normal(size=(BATCH_SIZE, INPUT_IMG_SIZE, INPUT_IMG_SIZE, 3))
+            cond = np.random.uniform(size=(BATCH_SIZE, NUM_INFO))
+
+            sess.run(dec_output, feed_dict={input_img: image, input_cond: cond, dec_cond: cond})
+
+
+    def feed_to_solve_invalid_arg_for_decoder(self, latent_vector, dec_cond, dec_output):
+        with tf.compat.v1.Session() as sess:
+            latent = np.random.normal(size=(BATCH_SIZE, HIDDEN_DIMS))
+            cond = np.random.uniform(size=(BATCH_SIZE, NUM_INFO))
+
+            sess.run(dec_output, feed_dict={latent_vector: latent, dec_cond: cond})
+    """
 
     def call(self, inputs, training):
         return self.cvae(inputs)
@@ -196,6 +268,7 @@ def define_cvae_model():
     optimizer = optimizers.Adam(0.0002, decay=1e-6)
     scheduler_callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
     model = CVAE_Model(dropout_rate=0.45) # 실제 모델은 model.cvae
+
     return model, optimizer, scheduler_callback
 
 
@@ -225,6 +298,9 @@ def show_model_summary(model_class):
 # C-VAE 모델 학습 실시 및 모델 저장
 # train_info = train_condition (N, 5)
 def train_cvae_model(train_input, train_info):
+
+    # to solve "You must feed a value for placeholder tensor {tensor_name} with dtype float and shape {shape}."
+    tf.keras.backend.set_learning_phase(False)
     cvae_model_class, optimizer, scheduler_callback = define_cvae_model()
     cvae_model_class.cvae.compile(loss=cvae_model_class.vae_loss, optimizer=optimizer)
 
