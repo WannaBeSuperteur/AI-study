@@ -12,6 +12,86 @@
     * **mouth** (입을 벌린 정도)
     * **eyes** (눈을 뜬 정도)
 
+## MODEL 13 (2024.04.13 17시)
+* 직전 모델과의 차이점
+  * Decoder의 각 레이어 (마지막 레이어를 제외한 3개) 마다 다음을 평균하는 레이어 추가
+    * identity
+    * 2x2 Kernel 의 2D Convolution 레이어
+    * 3x3 Kernel 의 2D Convolution 레이어
+    * 4x4 Kernel 의 2D Convolution 레이어
+  * 상기한 2x2, 3x3, 4x4의 2D convolution layer 는 모두 same padding 적용  
+* HIDDEN_DIMS : **76**
+* MSE loss weight : **50000.0 (=50K)**
+* learning rate 초기값 : **0.0004**
+* epoch 4 이후 learning rate 감소율 (직전 epoch 대비 현재 epoch의 learning rate의 비율) : **0.975**
+* 최종 loss : **771.1474**
+* 특징
+  * 모델 구조가 MODEL 12 보다 복잡해졌기 때문에 학습 시간 증가 (전체 24 epochs 기준 37분 -> 1시간 3분)
+  * 모델 구조가 복잡해졌음에도 **최종 loss는 오차 범위를 고려할 때 MODEL 12와 사실상 차이가 없으므로, 본 변경은 적용하지 않음**
+
+```
+Epoch 1/24
+2024-04-13 17:19:57.078688: I tensorflow/stream_executor/cuda/cuda_dnn.cc:368] Loaded cuDNN version 8907
+2024-04-13 17:19:57.981503: W tensorflow/stream_executor/gpu/asm_compiler.cc:111] *** WARNING *** You are using ptxas 11.0.194, which is older than 11.1. ptxas before 11.1 is known to miscompile XLA code, leading to incorrect results or invalid-address errors.
+
+You may not need to update to CUDA 11.1; cherry-picking the ptxas binary is often sufficient.
+16864/16864 [==============================] - 157s 9ms/sample - loss: 1969.1082 - lr: 4.0000e-04
+Epoch 2/24
+16864/16864 [==============================] - 155s 9ms/sample - loss: 1239.9702 - lr: 4.0000e-04
+Epoch 3/24
+16864/16864 [==============================] - 157s 9ms/sample - loss: 1081.2427 - lr: 4.0000e-04
+Epoch 4/24
+16864/16864 [==============================] - 157s 9ms/sample - loss: 1002.9044 - lr: 4.0000e-04
+Epoch 5/24
+16864/16864 [==============================] - 158s 9ms/sample - loss: 961.4564 - lr: 3.9000e-04
+Epoch 6/24
+16864/16864 [==============================] - 158s 9ms/sample - loss: 929.7188 - lr: 3.8025e-04
+Epoch 7/24
+16864/16864 [==============================] - 159s 9ms/sample - loss: 908.4392 - lr: 3.7074e-04
+Epoch 8/24
+16864/16864 [==============================] - 159s 9ms/sample - loss: 893.0965 - lr: 3.6148e-04
+Epoch 9/24
+16864/16864 [==============================] - 158s 9ms/sample - loss: 877.4231 - lr: 3.5244e-04
+Epoch 10/24
+16864/16864 [==============================] - 159s 9ms/sample - loss: 864.2533 - lr: 3.4363e-04
+Epoch 11/24
+16864/16864 [==============================] - 158s 9ms/sample - loss: 852.4276 - lr: 3.3504e-04
+Epoch 12/24
+16864/16864 [==============================] - 158s 9ms/sample - loss: 844.9243 - lr: 3.2666e-04
+Epoch 13/24
+16864/16864 [==============================] - 158s 9ms/sample - loss: 839.3536 - lr: 3.1849e-04
+Epoch 14/24
+16864/16864 [==============================] - 158s 9ms/sample - loss: 830.7213 - lr: 3.1053e-04
+Epoch 15/24
+16864/16864 [==============================] - 158s 9ms/sample - loss: 823.5034 - lr: 3.0277e-04
+Epoch 16/24
+16864/16864 [==============================] - 158s 9ms/sample - loss: 815.9373 - lr: 2.9520e-04
+Epoch 17/24
+16864/16864 [==============================] - 158s 9ms/sample - loss: 809.0727 - lr: 2.8782e-04
+Epoch 18/24
+16864/16864 [==============================] - 158s 9ms/sample - loss: 801.9664 - lr: 2.8062e-04
+Epoch 19/24
+16864/16864 [==============================] - 158s 9ms/sample - loss: 795.9257 - lr: 2.7361e-04
+Epoch 20/24
+16864/16864 [==============================] - 158s 9ms/sample - loss: 791.3182 - lr: 2.6677e-04
+Epoch 21/24
+16864/16864 [==============================] - 158s 9ms/sample - loss: 787.1661 - lr: 2.6010e-04
+Epoch 22/24
+16864/16864 [==============================] - 158s 9ms/sample - loss: 782.1028 - lr: 2.5360e-04
+Epoch 23/24
+16864/16864 [==============================] - 158s 9ms/sample - loss: 777.0560 - lr: 2.4726e-04
+Epoch 24/24
+16864/16864 [==============================] - 158s 9ms/sample - loss: 771.1474 - lr: 2.4108e-04
+```
+
+**Decoder 모델 구조**
+
+![decoder](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/5aeb7847-e28b-48be-89e1-282388a3069f)
+
+**예시 생성 이미지**
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/206da9f2-e604-4024-b93a-3ffbc90542ce)
+
 ## MODEL 12 (2024.04.13 15시)
 * 직전 모델과의 차이점
   * Encoder와 Decoder의 각 layer 의 필터 개수를 MODEL 9 와 동일한 값으로 롤백

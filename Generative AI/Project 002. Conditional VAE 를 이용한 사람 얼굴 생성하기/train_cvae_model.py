@@ -99,13 +99,25 @@ class CVAE_Model:
         self.decoder_bn_cnn0 = layers.BatchNormalization(name='dc0_bn')
         self.decoder_ac_cnn0 = layers.Activation(silu, name='dc0_ac')
 
+        self.decoder_cnn0_addi2 = layers.Conv2D(80, (2, 2), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='dc0_a2')
+        self.decoder_cnn0_addi3 = layers.Conv2D(80, (3, 3), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='dc0_a3')
+        self.decoder_cnn0_addi4 = layers.Conv2D(80, (4, 4), strides=1, activation=silu, padding='same',kernel_regularizer=L2, name='dc0_a4')
+
         self.decoder_cnn1 = layers.Conv2DTranspose(60, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='dc1')
         self.decoder_bn_cnn1 = layers.BatchNormalization(name='dc1_bn')
         self.decoder_ac_cnn1 = layers.Activation(silu, name='dc1_ac')
 
+        self.decoder_cnn1_addi2 = layers.Conv2D(60, (2, 2), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='dc1_a2')
+        self.decoder_cnn1_addi3 = layers.Conv2D(60, (3, 3), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='dc1_a3')
+        self.decoder_cnn1_addi4 = layers.Conv2D(60, (4, 4), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='dc1_a4')
+
         self.decoder_cnn2 = layers.Conv2DTranspose(40, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='dc2')
         self.decoder_bn_cnn2 = layers.BatchNormalization(name='dc2_bn')
         self.decoder_ac_cnn2 = layers.Activation(silu, name='dc2_ac')
+
+        self.decoder_cnn2_addi2 = layers.Conv2D(40, (2, 2), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='dc2_a2')
+        self.decoder_cnn2_addi3 = layers.Conv2D(40, (3, 3), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='dc2_a3')
+        self.decoder_cnn2_addi4 = layers.Conv2D(40, (4, 4), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='dc2_a4')
 
         self.decoder_cnn3 = layers.Conv2D(NUM_CHANNELS, (4, 4), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='dc3')
         self.decoder_bn_cnn3 = layers.BatchNormalization(name='dc3_bn')
@@ -192,17 +204,32 @@ class CVAE_Model:
         dec_c0 = self.decoder_ac_cnn0(dec_c0)
         dec_c0 = self.dropout_dec_c0(dec_c0)
 
-        dec_c1 = self.decoder_cnn1(layers.Add()([dec_c0, dec_add_c1_]))
+        dec_c0_a2 = self.decoder_cnn0_addi2(dec_c0)
+        dec_c0_a3 = self.decoder_cnn0_addi3(dec_c0)
+        dec_c0_a4 = self.decoder_cnn0_addi4(dec_c0)
+        dec_c0_concat = layers.Average()([dec_c0, dec_c0_a2, dec_c0_a3, dec_c0_a4])
+
+        dec_c1 = self.decoder_cnn1(layers.Add()([dec_c0_concat, dec_add_c1_]))
         dec_c1 = self.decoder_bn_cnn1(dec_c1)
         dec_c1 = self.decoder_ac_cnn1(dec_c1)
         dec_c1 = self.dropout_dec_c1(dec_c1)
 
-        dec_c2 = self.decoder_cnn2(layers.Add()([dec_c1, dec_add_c2_]))
+        dec_c1_a2 = self.decoder_cnn1_addi2(dec_c1)
+        dec_c1_a3 = self.decoder_cnn1_addi3(dec_c1)
+        dec_c1_a4 = self.decoder_cnn1_addi4(dec_c1)
+        dec_c1_concat = layers.Average()([dec_c1, dec_c1_a2, dec_c1_a3, dec_c1_a4])
+
+        dec_c2 = self.decoder_cnn2(layers.Add()([dec_c1_concat, dec_add_c2_]))
         dec_c2 = self.decoder_bn_cnn2(dec_c2)
         dec_c2 = self.decoder_ac_cnn2(dec_c2)
         dec_c2 = self.dropout_dec_c2(dec_c2)
 
-        dec_c3 = self.decoder_cnn3(layers.Add()([dec_c2, dec_add_c3_]))
+        dec_c2_a2 = self.decoder_cnn2_addi2(dec_c2)
+        dec_c2_a3 = self.decoder_cnn2_addi3(dec_c2)
+        dec_c2_a4 = self.decoder_cnn2_addi4(dec_c2)
+        dec_c2_concat = layers.Average()([dec_c2, dec_c2_a2, dec_c2_a3, dec_c2_a4])
+
+        dec_c3 = self.decoder_cnn3(layers.Add()([dec_c2_concat, dec_add_c3_]))
         dec_c3 = self.decoder_bn_cnn3(dec_c3)
         dec_c3 = self.decoder_ac_cnn3(dec_c3)
         
