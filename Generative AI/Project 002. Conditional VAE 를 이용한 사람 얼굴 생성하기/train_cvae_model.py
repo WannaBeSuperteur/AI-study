@@ -19,9 +19,9 @@ TOTAL_INPUT_IMG_VALUES = NUM_CHANNELS * TOTAL_CELLS
 NUM_INFO = 5 # male prob, female prob, hair color, mouth, and eyes
 
 BATCH_SIZE = 32
-HIDDEN_DIMS = 40
+HIDDEN_DIMS = 76
 
-MSE_LOSS_WEIGHT = 8000.0
+MSE_LOSS_WEIGHT = 50000.0
 
 
 # random normal noise maker for VAE 
