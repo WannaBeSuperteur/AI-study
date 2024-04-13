@@ -12,6 +12,73 @@
     * **mouth** (입을 벌린 정도)
     * **eyes** (눈을 뜬 정도)
 
+## MODEL 12 (2024.04.13 15시)
+* 직전 모델과의 차이점
+  * Encoder와 Decoder의 각 layer 의 필터 개수를 MODEL 9 와 동일한 값으로 롤백
+  * Decoder의 마지막 레이어 ```Conv2DTranspose``` (2D Transpose Convolution) 를 ```Conv2D``` (2D Convolution Layer) 레이어로 변경
+* HIDDEN_DIMS : **76**
+* MSE loss weight : **50000.0 (=50K)**
+* learning rate 초기값 : **0.0004**
+* epoch 4 이후 learning rate 감소율 (직전 epoch 대비 현재 epoch의 learning rate의 비율) : **0.975**
+* 최종 loss : **774.4656**
+
+```
+Epoch 1/24
+2024-04-13 15:41:32.792294: I tensorflow/stream_executor/cuda/cuda_dnn.cc:368] Loaded cuDNN version 8907
+2024-04-13 15:41:33.719264: W tensorflow/stream_executor/gpu/asm_compiler.cc:111] *** WARNING *** You are using ptxas 11.0.194, which is older than 11.1. ptxas before 11.1 is known to miscompile XLA code, leading to incorrect results or invalid-address errors.
+
+You may not need to update to CUDA 11.1; cherry-picking the ptxas binary is often sufficient.
+16864/16864 [==============================] - 95s 6ms/sample - loss: 1905.8512 - lr: 4.0000e-04
+Epoch 2/24
+16864/16864 [==============================] - 93s 5ms/sample - loss: 1238.7471 - lr: 4.0000e-04
+Epoch 3/24
+16864/16864 [==============================] - 93s 5ms/sample - loss: 1086.4069 - lr: 4.0000e-04
+Epoch 4/24
+16864/16864 [==============================] - 93s 6ms/sample - loss: 999.7828 - lr: 4.0000e-04
+Epoch 5/24
+16864/16864 [==============================] - 93s 6ms/sample - loss: 957.5870 - lr: 3.9000e-04
+Epoch 6/24
+16864/16864 [==============================] - 93s 6ms/sample - loss: 931.1225 - lr: 3.8025e-04
+Epoch 7/24
+16864/16864 [==============================] - 93s 6ms/sample - loss: 904.0660 - lr: 3.7074e-04
+Epoch 8/24
+16864/16864 [==============================] - 93s 6ms/sample - loss: 889.0775 - lr: 3.6148e-04
+Epoch 9/24
+16864/16864 [==============================] - 94s 6ms/sample - loss: 874.9561 - lr: 3.5244e-04
+Epoch 10/24
+16864/16864 [==============================] - 93s 6ms/sample - loss: 863.6313 - lr: 3.4363e-04
+Epoch 11/24
+16864/16864 [==============================] - 94s 6ms/sample - loss: 854.3229 - lr: 3.3504e-04
+Epoch 12/24
+16864/16864 [==============================] - 94s 6ms/sample - loss: 845.4591 - lr: 3.2666e-04
+Epoch 13/24
+16864/16864 [==============================] - 94s 6ms/sample - loss: 835.0798 - lr: 3.1849e-04
+Epoch 14/24
+16864/16864 [==============================] - 94s 6ms/sample - loss: 831.4741 - lr: 3.1053e-04
+Epoch 15/24
+16864/16864 [==============================] - 94s 6ms/sample - loss: 821.5918 - lr: 3.0277e-04
+Epoch 16/24
+16864/16864 [==============================] - 94s 6ms/sample - loss: 816.5080 - lr: 2.9520e-04
+Epoch 17/24
+16864/16864 [==============================] - 94s 6ms/sample - loss: 811.6130 - lr: 2.8782e-04
+Epoch 18/24
+16864/16864 [==============================] - 93s 6ms/sample - loss: 802.8952 - lr: 2.8062e-04
+Epoch 19/24
+16864/16864 [==============================] - 93s 6ms/sample - loss: 796.9773 - lr: 2.7361e-04
+Epoch 20/24
+16864/16864 [==============================] - 94s 6ms/sample - loss: 794.4094 - lr: 2.6677e-04
+Epoch 21/24
+16864/16864 [==============================] - 94s 6ms/sample - loss: 787.4577 - lr: 2.6010e-04
+Epoch 22/24
+16864/16864 [==============================] - 93s 6ms/sample - loss: 782.8555 - lr: 2.5360e-04
+Epoch 23/24
+16864/16864 [==============================] - 93s 6ms/sample - loss: 779.5396 - lr: 2.4726e-04
+Epoch 24/24
+16864/16864 [==============================] - 94s 6ms/sample - loss: 774.4656 - lr: 2.4108e-04
+```
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/2bf93d96-ebc0-425c-b8a0-92ea2734cd83)
+
 ## MODEL 11 (2024.04.13 14시)
 * 직전 모델과의 차이점 : Encoder 및 Decoder의 각 layer의 필터 개수 증가
 * HIDDEN_DIMS : **76**
