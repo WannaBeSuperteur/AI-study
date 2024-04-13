@@ -12,6 +12,87 @@
     * **mouth** (입을 벌린 정도)
     * **eyes** (눈을 뜬 정도)
 
+## MODEL 14 (2024.04.13 21시)
+* 직전 모델과의 차이점
+  * MODEL 13에 적용한 다음 사항을 롤백
+    * Decoder의 각 레이어 (마지막 레이어를 제외한 3개) 마다 다음을 평균하는 레이어 추가
+  * **Encoder와 Decoder의 모든 레이어에 대해 2x2 Conv, 4x4 Conv를 각각 적용 후 add** 하는 방법 사용 (모두 same padding)
+* HIDDEN_DIMS : **76**
+* MSE loss weight : **50000.0 (=50K)**
+* learning rate 초기값 : **0.0004**
+* epoch 4 이후 learning rate 감소율 (직전 epoch 대비 현재 epoch의 learning rate의 비율) : **0.975**
+* 최종 loss : **774.8997**
+* 실험 결과 및 결론
+  * 2x2 Conv, 4x4 Conv add 적용에도 불구하고 MODEL 12, MODEL 13 과 오차 범위 내의 최종 loss를 보임
+  * MODEL 13, MODEL 14 에서의 변경 사항을 모두 취소하고, **해당 변경 사항들에 대해서는 MODEL 12로 롤백 결정**
+
+```
+Epoch 1/24
+2024-04-13 21:06:35.463404: I tensorflow/stream_executor/cuda/cuda_dnn.cc:368] Loaded cuDNN version 8907
+2024-04-13 21:06:36.338514: W tensorflow/stream_executor/gpu/asm_compiler.cc:111] *** WARNING *** You are using ptxas 11.0.194, which is older than 11.1. ptxas before 11.1 is known to miscompile XLA code, leading to incorrect results or invalid-address errors.
+
+You may not need to update to CUDA 11.1; cherry-picking the ptxas binary is often sufficient.
+16864/16864 [==============================] - 112s 7ms/sample - loss: 1866.8873 - lr: 4.0000e-04
+Epoch 2/24
+16864/16864 [==============================] - 108s 6ms/sample - loss: 1214.6325 - lr: 4.0000e-04
+Epoch 3/24
+16864/16864 [==============================] - 109s 6ms/sample - loss: 1080.1401 - lr: 4.0000e-04
+Epoch 4/24
+16864/16864 [==============================] - 109s 6ms/sample - loss: 1008.2583 - lr: 4.0000e-04
+Epoch 5/24
+16864/16864 [==============================] - 110s 7ms/sample - loss: 966.6472 - lr: 3.9000e-04
+Epoch 6/24
+16864/16864 [==============================] - 111s 7ms/sample - loss: 936.5013 - lr: 3.8025e-04
+Epoch 7/24
+16864/16864 [==============================] - 110s 7ms/sample - loss: 917.2839 - lr: 3.7074e-04
+Epoch 8/24
+16864/16864 [==============================] - 110s 7ms/sample - loss: 896.7678 - lr: 3.6148e-04
+Epoch 9/24
+16864/16864 [==============================] - 111s 7ms/sample - loss: 881.2158 - lr: 3.5244e-04
+Epoch 10/24
+16864/16864 [==============================] - 110s 7ms/sample - loss: 869.6206 - lr: 3.4363e-04
+Epoch 11/24
+16864/16864 [==============================] - 111s 7ms/sample - loss: 858.2306 - lr: 3.3504e-04
+Epoch 12/24
+16864/16864 [==============================] - 111s 7ms/sample - loss: 847.8867 - lr: 3.2666e-04
+Epoch 13/24
+16864/16864 [==============================] - 110s 7ms/sample - loss: 837.4093 - lr: 3.1849e-04
+Epoch 14/24
+16864/16864 [==============================] - 111s 7ms/sample - loss: 830.7097 - lr: 3.1053e-04
+Epoch 15/24
+16864/16864 [==============================] - 111s 7ms/sample - loss: 822.7494 - lr: 3.0277e-04
+Epoch 16/24
+16864/16864 [==============================] - 111s 7ms/sample - loss: 817.6014 - lr: 2.9520e-04
+Epoch 17/24
+16864/16864 [==============================] - 111s 7ms/sample - loss: 811.0067 - lr: 2.8782e-04
+Epoch 18/24
+16864/16864 [==============================] - 111s 7ms/sample - loss: 805.7911 - lr: 2.8062e-04
+Epoch 19/24
+16864/16864 [==============================] - 111s 7ms/sample - loss: 797.7601 - lr: 2.7361e-04
+Epoch 20/24
+16864/16864 [==============================] - 111s 7ms/sample - loss: 793.3352 - lr: 2.6677e-04
+Epoch 21/24
+16864/16864 [==============================] - 111s 7ms/sample - loss: 788.5164 - lr: 2.6010e-04
+Epoch 22/24
+16864/16864 [==============================] - 111s 7ms/sample - loss: 782.1806 - lr: 2.5360e-04
+Epoch 23/24
+16864/16864 [==============================] - 111s 7ms/sample - loss: 777.5712 - lr: 2.4726e-04
+Epoch 24/24
+16864/16864 [==============================] - 111s 7ms/sample - loss: 774.8997 - lr: 2.4108e-04
+```
+
+**Encoder 모델 구조**
+
+![encoder](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/bd6e4063-1282-4f28-925d-0fd5ac1d0260)
+
+**Decoder 모델 구조**
+
+![decoder](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/fa8c4e73-b671-458d-aa0d-4430a5d6ee75)
+
+**예시 생성 이미지**
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/22e14690-1c79-4d43-b15b-91a7f476fd30)
+
 ## MODEL 13 (2024.04.13 17시)
 * 직전 모델과의 차이점
   * Decoder의 각 레이어 (마지막 레이어를 제외한 3개) 마다 다음을 평균하는 레이어 추가

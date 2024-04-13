@@ -22,8 +22,8 @@ def convert_RGB_to_BGR(original_image):
 def test_decoder(cvae_decoder, gender, hair_color, mouth, eyes, num):
     latent_space = np.random.normal(0.0, 1.0, size=(1, HIDDEN_DIMS))
 
-    male_prob = 0.999999 if gender == 'male' else 0.000001
-    female_prob = 0.999999 if gender == 'female' else 0.000001
+    male_prob = 0.9999999 if gender == 'male' else 0.0000001
+    female_prob = 0.9999999 if gender == 'female' else 0.0000001
     
     input_info = np.array([[male_prob, female_prob, float(hair_color), float(mouth), float(eyes)]])
     
