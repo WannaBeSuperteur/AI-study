@@ -58,7 +58,7 @@ class CVAE_Model:
         return mse_loss + kl_loss
 
 
-    def __init__(self, dropout_rate=0.45):
+    def __init__(self, dropout_rate=0.25):
 
         # loss tracker
         self.mse_loss_tracker = tf.keras.metrics.Mean(name='cvae_mse_loss')
@@ -279,7 +279,7 @@ def scheduler(epoch, lr):
 def define_cvae_model():
     optimizer = optimizers.Adam(0.0004, decay=1e-6)
     scheduler_callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
-    model = CVAE_Model(dropout_rate=0.45) # 실제 모델은 model.cvae
+    model = CVAE_Model(dropout_rate=0.25) # 실제 모델은 model.cvae
 
     return model, optimizer, scheduler_callback
 
