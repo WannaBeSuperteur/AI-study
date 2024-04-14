@@ -6,6 +6,7 @@ from tensorflow.nn import silu
 from tensorflow.keras import layers, optimizers
 from keras.losses import mean_squared_error
 import keras.backend as K
+import matplotlib.pyplot as plt
 
 import cv2
 
@@ -44,6 +45,10 @@ class CVAE_Model:
         mse_loss = MSE_LOSS_WEIGHT * mean_squared_error(x_reshaped, y_reshaped)
         kl_loss = -0.5 * K.sum(1 + self.latent_log_var - K.square(self.latent_mean) - K.exp(self.latent_log_var), axis=-1)
 
+#        self.mse_loss_tracker.update_state(mse_loss)
+#        self.kl_loss_tracker.update_state(kl_loss)
+#        self.total_loss_tracker.update_state(mse_loss + kl_loss)
+
         return mse_loss, kl_loss, y_reshaped
 
 
@@ -54,6 +59,11 @@ class CVAE_Model:
 
 
     def __init__(self, dropout_rate=0.45):
+
+        # loss tracker
+        self.mse_loss_tracker = tf.keras.metrics.Mean(name='cvae_mse_loss')
+        self.kl_loss_tracker = tf.keras.metrics.Mean(name='cvae_kl_loss')
+        self.total_loss_tracker = tf.keras.metrics.Mean(name='cvae_total_loss')
 
         # 공통 레이어
         self.flatten = tf.keras.layers.Flatten()
@@ -297,6 +307,30 @@ def show_model_summary(model_class):
     plot_model_architecture(model_class.cvae, 'cvae')
 
 
+class LossDetailCallback(tf.keras.callbacks.Callback):
+    def __init__(self, cvae_model_class: CVAE_Model):
+        super().__init__()
+        self.cvae_class = cvae_model_class
+
+
+    def on_epoch_end(self, epoch, logs=None):
+        mse_loss = tf.print(self.cvae_class.mse_loss_tracker.result())
+        kl_loss = tf.print(self.cvae_class.kl_loss_tracker.result())
+        total_loss = tf.print(self.cvae_class.total_loss_tracker.result())
+
+#        loss_dict = {'mse_loss': mse_loss, 'kl_loss': kl_loss, 'total_loss': total_loss}
+        print(f' - mse_loss: {mse_loss} - kl_loss: {kl_loss} - total_loss: {total_loss}')
+
+
+# C-VAE 모델 학습 loss 기록 저장
+def save_cvae_loss_log(train_history):
+    plt.plot(train_history.history['loss'])
+    plt.title('CVAE loss history')
+    plt.xlabel('epoch')
+    plt.ylabel('total loss')
+    plt.savefig('cvae_train_result.png')
+
+
 # C-VAE 모델 학습 실시 및 모델 저장
 # train_info = train_condition (N, 5)
 def train_cvae_model(train_input, train_info):
@@ -307,13 +341,15 @@ def train_cvae_model(train_input, train_info):
     cvae_model_class.cvae.compile(loss=cvae_model_class.vae_loss, optimizer=optimizer)
 
     # 학습 실시
-    cvae_model_class.cvae.fit(
+    train_history = cvae_model_class.cvae.fit(
         [train_input, train_info, train_info], train_input,
         epochs=TRAIN_EPOCHS,
         batch_size=BATCH_SIZE,
+#        callbacks=[scheduler_callback, LossDetailCallback(cvae_model_class=cvae_model_class)],
         callbacks=[scheduler_callback],
         shuffle=True
     )
+    save_cvae_loss_log(train_history)
 
     # 모델 구조 표시
     show_model_summary(cvae_model_class)
