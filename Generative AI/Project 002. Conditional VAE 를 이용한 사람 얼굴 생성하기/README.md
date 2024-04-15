@@ -3,7 +3,7 @@
   * [Person Face Dataset (thispersondoesnotexist)](https://www.kaggle.com/datasets/almightyj/person-face-dataset-thispersondoesnotexist)
   * [Face Dataset Of People That Don't Exist](https://www.kaggle.com/datasets/bwandowando/all-these-people-dont-exist)
   * 모두 https://thispersondoesnotexist.com/ 로부터 생성된 데이터
-* 수행 기간: 2024.03.11 ~ 03.17 + 2024.04.01 ~ 04.14 (21일)
+* 수행 기간: 2024.03.11 ~ 03.17 + 2024.04.01 ~ 04.18 (25일)
 
 ## 파일 및 코드 설명
 * 학습 데이터셋 구조 (다운받은 데이터를 아래와 같이 배치), **전체 16,873 장**
@@ -151,7 +151,7 @@ python test_cvae_model.py
 ## branch info
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|
-|GAI-P2-master|||240311|240414|마스터 브랜치|
+|GAI-P2-master|||240311|240418|마스터 브랜치|
 |GAI-P2-1|```done```|```feat```|240312|240312|data 재배치 및 resizing, 배경 부분 cropping 실시|
 |GAI-P2-2|```done```|```feat```|240313|240317|```성별 조건``` condition을 위한 ```classify_male_or_female``` 모델 학습|
 |GAI-P2-3|```done```|```feat```|240401|240402|```머리 색 조건``` condition을 위한 ```regression_hair_color``` 모델 학습|
