@@ -119,7 +119,7 @@ class CVAE_Model:
         self.decoder_bn_cnn2 = layers.BatchNormalization(name='dc2_bn')
         self.decoder_ac_cnn2 = layers.Activation(silu, name='dc2_ac')
 
-        self.decoder_cnn3 = layers.Conv2D(NUM_CHANNELS, (4, 4), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='dc3')
+        self.decoder_cnn3 = layers.Conv2D(NUM_CHANNELS, (4, 4), strides=1, activation='sigmoid', padding='same', kernel_regularizer=L2, name='dc3')
         self.decoder_bn_cnn3 = layers.BatchNormalization(name='dc3_bn')
         self.decoder_ac_cnn3 = layers.Activation(silu, name='dc3_ac')
 
