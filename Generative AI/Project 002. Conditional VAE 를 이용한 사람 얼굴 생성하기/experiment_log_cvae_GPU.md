@@ -20,11 +20,65 @@
 * epoch 4 이후 learning rate 감소율 (직전 epoch 대비 현재 epoch의 learning rate의 비율) : **0.975**
 
 ### MODEL 19 - 2차 (2024.04.16 23시)
-* 최종 loss : **????.????** (1차 대비 **+/-??.????**)
+* 최종 loss : **2793.5303** (1차 대비 **-0.2845**)
 
 ```
+2024-04-16 23:10:13.800700: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1525] Created device /job:localhost/replica:0/task:0/device:GPU:1 with 9703 MB memory:  -> device: 1, name: Quadro M6000, pci bus id: 0000:22:00.0, compute capability: 5.2
+Epoch 1/24
+2024-04-16 23:10:17.103417: I tensorflow/stream_executor/cuda/cuda_dnn.cc:368] Loaded cuDNN version 8907
+2024-04-16 23:10:18.020015: W tensorflow/stream_executor/gpu/asm_compiler.cc:111] *** WARNING *** You are using ptxas 11.0.194, which is older than 11.1. ptxas before 11.1 is known to miscompile XLA code, leading to incorrect results or invalid-address errors.
 
+You may not need to update to CUDA 11.1; cherry-picking the ptxas binary is often sufficient.
+16864/16864 [==============================] - 116s 7ms/sample - loss: 5530.2585 - lr: 4.0000e-04
+Epoch 2/24
+16864/16864 [==============================] - 114s 7ms/sample - loss: 3992.8239 - lr: 4.0000e-04
+Epoch 3/24
+16864/16864 [==============================] - 114s 7ms/sample - loss: 3716.4728 - lr: 4.0000e-04
+Epoch 4/24
+16864/16864 [==============================] - 115s 7ms/sample - loss: 3577.6833 - lr: 4.0000e-04
+Epoch 5/24
+16864/16864 [==============================] - 115s 7ms/sample - loss: 3477.2342 - lr: 3.9000e-04
+Epoch 6/24
+16864/16864 [==============================] - 115s 7ms/sample - loss: 3401.0268 - lr: 3.8025e-04
+Epoch 7/24
+16864/16864 [==============================] - 115s 7ms/sample - loss: 3338.3062 - lr: 3.7074e-04
+Epoch 8/24
+16864/16864 [==============================] - 115s 7ms/sample - loss: 3292.1340 - lr: 3.6148e-04
+Epoch 9/24
+16864/16864 [==============================] - 115s 7ms/sample - loss: 3236.6770 - lr: 3.5244e-04
+Epoch 10/24
+16864/16864 [==============================] - 115s 7ms/sample - loss: 3197.7051 - lr: 3.4363e-04
+Epoch 11/24
+16864/16864 [==============================] - 115s 7ms/sample - loss: 3161.6532 - lr: 3.3504e-04
+Epoch 12/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 3119.1113 - lr: 3.2666e-04
+Epoch 13/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 3084.7961 - lr: 3.1849e-04
+Epoch 14/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 3046.8354 - lr: 3.1053e-04
+Epoch 15/24
+16864/16864 [==============================] - 115s 7ms/sample - loss: 3025.6497 - lr: 3.0277e-04
+Epoch 16/24
+16864/16864 [==============================] - 115s 7ms/sample - loss: 2991.8535 - lr: 2.9520e-04
+Epoch 17/24
+16864/16864 [==============================] - 115s 7ms/sample - loss: 2966.6118 - lr: 2.8782e-04
+Epoch 18/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 2943.9034 - lr: 2.8062e-04
+Epoch 19/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 2907.8518 - lr: 2.7361e-04
+Epoch 20/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 2887.5324 - lr: 2.6677e-04
+Epoch 21/24
+16864/16864 [==============================] - 115s 7ms/sample - loss: 2868.9599 - lr: 2.6010e-04
+Epoch 22/24
+16864/16864 [==============================] - 114s 7ms/sample - loss: 2836.1533 - lr: 2.5360e-04
+Epoch 23/24
+16864/16864 [==============================] - 115s 7ms/sample - loss: 2814.6049 - lr: 2.4726e-04
+Epoch 24/24
+16864/16864 [==============================] - 115s 7ms/sample - loss: 2793.5303 - lr: 2.4108e-04
 ```
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/3ff4f013-0f0e-4328-b04f-7e997a8abac9)
 
 ### MODEL 19 - 1차 (2024.04.16 22시)
 * 최종 loss : **2793.8148**
