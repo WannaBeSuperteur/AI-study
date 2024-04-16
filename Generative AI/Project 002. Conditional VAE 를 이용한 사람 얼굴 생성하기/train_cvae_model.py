@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 
 import tensorflow as tf
-from tensorflow.nn import silu
 from tensorflow.keras import layers, optimizers
 from keras.losses import mean_squared_error
 import keras.backend as K
@@ -23,6 +22,12 @@ HIDDEN_DIMS = 76
 MSE_LOSS_WEIGHT = 200000.0
 TRAIN_EPOCHS = 24
 TRAIN_DATA_LIMIT = None
+SILU_MULTIPLE = 2.0
+
+
+# 사용자 정의 activation function = x * sigmoid(2x)
+def silu_mul(x):
+    return x * K.sigmoid(SILU_MULTIPLE * x)
 
 
 # random normal noise maker for VAE
@@ -82,46 +87,46 @@ class CVAE_Model:
         L2 = tf.keras.regularizers.l2(0.001)
 
         # encoder 용 레이어
-        self.encoder_cnn0 = layers.Conv2D(32, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='ec0')
+        self.encoder_cnn0 = layers.Conv2D(32, (4, 4), strides=2, activation=silu_mul, padding='same', kernel_regularizer=L2, name='ec0')
         self.encoder_bn_cnn0 = layers.BatchNormalization(name='ec0_bn')
-        self.encoder_ac_cnn0 = layers.Activation(silu, name='ec0_ac')
+        self.encoder_ac_cnn0 = layers.Activation(silu_mul, name='ec0_ac')
 
-        self.encoder_cnn1 = layers.Conv2D(48, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='ec1')
+        self.encoder_cnn1 = layers.Conv2D(48, (4, 4), strides=2, activation=silu_mul, padding='same', kernel_regularizer=L2, name='ec1')
         self.encoder_bn_cnn1 = layers.BatchNormalization(name='ec1_bn')
-        self.encoder_ac_cnn1 = layers.Activation(silu, name='ec1_ac')
+        self.encoder_ac_cnn1 = layers.Activation(silu_mul, name='ec1_ac')
 
-        self.encoder_cnn2 = layers.Conv2D(64, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='ec2')
+        self.encoder_cnn2 = layers.Conv2D(64, (4, 4), strides=2, activation=silu_mul, padding='same', kernel_regularizer=L2, name='ec2')
         self.encoder_bn_cnn2 = layers.BatchNormalization(name='ec2_bn')
-        self.encoder_ac_cnn2 = layers.Activation(silu, name='ec2_ac')
+        self.encoder_ac_cnn2 = layers.Activation(silu_mul, name='ec2_ac')
 
-        self.encoder_cnn3 = layers.Conv2D(96, (4, 4), strides=1, activation=silu, padding='same', kernel_regularizer=L2, name='ec3')
+        self.encoder_cnn3 = layers.Conv2D(96, (4, 4), strides=1, activation=silu_mul, padding='same', kernel_regularizer=L2, name='ec3')
         self.encoder_bn_cnn3 = layers.BatchNormalization(name='ec3_bn')
-        self.encoder_ac_cnn3 = layers.Activation(silu, name='ec3_ac')
+        self.encoder_ac_cnn3 = layers.Activation(silu_mul, name='ec3_ac')
 
-        self.encoder_dense0 = layers.Dense(192, activation=silu, name='ed0')
-        self.encoder_ad0 = layers.Dense(64, activation=silu, name='ead0') # input image 와 직접 연결
-        self.encoder_ad1 = layers.Dense(64, activation=silu, name='ead1') # 60 x 60 feature 와 직접 연결
-        self.encoder_ad2 = layers.Dense(64, activation=silu, name='ead2') # 30 x 30 feature 와 직접 연결
+        self.encoder_dense0 = layers.Dense(192, activation=silu_mul, name='ed0')
+        self.encoder_ad0 = layers.Dense(64, activation=silu_mul, name='ead0') # input image 와 직접 연결
+        self.encoder_ad1 = layers.Dense(64, activation=silu_mul, name='ead1') # 60 x 60 feature 와 직접 연결
+        self.encoder_ad2 = layers.Dense(64, activation=silu_mul, name='ead2') # 30 x 30 feature 와 직접 연결
 
         # decoder 용 레이어
-        self.decoder_dense0 = layers.Dense(256, activation=silu, name='dd0')
-        self.decoder_dense1 = layers.Dense(120 * TOTAL_CELLS // (8 * 8), activation=silu, name='dd1')
+        self.decoder_dense0 = layers.Dense(256, activation=silu_mul, name='dd0')
+        self.decoder_dense1 = layers.Dense(120 * TOTAL_CELLS // (8 * 8), activation=silu_mul, name='dd1')
 
-        self.decoder_cnn0 = layers.Conv2DTranspose(80, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='dc0')
+        self.decoder_cnn0 = layers.Conv2DTranspose(80, (4, 4), strides=2, activation=silu_mul, padding='same', kernel_regularizer=L2, name='dc0')
         self.decoder_bn_cnn0 = layers.BatchNormalization(name='dc0_bn')
-        self.decoder_ac_cnn0 = layers.Activation(silu, name='dc0_ac')
+        self.decoder_ac_cnn0 = layers.Activation(silu_mul, name='dc0_ac')
 
-        self.decoder_cnn1 = layers.Conv2DTranspose(60, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='dc1')
+        self.decoder_cnn1 = layers.Conv2DTranspose(60, (4, 4), strides=2, activation=silu_mul, padding='same', kernel_regularizer=L2, name='dc1')
         self.decoder_bn_cnn1 = layers.BatchNormalization(name='dc1_bn')
-        self.decoder_ac_cnn1 = layers.Activation(silu, name='dc1_ac')
+        self.decoder_ac_cnn1 = layers.Activation(silu_mul, name='dc1_ac')
 
-        self.decoder_cnn2 = layers.Conv2DTranspose(40, (4, 4), strides=2, activation=silu, padding='same', kernel_regularizer=L2, name='dc2')
+        self.decoder_cnn2 = layers.Conv2DTranspose(40, (4, 4), strides=2, activation=silu_mul, padding='same', kernel_regularizer=L2, name='dc2')
         self.decoder_bn_cnn2 = layers.BatchNormalization(name='dc2_bn')
-        self.decoder_ac_cnn2 = layers.Activation(silu, name='dc2_ac')
+        self.decoder_ac_cnn2 = layers.Activation(silu_mul, name='dc2_ac')
 
         self.decoder_cnn3 = layers.Conv2D(NUM_CHANNELS, (4, 4), strides=1, activation='sigmoid', padding='same', kernel_regularizer=L2, name='dc3')
         self.decoder_bn_cnn3 = layers.BatchNormalization(name='dc3_bn')
-        self.decoder_ac_cnn3 = layers.Activation(silu, name='dc3_ac')
+        self.decoder_ac_cnn3 = layers.Activation(silu_mul, name='dc3_ac')
 
         # encoder (main stream)
         input_image = layers.Input(batch_shape=(BATCH_SIZE, INPUT_IMG_SIZE, INPUT_IMG_SIZE, NUM_CHANNELS), name='ec_input_img')
@@ -186,16 +191,16 @@ class CVAE_Model:
         dec_reshaped = layers.Reshape((INPUT_IMG_SIZE // 8, INPUT_IMG_SIZE // 8, 120))(dec_d1)
 
         # decoder additional
-        dec_add_c0 = layers.Dense((INPUT_IMG_SIZE // 8) * (INPUT_IMG_SIZE // 8) * 120, name='dec_c0_add', activation=silu)(dec_merged)
+        dec_add_c0 = layers.Dense((INPUT_IMG_SIZE // 8) * (INPUT_IMG_SIZE // 8) * 120, name='dec_c0_add', activation=silu_mul)(dec_merged)
         dec_add_c0_ = layers.Reshape((INPUT_IMG_SIZE // 8, INPUT_IMG_SIZE // 8, 120))(dec_add_c0)
 
-        dec_add_c1 = layers.Dense((INPUT_IMG_SIZE // 4) * (INPUT_IMG_SIZE // 4) * 80, name='dec_c1_add', activation=silu)(dec_merged)
+        dec_add_c1 = layers.Dense((INPUT_IMG_SIZE // 4) * (INPUT_IMG_SIZE // 4) * 80, name='dec_c1_add', activation=silu_mul)(dec_merged)
         dec_add_c1_ = layers.Reshape((INPUT_IMG_SIZE // 4, INPUT_IMG_SIZE // 4, 80))(dec_add_c1)
 
-        dec_add_c2 = layers.Dense((INPUT_IMG_SIZE // 2) * (INPUT_IMG_SIZE // 2) * 60, name='dec_c2_add', activation=silu)(dec_merged)
+        dec_add_c2 = layers.Dense((INPUT_IMG_SIZE // 2) * (INPUT_IMG_SIZE // 2) * 60, name='dec_c2_add', activation=silu_mul)(dec_merged)
         dec_add_c2_ = layers.Reshape((INPUT_IMG_SIZE // 2, INPUT_IMG_SIZE // 2, 60))(dec_add_c2)
 
-        dec_add_c3 = layers.Dense(INPUT_IMG_SIZE * INPUT_IMG_SIZE * 40, name='dec_c3_add', activation=silu)(dec_merged)
+        dec_add_c3 = layers.Dense(INPUT_IMG_SIZE * INPUT_IMG_SIZE * 40, name='dec_c3_add', activation=silu_mul)(dec_merged)
         dec_add_c3_ = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 40))(dec_add_c3)
 
         # decoder deconv CNN layers
