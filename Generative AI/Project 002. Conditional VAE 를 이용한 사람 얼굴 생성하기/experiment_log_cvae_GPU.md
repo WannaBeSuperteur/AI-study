@@ -140,6 +140,67 @@ Epoch 24/24
 
 ![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/e65721ad-f218-49ba-848a-ad90e30af0d4)
 
+### MODEL 19 - 참고 (GeLU approximation 적용 시)
+* 적용할 GeLU approximation : $GeLU(x) = x \times sigmoid(1.702x)$
+* 최종 loss : **2837.6299**
+
+```
+Epoch 1/24
+2024-04-17 00:37:53.610109: I tensorflow/stream_executor/cuda/cuda_dnn.cc:368] Loaded cuDNN version 8907
+2024-04-17 00:37:54.471369: W tensorflow/stream_executor/gpu/asm_compiler.cc:111] *** WARNING *** You are using ptxas 11.0.194, which is older than 11.1. ptxas before 11.1 is known to miscompile XLA code, leading to incorrect results or invalid-address errors.
+
+You may not need to update to CUDA 11.1; cherry-picking the ptxas binary is often sufficient.
+16864/16864 [==============================] - 117s 7ms/sample - loss: 5678.5433 - lr: 4.0000e-04
+Epoch 2/24
+16864/16864 [==============================] - 115s 7ms/sample - loss: 4096.4987 - lr: 4.0000e-04
+Epoch 3/24
+16864/16864 [==============================] - 117s 7ms/sample - loss: 3790.3793 - lr: 4.0000e-04
+Epoch 4/24
+16864/16864 [==============================] - 114s 7ms/sample - loss: 3613.6717 - lr: 4.0000e-04
+Epoch 5/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 3515.4817 - lr: 3.9000e-04
+Epoch 6/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 3434.4356 - lr: 3.8025e-04
+Epoch 7/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 3362.7460 - lr: 3.7074e-04
+Epoch 8/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 3307.7757 - lr: 3.6148e-04
+Epoch 9/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 3262.7189 - lr: 3.5244e-04
+Epoch 10/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 3221.6631 - lr: 3.4363e-04
+Epoch 11/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 3171.3026 - lr: 3.3504e-04
+Epoch 12/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 3143.4781 - lr: 3.2666e-04
+Epoch 13/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 3109.4691 - lr: 3.1849e-04
+Epoch 14/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 3077.6068 - lr: 3.1053e-04
+Epoch 15/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 3051.3673 - lr: 3.0277e-04
+Epoch 16/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 3024.7557 - lr: 2.9520e-04
+Epoch 17/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 3003.2814 - lr: 2.8782e-04
+Epoch 18/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 2970.0341 - lr: 2.8062e-04
+Epoch 19/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 2947.8251 - lr: 2.7361e-04
+Epoch 20/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 2923.5454 - lr: 2.6677e-04
+Epoch 21/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 2896.1642 - lr: 2.6010e-04
+Epoch 22/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 2874.7959 - lr: 2.5360e-04
+Epoch 23/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 2854.4980 - lr: 2.4726e-04
+Epoch 24/24
+16864/16864 [==============================] - 116s 7ms/sample - loss: 2837.6299 - lr: 2.4108e-04
+```
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/943b03cf-bd75-4e9b-b24a-50cd2b6558f0)
+
 ## MODEL 18 (2024.04.15 23시)
 * 직전 모델과의 차이점 : **decoder의 마지막 (최종 이미지) 레이어의 activation function을 SiLU -> Sigmoid 로 변경**
 * HIDDEN_DIMS : **76**

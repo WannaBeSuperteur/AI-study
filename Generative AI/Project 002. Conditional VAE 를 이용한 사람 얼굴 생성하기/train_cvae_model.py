@@ -22,10 +22,12 @@ HIDDEN_DIMS = 76
 MSE_LOSS_WEIGHT = 200000.0
 TRAIN_EPOCHS = 24
 TRAIN_DATA_LIMIT = None
-SILU_MULTIPLE = 2.0
+SILU_MULTIPLE = 1.702 # same as GeLU approximation
+
+print(f'settings: HIDDEN_DIMS={HIDDEN_DIMS}, MSE_LOSS_WEIGHT={MSE_LOSS_WEIGHT}, SILU_MULTIPLE={SILU_MULTIPLE}')
 
 
-# 사용자 정의 activation function = x * sigmoid(2x)
+# 사용자 정의 activation function = x * sigmoid(1.702x)
 def silu_mul(x):
     return x * K.sigmoid(SILU_MULTIPLE * x)
 
