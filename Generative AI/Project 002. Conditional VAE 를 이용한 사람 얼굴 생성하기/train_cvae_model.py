@@ -14,14 +14,14 @@ INPUT_IMG_SIZE = 120
 NUM_CHANNELS = 3 # R, G, and B
 TOTAL_CELLS = INPUT_IMG_SIZE * INPUT_IMG_SIZE
 TOTAL_INPUT_IMG_VALUES = NUM_CHANNELS * TOTAL_CELLS
-NUM_INFO = 5 # male prob, female prob, hair color, mouth, and eyes
+NUM_INFO = 8 # male prob, female prob, hair color, mouth, eyes, and face location from top/left/right
 
 BATCH_SIZE = 32
 HIDDEN_DIMS = 76
 
 MSE_LOSS_WEIGHT = 200000.0
-TRAIN_EPOCHS = 24
-TRAIN_DATA_LIMIT = None
+TRAIN_EPOCHS = 3
+TRAIN_DATA_LIMIT = 300
 SILU_MULTIPLE = 1.702 # same as GeLU approximation
 
 print(f'settings: HIDDEN_DIMS={HIDDEN_DIMS}, MSE_LOSS_WEIGHT={MSE_LOSS_WEIGHT}, SILU_MULTIPLE={SILU_MULTIPLE}')
@@ -387,10 +387,13 @@ def create_train_and_valid_data(limit=None):
         hair_color = row['hair_color']
         mouth = row['mouth']
         eyes = row['eyes']
+        face_location_top = row['face_location_top_normalized']
+        face_location_left = row['face_location_left_normalized']
+        face_location_right = row['face_location_right_normalized']
 
         img = cv2.imread(img_path, cv2.IMREAD_UNCHANGED)
         train_input.append(np.array(img) / 255.0)
-        train_info.append([male_prob, female_prob, hair_color, mouth, eyes])
+        train_info.append([male_prob, female_prob, hair_color, mouth, eyes, face_location_top, face_location_left, face_location_right])
 
         current_idx += 1
         if limit is not None and current_idx >= limit:
@@ -405,11 +408,6 @@ def create_train_and_valid_data(limit=None):
 
     return train_input, train_info
 
-
-# training time (with CPU) : 15 sample/s -> 18.67 - 19.5  minutes for all 16,800 samples (= 1 epoch)
-#                                            2.5  -  2.6  hours   for 8 epochs
-#                                            6.25 -  6.5  hours   for 20 epochs
-#                                           12.5  - 13.0  hours   for 40 epochs
 
 if __name__ == '__main__':
     tf.compat.v1.disable_eager_execution()
