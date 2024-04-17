@@ -85,8 +85,12 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
     * **각 모델의 학습 대상이 되는 이미지에 대해서도, 실제 값인 ground truth 값이 아닌 모델에 의해 예측된 condition 값을 저장**
     * 본 repository에서는 ```condition_data.txt``` 파일로 저장되어 있으며, csv 로 확장자 변경하여 사용 가능 
 
+* ```add_face_location_info.py``` : face location info 추가
+  * 필요 파일 : resized image 전체 (16,873 장 = first dataset 10,000 장 + second dataset 6,873장)
+  * 출력 파일 : ```condition_data.csv``` (기존 5개의 열 외에 face location info 열 추가)
+
 * ```train_cvae_model.py``` : 학습 과정 전체 진행
-  * 필요 파일 : resize 및 재배치된 전체 학습 데이터셋 (위 ```resizd_images``` 및 그 내부 디렉토리 구조 참고), ```condition_data.csv``` (모든 각 이미지의 condition 값)
+  * 필요 파일 : resize 및 재배치된 전체 학습 데이터셋 (위 ```resizd_images``` 및 그 내부 디렉토리 구조 참고), ```condition_data.csv``` (모든 각 이미지의 condition 값, face location info 3개 열 포함)
   * 출력 모델 : ```cvae_model``` (Conditional VAE 모델), ```cvae_encoder_model``` (C-VAE의 인코더), ```cvae_decoder_model``` (C-VAE의 디코더)
   * decoder 모델 모의 테스트용 파일 : ```decoder_mock_test.py```
 
@@ -135,6 +139,7 @@ python train_model_for_condition_hair_color.py
 python train_model_for_condition_mouth.py
 python train_model_for_condition_eyes.py
 python save_condition_data.py
+python add_face_location_info.py
 python train_cvae_model.py
 python test_cvae_model.py
 ```
