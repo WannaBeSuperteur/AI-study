@@ -14,7 +14,7 @@ def convert_RGB_to_BGR(original_image):
 # 생성된 cvae_decoder_model 모의 테스트
 def mock_test_decoder(cvae_decoder):
     latent_space = np.random.normal(0.0, 1.0, size=(BATCH_SIZE, HIDDEN_DIMS))
-    input_info = np.array([[0.000025, 0.999975, 0.99, 0.98, 0.99, 0.0, 0.0, 0.0] for _ in range(BATCH_SIZE)])
+    input_info = np.array([[0.000025, 0.999975, 0.99, 0.98, 0.99, 0.5, 0.5, 0.5] for _ in range(BATCH_SIZE)])
     
     img = cvae_decoder([latent_space, input_info])
     img_np = np.array(img.numpy() * 255.0, dtype=np.uint8)

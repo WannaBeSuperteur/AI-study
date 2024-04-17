@@ -122,12 +122,15 @@ def save_face_location_info_for_all_images():
 
     # normalize face location info columns
     face_location_cols = ['face_location_top', 'face_location_left', 'face_location_right']
+    image_count = len(face_location_info)
 
     for col in face_location_cols:
         column = face_location_info[col]
-        mean = column.mean()
-        std = column.std()
-        face_location_info[f'{col}_normalized'] = (column - mean) / std
+        bottom_5 = column.sort_values().iloc[int(0.05 * image_count)]
+        top_10 = column.sort_values().iloc[int(0.9 * image_count)]
+        print(f'column {col}, top 10% = {top_10}, bottom 5% = {bottom_5}')
+
+        face_location_info[f'{col}_normalized'] = (column - bottom_5) / (top_10 - bottom_5)
 
     # concat into existing dataset
     condition_data = pd.read_csv('condition_data.csv', index_col=0)
