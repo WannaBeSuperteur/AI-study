@@ -11,6 +11,10 @@
     * **hair color**
     * **mouth** (입을 벌린 정도)
     * **eyes** (눈을 뜬 정도)
+    * **MODEL 20** 에서 추가
+      * **face_location_top** (이미지 위쪽 끝 가운데에서부터 얼굴까지의 거리)
+      * **face_location_left** (이미지 왼쪽 끝 가운데에서부터 얼굴까지의 거리)
+      * **face_location_right** (이미지 오른쪽 끝 가운데에서부터 얼굴까지의 거리)
 
 ## MODEL 21 (2024.04.17 23시)
 * 직전 모델과의 차이점 : **MODEL 20에서 새로 추가한 3가지의 각 face location 정보 값에 대해, 다음과 같이 mapping 시키는 linear transformation 적용**
