@@ -41,10 +41,10 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
   * ```classify_male_or_female``` 성별 분류 모델 : **Face Dataset Of People That Don't Exist** 로부터의 데이터셋을 이용하여 **성별 예측 분류 모델 학습**
   * 나머지 모든 회귀 모델 (7개) : **Face Dataset Of People That Don't Exist** 로부터의 데이터셋 중 **남녀 각각 최초 1000장 (이름순)** 의 사진을 학습 및 validation
     * 필요 파일 :
-      * ```regression_{info_name}_info_male.csv``` (```resized_images/second_dataset_male``` 의 이미지 중 최초 1000장 이름순, 머리 색을 나타내는 0-1 값 정보)
-      * ```regression_{info_name}_info_female.csv``` (```resized_images/second_dataset_female``` 의 이미지 중 최초 1000장 이름순, 머리 색을 나타내는 0-1 값 정보)
+      * ```regression_{info_name}_info_male.csv``` (```resized_images/second_dataset_male``` 의 이미지 중 최초 1000장 이름순, 해당 info의 값을 나타내는 0-1 값 정보)
+      * ```regression_{info_name}_info_female.csv``` (```resized_images/second_dataset_female``` 의 이미지 중 최초 1000장 이름순, 해당 info의 값을 나타내는 0-1 값 정보)
       * 이상의 2개의 csv 파일은 본 repository에서는 txt 파일로 저장되어 있음
-      * ```male_or_female_classify_result_for_all_images.csv``` (모든 이미지에 대한 각 성별일 확률에 대한 정보로, "머리 색 조건" 모델의 input 값으로 사용)
+      * ```male_or_female_classify_result_for_all_images.csv``` (모든 이미지에 대한 각 성별일 확률에 대한 정보로, 해당 info condition의 값을 출력하기 위한 모델의 input 값으로 사용)
     * 출력 모델 이름 : ```regression_{info_name}```
 
 * 성별 분류 모델 상세
@@ -128,6 +128,10 @@ python train_model_for_condition_male_or_female.py
 python train_model_for_condition_hair_color.py
 python train_model_for_condition_mouth.py
 python train_model_for_condition_eyes.py
+python train_model_for_condition_background_mean.py
+python train_model_for_condition_background_std.py
+python train_model_for_condition_age.py
+python train_model_for_condition_beauty.py
 python save_condition_data.py
 python train_cvae_model.py
 python test_cvae_model.py
