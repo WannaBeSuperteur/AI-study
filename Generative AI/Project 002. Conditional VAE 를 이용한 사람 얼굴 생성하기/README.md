@@ -36,9 +36,10 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
 ```
 
 ### additional info 학습 관련
-* 학습 데이터
+* additional info 값 출력 모델
+  * **일부 이미지에 대해 info 값을 인위적으로 지정하여, CNN 딥러닝 모델이 해당 값을 output 으로 학습한 후, 모든 이미지에 대해서 해당 모델이 출력한 값의 prediction을 이용**
   * ```classify_male_or_female``` 성별 분류 모델 : **Face Dataset Of People That Don't Exist** 로부터의 데이터셋을 이용하여 **성별 예측 분류 모델 학습**
-  * 나머지 모든 회귀 모델 : **Face Dataset Of People That Don't Exist** 로부터의 데이터셋 중 **남녀 각각 최초 1000장 (이름순)** 의 사진을 학습 및 validation
+  * 나머지 모든 회귀 모델 (7개) : **Face Dataset Of People That Don't Exist** 로부터의 데이터셋 중 **남녀 각각 최초 1000장 (이름순)** 의 사진을 학습 및 validation
     * 필요 파일 :
       * ```regression_{info_name}_info_male.csv``` (```resized_images/second_dataset_male``` 의 이미지 중 최초 1000장 이름순, 머리 색을 나타내는 0-1 값 정보)
       * ```regression_{info_name}_info_female.csv``` (```resized_images/second_dataset_female``` 의 이미지 중 최초 1000장 이름순, 머리 색을 나타내는 0-1 값 정보)
@@ -54,7 +55,8 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
       * **resized_image** 디렉토리에 있는 **모든 이미지 (학습 데이터 포함)** 에 대한 각 성별일 확률을 저장한 csv 파일
       * 본 repository에는 ```male_or_female_classify_result_for_all_images.txt``` 파일로 저장되어 있으며, csv 로 확장자 변경하여 사용 가능
 
-* 회귀 모델 구성
+* 회귀 모델 구성 (총 7개)
+
 |```info_name``` 의 값|회귀 모델 학습 데이터의 output의 의미|
 |---|---|
 |```hair_color```|**머리 색** 이 진할수록 1에 가깝고, 밝을수록 0에 가까운 값|
