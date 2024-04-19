@@ -17,7 +17,7 @@ TOTAL_INPUT_IMG_VALUES = NUM_CHANNELS * TOTAL_CELLS
 NUM_INFO = 8 # male prob, female prob, hair color, mouth, eyes, and face location from top/left/right
 
 BATCH_SIZE = 32
-HIDDEN_DIMS = 76
+HIDDEN_DIMS = 152
 
 MSE_LOSS_WEIGHT = 200000.0
 TRAIN_EPOCHS = 24
