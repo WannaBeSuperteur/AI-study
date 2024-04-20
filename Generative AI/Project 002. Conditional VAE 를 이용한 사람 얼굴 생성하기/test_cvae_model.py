@@ -29,7 +29,9 @@ def test_decoder(cvae_decoder, gender, hair_color, mouth, eyes, num):
     input_info_one = [male_prob, female_prob, float(hair_color), 1.0 - float(hair_color), float(mouth), float(eyes),
                       np.random.uniform(),  # face location from top
                       np.random.uniform(),  # face location from left
-                      np.random.uniform()]  # face location from right
+                      np.random.uniform(),  # face location from right
+                      0.93,  # background mean
+                      0.2]   # background std
 
     input_info = np.array([input_info_one for _ in range(BATCH_SIZE)])
     
