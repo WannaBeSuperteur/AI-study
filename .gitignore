@@ -39,6 +39,9 @@ Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하
 Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기/regression_hair_color/*
 Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기/regression_mouth/*
 Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기/regression_eyes/*
+Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기/regression_background_mean/*
+Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기/regression_background_std/*
+Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기/regression_other_person/*
 *.pyc
 __pycache__/
 .idea/*
