@@ -1,7 +1,5 @@
 import tensorflow as tf
 import numpy as np
-from tensorflow.keras import layers, optimizers
-from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 
 import os
 import cv2

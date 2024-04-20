@@ -15,9 +15,9 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
   - Person Face Dataset (thispersondoesnotexist) 10,000 장 (original)
 - ThisPersonDoesNotExist
   - Female
-    - Face Dataset Of People That Don't Exist 3,013 장 (original)
-  - Male
     - Face Dataset Of People That Don't Exist 3,860 장 (original)
+  - Male
+    - Face Dataset Of People That Don't Exist 3,013 장 (original)
 ```
 
 * ```resize_and_sort_data.py``` : 다운받은 데이터셋의 이미지를 리사이징, 명백히 배경에 해당하는 일부분을 cropping 및 재배치
@@ -86,9 +86,13 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
     * **각 모델의 학습 대상이 되는 이미지에 대해서도, 실제 값인 ground truth 값이 아닌 모델에 의해 예측된 condition 값을 저장**
     * 본 repository에서는 ```condition_data.txt``` 파일로 저장되어 있으며, csv 로 확장자 변경하여 사용 가능 
 
-### 모델 학습, 저장 및 테스트 
+* ```add_face_location_info.py``` : face location info 추가
+  * 필요 파일 : resized image 전체 (16,873 장 = first dataset 10,000 장 + second dataset 6,873장)
+  * 출력 파일 : ```condition_data.csv``` (기존 5개의 열 외에 face location info 열 추가)
+
+### 모델 학습, 저장 및 테스트
 * ```train_cvae_model.py``` : 학습 과정 전체 진행
-  * 필요 파일 : resize 및 재배치된 전체 학습 데이터셋 (위 ```resizd_images``` 및 그 내부 디렉토리 구조 참고), ```condition_data.csv``` (모든 각 이미지의 condition 값)
+  * 필요 파일 : resize 및 재배치된 전체 학습 데이터셋 (위 ```resizd_images``` 및 그 내부 디렉토리 구조 참고), ```condition_data.csv``` (모든 각 이미지의 condition 값, face location info 3개 열 포함)
   * 출력 모델 : ```cvae_model``` (Conditional VAE 모델), ```cvae_encoder_model``` (C-VAE의 인코더), ```cvae_decoder_model``` (C-VAE의 디코더)
   * decoder 모델 모의 테스트용 파일 : ```decoder_mock_test.py```
 
@@ -137,6 +141,7 @@ python train_model_for_condition_background_mean.py
 python train_model_for_condition_background_std.py
 python train_model_for_condition_other_person.py (실패한 모델이므로, 선택)
 python save_condition_data.py
+python add_face_location_info.py
 python train_cvae_model.py
 python test_cvae_model.py
 ```
@@ -163,4 +168,5 @@ python test_cvae_model.py
 |GAI-P2-7|```done```|```feat```|240406|240407|C-VAE 모델 학습|
 |GAI-P2-8|```done```|```feat```|240407|240407|C-VAE 모델 테스트 (사람 얼굴 이미지 생성)|
 |GAI-P2-9|```ing```|```feat```|240407|240421|C-VAE 모델 성능 개선 (특별한 Loss 추가, 새로운 condition 추가, 모델 구조 변경 등)|
+|GAI-P2-10|```done```|```feat```|240411|240420|C-VAE 모델 성능 개선 (on GPU)|
 |GAI-P2-11|```done```|```feat```|240419|240420|C-VAE 모델 성능 개선 (새로운 condition 추가)|

@@ -3,8 +3,9 @@ import numpy as np
 from PIL import Image
 import os
 
-HIDDEN_DIMS = 48
+HIDDEN_DIMS = 231
 NUM_IMGS_FOR_EACH_INFO = 3
+BATCH_SIZE = 32
 
 
 gender_to_img_name = {'male': 'M', 'female': 'F'}
@@ -20,12 +21,17 @@ def convert_RGB_to_BGR(original_image):
 
 # 생성된 cvae_decoder_model 테스트
 def test_decoder(cvae_decoder, gender, hair_color, mouth, eyes, num):
-    latent_space = np.random.normal(0.0, 1.0, size=(1, HIDDEN_DIMS))
+    latent_space = np.random.normal(0.0, 1.0, size=(BATCH_SIZE, HIDDEN_DIMS))
 
-    male_prob = 0.999999 if gender == 'male' else 0.000001
-    female_prob = 0.999999 if gender == 'female' else 0.000001
-    
-    input_info = np.array([[male_prob, female_prob, float(hair_color), float(mouth), float(eyes)]])
+    male_prob = 0.9999999 if gender == 'male' else 0.0000001
+    female_prob = 0.9999999 if gender == 'female' else 0.0000001
+
+    input_info_one = [male_prob, female_prob, float(hair_color), 1.0 - float(hair_color), float(mouth), float(eyes),
+                      np.random.uniform(),  # face location from top
+                      np.random.uniform(),  # face location from left
+                      np.random.uniform()]  # face location from right
+
+    input_info = np.array([input_info_one for _ in range(BATCH_SIZE)])
     
     img = cvae_decoder([latent_space, input_info])
     img_np = np.array(img.numpy() * 255.0, dtype=np.uint8)
