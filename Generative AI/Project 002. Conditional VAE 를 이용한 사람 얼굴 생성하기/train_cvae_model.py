@@ -14,10 +14,10 @@ INPUT_IMG_SIZE = 120
 NUM_CHANNELS = 3 # R, G, and B
 TOTAL_CELLS = INPUT_IMG_SIZE * INPUT_IMG_SIZE
 TOTAL_INPUT_IMG_VALUES = NUM_CHANNELS * TOTAL_CELLS
-NUM_INFO = 8 # male prob, female prob, hair color, mouth, eyes, and face location from top/left/right
+NUM_INFO = 9 # male prob, female prob, hair color, inv hair color, mouth, eyes, and face location from top/left/right
 
 BATCH_SIZE = 32
-HIDDEN_DIMS = 152
+HIDDEN_DIMS = 231
 
 MSE_LOSS_WEIGHT = 200000.0
 TRAIN_EPOCHS = 24
@@ -385,6 +385,7 @@ def create_train_and_valid_data(limit=None):
         male_prob = row['male_prob']
         female_prob = row['female_prob']
         hair_color = row['hair_color']
+        inv_hair_color = 1.0 - row['hair_color']
         mouth = row['mouth']
         eyes = row['eyes']
         face_location_top = row['face_location_top_normalized']
@@ -393,7 +394,7 @@ def create_train_and_valid_data(limit=None):
 
         img = cv2.imread(img_path, cv2.IMREAD_UNCHANGED)
         train_input.append(np.array(img) / 255.0)
-        train_info.append([male_prob, female_prob, hair_color, mouth, eyes, face_location_top, face_location_left, face_location_right])
+        train_info.append([male_prob, female_prob, hair_color, inv_hair_color, mouth, eyes, face_location_top, face_location_left, face_location_right])
 
         current_idx += 1
         if limit is not None and current_idx >= limit:

@@ -3,7 +3,7 @@ import numpy as np
 from PIL import Image
 import os
 
-HIDDEN_DIMS = 152
+HIDDEN_DIMS = 231
 NUM_IMGS_FOR_EACH_INFO = 3
 BATCH_SIZE = 32
 
@@ -26,7 +26,7 @@ def test_decoder(cvae_decoder, gender, hair_color, mouth, eyes, num):
     male_prob = 0.9999999 if gender == 'male' else 0.0000001
     female_prob = 0.9999999 if gender == 'female' else 0.0000001
 
-    input_info_one = [male_prob, female_prob, float(hair_color), float(mouth), float(eyes),
+    input_info_one = [male_prob, female_prob, float(hair_color), 1.0 - float(hair_color), float(mouth), float(eyes),
                       np.random.uniform(),  # face location from top
                       np.random.uniform(),  # face location from left
                       np.random.uniform()]  # face location from right
