@@ -39,7 +39,7 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
 * additional info 값 출력 모델
   * **일부 이미지에 대해 info 값을 인위적으로 지정하여, CNN 딥러닝 모델이 해당 값을 output 으로 학습한 후, 모든 이미지에 대해서 해당 모델이 출력한 값의 prediction을 이용**
   * ```classify_male_or_female``` 성별 분류 모델 : **Face Dataset Of People That Don't Exist** 로부터의 데이터셋을 이용하여 **성별 예측 분류 모델 학습**
-  * 나머지 모든 회귀 모델 (7개) : **Face Dataset Of People That Don't Exist** 로부터의 데이터셋 중 **남녀 각각 최초 1000장 (이름순)** 의 사진을 학습 및 validation
+  * 나머지 모든 회귀 모델 (6개) : **Face Dataset Of People That Don't Exist** 로부터의 데이터셋 중 **남녀 각각 최초 1000장 (이름순)** 의 사진을 학습 및 validation
     * 필요 파일 :
       * ```regression_{info_name}_info_male.csv``` (```resized_images/second_dataset_male``` 의 이미지 중 최초 1000장 이름순, 해당 info의 값을 나타내는 0-1 값 정보)
       * ```regression_{info_name}_info_female.csv``` (```resized_images/second_dataset_female``` 의 이미지 중 최초 1000장 이름순, 해당 info의 값을 나타내는 0-1 값 정보)
@@ -55,7 +55,7 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
       * **resized_image** 디렉토리에 있는 **모든 이미지 (학습 데이터 포함)** 에 대한 각 성별일 확률을 저장한 csv 파일
       * 본 repository에는 ```male_or_female_classify_result_for_all_images.txt``` 파일로 저장되어 있으며, csv 로 확장자 변경하여 사용 가능
 
-* 회귀 모델 구성 (총 7개)
+* 회귀 모델 구성 (총 6개)
 
 |```info_name``` 의 값|회귀 모델 학습 데이터의 output의 의미|
 |---|---|
@@ -64,8 +64,7 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
 |```eyes```|**눈을 뜬 정도** 가 클수록 1에 가깝고, 눈을 감았을수록 0에 가까운 값|
 |```background_mean```|**배경 영역** 의 밝기가 밝을수록 1에 가깝고, 어두울수록 0에 가까운 값|
 |```background_std```|**배경 영역** 의 색 (특히 인접한 픽셀/픽셀 그룹 간) 이 일정하지 않을수록 1에 가깝고, 일정할수록 0에 가까운 값|
-|```age```|**나이가 들어 보이는** 이미지일수록 1에 가깝고, 어릴수록 0에 가까운 값|
-|```beauty```|**예쁘고 잘생긴** 인물일수록 1에 가깝고, 그렇지 않을수록 0에 가까운 값|
+|```other_person```|**다른 사람이 보일수록** 1에 가깝고, 중심 인물 한 명만 있을수록 0에 가까운 값|
 
 * 회귀 모델에 대한 추가 설명
   * 각각의 모델은 간단한 구조의 Convolutional Neural Network 를 이용
@@ -73,7 +72,13 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
 
 ### additional info 저장 관련
 * ```save_condition_data.py``` : 모든 각 이미지의 condition 값을 pandas DataFrame 화
-  * 필요 모델 : ```regression_hair_color```, ```regression_mouth```, ```regression_eyes```
+  * 필요 모델 : 6개의 regression 모델
+    * ```regression_hair_color```
+    * ```regression_mouth```
+    * ```regression_eyes```
+    * ```regression_background_mean```
+    * ```regression_background_std```
+    * ```regression_other_person```
   * 필요 파일 : ```male_or_female_classify_result_for_all_images.csv``` (모든 이미지에 대한 성별 예측 정보)
   * 출력 파일 : ```condition_data.csv```
     * 모든 각 이미지의 condition 값을 pandas DataFrame 의 csv 형식으로 저장한 파일
@@ -109,8 +114,8 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
   * 머리 색 조건 (```regression_hair_color``` 모델의 출력 결과를 이용)
   * 입을 벌린 정도 (```regression_mouth``` 모델의 출력 결과를 이용)
   * 눈을 뜬 정도 (```regression_eyes``` 모델의 출력 결과를 이용)
-  * 그 외 4개의 회귀 모델 : ```regression_background_mean```, ```regression_background_std```, ```regression_age```, ```regression_beauty```
-  * 이상 8개 모델의 **학습 및 validation에 사용한 데이터** 에 대해서도 마찬가지로 **해당 모델의 출력 결과를 이용**
+  * 그 외 3개의 회귀 모델 : ```regression_background_mean```, ```regression_background_std```, ```regression_other_person```
+  * 이상 7개 모델의 **학습 및 validation에 사용한 데이터** 에 대해서도 마찬가지로 **해당 모델의 출력 결과를 이용**
 * Conditional VAE 모델의 Loss function
   * Total loss = ```MSE Loss``` + ```KL Divergence``` + ```??? Loss```
     * 단, ```??? Loss``` 는 2nd epoch 부터 적용
@@ -130,8 +135,7 @@ python train_model_for_condition_mouth.py
 python train_model_for_condition_eyes.py
 python train_model_for_condition_background_mean.py
 python train_model_for_condition_background_std.py
-python train_model_for_condition_age.py
-python train_model_for_condition_beauty.py
+python train_model_for_condition_other_person.py
 python save_condition_data.py
 python train_cvae_model.py
 python test_cvae_model.py

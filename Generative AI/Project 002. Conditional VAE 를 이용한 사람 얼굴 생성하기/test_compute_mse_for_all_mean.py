@@ -3,7 +3,7 @@ from sklearn.metrics import mean_squared_error
 import numpy as np
 
 # modify file name if you want to test another csv file
-file_name = 'regression_background_std_info_male.csv'
+file_name = 'regression_other_person_info_male.csv'
 
 df = pd.read_csv(file_name, index_col=0)
 df_arr = np.array(df).flatten()
