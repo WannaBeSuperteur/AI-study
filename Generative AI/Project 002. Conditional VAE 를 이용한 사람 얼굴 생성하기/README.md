@@ -64,21 +64,21 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
 |```eyes```|**눈을 뜬 정도** 가 클수록 1에 가깝고, 눈을 감았을수록 0에 가까운 값|
 |```background_mean```|**배경 영역** 의 밝기가 밝을수록 1에 가깝고, 어두울수록 0에 가까운 값|
 |```background_std```|**배경 영역** 의 색 (특히 인접한 픽셀/픽셀 그룹 간) 이 일정하지 않을수록 1에 가깝고, 일정할수록 0에 가까운 값|
-|```other_person```|**다른 사람이 보일수록** 1에 가깝고, 중심 인물 한 명만 있을수록 0에 가까운 값|
+|```other_person``` **(평균으로 수렴, 실패한 모델)**|**다른 사람이 보일수록** 1에 가깝고, 중심 인물 한 명만 있을수록 0에 가까운 값|
 
 * 회귀 모델에 대한 추가 설명
   * 각각의 모델은 간단한 구조의 Convolutional Neural Network 를 이용
   * 각각의 모델 학습 시, **남성 이미지 100장, 여성 이미지 100장** 의 데이터를 validation 데이터로 이용
 
 ### additional info 저장 관련
-* ```save_condition_data.py``` : 모든 각 이미지의 condition 값을 pandas DataFrame 화
+* ```save_condition_data.py``` : 모든 각 이미지의 condition 값 **(```other_person``` 값 제외)** 을 pandas DataFrame 화
   * 필요 모델 : 6개의 regression 모델
     * ```regression_hair_color```
     * ```regression_mouth```
     * ```regression_eyes```
     * ```regression_background_mean```
     * ```regression_background_std```
-    * ```regression_other_person```
+    * ```regression_other_person``` **(실패한 모델이므로 미사용, 실제로는 5개만 사용)**
   * 필요 파일 : ```male_or_female_classify_result_for_all_images.csv``` (모든 이미지에 대한 성별 예측 정보)
   * 출력 파일 : ```condition_data.csv```
     * 모든 각 이미지의 condition 값을 pandas DataFrame 의 csv 형식으로 저장한 파일
@@ -114,7 +114,7 @@ Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기
   * 머리 색 조건 (```regression_hair_color``` 모델의 출력 결과를 이용)
   * 입을 벌린 정도 (```regression_mouth``` 모델의 출력 결과를 이용)
   * 눈을 뜬 정도 (```regression_eyes``` 모델의 출력 결과를 이용)
-  * 그 외 3개의 회귀 모델 : ```regression_background_mean```, ```regression_background_std```, ```regression_other_person```
+  * 그 외 2개의 회귀 모델 : ```regression_background_mean```, ```regression_background_std```
   * 이상 7개 모델의 **학습 및 validation에 사용한 데이터** 에 대해서도 마찬가지로 **해당 모델의 출력 결과를 이용**
 * Conditional VAE 모델의 Loss function
   * Total loss = ```MSE Loss``` + ```KL Divergence``` + ```??? Loss```
@@ -135,7 +135,7 @@ python train_model_for_condition_mouth.py
 python train_model_for_condition_eyes.py
 python train_model_for_condition_background_mean.py
 python train_model_for_condition_background_std.py
-python train_model_for_condition_other_person.py
+python train_model_for_condition_other_person.py (실패한 모델이므로, 선택)
 python save_condition_data.py
 python train_cvae_model.py
 python test_cvae_model.py
@@ -163,4 +163,4 @@ python test_cvae_model.py
 |GAI-P2-7|```done```|```feat```|240406|240407|C-VAE 모델 학습|
 |GAI-P2-8|```done```|```feat```|240407|240407|C-VAE 모델 테스트 (사람 얼굴 이미지 생성)|
 |GAI-P2-9|```ing```|```feat```|240407||C-VAE 모델 성능 개선 (특별한 Loss 추가, 새로운 condition 추가, 모델 구조 변경 등)|
-|GAI-P2-11|```ing```|```feat```|240419||C-VAE 모델 성능 개선 (새로운 condition 추가)|
+|GAI-P2-11|```done```|```feat```|240419|240420|C-VAE 모델 성능 개선 (새로운 condition 추가)|
