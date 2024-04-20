@@ -20,8 +20,8 @@ BATCH_SIZE = 32
 HIDDEN_DIMS = 231
 
 MSE_LOSS_WEIGHT = 200000.0
-TRAIN_EPOCHS = 1
-TRAIN_DATA_LIMIT = 1000
+TRAIN_EPOCHS = 24
+TRAIN_DATA_LIMIT = None
 SILU_MULTIPLE = 2.0 # same as GeLU approximation
 
 print(f'settings: HIDDEN_DIMS={HIDDEN_DIMS}, MSE_LOSS_WEIGHT={MSE_LOSS_WEIGHT}, SILU_MULTIPLE={SILU_MULTIPLE}')
@@ -419,6 +419,7 @@ def create_train_and_valid_data(limit=None):
 if __name__ == '__main__':
     tf.compat.v1.disable_eager_execution()
     np.set_printoptions(suppress=True, linewidth=160)
+    pd.set_option('display.max_columns', 16)
 
     # 학습 데이터 추출 (이미지 input + 해당 이미지의 class)
     train_input, train_info = create_train_and_valid_data(limit=TRAIN_DATA_LIMIT)

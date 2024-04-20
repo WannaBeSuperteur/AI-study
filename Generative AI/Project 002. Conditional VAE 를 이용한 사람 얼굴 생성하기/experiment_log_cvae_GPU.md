@@ -16,6 +16,82 @@
       * **face_location_left** (이미지 왼쪽 끝 가운데에서부터 얼굴까지의 거리)
       * **face_location_right** (이미지 오른쪽 끝 가운데에서부터 얼굴까지의 거리)
 
+## MODEL 28 (2024.04.20 22시)
+* 직전 모델과의 차이점 : **additional info 2개 적용**
+  * ```background_mean``` : **배경의 밝은 정도** 를 나타내는 값 (0.0 ~ 1.0 범위, 1에 가까울수록 밝음)
+  * ```background_std``` : **배경을 이루는 픽셀들의 색이 일정하지 않은 정도** (특히 인접한 픽셀 간 차이) 를 나타내는 값 (0.0 ~ 1.0 범위, 1에 가까울수록 픽셀 간 차이가 큼)
+  * condition info가 2개 추가되어, 그 개수가 **9개 -> 11개** 로 증가 
+* HIDDEN_DIMS : **231**
+* MSE loss weight : **200,000 (=200K)**
+* learning rate 초기값 : **0.0006**
+* epoch 4 이후 learning rate 감소율 (직전 epoch 대비 현재 epoch의 learning rate의 비율) : **0.9675**
+* 최종 loss : **1499.3069**
+
+```
+Epoch 1/24
+2024-04-20 21:57:22.225996: I tensorflow/stream_executor/cuda/cuda_dnn.cc:368] Loaded cuDNN version 8907
+2024-04-20 21:57:23.144088: W tensorflow/stream_executor/gpu/asm_compiler.cc:111] *** WARNING *** You are using ptxas 11.0.194, which is older than 11.1. ptxas before 11.1 is known to miscompile XLA code, leading to incorrect results or invalid-address errors.
+
+You may not need to update to CUDA 11.1; cherry-picking the ptxas binary is often sufficient.
+16864/16864 [==============================] - 161s 10ms/sample - loss: 4383.4016 - lr: 6.0000e-04
+Epoch 2/24
+16864/16864 [==============================] - 158s 9ms/sample - loss: 3094.8354 - lr: 6.0000e-04
+Epoch 3/24
+16864/16864 [==============================] - 158s 9ms/sample - loss: 2827.1280 - lr: 6.0000e-04
+Epoch 4/24
+16864/16864 [==============================] - 160s 10ms/sample - loss: 2676.5286 - lr: 6.0000e-04
+Epoch 5/24
+16864/16864 [==============================] - 160s 9ms/sample - loss: 2560.9929 - lr: 5.8050e-04
+Epoch 6/24
+16864/16864 [==============================] - 159s 9ms/sample - loss: 2467.7633 - lr: 5.6163e-04
+Epoch 7/24
+16864/16864 [==============================] - 159s 9ms/sample - loss: 2390.8411 - lr: 5.4338e-04
+Epoch 8/24
+16864/16864 [==============================] - 159s 9ms/sample - loss: 2315.3618 - lr: 5.2572e-04
+Epoch 9/24
+16864/16864 [==============================] - 159s 9ms/sample - loss: 2240.3510 - lr: 5.0863e-04
+Epoch 10/24
+16864/16864 [==============================] - 159s 9ms/sample - loss: 2167.7623 - lr: 4.9210e-04
+Epoch 11/24
+16864/16864 [==============================] - 160s 9ms/sample - loss: 2102.9086 - lr: 4.7611e-04
+Epoch 12/24
+16864/16864 [==============================] - 160s 9ms/sample - loss: 2041.4472 - lr: 4.6064e-04
+Epoch 13/24
+16864/16864 [==============================] - 159s 9ms/sample - loss: 1978.6625 - lr: 4.4567e-04
+Epoch 14/24
+16864/16864 [==============================] - 160s 9ms/sample - loss: 1920.8785 - lr: 4.3118e-04
+Epoch 15/24
+16864/16864 [==============================] - 159s 9ms/sample - loss: 1863.4421 - lr: 4.1717e-04
+Epoch 16/24
+16864/16864 [==============================] - 160s 9ms/sample - loss: 1810.7219 - lr: 4.0361e-04
+Epoch 17/24
+16864/16864 [==============================] - 160s 9ms/sample - loss: 1765.5229 - lr: 3.9049e-04
+Epoch 18/24
+16864/16864 [==============================] - 159s 9ms/sample - loss: 1718.8092 - lr: 3.7780e-04
+Epoch 19/24
+16864/16864 [==============================] - 159s 9ms/sample - loss: 1676.8898 - lr: 3.6552e-04
+Epoch 20/24
+16864/16864 [==============================] - 160s 9ms/sample - loss: 1639.7483 - lr: 3.5364e-04
+Epoch 21/24
+16864/16864 [==============================] - 160s 9ms/sample - loss: 1594.5175 - lr: 3.4215e-04
+Epoch 22/24
+16864/16864 [==============================] - 159s 9ms/sample - loss: 1561.6233 - lr: 3.3103e-04
+Epoch 23/24
+16864/16864 [==============================] - 159s 9ms/sample - loss: 1533.4269 - lr: 3.2027e-04
+Epoch 24/24
+16864/16864 [==============================] - 159s 9ms/sample - loss: 1499.3069 - lr: 3.0986e-04
+```
+
+**Loss 그래프**
+
+![cvae_train_result](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/4f7af63f-ff9a-4e2c-9e0a-a513ce7bbdc3)
+
+**예시 생성 이미지**
+
+* ```background_mean``` = 0.93, ```background_std``` = 0.20 으로 고정했고, **어느 정도는** 해당 conditional info 값이 반영된 듯하다.
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/e5c6ed7a-085d-48f3-910f-be68faf68a3c)
+
 ## MODEL 27 (2024.04.20 12시)
 * 직전 모델과의 차이점 :
   * learning rate 초기값을 **0.0004 -> 0.0006** 으로 상향
