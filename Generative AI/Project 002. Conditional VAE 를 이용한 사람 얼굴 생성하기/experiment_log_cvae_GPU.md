@@ -16,6 +16,73 @@
       * **face_location_left** (이미지 왼쪽 끝 가운데에서부터 얼굴까지의 거리)
       * **face_location_right** (이미지 오른쪽 끝 가운데에서부터 얼굴까지의 거리)
 
+## MODEL 27 (2024.04.20 12시)
+* 직전 모델과의 차이점 :
+  * learning rate 초기값을 **0.0004 -> 0.0006** 으로 상향
+  * epoch 4 이후 learning rate 감소율을 **0.975 -> 0.9675** 로 하향
+* HIDDEN_DIMS : **231**
+* MSE loss weight : **200,000 (=200K)**
+* learning rate 초기값 : **0.0006**
+* epoch 4 이후 learning rate 감소율 (직전 epoch 대비 현재 epoch의 learning rate의 비율) : **0.9675**
+* 최종 loss : **1539.1570**
+
+```
+Epoch 1/24
+2024-04-20 12:42:29.102138: I tensorflow/stream_executor/cuda/cuda_dnn.cc:368] Loaded cuDNN version 8907
+2024-04-20 12:42:30.023662: W tensorflow/stream_executor/gpu/asm_compiler.cc:111] *** WARNING *** You are using ptxas 11.0.194, which is older than 11.1. ptxas before 11.1 is known to miscompile XLA code, leading to incorrect results or invalid-address errors.
+
+You may not need to update to CUDA 11.1; cherry-picking the ptxas binary is often sufficient.
+16864/16864 [==============================] - 148s 9ms/sample - loss: 4487.3057 - lr: 6.0000e-04
+Epoch 2/24
+16864/16864 [==============================] - 146s 9ms/sample - loss: 3173.7103 - lr: 6.0000e-04
+Epoch 3/24
+16864/16864 [==============================] - 148s 9ms/sample - loss: 2907.5837 - lr: 6.0000e-04
+Epoch 4/24
+16864/16864 [==============================] - 148s 9ms/sample - loss: 2753.6015 - lr: 6.0000e-04
+Epoch 5/24
+16864/16864 [==============================] - 148s 9ms/sample - loss: 2634.0559 - lr: 5.8050e-04
+Epoch 6/24
+16864/16864 [==============================] - 148s 9ms/sample - loss: 2536.3598 - lr: 5.6163e-04
+Epoch 7/24
+16864/16864 [==============================] - 149s 9ms/sample - loss: 2452.8097 - lr: 5.4338e-04
+Epoch 8/24
+16864/16864 [==============================] - 149s 9ms/sample - loss: 2372.0219 - lr: 5.2572e-04
+Epoch 9/24
+16864/16864 [==============================] - 149s 9ms/sample - loss: 2300.9253 - lr: 5.0863e-04
+Epoch 10/24
+16864/16864 [==============================] - 148s 9ms/sample - loss: 2222.1033 - lr: 4.9210e-04
+Epoch 11/24
+16864/16864 [==============================] - 148s 9ms/sample - loss: 2158.9536 - lr: 4.7611e-04
+Epoch 12/24
+16864/16864 [==============================] - 148s 9ms/sample - loss: 2087.4444 - lr: 4.6064e-04
+Epoch 13/24
+16864/16864 [==============================] - 148s 9ms/sample - loss: 2028.7545 - lr: 4.4567e-04
+Epoch 14/24
+16864/16864 [==============================] - 148s 9ms/sample - loss: 1965.4223 - lr: 4.3118e-04
+Epoch 15/24
+16864/16864 [==============================] - 148s 9ms/sample - loss: 1907.1390 - lr: 4.1717e-04
+Epoch 16/24
+16864/16864 [==============================] - 149s 9ms/sample - loss: 1856.9157 - lr: 4.0361e-04
+Epoch 17/24
+16864/16864 [==============================] - 149s 9ms/sample - loss: 1810.5427 - lr: 3.9049e-04
+Epoch 18/24
+16864/16864 [==============================] - 149s 9ms/sample - loss: 1761.5659 - lr: 3.7780e-04
+Epoch 19/24
+16864/16864 [==============================] - 149s 9ms/sample - loss: 1720.3237 - lr: 3.6552e-04
+Epoch 20/24
+16864/16864 [==============================] - 149s 9ms/sample - loss: 1678.8051 - lr: 3.5364e-04
+Epoch 21/24
+16864/16864 [==============================] - 149s 9ms/sample - loss: 1638.2619 - lr: 3.4215e-04
+Epoch 22/24
+16864/16864 [==============================] - 149s 9ms/sample - loss: 1600.8285 - lr: 3.3103e-04
+Epoch 23/24
+16864/16864 [==============================] - 149s 9ms/sample - loss: 1568.4406 - lr: 3.2027e-04
+Epoch 24/24
+16864/16864 [==============================] - 149s 9ms/sample - loss: 1539.1570 - lr: 3.0986e-04
+```
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/9bd6c04c-dd16-4f9d-8e1a-698373e61a09)
+
 ## MODEL 26 (2024.04.20 11시)
 * 직전 모델과의 차이점 :
   * **HIDDEN_DIMS 를 152 -> 231 로 증가**
