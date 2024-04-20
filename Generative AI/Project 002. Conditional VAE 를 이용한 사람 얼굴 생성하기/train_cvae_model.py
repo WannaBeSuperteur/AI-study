@@ -199,12 +199,6 @@ class CVAE_Model:
         dec_add_c1 = layers.Dense((INPUT_IMG_SIZE // 4) * (INPUT_IMG_SIZE // 4) * 120, name='dec_c1_add', activation=silu_mul)(dec_merged)
         dec_add_c1_ = layers.Reshape((INPUT_IMG_SIZE // 4, INPUT_IMG_SIZE // 4, 120))(dec_add_c1)
 
-        dec_add_c2 = layers.Dense((INPUT_IMG_SIZE // 2) * (INPUT_IMG_SIZE // 2) * 60, name='dec_c2_add', activation=silu_mul)(dec_merged)
-        dec_add_c2_ = layers.Reshape((INPUT_IMG_SIZE // 2, INPUT_IMG_SIZE // 2, 60))(dec_add_c2)
-
-        dec_add_c3 = layers.Dense(INPUT_IMG_SIZE * INPUT_IMG_SIZE * 40, name='dec_c3_add', activation=silu_mul)(dec_merged)
-        dec_add_c3_ = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 40))(dec_add_c3)
-
         # decoder deconv CNN layers
         dec_c0 = self.decoder_cnn0(layers.Concatenate()([dec_reshaped, dec_add_c0_]))
         dec_c0 = self.decoder_bn_cnn0(dec_c0)
@@ -216,12 +210,12 @@ class CVAE_Model:
         dec_c1 = self.decoder_ac_cnn1(dec_c1)
         dec_c1 = self.dropout_dec_c1(dec_c1)
 
-        dec_c2 = self.decoder_cnn2(layers.Concatenate()([dec_c1, dec_add_c2_]))
+        dec_c2 = self.decoder_cnn2(dec_c1)
         dec_c2 = self.decoder_bn_cnn2(dec_c2)
         dec_c2 = self.decoder_ac_cnn2(dec_c2)
         dec_c2 = self.dropout_dec_c2(dec_c2)
 
-        dec_c3 = self.decoder_cnn3(layers.Concatenate()([dec_c2, dec_add_c3_]))
+        dec_c3 = self.decoder_cnn3(dec_c2)
         dec_c3 = self.decoder_bn_cnn3(dec_c3)
         dec_c3 = self.decoder_ac_cnn3(dec_c3)
 

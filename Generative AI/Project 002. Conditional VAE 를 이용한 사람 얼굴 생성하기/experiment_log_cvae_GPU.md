@@ -16,6 +16,89 @@
       * **face_location_left** (이미지 왼쪽 끝 가운데에서부터 얼굴까지의 거리)
       * **face_location_right** (이미지 오른쪽 끝 가운데에서부터 얼굴까지의 거리)
 
+## MODEL 29 (2024.04.20 23시)
+* 직전 모델과의 차이점 : **Decoder에서 latent vector를 60 x 60, 120 x 120 feature 레이어로 직접 연결하는 connection 삭제** 
+  * 목적 : HIDDEN_DIMS 증가에 따른 생성된 이미지의 noise 제거 
+* HIDDEN_DIMS : **231**
+* MSE loss weight : **200,000 (=200K)**
+* learning rate 초기값 : **0.0006**
+* epoch 4 이후 learning rate 감소율 (직전 epoch 대비 현재 epoch의 learning rate의 비율) : **0.9675**
+* 실험 결과
+  * 최종 loss : **1606.3852**
+  * 직전 모델인 MODEL 28 보다 약간 높지만, **epoch 당 실행 시간이 약 1.6배 (37.5%) 감소** 했으며, 동시에 **생성된 이미지 상에서 noise가 제거됨**
+  * 참고로, first epoch 종료 시점의 loss 값이 많이 나타나는 범위는 **4,100 ~ 5,000** 으로 추정됨 
+  * loss가 1700 부근일 때, MODEL 28 과 MODEL 29 를 비교하면 다음과 같음
+
+|모델|MODEL 28|MODEL 29|
+|---|---|---|
+|1 epoch 당 Loss 감소|약 40|약 31|
+|Loss 100 감소에 소요되는 epoch 수|약 2.5 epochs|약 3.2 epochs|
+|1 epoch 소요 시간|약 160 초|약 100 초|
+|Loss 100 감소 소요 시간|**약 400 초**|**약 320 초**|
+
+```
+Epoch 1/24
+2024-04-20 23:25:34.296341: I tensorflow/stream_executor/cuda/cuda_dnn.cc:368] Loaded cuDNN version 8907
+2024-04-20 23:25:35.177734: W tensorflow/stream_executor/gpu/asm_compiler.cc:111] *** WARNING *** You are using ptxas 11.0.194, which is older than 11.1. ptxas before 11.1 is known to miscompile XLA code, leading to incorrect results or invalid-address errors.
+
+You may not need to update to CUDA 11.1; cherry-picking the ptxas binary is often sufficient.
+16864/16864 [==============================] - 100s 6ms/sample - loss: 4369.6734 - lr: 6.0000e-04
+Epoch 2/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 2903.8149 - lr: 6.0000e-04
+Epoch 3/24
+16864/16864 [==============================] - 99s 6ms/sample - loss: 2690.3680 - lr: 6.0000e-04
+Epoch 4/24
+16864/16864 [==============================] - 99s 6ms/sample - loss: 2571.7325 - lr: 6.0000e-04
+Epoch 5/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 2478.7868 - lr: 5.8050e-04
+Epoch 6/24
+16864/16864 [==============================] - 99s 6ms/sample - loss: 2400.1775 - lr: 5.6163e-04
+Epoch 7/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 2341.5591 - lr: 5.4338e-04
+Epoch 8/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 2274.0384 - lr: 5.2572e-04
+Epoch 9/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 2226.5393 - lr: 5.0863e-04
+Epoch 10/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 2167.7788 - lr: 4.9210e-04
+Epoch 11/24
+16864/16864 [==============================] - 99s 6ms/sample - loss: 2121.5042 - lr: 4.7611e-04
+Epoch 12/24
+16864/16864 [==============================] - 99s 6ms/sample - loss: 2067.5742 - lr: 4.6064e-04
+Epoch 13/24
+16864/16864 [==============================] - 99s 6ms/sample - loss: 2016.1375 - lr: 4.4567e-04
+Epoch 14/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 1969.2847 - lr: 4.3118e-04
+Epoch 15/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 1927.0178 - lr: 4.1717e-04
+Epoch 16/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 1881.6646 - lr: 4.0361e-04
+Epoch 17/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 1836.2099 - lr: 3.9049e-04
+Epoch 18/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 1800.0973 - lr: 3.7780e-04
+Epoch 19/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 1759.2903 - lr: 3.6552e-04
+Epoch 20/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 1731.6728 - lr: 3.5364e-04
+Epoch 21/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 1691.9861 - lr: 3.4215e-04
+Epoch 22/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 1664.0455 - lr: 3.3103e-04
+Epoch 23/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 1634.4865 - lr: 3.2027e-04
+Epoch 24/24
+16864/16864 [==============================] - 98s 6ms/sample - loss: 1606.3852 - lr: 3.0986e-04
+```
+
+**Decoder 모델 구조**
+
+![decoder](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/d6723fd8-da78-4660-b7bb-74fadb51a28b)
+
+**예시 생성 이미지**
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/ff82a6fa-2cf2-48db-97e2-94223029c640)
+
 ## MODEL 28 (2024.04.20 22시)
 * 직전 모델과의 차이점 : **additional info 2개 적용**
   * ```background_mean``` : **배경의 밝은 정도** 를 나타내는 값 (0.0 ~ 1.0 범위, 1에 가까울수록 밝음)
