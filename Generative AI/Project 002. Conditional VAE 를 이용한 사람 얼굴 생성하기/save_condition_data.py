@@ -1,7 +1,5 @@
 import tensorflow as tf
 import numpy as np
-from tensorflow.keras import layers, optimizers
-from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 
 import os
 import cv2
@@ -15,6 +13,8 @@ EYES_YXHW = {'y': 30, 'x': 30, 'h': 32, 'w': 60} # eyes 모델용 이미지 영�
 model_hair_color = tf.keras.models.load_model('regression_hair_color')
 model_mouth = tf.keras.models.load_model('regression_mouth')
 model_eyes = tf.keras.models.load_model('regression_eyes')
+model_background_mean = tf.keras.models.load_model('regression_background_mean')
+model_background_std = tf.keras.models.load_model('regression_background_std')
 
 gender_predictions_csv = 'male_or_female_classify_result_for_all_images.csv'
 gender_predictions = pd.read_csv(gender_predictions_csv, index_col=0)
@@ -69,6 +69,13 @@ def add_model_outputs(image_name, image_dir, model_output_result):
 
     eyes_model_output = float(model_eyes(input_for_eyes_model)[0][0])
 
+    # get background mean/std prediction model output
+    input_original = np.concatenate((img.flatten(), gender_prob.flatten()))
+    input_original = np.array(input_original).reshape((1, len(input_original)))
+
+    background_mean_model_output = float(model_background_mean(input_original)[0][0])
+    background_std_model_output = float(model_background_std(input_original)[0][0])
+
     # add output result
     output_result = {
         'image_path': [img_path],
@@ -76,7 +83,9 @@ def add_model_outputs(image_name, image_dir, model_output_result):
         'female_prob': [female_prob],
         'hair_color': [hair_color_model_output],
         'mouth': [mouth_model_output],
-        'eyes': [eyes_model_output]
+        'eyes': [eyes_model_output],
+        'background_mean': [background_mean_model_output],
+        'background_std': [background_std_model_output]
     }
     
     output_result = pd.DataFrame(output_result)
