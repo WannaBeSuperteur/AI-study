@@ -1,5 +1,12 @@
 각 모델에 대한 자세한 정보는 ```experiment_log_cvae_GPU.md``` 파일 참고.
 
+## MODEL 28, 29, 30 차이점
+
+||MODEL 28|MODEL 29|MODEL 30|
+|---|---|---|---|
+|HIDDEN_DIMS|231|231|149|
+|decoder 60 x 60, 120 x 120 feature direct connection|O|X|O|
+
 ## MODEL 30
 **학습 로그**
 ```
@@ -428,3 +435,14 @@ Epoch 60/60
 * Final Loss : **1499.3069**
 
 ![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/e5c6ed7a-085d-48f3-910f-be68faf68a3c)
+
+## MODEL 29 info change 실험 결과
+
+* 실험 결론 : 다음의 info change에 대해 모두 **의도한 대로 이미지가 잘 생성된다.**
+  * 머리 색 (```hair_color```) 변경
+  * 입을 벌린 정도 (```mouth```) 변경
+  * 눈을 뜬 정도 (```eyes```) 변경
+  * 성별 (```male_prob```, ```female_prob```) 변경
+* 아래 캡처에서 선택한 이미지는 **여성 가상인간으로 사용하기에 큰 무리가 없는 이미지**
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/ecc5daa3-e436-473b-a8a8-1e4321934d1f)
