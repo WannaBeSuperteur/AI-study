@@ -16,6 +16,84 @@
       * **face_location_left** (이미지 왼쪽 끝 가운데에서부터 얼굴까지의 거리)
       * **face_location_right** (이미지 오른쪽 끝 가운데에서부터 얼굴까지의 거리)
 
+## 향후 업그레이드 방안
+* data augmentation을 이용하여, 기존 약 16,900 장의 이미지를 10만 장 수준으로 (기존의 6배 이상) 학습 데이터 증강
+* 이미지에 나타난 인물에 대한 추가적인 condition info 지정
+* NVAE ([논문](https://arxiv.org/pdf/2007.03898.pdf)) 구조 도입
+
+## MODEL 30 (FINAL) (2024.04.21 13시)
+* 직전 모델 (MODEL 29) 과의 차이점
+  * HIDDEN_DIMS 를 **231 -> 149 로 감소**
+    * 목적 : 과도하게 많은 HIDDEN_DIM (latent vector의 차원) 으로 인한 얼굴의 노이즈 제거
+  * MODEL 29 에서 삭제한, Decoder의 latent vector - feature layer 직접 연결 connection 복구
+  * MODEL 25 와 같이 learning rate의 초기값을 **0.0006 -> 0.0004** 로, 감소율을 **0.9675 -> 0.975** 로 변경
+* MODEL 25 와의 차이점
+  * (1.0 - ```hair_color```), ```background_mean```, ```background_std``` 의 condition info 를 추가적으로 사용
+  * HIDDEN_DIMS 가 MODEL 25 는 **152**, MODEL 30 은 **149** 로 **3 차이** (HIDDEN_DIMS + condition info = 160 으로 동일)
+  * 참고 : MODEL 25 는 **최종 loss가 2002.0582**
+* HIDDEN_DIMS : **149**
+* MSE loss weight : **200,000 (=200K)**
+* learning rate 초기값 : **0.0004**
+* epoch 4 이후 learning rate 감소율 (직전 epoch 대비 현재 epoch의 learning rate의 비율) : **0.975**
+* 최종 loss : **2007.7193**
+
+```
+Epoch 1/24
+2024-04-21 13:43:57.984283: I tensorflow/stream_executor/cuda/cuda_dnn.cc:368] Loaded cuDNN version 8907
+2024-04-21 13:43:58.907477: W tensorflow/stream_executor/gpu/asm_compiler.cc:111] *** WARNING *** You are using ptxas 11.0.194, which is older than 11.1. ptxas before 11.1 is known to miscompile XLA code, leading to incorrect results or invalid-address errors.
+
+You may not need to update to CUDA 11.1; cherry-picking the ptxas binary is often sufficient.
+16864/16864 [==============================] - 142s 8ms/sample - loss: 4857.3461 - lr: 4.0000e-04
+Epoch 2/24
+16864/16864 [==============================] - 141s 8ms/sample - loss: 3427.4449 - lr: 4.0000e-04
+Epoch 3/24
+16864/16864 [==============================] - 140s 8ms/sample - loss: 3173.2120 - lr: 4.0000e-04
+Epoch 4/24
+16864/16864 [==============================] - 140s 8ms/sample - loss: 3014.7491 - lr: 4.0000e-04
+Epoch 5/24
+16864/16864 [==============================] - 139s 8ms/sample - loss: 2899.9779 - lr: 3.9000e-04
+Epoch 6/24
+16864/16864 [==============================] - 140s 8ms/sample - loss: 2822.1452 - lr: 3.8025e-04
+Epoch 7/24
+16864/16864 [==============================] - 140s 8ms/sample - loss: 2749.5234 - lr: 3.7074e-04
+Epoch 8/24
+16864/16864 [==============================] - 140s 8ms/sample - loss: 2691.5403 - lr: 3.6148e-04
+Epoch 9/24
+16864/16864 [==============================] - 140s 8ms/sample - loss: 2630.9792 - lr: 3.5244e-04
+Epoch 10/24
+16864/16864 [==============================] - 140s 8ms/sample - loss: 2580.1934 - lr: 3.4363e-04
+Epoch 11/24
+16864/16864 [==============================] - 140s 8ms/sample - loss: 2533.8669 - lr: 3.3504e-04
+Epoch 12/24
+16864/16864 [==============================] - 140s 8ms/sample - loss: 2486.5899 - lr: 3.2666e-04
+Epoch 13/24
+16864/16864 [==============================] - 141s 8ms/sample - loss: 2446.4905 - lr: 3.1849e-04
+Epoch 14/24
+16864/16864 [==============================] - 141s 8ms/sample - loss: 2393.7711 - lr: 3.1053e-04
+Epoch 15/24
+16864/16864 [==============================] - 141s 8ms/sample - loss: 2357.8582 - lr: 3.0277e-04
+Epoch 16/24
+16864/16864 [==============================] - 141s 8ms/sample - loss: 2313.3636 - lr: 2.9520e-04
+Epoch 17/24
+16864/16864 [==============================] - 141s 8ms/sample - loss: 2273.1434 - lr: 2.8782e-04
+Epoch 18/24
+16864/16864 [==============================] - 141s 8ms/sample - loss: 2231.1698 - lr: 2.8062e-04
+Epoch 19/24
+16864/16864 [==============================] - 141s 8ms/sample - loss: 2190.4568 - lr: 2.7361e-04
+Epoch 20/24
+16864/16864 [==============================] - 141s 8ms/sample - loss: 2150.4451 - lr: 2.6677e-04
+Epoch 21/24
+16864/16864 [==============================] - 141s 8ms/sample - loss: 2112.7155 - lr: 2.6010e-04
+Epoch 22/24
+16864/16864 [==============================] - 141s 8ms/sample - loss: 2080.4411 - lr: 2.5360e-04
+Epoch 23/24
+16864/16864 [==============================] - 141s 8ms/sample - loss: 2045.0475 - lr: 2.4726e-04
+Epoch 24/24
+16864/16864 [==============================] - 141s 8ms/sample - loss: 2007.7193 - lr: 2.4108e-04
+```
+
+![image](https://github.com/WannaBeSuperteur/AI-study/assets/32893014/46a39880-724f-4f1b-8c71-5500affa3b2a)
+
 ## MODEL 29 (2024.04.20 23시)
 * 직전 모델과의 차이점 : **Decoder에서 latent vector를 60 x 60, 120 x 120 feature 레이어로 직접 연결하는 connection 삭제** 
   * 목적 : HIDDEN_DIMS 증가에 따른 생성된 이미지의 noise 제거 

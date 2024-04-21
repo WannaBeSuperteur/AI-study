@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 from PIL import Image
 
-HIDDEN_DIMS = 231
+HIDDEN_DIMS = 149
 BATCH_SIZE = 32
 
 
