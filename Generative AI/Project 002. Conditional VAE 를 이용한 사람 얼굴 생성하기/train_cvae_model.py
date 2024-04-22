@@ -17,7 +17,7 @@ TOTAL_INPUT_IMG_VALUES = NUM_CHANNELS * TOTAL_CELLS
 NUM_INFO = 11 # male prob, female prob, hair color, inv hair color, mouth, eyes, and face location from top/left/right, background mean, background std
 
 BATCH_SIZE = 32
-HIDDEN_DIMS = 231
+HIDDEN_DIMS = 149
 
 MSE_LOSS_WEIGHT = 200000.0
 TRAIN_EPOCHS = 150
@@ -199,6 +199,12 @@ class CVAE_Model:
         dec_add_c1 = layers.Dense((INPUT_IMG_SIZE // 4) * (INPUT_IMG_SIZE // 4) * 120, name='dec_c1_add', activation=silu_mul)(dec_merged)
         dec_add_c1_ = layers.Reshape((INPUT_IMG_SIZE // 4, INPUT_IMG_SIZE // 4, 120))(dec_add_c1)
 
+        dec_add_c2 = layers.Dense((INPUT_IMG_SIZE // 2) * (INPUT_IMG_SIZE // 2) * 60, name='dec_c2_add', activation=silu_mul)(dec_merged)
+        dec_add_c2_ = layers.Reshape((INPUT_IMG_SIZE // 2, INPUT_IMG_SIZE // 2, 60))(dec_add_c2)
+
+        dec_add_c3 = layers.Dense(INPUT_IMG_SIZE * INPUT_IMG_SIZE * 40, name='dec_c3_add', activation=silu_mul)(dec_merged)
+        dec_add_c3_ = layers.Reshape((INPUT_IMG_SIZE, INPUT_IMG_SIZE, 40))(dec_add_c3)
+
         # decoder deconv CNN layers
         dec_c0 = self.decoder_cnn0(layers.Concatenate()([dec_reshaped, dec_add_c0_]))
         dec_c0 = self.decoder_bn_cnn0(dec_c0)
@@ -210,12 +216,12 @@ class CVAE_Model:
         dec_c1 = self.decoder_ac_cnn1(dec_c1)
         dec_c1 = self.dropout_dec_c1(dec_c1)
 
-        dec_c2 = self.decoder_cnn2(dec_c1)
+        dec_c2 = self.decoder_cnn2(layers.Concatenate()([dec_c1, dec_add_c2_]))
         dec_c2 = self.decoder_bn_cnn2(dec_c2)
         dec_c2 = self.decoder_ac_cnn2(dec_c2)
         dec_c2 = self.dropout_dec_c2(dec_c2)
 
-        dec_c3 = self.decoder_cnn3(dec_c2)
+        dec_c3 = self.decoder_cnn3(layers.Concatenate()([dec_c2, dec_add_c3_]))
         dec_c3 = self.decoder_bn_cnn3(dec_c3)
         dec_c3 = self.decoder_ac_cnn3(dec_c3)
 
@@ -270,17 +276,17 @@ class CVAE_Model:
 def scheduler(epoch, lr):
     if epoch < 4:
         return lr
-    elif lr > 0.0003:
-        return lr * 0.9675
+    elif lr > 0.00025:
+        return lr * 0.975
     elif lr > 0.0001:
-        return lr * 0.9875
+        return lr * 0.991
     else:
         return lr
 
 
 # C-VAE 모델 정의 및 반환
 def define_cvae_model():
-    optimizer = optimizers.Adam(0.0006, decay=1e-6)
+    optimizer = optimizers.Adam(0.0004, decay=1e-6)
     scheduler_callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
     model = CVAE_Model(dropout_rate=0.25) # 실제 모델은 model.cvae
 
