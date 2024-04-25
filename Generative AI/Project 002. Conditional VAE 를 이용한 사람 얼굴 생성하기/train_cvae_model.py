@@ -17,7 +17,7 @@ TOTAL_INPUT_IMG_VALUES = NUM_CHANNELS * TOTAL_CELLS
 NUM_INFO = 11 # male prob, female prob, hair color, inv hair color, mouth, eyes, and face location from top/left/right, background mean, background std
 
 BATCH_SIZE = 32
-HIDDEN_DIMS = 149
+HIDDEN_DIMS = 231
 
 MSE_LOSS_WEIGHT = 200000.0
 TRAIN_EPOCHS = 150
@@ -276,17 +276,17 @@ class CVAE_Model:
 def scheduler(epoch, lr):
     if epoch < 4:
         return lr
-    elif lr > 0.00025:
-        return lr * 0.975
+    elif lr > 0.0003:
+        return lr * 0.9675
     elif lr > 0.0001:
-        return lr * 0.991
+        return lr * 0.9875
     else:
         return lr
 
 
 # C-VAE 모델 정의 및 반환
 def define_cvae_model():
-    optimizer = optimizers.Adam(0.0004, decay=1e-6)
+    optimizer = optimizers.Adam(0.0006, decay=1e-6)
     scheduler_callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
     model = CVAE_Model(dropout_rate=0.25) # 실제 모델은 model.cvae
 

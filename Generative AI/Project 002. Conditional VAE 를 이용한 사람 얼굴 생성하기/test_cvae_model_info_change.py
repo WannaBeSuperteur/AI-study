@@ -1,11 +1,11 @@
-# settings for MODEL 30
+# settings for MODEL 28
 
 import tensorflow as tf
 import numpy as np
 from PIL import Image
 import os
 
-HIDDEN_DIMS = 149
+HIDDEN_DIMS = 231
 RANDOM_LATENT_COUNT = 15
 BATCH_SIZE = 32
 

@@ -3,7 +3,7 @@ import numpy as np
 from PIL import Image
 import os
 
-HIDDEN_DIMS = 149
+HIDDEN_DIMS = 231
 NUM_IMGS_FOR_EACH_INFO = 3
 BATCH_SIZE = 32
 
