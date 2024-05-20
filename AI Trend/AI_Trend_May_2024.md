@@ -1,3 +1,15 @@
+## 2024.05.20 (월)
+**[SK C&C, sLLM 지원 플랫폼 출시](https://n.news.naver.com/mnews/article/003/0012554448?sid=105)** ```AI``` ```Large Language Model```
+
+* SK C&C에서 소형 거대 언어 모델 (sLLM) 을 기업에서 쉽고 빠르게 구현할 수 있는 플랫폼인 **Solur LLMOps** 를 출시했다.
+  * Solur LLMOps에는 SK C&C의 생성형 AI 서비스 구축 및 운영을 통해 축적된 데이터 학습 등 노하우가 반영되어 있다.
+* Solur LLMOps의 주요 기능은 다음과 같다.
+  * 다양한 외부 파운데이션 모델의 조합 및 활용
+    * OpenAI의 ChatGPT 및 네이버의 하이퍼클로바 등 상용 LLM
+    * 오픈소스 LLM
+  * 기업 특성에 맞춘 sLLM 구축에 필요한 모델 추천 및 선택, 조합, 활용 지원
+    * 특히, **데이터 수집, 전처리, 학습 데이터 자동 생성** 등 MLOps 과정 전반에 **하이퍼 오토메이션 (초자동화)** 적용
+
 ## 2024.05.19 (일)
 **[일상과 가까워진 AI 로봇](https://n.news.naver.com/mnews/article/001/0014694410?sid=105)** ```AI``` ```AI Robot```
 
