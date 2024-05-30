@@ -1,3 +1,11 @@
+## 2024.05.30 (목)
+**[OpenAI, 회계업체 PwC와 ChatGPT 사용 계약](https://n.news.naver.com/mnews/article/001/0014716153?sid=104)** ```AI``` ```OpenAI``` ```ChatGPT```
+
+* OpenAI가 영국의 대규모 회계업체인 PwC (프라이스워터하우스쿠퍼스) 와 ChatGPT의 기업용 버전인 'ChatGPT 엔터프라이즈'의 사용 및 재판매 계약을 체결했다.
+  * 이로 인해 PwC는 **ChatGPT 엔터프라이즈 사용 고객사 중 가장 큰 회사** 가 되었다.
+  * 또한, 이번 계약은 **OpenAI의 자사 AI 제품 재판매를 허용하는 첫 계약** 이라는 점에서 의미가 있다.
+* 한편, **OpenAI의 유료 구독자는 현재 약 60만 명** 이며, Fortune에서 선정한 500대 기업의 90% 이상이 ChatGPT를 어떻게든 사용하고 있다.   
+
 ## 2024.05.29 (수)
 **[OpenAI, 새 모델 학습 앞두고 안전 위원회 구성](https://n.news.naver.com/mnews/article/023/0003837065?sid=105)** ```AI```
 
