@@ -1,3 +1,11 @@
+## 2024.07.03 (수)
+**[애플, OpenAI 이사회 들어간다](https://n.news.naver.com/mnews/article/277/0005440572?sid=104)** ```AI``` ```OpenAI```
+
+* 애플이 OpenAI 이사회에 가입하여 참관인 (observer) 자격을 얻었다.
+  * 이를 통해 애플 - OpenAI 간 협력 관계가 강화되는데, 이것은 **애플이 OpenAI 이사회에서 OpenAI에 큰 돈을 투자했던 마이크로소프트와 동등한 수준의 영향력을 행사할 수 있음** 을 의미한다.
+  * 이를 애플 기기에 제공하는 AI 서비스인 '애플 인텔리전스'에 ChatGPT가 포함되는 등 협력 발표에 따른 것이다.
+* 한편, 이로 인해 OpenAI의 핵심 파트너이자 애플의 경쟁사/파트너인 MS의 입장이 불확실해질 것이다.
+
 ## 2024.07.02 (화)
 **[SK쉴더스, 생성형 AI 공격 시연](https://n.news.naver.com/mnews/article/018/0005779157?sid=105)** ```AI``` ```AI Security``` ```Generative AI```
 
