@@ -1,3 +1,12 @@
+## 2024.07.16 (화)
+**[MambaVision: A Hybrid Mamba-Transformer Vision Backbone](https://github.com/NVlabs/MambaVision?tab=readme-ov-file)** ```AI``` ```Vision```
+
+* [Official Paper (2024년 7월 공개)](https://arxiv.org/pdf/2407.08083)
+* MambaVision은 Mamba와 [Transformer 모델](https://github.com/WannaBeSuperteur/AI-study/blob/main/Natural%20Language%20Processing/Basics_%ED%8A%B8%EB%9E%9C%EC%8A%A4%ED%8F%AC%EB%A8%B8%20%EB%AA%A8%EB%8D%B8.md) 구조를 hybrid 시킨 backbone network 이다.
+* Mamba formulation을 재설계하여 시각적인 특징 (feature) 을 보다 효과적으로 모델링한 구조이다.
+* 이 논문에서는 **기존의 Mamba 구조의 마지막 레이어에 self-attention block 들을 추가** 하는 것이 이미지 인식에서 필요한 **long-range spatial dependency (이미지 상에서 서로 멀리 떨어진 물체 또는 부분 간의 관계) 를 추론하는 능력을 비약적으로 향상** 시킨다고 주장한다.
+* Figure 1 기준으로, 서로 비슷한 image throughput을 갖도록 적절한 크기의 세부 모델 (예: MambaVision-B, NextViT-S) 을 매칭시켜 기존 모델과 비교할 때, **MambaVision의 Top-1 accuracy가 NextViT보다 1% 이상, FasterViT보다 0.5% 정도 높은** 것을 알 수 있다.
+
 ## 2024.07.15 (월)
 **[구글 AI 활용한 아이스크림](https://n.news.naver.com/mnews/article/018/0005790543?sid=105)** ```AI``` ```Google AI```
 
