@@ -32,6 +32,7 @@
 
 ## 브랜치 정보
 * status : 🔥 (개발 진행중), ✔ (개발 완료)
+* type : ✨ (feature), 🛠 (bug fix), ⚡ (improve performance)
 
 |branch|status|type|start|end|description|
 |---|---|---|---|---|---|

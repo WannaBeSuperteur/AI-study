@@ -35,4 +35,4 @@ Transformer, BERT, S-BERT 부터 시작해서, 최종적으로는 Mini Chat-GPT�
 |NLP-P7|Python 코드 퀄리티 개선 AI|NLP|2024.08.12 - 08.25|⬜|
 |NLP-P8|문장에서 특정 정보가 있는 토큰 추출|NLP, word embedding, sentence embedding|2024.08.26 - 09.01|⬜|
 |NLP-P9|특정 사물을 챗봇으로 만들기 (예: 말하는 크림빵) (NLP + 생성형 AI?)|next token generation, sentence embedding, clustering|2024.09.23 - 10.03|⬜|
-|NLP-P10||||⬜|
+|NLP-P10|말하는 README 문서|word/sentence embedding, word/sentence similarity, 문장 요약, 말투 변환|2024.10.14 - 10.31|⬜|
