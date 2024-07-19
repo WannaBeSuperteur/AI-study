@@ -2,24 +2,6 @@
 
 Transformer, BERT, S-BERT 부터 시작해서, 최종적으로는 Mini Chat-GPT를 만드는 것이 목표!!
 
-**TODO :**
-* Transformer, BERT, S-BERT 등 NLP 알고리즘 기초지식 익히기 (~2023.12.10)
-* 자체 제작 자연어 처리 과제 (~2024.02.11)
-  * 1차 : 2023.12.11 ~ 2024.02.06
-    * Project 001. 영어 문장 감성 분석
-  * 2차 : 2024.02.07 ~ 02.11
-    * Project 002. 이모지 데이터 유사도 검증
-  * 3차 : 2024.02.08 ~ 02.13
-    * Project 003. Python 코드 자동 수정
-* 프로젝트 (2024.02.25 ~ 04.07)
-  * Mini ChatGPT 만들기 (생성형 AI를 이용) : 2024.02.25 ~ 03.03, ```Project 004. 미니 ChatGPT 만들기``` ```Project 005. 미니 ChatGPT 만들기 (2)```
-  * Python 코드 개행해야 하는지 판단하는 AI 만들기 : 2024.03.11 ~ 03.17
-  * NLP로 폰트 생성 요청 처리하기 : 2024.03.18 ~ 03.24
-    * baseline : [생성형 AI Project 001. MNIST 숫자 생성 AI](https://github.com/WannaBeSuperteur/AI-study/blob/GAI-P1-master/Generative%20AI/Project%20001.%20MNIST%20%EC%88%AB%EC%9E%90%20%EC%83%9D%EC%84%B1%20AI%20with%20C-VAE/README.md)
-  * 질문에 답하는 ReadMe 문서 만들기 : 2024.03.25 ~ 03.31
-  * 미니 ChatGPT 성능 개선 시도하기 : 2024.04.01 ~ 04.07
-    * baseline : [NLP Project 005. 미니 ChatGPT 만들기 (2)](https://github.com/WannaBeSuperteur/AI-study/tree/main/Natural%20Language%20Processing/Project%20005.%20%EB%AF%B8%EB%8B%88%20ChatGPT%20%EB%A7%8C%EB%93%A4%EA%B8%B0%20(2))
-
 **Project Branch Naming Rule :**
 * **NLP-P123-master** 123번째 NLP 관련 프로젝트 (토이 프로젝트 등) 의 master branch 
 * **NLP-P123-456** 123번째 NLP 관련 프로젝트의 456번째 sub-branch
@@ -31,7 +13,7 @@ Transformer, BERT, S-BERT 부터 시작해서, 최종적으로는 Mini Chat-GPT�
 
 **Natural Language Processing gives machine a life.** 라는 문장은 이곳 NLP 파트에서 기술을 소개할 때 사용하는 대표적인 예시 문장이다. [ChatGPT도 이 문장의 의미에 공감한다.](https://chat.openai.com/share/3f608c85-58d1-4500-ad4c-7a99b045f2e6)
 
-## Projects
+## Projects (1차)
 * **Project 001. 영어 문장 감성 분석** (2023.12.12 ~ 2024.02.06 중 3일)
   * 기본적인 데이터 전처리, Sentence-BERT (S-BERT) 를 통한 문장 임베딩, 신경망 내에서 입력 데이터가 분리 및 합성되는 Tensorflow 모델
 * **Project 002. 이모지 데이터 유사도 검증** (2024.02.07 ~ 2024.02.11, 5일)
@@ -44,9 +26,13 @@ Transformer, BERT, S-BERT 부터 시작해서, 최종적으로는 Mini Chat-GPT�
   * 생성형 언어 모델 (Generative Language Model), word embedding, BERT embedding, Embedding and LSTM layer of Keras, tokenize, 다음 token 예측, 실험 노트 작성
 * **Project 006. Python 코드 개행해야 하는지 판단하기** (2024.03.11 ~ 2024.03.17, 7일)
   * 추가 예정
-* **Project 007. NLP로 폰트 생성 요청 처리하기** (2024.03.18 ~ 2024.03.24, 7일)
-  * 추가 예정
-* **Project 008. 질문에 답하는 ReadMe 문서 만들기** (2024.03.25 ~ 2024.03.31, 7일)
-  * 추가 예정
-* **Project 009. 미니 ChatGPT 성능 개선 시도하기** (2024.04.01 ~ 2024.04.07, 7일)
-  * 추가 예정
+
+## Projects (2차, 2024.07.20 - 11.30)
+* 상태 : ⬜ (TODO), 💨 (ING), ✅ (DONE)
+
+|프로젝트 ID|프로젝트 요약|역량 및 사용 기술|프로젝트 기간|상태|
+|---|---|---|---|---|
+|NLP-P7|Python 코드 퀄리티 개선 AI|NLP|2024.08.12 - 08.25|⬜|
+|NLP-P8|문장에서 특정 정보가 있는 토큰 추출|NLP, word embedding, sentence embedding|2024.08.26 - 09.01|⬜|
+|NLP-P9|특정 사물을 챗봇으로 만들기 (예: 말하는 크림빵) (NLP + 생성형 AI?)|next token generation, sentence embedding, clustering|2024.09.23 - 10.03|⬜|
+|NLP-P10||||⬜|
