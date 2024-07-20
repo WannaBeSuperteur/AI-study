@@ -9,11 +9,15 @@
   * [NVAE official paper](https://arxiv.org/pdf/2007.03898)
 * 학습 데이터 결정 모델
   * 학습 데이터 중 성별이 labeling 된 이미지 (Female 3,860 장, Male 3,013 장) 를 학습하여, '학습 데이터 결정 모델' 생성
-  * 학습 데이터 결정 모델을 이용하여 여성일 확률이 90% 이상인 이미지만 학습 데이터셋으로 사용 
+  * 학습 데이터 결정 모델을 이용하여, 여성일 확률이 99.99% 이상이면서 원래 포함된 디렉토리가 'male' 디렉토리가 아닌 이미지만 학습 데이터셋으로 사용 
 * 입력값 결정 모델
-  * 학습 데이터셋의 이미지에서 **눈을 뜬 정도, 입을 벌린 정도, 헤어 컬러, 배경 색** 을 나타내는 연속된 숫자 값을 CVAE의 입력으로 하기 위해, 그 입력값을 결정하는 모델
-  * 학습 데이터 중 ```Project 003. 사람 얼굴 성능 고도화 (성능 향상)/dataset/ThisPersonDoesNotExist/Female``` 에 저장된 여성 이미지 중 이름순 최초 1,000 장에 대해 해당 입력값을 labeling 하여, 해당 입력값을 다른 이미지에 대해서 결정할 수 있는 Regression Model 학습
-  * 해당 Regression 모델을 이용하여, 그 1,000 장을 제외한, CVAE 의 나머지 학습 데이터에 대해서도 해당 입력값을 결정
+  * 학습 데이터셋의 이미지에서 **CVAE 입력값**을 나타내는 연속된 숫자 값을 CVAE의 입력으로 하기 위해, 그 입력값을 결정하는 모델
+    * CVAE 입력값 (5종) : **눈을 뜬 정도, 입을 벌린 정도, 헤어 컬러, 배경 색, 고개를 돌린 유형**
+  * 학습 데이터 중 다음의 2,000 장에 대해 해당 입력값을 labeling 하여, 해당 입력값을 다른 이미지에 대해서 결정할 수 있는 Regression Model 학습
+    * ```Project 003. 사람 얼굴 성능 고도화 (성능 향상)/resized/ThisPersonDoesNotExist/Male``` 에 저장된 남성 이미지 중 파일 이름순 최초 1,000 장
+    * ```Project 003. 사람 얼굴 성능 고도화 (성능 향상)/resized/ThisPersonDoesNotExist/Female``` 에 저장된 여성 이미지 중 파일 이름순 최초 1,000 장
+  * 해당 Regression 모델의 예측값으로, 그 2,000 장을 포함한 전체 학습 데이터에 대해 해당 입력값을 결정
+    * 모든 데이터에 대해 모델 예측값을 사용한다는 일관성을 위해, 해당 모델의 학습 데이터도 입력값 결정 대상에 포함
 * 사람 얼굴의 어색한 부분 수정
   * (A) 원본 데이터와 (B) NVAE 응용 모델을 이용하여 생성한 이미지 간 구분하는 Classification model 개발
   * 해당 모델을 이용하여 NVAE 응용 모델로 생성한 이미지를 리터칭
@@ -28,12 +32,13 @@
 * 입력값 결정 모델 및 관련 데이터
   * 모델 주소의 처음 부분인 ```Project 003. 사람 얼굴 성능 고도화 (성능 향상)/models/``` 는 생략
 
-| 입력값        | 입력값 설명                   | 입력값 결정 모델              | 입력값 결정 모델을 위한, 학습 데이터 output      | 입력값 결정 모델이 판정한, 모든 이미지에 대한 output | 
-|------------|--------------------------|------------------------|-----------------------------------|-----------------------------------|
-| eyes       | 눈을 뜬 정도, 0~1             | ```input_eyes```       | ```train_output_eyes.csv```       | ```all_output_eyes.csv```         |
-| hair_color | 헤어 컬러, 0~1, 진할수록 1에 가까움  | ```input_hair_color``` | ```train_output_hair_color.csv``` | ```all_output_hair_color.csv```   |
-| mouth      | 입을 벌린 정도, 0~1            | ```input_mouth```      | ```train_output_mouth.csv```      | ```all_output_mouth.csv```        |
-| background | 배경의 밝기, 0~1, 밝을수록 1에 가까움 | ```input_background```     | ```train_output_background.csv``` | ```all_output_background.csv```   |
+| 입력값        | 입력값 설명                                  | 입력값 결정 모델              | 입력값 결정 모델을 위한, 학습 데이터 output      | 입력값 결정 모델이 판정한, 모든 이미지에 대한 output | 
+|------------|-----------------------------------------|------------------------|-----------------------------------|-----------------------------------|
+| eyes       | 눈을 뜬 정도, 0~1                            | ```input_eyes```       | ```train_output_eyes.csv```       | ```all_output_eyes.csv```         |
+| hair_color | 헤어 컬러, 0~1, 진할수록 1에 가까움                 | ```input_hair_color``` | ```train_output_hair_color.csv``` | ```all_output_hair_color.csv```   |
+| mouth      | 입을 벌린 정도, 0~1                           | ```input_mouth```      | ```train_output_mouth.csv```      | ```all_output_mouth.csv```        |
+| background | 배경의 밝기, 0~1, 밝을수록 1에 가까움                | ```input_background``` | ```train_output_background.csv``` | ```all_output_background.csv```   |
+| head       | 고개 돌림 유형, 0 (왼쪽), 1 (오른쪽), 0.5 (돌리지 않음) | ```input_head```       | ```train_output_head.csv```       | ```all_output_head.csv```         |
 
 ## 사용 데이터셋
 ### 원본 데이터셋
@@ -64,8 +69,20 @@
 | A-D2-M | ```augmented/male```         | O             | O            | 3,013  | D2     |
 | total  |                            |               |              | 33,746 |        |
 
-* 위 표의 데이터셋에서, **학습 데이터 결정 모델**에 의해 '여성일 확률이 90% 이상'으로 판정된 이미지만을 데이터셋으로 사용
-* 설명 및 그림 (TBU)
+* 위 표의 데이터셋에서, 다음 조건을 모두 만족시키는 데이터의 집합을 **최종 데이터셋**으로 사용
+  * **학습 데이터 결정 모델**에 의해 '여성일 확률이 99.99% 이상'으로 판정된 이미지
+  * ```resized/male``` 또는 ```augmented/male``` 에 속하지 않는 이미지
+
+### 최종 데이터셋
+NVAE-idea-based CVAE 모델을 학습시키기 위한 최종 데이터셋
+* 데이터셋 규모 : **17,505 장**
+
+최종 데이터셋 경로
+* 데이터셋 저장 위치 : ```Project 003. 사람 얼굴 성능 고도화 (성능 향상)/final```
+* 데이터셋 저장 파일 전체 경로 : ```Project 003. 사람 얼굴 성능 고도화 (성능 향상)/final/{aug_or_res}_{dir_name}_{file_name}.jpg```
+  * ```aug_or_res``` : 'augmented' 또는 'resized'
+  * ```dir_name``` : 가공 데이터셋 경로 기준의 디렉토리 이름 ('10k-images', 'female', 'male' 중 하나)
+  * ```file_name``` : 디렉토리 이름을 제외한 이미지 파일 이름
 
 ## 코드 설명 및 실행 순서
 설명 및 그림 (TBU)
