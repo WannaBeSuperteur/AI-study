@@ -61,6 +61,10 @@ Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/datase
 Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/dataset/ThisPersonDoesNotExist/*
 Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/resized/*
 Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/augmented/*
+Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/models/decide_train_data/*
+Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/models/input_eyes/*
+Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/models/input_hair_color/*
+Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/models/input_mouth/*
 *.pyc
 __pycache__/
 .idea/*
