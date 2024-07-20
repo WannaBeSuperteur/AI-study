@@ -59,6 +59,8 @@ Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하
 Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/*.csv
 Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/dataset/thispersondoesnotexist.10k/*
 Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/dataset/ThisPersonDoesNotExist/*
+Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/resized/*
+Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/augmented/*
 *.pyc
 __pycache__/
 .idea/*
