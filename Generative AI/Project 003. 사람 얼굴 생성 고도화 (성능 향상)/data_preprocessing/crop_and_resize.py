@@ -1,10 +1,9 @@
 import os
 import cv2
 import numpy as np
-
-
-def get_img_path(dir_name, img_name):
-    return os.path.join(dir_name, img_name).replace(os.sep, '/')
+import sys
+sys.path.append(os.path.abspath(os.path.dirname(__file__)) + '/../')
+from utils.utils import get_img_path
 
 
 def crop_and_resize(src_dir, dst_dir, crop_ratio_vertical, crop_ratio_horizontal, dst_size):

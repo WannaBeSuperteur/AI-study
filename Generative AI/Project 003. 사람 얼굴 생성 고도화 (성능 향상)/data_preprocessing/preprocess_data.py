@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 from crop_and_resize import crop_and_resize
+from augmentation import augment_images
+
 
 """
 Summary
@@ -27,6 +29,10 @@ def preprocess_data():
     current_dir = os.getcwd()
     project_home_dir = Path(current_dir).parent.absolute()
 
+    if 'resized' in os.listdir(project_home_dir):
+        print('preprocessed data already exists')
+        return
+
     src_dirs = ['thispersondoesnotexist.10k', 'ThisPersonDoesNotExist/female', 'ThisPersonDoesNotExist/male']
     dst_dirs = ['10k-images', 'female', 'male']
 
@@ -38,5 +44,23 @@ def preprocess_data():
                         dst_size=128)
 
 
+def augment_data():
+    current_dir = os.getcwd()
+    project_home_dir = Path(current_dir).parent.absolute()
+
+    if 'augmented' in os.listdir(project_home_dir):
+        print('augmented data already exists')
+        return
+
+    src_dst_dirs = ['10k-images', 'female', 'male']
+
+    for directory in src_dst_dirs:
+        augment_images(src_dir=os.path.join(project_home_dir, 'resized/' + directory),
+                       dst_dir=os.path.join(project_home_dir, 'augmented/' + directory),
+                       ratio_range=[0.84, 0.864, 0.888, 0.912, 0.936, 0.96,
+                                    1.04, 1.064, 1.088, 1.112, 1.136, 1.16])
+
+
 if __name__ == '__main__':
     preprocess_data()
+    augment_data()
