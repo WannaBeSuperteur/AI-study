@@ -27,7 +27,7 @@ Output
 
 def preprocess_data():
     current_dir = os.getcwd()
-    project_home_dir = Path(current_dir).parent.absolute()
+    project_home_dir = Path(current_dir)  # 프로젝트 홈 디렉토리에서 실행하지 않으면 오류 발생
 
     if 'resized' in os.listdir(project_home_dir):
         print('preprocessed data already exists')
@@ -46,7 +46,7 @@ def preprocess_data():
 
 def augment_data():
     current_dir = os.getcwd()
-    project_home_dir = Path(current_dir).parent.absolute()
+    project_home_dir = Path(current_dir)  # 프로젝트 홈 디렉토리에서 실행하지 않으면 오류 발생
 
     if 'augmented' in os.listdir(project_home_dir):
         print('augmented data already exists')
