@@ -6,7 +6,7 @@ IMG_WIDTH = 104
 IMG_HEIGHT = 128
 
 
-class Regression_Hair_Color_Model(tf.keras.Model):
+class Regression_Head_Model(tf.keras.Model):
 
     def __init__(self, dropout_rate=0.25):
         super().__init__()
