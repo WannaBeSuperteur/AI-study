@@ -56,18 +56,17 @@ Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하
 Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기/regression_background_mean/*
 Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기/regression_background_std/*
 Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기/regression_other_person/*
-Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/*.csv
-Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/dataset/thispersondoesnotexist.10k/*
-Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/dataset/ThisPersonDoesNotExist/*
-Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/resized/*
-Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/augmented/*
+Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/dataset/original/thispersondoesnotexist.10k/*
+Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/dataset/original/ThisPersonDoesNotExist/*
+Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/dataset/resized/*
+Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/dataset/augmented/*
+Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/dataset/final/*
 Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/models/decide_train_data/*
 Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/models/input_eyes/*
 Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/models/input_hair_color/*
 Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/models/input_mouth/*
 Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/models/input_background/*
 Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/models/input_head/*
-Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/final/*
 *.pyc
 __pycache__/
 .idea/*

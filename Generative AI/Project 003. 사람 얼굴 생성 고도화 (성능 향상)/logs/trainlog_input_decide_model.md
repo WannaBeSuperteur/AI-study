@@ -1,7 +1,7 @@
 ## 입력값 결정 모델 테스트 로그
 
 * 학습 데이터
-  * ```resize/male```, ```resize/female``` 에 있는 남녀 이미지 각각 파일 이름순 최초 1,000 장 
+  * ```dataset/resized/male```, ```dataset/resized/female``` 에 있는 남녀 이미지 각각 파일 이름순 최초 1,000 장 
   * eyes, mouth 의 경우 이미지의 일부만 보고 알 수 있기 때문에 원본 대신 cropped image 를 학습 
 * GAI-P2 와의 차이점
   * 성별 정보를 학습에 반영하지 않음

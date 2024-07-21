@@ -48,7 +48,7 @@ def train_male_or_female_model(model_dir):
         return model
 
     print('loading training data ...')
-    train_input, train_output = load_training_data('resized')
+    train_input, train_output = load_training_data('dataset/resized')
 
     print('loading cnn model ...')
     model = train_cnn_model(train_input, train_output, Classify_Male_Or_Female_CNN_Model)
@@ -65,17 +65,17 @@ def predict_male_or_female(model):
         model (TensorFlow model) : saved "Training Data Decision Model"
 
     File Outputs:
-        models/all_output_decide_train_data.csv : Male/Female prediction result for entire dataset,
+        models/data/all_output_decide_train_data.csv : Male/Female prediction result for entire dataset,
                                                   including model's training data
     """
 
-    if os.path.exists('models/all_output_decide_train_data.csv'):
+    if os.path.exists('models/data/all_output_decide_train_data.csv'):
         print('prediction result already exists')
         return
 
     print('prediction start ...')
-    all_data_dir_list = ['augmented/10k-images', 'augmented/female', 'augmented/male',
-                         'resized/10k-images', 'resized/female', 'resized/male']
+    all_data_dir_list = ['dataset/augmented/10k-images', 'dataset/augmented/female', 'dataset/augmented/male',
+                         'dataset/resized/10k-images', 'dataset/resized/female', 'dataset/resized/male']
 
     predict_male_or_female_for_all_images(model, all_data_dir_list)
 
@@ -89,17 +89,17 @@ def save_final_training_data():
         print('final training data for CVAE already exists')
         return
 
-    prediction_result = pd.read_csv('models/all_output_decide_train_data.csv', index_col=0)
+    prediction_result = pd.read_csv('models/data/all_output_decide_train_data.csv', index_col=0)
     prediction_result = prediction_result[prediction_result['prob_female'] >= 0.9999]
     prediction_result = prediction_result[~prediction_result['image_path'].str.contains('/male/')]
     print('final training data for CVAE :\n', prediction_result)
 
-    os.makedirs('final', exist_ok=True)
+    os.makedirs('dataset/final', exist_ok=True)
 
     for _, row in prediction_result.iterrows():
         img_path = row['image_path']
-        aug_or_res, dir_name, file_name = img_path.split('/')[0], img_path.split('/')[1], img_path.split('/')[2]
-        new_img_path = f'final/{aug_or_res}_{dir_name}_{file_name}'
+        aug_or_res, dir_name, file_name = img_path.split('/')[1], img_path.split('/')[2], img_path.split('/')[3]
+        new_img_path = f'dataset/final/{aug_or_res}_{dir_name}_{file_name}'
         shutil.copyfile(img_path, new_img_path)
 
 
@@ -117,7 +117,7 @@ def train_input_decision_models_for_input_type(input_type):
 
     if os.path.exists(f'models/input_{input_type}'):
         print(f'Input Decision Model for {input_type} already exists')
-        return
+        return tf.keras.models.load_model(f'models/input_{input_type}')
 
     train_input_image, train_output = load_training_data_for_IDM(input_type=input_type,
                                                                  cropped_img_x_start=IMG_INFO_MAPPING[input_type]['x_start'],
@@ -168,16 +168,16 @@ def predict_with_input_decision_models_for_input_type(input_type):
                            one of 'background', 'eyes', 'hair_color', 'head' or 'mouth'
 
     File Output:
-        all_output_{input_type}.csv : prediction result for entire final training dataset
+        models/data/all_output_{input_type}.csv : prediction result for entire final training dataset
     """
 
-    if os.path.exists(f'models/all_output_{input_type}.csv'):
+    if os.path.exists(f'models/data/all_output_{input_type}.csv'):
         print(f'prediction result (by Input Decision Model) for {input_type} already exists')
         return
 
     input_decision_model = tf.keras.models.load_model(f'models/input_{input_type}')
 
-    final_training_img_names = os.listdir('final')
+    final_training_img_names = os.listdir('dataset/final')
     img_paths = []
     predicted_values = []
 
@@ -185,7 +185,7 @@ def predict_with_input_decision_models_for_input_type(input_type):
         if idx % 250 == 0:
             print(f'progress (for {input_type}) : {idx}')
 
-        img_path = 'final/' + img_name
+        img_path = 'dataset/final/' + img_name
         img = cv2.imread(img_path, cv2.IMREAD_UNCHANGED)
         img = img.reshape((1, img.shape[0], img.shape[1], 3))  # (128, 104, 3) -> (1, 128, 104, 3)
 
@@ -207,7 +207,7 @@ def predict_with_input_decision_models_for_input_type(input_type):
 
     prediction_result = {'image_path': img_paths, input_type: predicted_values}
     prediction_result_df = pd.DataFrame(prediction_result)
-    prediction_result_df.to_csv(f'models/all_output_{input_type}.csv', index=False)
+    prediction_result_df.to_csv(f'models/data/all_output_{input_type}.csv', index=False)
 
 
 def predict_with_input_decision_models():
