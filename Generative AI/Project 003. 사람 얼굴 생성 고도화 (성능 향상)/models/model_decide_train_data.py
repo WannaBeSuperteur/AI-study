@@ -155,6 +155,7 @@ def predict_male_or_female_for_all_images(cnn_model, image_dirs):
         train_output (np.array) : training output images
     """
 
+    os.makedirs('models/data', exist_ok=True)
     predict_result = pd.DataFrame()
 
     for image_dir in image_dirs:
@@ -162,4 +163,4 @@ def predict_male_or_female_for_all_images(cnn_model, image_dirs):
         for image_name in os.listdir(image_dir):
             predict_result = add_predict_results(image_name, image_dir, predict_result, cnn_model)
 
-    predict_result.to_csv('models/all_output_decide_train_data.csv')
+    predict_result.to_csv('models/data/all_output_decide_train_data.csv')
