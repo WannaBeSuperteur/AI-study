@@ -40,6 +40,22 @@
 | background | **배경의 밝기 🏞**<br>- 0~1, 밝을수록 1에 가까움                | ```input_background```<br>```model_input_background.py``` | ```data/train_output_background.csv```    | ```data/all_output_background.csv``` |
 | head       | **고개 돌림 유형 🐴**<br>- 0 (왼쪽), 1 (오른쪽), 0.5 (돌리지 않음) | ```input_head```<br>```model_input_head.py```      | ```data/train_output_head.csv```          | ```data/all_output_head.csv```   |
 
+### 모델 아키텍처 정보
+| 모델                  | 모델 아키텍처 그림 파일 위치                                                      |
+|---------------------|-----------------------------------------------------------------------|
+| CVAE encoder        | ```models/model_architecture/encoder{0,1,2,3}.png``` (total 4 images) |
+| CVAE decoder        | ```models/model_architecture/decoder.png```                           |
+| CVAE (entire model) | ```models/model_architecture/cvae.png```                              |
+
+**Entire CVAE Model**
+* TBU
+
+**Encoder**
+* TBU
+
+**Decoder**
+* TBU
+
 ## 사용 데이터셋
 ### 원본 데이터셋
 * (D1) [Person Face Dataset (thispersondoesnotexist)](https://www.kaggle.com/datasets/almightyj/person-face-dataset-thispersondoesnotexist)

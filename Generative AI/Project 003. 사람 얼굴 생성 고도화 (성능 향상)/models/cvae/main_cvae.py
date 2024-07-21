@@ -1,8 +1,10 @@
 import tensorflow as tf
 import numpy as np
 import pandas as pd
+
+from condition_input import merge_conditional_input_data
 from cvae_model_utils import create_train_and_valid_data
-from cvae_model_utils import TRAIN_DATA_LIMIT
+from cvae_model_architecture import TRAIN_DATA_LIMIT
 from cvae_model_architecture import train_cvae_model
 
 
@@ -20,14 +22,12 @@ def train_cvae():
     train_input, train_info = create_train_and_valid_data(limit=TRAIN_DATA_LIMIT)
 
     print(f'\nshape of train input: {np.shape(train_input)}')
-    print(train_input)
-
     print(f'\nshape of train info: {np.shape(train_info)}')
-    print(train_info)
 
     # 학습 실시 및 모델 저장
-    cvae_encoder, cvae_decoder, cvae_model = train_cvae_model(train_input, train_info)
+    train_cvae_model(train_input, train_info)
 
 
 if __name__ == '__main__':
+    merge_conditional_input_data()
     train_cvae()

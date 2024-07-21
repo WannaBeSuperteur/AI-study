@@ -2,29 +2,13 @@
 
 import pandas as pd
 import numpy as np
+import os
 
 import tensorflow as tf
 import matplotlib.pyplot as plt
-
 import cv2
 
-
-INPUT_IMG_WIDTH = 104
-INPUT_IMG_HEIGHT = 128
-NUM_CHANNELS = 3 # R, G, and B
-TOTAL_CELLS = INPUT_IMG_WIDTH * INPUT_IMG_HEIGHT
-TOTAL_INPUT_IMG_VALUES = NUM_CHANNELS * TOTAL_CELLS
-NUM_INFO = 5  # hair_color, mouth, eyes, head, background
-
-BATCH_SIZE = 32
-HIDDEN_DIMS = 120
-
-MSE_LOSS_WEIGHT = 50000.0
-TRAIN_EPOCHS = 60
-TRAIN_DATA_LIMIT = None
-SILU_MULTIPLE = 2.0 # same as GeLU approximation
-
-print(f'settings: HIDDEN_DIMS={HIDDEN_DIMS}, MSE_LOSS_WEIGHT={MSE_LOSS_WEIGHT}, SILU_MULTIPLE={SILU_MULTIPLE}')
+BATCH_SIZE = 32  # same as 'cvae_model_architecture.py'
 
 
 # C-VAE 모델의 learning rate scheduler
@@ -40,26 +24,32 @@ def scheduler(epoch, lr):
 
 
 # model architecture image
-def plot_model_architecture(model, img_file_name):
+def plot_model_architecture(model, img_file_path):
     try:
-        tf.keras.utils.plot_model(model, to_file=f'{img_file_name}.png', show_shapes=True)
+        tf.keras.utils.plot_model(model, to_file=img_file_path, show_shapes=True)
     except Exception as e:
         print(f'model architecture image file generation error : {e}')
 
 
 # 모델 구조 표시
 def show_model_summary(cvae_module):
+    architecture_img_dir = 'models/model_architecture'
+    os.makedirs(architecture_img_dir, exist_ok=True)
+
     print('\n === ENCODER ===')
-    cvae_module.encoder.summary()
-    plot_model_architecture(cvae_module.encoder, 'encoder')
+    cvae_module.encoder3.summary()
+    plot_model_architecture(cvae_module.encoder0, os.path.join(architecture_img_dir, 'encoder0.png'))
+    plot_model_architecture(cvae_module.encoder1, os.path.join(architecture_img_dir, 'encoder1.png'))
+    plot_model_architecture(cvae_module.encoder2, os.path.join(architecture_img_dir, 'encoder2.png'))
+    plot_model_architecture(cvae_module.encoder3, os.path.join(architecture_img_dir, 'encoder3.png'))
 
     print('\n === DECODER ===')
     cvae_module.decoder.summary()
-    plot_model_architecture(cvae_module.decoder, 'decoder')
+    plot_model_architecture(cvae_module.decoder, os.path.join(architecture_img_dir, 'decoder.png'))
 
     print('\n === VAE ===')
     cvae_module.cvae.summary()
-    plot_model_architecture(cvae_module.cvae, 'cvae')
+    plot_model_architecture(cvae_module.cvae, os.path.join(architecture_img_dir, 'cvae.png'))
 
 
 # C-VAE 모델 학습 loss 기록 저장
@@ -84,7 +74,7 @@ def create_train_and_valid_data(limit=None):
         train_info  (np.array) : additional info (background, eyes, hair color, head, mouth) for CVAE
     """
 
-    condition_data = pd.read_csv('models/data/all_outputs.csv', index_col=0)
+    condition_data = pd.read_csv('models/data/all_output.csv')
     print(condition_data)
 
     train_input = []
@@ -95,7 +85,7 @@ def create_train_and_valid_data(limit=None):
         if current_idx % 250 == 0:
             print(current_idx)
 
-        img_path = row['image_path']
+        img_path = row['image_paths']
 
         # condition info (total 5)
         background = row['background']
