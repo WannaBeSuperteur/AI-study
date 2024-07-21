@@ -26,10 +26,10 @@ IDL_CLASS_MAPPING = {
 # Input Decision Model name, to the resolution info of cropped part of images to train IDM
 IMG_INFO_MAPPING = {
     'background': {'x_start': 0,  'width': 104, 'y_start': 0,  'height': 128},
-    'eyes':       {'x_start': 20, 'width': 64,  'y_start': 32, 'height': 32},
+    'eyes':       {'x_start': 24, 'width': 56,  'y_start': 48, 'height': 24},
     'hair_color': {'x_start': 0,  'width': 104, 'y_start': 0,  'height': 128},
     'head':       {'x_start': 0,  'width': 104, 'y_start': 0,  'height': 128},
-    'mouth':      {'x_start': 20, 'width': 64,  'y_start': 72, 'height': 32},
+    'mouth':      {'x_start': 36, 'width': 32,  'y_start': 88, 'height': 16},
 }
 
 
@@ -125,11 +125,16 @@ def train_input_decision_models_for_input_type(input_type):
                                                                  cropped_img_y_start=IMG_INFO_MAPPING[input_type]['y_start'],
                                                                  cropped_img_height=IMG_INFO_MAPPING[input_type]['height'])
 
+    # 기본 옵션 (early_stopping_patience=5, lr_reduce_patience=2) 로 학습이 잘 안되는 eyes 의 경우, patience 관련 특별 처리
+    # eyes 의 경우 학습 종료시점 기준 valid loss 가 0.035 정도 수준이면 안되고, 0.020 정도여야 학습이 잘 된 것임
+    # (약 50% 확률로 학습이 잘되는 것으로 추정)
     input_decision_model = train_cnn_model(train_input=train_input_image,
                                            train_output=train_output,
                                            model_class=IDL_CLASS_MAPPING[input_type],
                                            loss='mse',
-                                           epochs=30)
+                                           epochs=30,
+                                           early_stopping_patience=(12 if input_type == 'eyes' else 5),
+                                           lr_reduce_patience=(30 if input_type == 'eyes' else 2))
 
     return input_decision_model
 
@@ -186,7 +191,7 @@ def predict_with_input_decision_models_for_input_type(input_type):
 
         cropped_img_x_start = IMG_INFO_MAPPING[input_type]['x_start']
         cropped_img_width = IMG_INFO_MAPPING[input_type]['width']
-        cropped_img_y_start = IMG_INFO_MAPPING[input_type]['x_start']
+        cropped_img_y_start = IMG_INFO_MAPPING[input_type]['y_start']
         cropped_img_height = IMG_INFO_MAPPING[input_type]['height']
 
         img_cropped = img[:,

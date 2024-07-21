@@ -9,16 +9,17 @@ import cv2
 
 
 # 모델 반환 (with early stopping + lr_reduced)
-def define_model(model_class):
+def define_model(model_class, early_stopping_patience, lr_reduce_patience):
     optimizer = optimizers.Adam(0.001, decay=1e-6)
-    early_stopping = EarlyStopping(monitor='val_loss', mode='min', patience=5)
-    lr_reduced = ReduceLROnPlateau(monitor='val_loss', mode='min', patience=2)
+    early_stopping = EarlyStopping(monitor='val_loss', mode='min', patience=early_stopping_patience)
+    lr_reduced = ReduceLROnPlateau(monitor='val_loss', mode='min', patience=lr_reduce_patience)
 
     model = model_class()
     return model, optimizer, early_stopping, lr_reduced
 
 
-def train_cnn_model(train_input, train_output, model_class, epochs=15, validation_split=0.1, loss='binary_crossentropy'):
+def train_cnn_model(train_input, train_output, model_class, epochs=15, validation_split=0.1, loss='binary_crossentropy',
+                    early_stopping_patience=5, lr_reduce_patience=2):
 
     """Training CNN model
 
@@ -33,7 +34,9 @@ def train_cnn_model(train_input, train_output, model_class, epochs=15, validatio
         cnn_model (TensorFlow Model) : trained CNN model
     """
 
-    cnn_model, optimizer, early_stopping, lr_reduced = define_model(model_class)
+    cnn_model, optimizer, early_stopping, lr_reduced = define_model(model_class,
+                                                                    early_stopping_patience=early_stopping_patience,
+                                                                    lr_reduce_patience=lr_reduce_patience)
     cnn_model.compile(loss=loss, optimizer=optimizer, metrics=['accuracy'])
 
     print(f'train input shape : {np.shape(train_input)}')
@@ -90,9 +93,9 @@ def load_training_data_for_IDM(input_type, cropped_img_x_start, cropped_img_widt
     # 각 성별의 처음 1,000장의 이미지에 대한 output values 와 해당 성별의 처음 1,000장의 이미지에 대해,
     # "이미지 조합 및 그 순서가 반드시 일치" 해야 함!!
 
-    male_images = load_first_1k('resized/male')
     female_images = load_first_1k('resized/female')
-    all_images = np.concatenate((male_images, female_images), axis=0)
+    male_images = load_first_1k('resized/male')
+    all_images = np.concatenate((female_images, male_images), axis=0)
 
     train_output_df = pd.read_csv(f'models/train_output_{input_type}.csv')
     train_output_df = train_output_df[['value']]
