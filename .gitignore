@@ -65,6 +65,9 @@ Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/models
 Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/models/input_eyes/*
 Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/models/input_hair_color/*
 Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/models/input_mouth/*
+Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/models/input_background/*
+Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/models/input_head/*
+Generative AI/Project 003. 사람 얼굴 생성 고도화 (성능 향상)/final/*
 *.pyc
 __pycache__/
 .idea/*

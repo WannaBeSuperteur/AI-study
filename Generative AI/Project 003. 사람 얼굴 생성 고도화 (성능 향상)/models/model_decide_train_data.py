@@ -127,7 +127,7 @@ def add_predict_results(image_name, image_dir, predict_result_df, cnn_model):
     img_path = image_dir + '/' + image_name
 
     img = cv2.imread(img_path, cv2.IMREAD_UNCHANGED)
-    img = img.reshape((1, img.shape[0], img.shape[1], 3))  # (120, 120, 3) -> (1, 120, 120, 3)
+    img = img.reshape((1, img.shape[0], img.shape[1], 3))  # (128, 104, 3) -> (1, 128, 104, 3)
     img = img / 255.0
 
     prediction = np.array(cnn_model(img))
