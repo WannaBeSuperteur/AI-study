@@ -33,7 +33,7 @@ def plot_model_architecture(model, img_file_path):
 
 # 모델 구조 표시
 def show_model_summary(cvae_module):
-    architecture_img_dir = 'models/model_architecture'
+    architecture_img_dir = 'models/cvae/model_architecture'
     os.makedirs(architecture_img_dir, exist_ok=True)
 
     print('\n === ENCODER ===')

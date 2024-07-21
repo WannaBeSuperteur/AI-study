@@ -5,6 +5,7 @@ from tensorflow.keras import layers, optimizers
 from keras.losses import mean_squared_error
 import keras.backend as K
 from cvae_model_utils import scheduler, save_cvae_loss_log, show_model_summary
+from callbacks import ModelTestCallback
 
 
 # 사용자 정의 activation function = x * sigmoid(2x) (x * sigmoid(1.702x) in GeLU approximation)
@@ -19,7 +20,7 @@ BATCH_SIZE = 32
 HIDDEN_DIMS = 120
 
 MSE_LOSS_WEIGHT = 50000.0
-TRAIN_EPOCHS = 1  # 60
+TRAIN_EPOCHS = 2  # 60
 TRAIN_DATA_LIMIT = None
 SILU_MULTIPLE = 2.0
 
@@ -39,7 +40,7 @@ def noise_maker(noise_args):
     return K.exp(noise_log_var / 2.0) * noise + noise_mean
 
 
-# TODO complete model architecture
+# TODO : complete and improve model architecture
 
 class CVAE_Model:
 
@@ -312,9 +313,10 @@ class CVAE_Model:
 def define_cvae_model():
     optimizer = optimizers.Adam(0.0006, decay=1e-6)
     scheduler_callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
+    model_test_callback = ModelTestCallback()
     cvae_module = CVAE_Model(dropout_rate=0.25) # 실제 모델은 model.cvae
 
-    return cvae_module, optimizer, scheduler_callback
+    return cvae_module, optimizer, scheduler_callback, model_test_callback
 
 
 # C-VAE 모델 학습 실시 및 모델 저장
@@ -323,7 +325,7 @@ def train_cvae_model(train_input, train_info):
 
     # to solve "You must feed a value for placeholder tensor {tensor_name} with dtype float and shape {shape}."
     tf.keras.backend.set_learning_phase(False)
-    cvae_module, optimizer, scheduler_callback = define_cvae_model()
+    cvae_module, optimizer, scheduler_callback, model_test_callback = define_cvae_model()
     cvae_module.cvae.compile(loss=cvae_module.vae_loss, optimizer=optimizer)
 
     # 학습 실시
@@ -331,7 +333,7 @@ def train_cvae_model(train_input, train_info):
         [train_input, train_info, train_info], train_input,
         epochs=TRAIN_EPOCHS,
         batch_size=BATCH_SIZE,
-        callbacks=[scheduler_callback],
+        callbacks=[scheduler_callback, model_test_callback],
         shuffle=True
     )
     save_cvae_loss_log(train_history)
