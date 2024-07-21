@@ -1,9 +1,9 @@
 # GAI-P3. 사람 얼굴 생성 고도화 (성능 향상)
-## 프로젝트 개요
+## 1. 프로젝트 개요
 * 진행 일정 : **2024.07.20 (토) ~ 08.11 (일), 23일간**
 * 프로젝트 목표 : 생성형 AI (GAN, CVAE, NVAE 등) 를 이용하여, 진짜 같은 사람 얼굴을 만드는 것
 
-## 기술적 접근 방법
+## 2. 기술적 접근 방법
 * 사람 얼굴 생성 모델 구현
   * NVAE (Nouveau VAE) 의 아이디어를 이용
   * [NVAE official paper](https://arxiv.org/pdf/2007.03898)
@@ -23,14 +23,15 @@
   * 해당 모델을 이용하여 NVAE 응용 모델로 생성한 이미지를 리터칭
 * 그림 (TBU)
 
-### 모델 파일 정보
-* 학습 데이터 결정 모델
-  * 저장 위치 : ```Project 003. 사람 얼굴 성능 고도화 (성능 향상)/models/decide_train_data``` 
-  * 전체 이미지에 대한 예측 결과 : ```Project 003. 사람 얼굴 성능 고도화 (성능 향상)/models/data/all_output_decide_train_data.csv``` 
-  * 학습 데이터 결정 모델의 학습을 위한 데이터
-    * 아래 "가공 데이터셋" 중 **R-D2-F, R-D2-M (성별이 명시된 이미지 총 6,873 장)**
-* 입력값 결정 모델 및 관련 데이터
-  * 모델 주소의 처음 부분인 ```Project 003. 사람 얼굴 성능 고도화 (성능 향상)/models/``` 는 생략
+## 3. 모델 파일 정보
+### 3-1. 학습 데이터 결정 모델
+* 저장 위치 : ```Project 003. 사람 얼굴 성능 고도화 (성능 향상)/models/decide_train_data``` 
+* 전체 이미지에 대한 예측 결과 : ```Project 003. 사람 얼굴 성능 고도화 (성능 향상)/models/data/all_output_decide_train_data.csv``` 
+* 학습 데이터 결정 모델의 학습을 위한 데이터
+  * 아래 "가공 데이터셋" 중 **R-D2-F, R-D2-M (성별이 명시된 이미지 총 6,873 장)**
+
+### 3-2. 입력값 결정 모델 및 관련 데이터
+* 모델 주소의 처음 부분인 ```Project 003. 사람 얼굴 성능 고도화 (성능 향상)/models/``` 는 생략
 
 | 입력값        | 입력값 설명<br>(입력값 결정 모델 output / CVAE input)          | 입력값 결정 모델 및 코드 | 입력값 결정 모델을 위한<br>학습 데이터 output<br>(수기로 라벨링) | 입력값 결정 모델에 의한<br>모든 이미지 output   | 
 |------------|----------------------------------------------------|------------------------|-------------------------------------------|----------------------------------|
@@ -40,8 +41,19 @@
 | background | **배경의 밝기 🏞**<br>- 0~1, 밝을수록 1에 가까움                | ```input_background```<br>```model_input_background.py``` | ```data/train_output_background.csv```    | ```data/all_output_background.csv``` |
 | head       | **고개 돌림 유형 🐴**<br>- 0 (왼쪽), 1 (오른쪽), 0.5 (돌리지 않음) | ```input_head```<br>```model_input_head.py```      | ```data/train_output_head.csv```          | ```data/all_output_head.csv```   |
 
-## 사용 데이터셋
-### 원본 데이터셋
+### 3-3. main CVAE model (NVAE 기반)
+* 모델 코드
+  * ```Project 003. 사람 얼굴 성능 고도화 (성능 향상)/models/cvae``` 내부
+* 모델 디렉토리
+
+| 모델      | 모델 디렉토리                                                          |
+|---------|------------------------------------------------------------------|
+| encoder | ```Project 003. 사람 얼굴 성능 고도화 (성능 향상)/models/cvae/cvae_encoder``` |
+| decoder | ```Project 003. 사람 얼굴 성능 고도화 (성능 향상)/models/cvae/cvae_decoder``` |
+| 전체 모델   | ```Project 003. 사람 얼굴 성능 고도화 (성능 향상)/models/cvae/cvae_entire```  |
+
+## 4. 사용 데이터셋
+### 4-1. 원본 데이터셋
 * (D1) [Person Face Dataset (thispersondoesnotexist)](https://www.kaggle.com/datasets/almightyj/person-face-dataset-thispersondoesnotexist)
   * 저장 위치 : ```Project 003. 사람 얼굴 성능 고도화 (성능 향상)/dataset/original/thispersondoesnotexist.10k``` (10,000 장의 이미지)
 * (D2) [Face Dataset Of People That Don't Exist](https://www.kaggle.com/datasets/bwandowando/all-these-people-dont-exist)
@@ -55,7 +67,7 @@
 |D2|6,873| 3,013  | 3,860  |
 |total|16,873| -      | -      |
 
-### 가공 데이터셋
+### 4-2. 가공 데이터셋
 * 원본 데이터셋에 대해 crop + resize + augmentation (brightness) 적용
 * 데이터 경로에서 처음의 ```Project 003. 사람 얼굴 성능 고도화 (성능 향상)``` 부분은 생략
 
@@ -73,7 +85,7 @@
   * **학습 데이터 결정 모델**에 의해 **여성일 확률이 99.99% 이상**으로 판정된 이미지
   * 데이터 경로가 ```dataset/resized/male``` 또는 ```dataset/augmented/male``` 에 속하지 않는 이미지
 
-### 최종 데이터셋
+### 4-3. 최종 데이터셋
 NVAE-idea-based CVAE 모델을 학습시키기 위한 최종 데이터셋
 * 데이터셋 규모 : **13,064 장 (가공 데이터셋의 38.7%)**
   * 가공 데이터셋 전체의 여성 이미지를 **16,720 장** (10k-images 의 50%를 여성으로 가정) 시, 이들 중 **78.1%**
@@ -86,10 +98,10 @@ NVAE-idea-based CVAE 모델을 학습시키기 위한 최종 데이터셋
   * ```dir_name``` : 가공 데이터셋 경로 기준의 디렉토리 이름 ('10k-images', 'female', 'male' 중 하나)
   * ```file_name``` : 디렉토리 이름을 제외한 이미지 파일 이름
 
-## 코드 설명 및 실행 순서
+## 5. 코드 설명 및 실행 순서
 설명 및 그림 (TBU)
 
-## 테스트 환경 및 방법
+## 6. 테스트 환경 및 방법
 * 테스트 환경 기본 사항
   * Python 3.8
   * Windows 10
@@ -99,7 +111,7 @@ NVAE-idea-based CVAE 모델을 학습시키기 위한 최종 데이터셋
 * 테스트 방법
   * TBU
 
-## 상세 일정
+## 7. 상세 일정
 * status : 🔥 (개발 진행중), ✔ (개발 완료)
 
 |개발 사항| 예상 일정              |status|
@@ -115,7 +127,7 @@ NVAE-idea-based CVAE 모델을 학습시키기 위한 최종 데이터셋
 |모델 전체 테스트| 08.03 - 08.04 (2d) ||
 |성능 추가 향상 시도| 08.05 - 08.11 (7d) ||
 
-## 브랜치 정보
+## 8. 브랜치 정보
 * status : 🔥 (개발 진행중), ✔ (개발 완료)
 * type : ✨ (feature), 🛠 (bug fix), ⚡ (improve performance)
 
@@ -126,12 +138,12 @@ NVAE-idea-based CVAE 모델을 학습시키기 위한 최종 데이터셋
 | GAI-P3-2      |✔|✨| 24.07.20 | 24.07.20 | 학습 데이터 결정 모델 생성        |
 | GAI-P3-3      |✔|✨| 24.07.20 | 24.07.21 | 입력값 결정 모델 생성           |
 | GAI-P3-4      |✔|🛠| 24.07.21 | 24.07.21 | 데이터셋 경로 재설정            |
-| GAI-P3-5      ||✨| 24.07.21 |          | 사람 얼굴 생성 모델 구현         |
+| GAI-P3-5      |🔥|✨| 24.07.21 |          | 사람 얼굴 생성 모델 구현         |
 | GAI-P3-6      ||✨|          |          | 어색한 부분 수정 (분류 모델 개발)   |
 | GAI-P3-7      ||✨|          |          | 어색한 부분 수정 (이미지 리터칭 개발) |
 
 
-## 실험 결과 및 로그
+## 9. 실험 결과 및 로그
 
 | 작성일      | 로그 내용               | 로그 파일 주소                                       |
 |----------|---------------------|------------------------------------------------|
