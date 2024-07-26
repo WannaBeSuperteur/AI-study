@@ -1,3 +1,11 @@
+## 2024.07.26 (금)
+**[OpenAI, 검색엔진 '서치GPT' 발표](https://n.news.naver.com/mnews/article/001/0014831059?sid=104)** ```AI```
+
+* ChatGPT 개발사 OpenAI는 2024.07.25일 구글에 대항하는 자체 검색 엔진인 **서치GPT (SearchGPT)** 를 발표했다. 
+  * 현재는 일부 이용자를 대상으로 한 프로토타입 버전이다.
+  * OpenAI의 향후 계획은 **이 SearchGPT를 ChatGPT에 통합** 시키는 것이다.
+* 현재 글로벌 검색 시장은 구글이 90% 정도의 점유율을 차지하며 사실상 독주하고 있으나, **ChatGPT의 인기가 큰 상황에서 OpenAI가 자체 검색엔진 공개를 통해 구글의 아성을 위협할 수 있다** 는 분석이 있다.
+
 ## 2024.07.25 (목)
 **[CJ CGV, AI 무비필터 출시](https://n.news.naver.com/mnews/article/092/0002339539?sid=105)** ```AI```
 
