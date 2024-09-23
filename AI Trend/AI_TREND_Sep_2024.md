@@ -1,3 +1,14 @@
+## 2024.09.23 (월)
+**[NCSOFT, LLM 성능 테스트 모델 '바르코 Judge LLM' 출시](https://n.news.naver.com/mnews/article/092/0002346222?sid=105)** ```AI``` ```Large Language Model```
+
+* NCSOFT 에서 2024.09.23일 국내 최초로 **거대 언어 모델 (LLM) 의 성능을 테스트하기 위한** 일종의 평가 툴인 **VARCO Judge LLM (바르코 Judge LLM)** 을 출시했다.
+  * 바르코 Judge LLM 은 기업들이 다양한 유형과 규모의 수많은 LLM 중 적절한 모델을 찾는 데 걸리는 시간을 절약할 수 있다.
+  * 또한, EMNLP 라는 NLP 학회를 통해 Judge LLM 의 기술력을 입증했다.
+* 바르코 Judge LLM 의 특장점은 다음과 같다.
+  * 동급 모델 중 최우수 수준의 **LLM 편향 해결** 능력
+  * **한국어 성능** 이 뛰어남 
+* NCSOFT 는 이 모델을 통해 'LLM 모델 성능 테스트' 분야에서 우위를 점하는 것을 계획하고 있다.
+
 ## 2024.09.22 (일)
 **[AI 전문가, 대한민국 AI 기술 10점 만점에 6.7점](https://n.news.naver.com/mnews/article/030/0003241226)** ```AI```
 
