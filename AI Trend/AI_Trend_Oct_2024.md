@@ -1,3 +1,17 @@
+## 2024.10.21 (월)
+**[메타, 감정을 읽는 AI '스피릿LM' 공개](https://n.news.naver.com/mnews/article/092/0002349209?sid=105)** ```AI``` ```Meta AI``` ```Language Model```
+
+* 페이스북과 인스타그램의 모회사이자 거대 언어 모델 (LLM) LLAMA 시리즈를 개발하여 오픈소스로 공개한 메타 (Meta) 가 **감정을 읽는 멀티모달 언어 모델인 '메타 스피릿 LM' 을 출시** 했다.
+  * [Inference Code Github Link](https://github.com/facebookresearch/spiritlm)
+* 메타 스피릿 LM의 특징은 다음과 같다.
+  * 음성과 텍스트 형태의 데이터를 이용하는 멀티모달 모델 
+  * **음성에 담긴 화자의 감정 상태를 분석** 하고 이를 모델의 출력에 반영 가능, 이를 통해 보다 자연스러운 의사소통 가능
+  * **같은 의미를 갖는 텍스트와 음성을 함께 학습** 시키는 방법을 통해, 텍스트와 음성의 2가지 형태 데이터 간 상호 작용까지 학습
+    * 이를 통해 **이들 두 형태 사이에서 소통이 가능** 한 언어 처리 능력 강화 
+* 스피릿LM의 모델 규모는 다음과 같다.
+  * 약 70억 개의 파라미터 (매개변수)
+  * 스피릿LM 베이스/익스프레시브의 2가지 모델 제공
+
 ## 2024.10.20 (일)
 **[네이버, 언어 모델 기술력 세계 학회 인정](https://www.ebn.co.kr/news/articleView.html?idxno=1640522)** ```AI``` ```Natural Language Processing``` ```Large Language Model``` ```Generative AI``` ```Naver AI```
 
