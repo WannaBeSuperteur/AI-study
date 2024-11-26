@@ -1,3 +1,12 @@
+## 2024.11.26 (화)
+**[OpenAI, 한국어 특화 LLM 개발하나](https://n.news.naver.com/mnews/article/001/0015068376?sid=105)** ```AI``` ```OpenAI``` ```Large Language Model```
+
+* ChatGPT를 개발한 OpenAI가 한국어 특화 LLM을 개발하여, **기존 국내 생성형 AI 기업들과의 경쟁** 가능성이 있다.
+  * 주된 근거는 **OpenAI와 한국산업은행이 AI 생태계 발전을 위한 업무협약 (MOU) 을 체결** 했다는 점이다.
+* OpenAI가 국내 기업과 협업하여 한국어 맥락을 이해하는 **한국어 특화 LLM** 을 개발하는 경우, 그 영향은 다음과 같다.
+  * 네이버, 카카오의 생성형 AI 모델 (네이버 하이퍼클로바, 카카오 카나나) 마저 충족시키지 못하는, 한국어 특화 언어 모델로서의 시장 기대 충족
+    * 이러한 한국어 특화 언어 모델을 일명 '소버린 AI' (Sovereign AI) 라고 함 
+
 ## 2024.11.21 (목)
 **[삼성전자, 자체 생성형 AI '가우스2' 공개](https://n.news.naver.com/mnews/article/022/0003987764?sid=105)** ```AI``` ```Generative AI``` ```Samsung AI```
 
