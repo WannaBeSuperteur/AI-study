@@ -1,3 +1,12 @@
+## 2025.01.21 (화)
+**[OpenAI, o3-mini 개발 완료](https://n.news.naver.com/mnews/article/421/0008031358?sid=105)** ```AI``` ```OpenAI``` ```ChatGPT```
+
+* OpenAI가 추론에 특화된 AI 모델인 o3의 mini 버전인 **o3-mini의 개발을 완료했으며, ChatGPT에 2주 이내로 출시** 한다고 밝혔다.
+  * o3-mini의 성능 수준은 o1-pro에 비해 떨어지지만, 실행 속도는 더 빠르다.
+  * 현재로서는 o3-mini는 월 200달러의 ChatGPT Pro 사용자는 물론 월 20달러의 ChatGPT Plus 사용자 역시 사용 가능할 것으로 설명했다.
+* 이 소식은 2025.01.18일 (현지시각) 샘 올트먼 OpenAI CEO의 X(트위터) 에 발표되었다. 
+* 한편, **GPT 시리즈 및 o 시리즈의 통합** 에 대해서는 2025년 내로 합칠 수 있으면 좋겠다는 정도라고 밝혔다.  
+
 ## 2025.01.20 (월)
 **[영상 언어 액션 모델 (VLA)](https://n.news.naver.com/mnews/article/001/0015166525?sid=105)** ```AI``` ```Generative AI``` ```Large Language Model```
 
