@@ -1,3 +1,22 @@
+## 2025.01.22 (수)
+**[딥시크, 'R1' 오픈소스 모델 공개, 'o1' 수준 성능](https://www.aitimes.com/news/articleView.html?idxno=167328)** ```AI``` ```Large Language Model```
+
+* 세계 최고의 오픈소스 모델로 불리는 'V3' 모델을 출시한 **딥시크 (deepseek) 에서 OpenAI의 o1 수준에 필적하는 성능의 추론 특화 거대 언어 모델 (LLM) 인 'R1' 모델 시리즈** 를 공개했다.
+  * 오픈소스 모델이며, o1 모델과 전반적으로 비슷한 성능이면서도 **실행 속도가 o1 모델보다 빠르다** 는 것이 장점이다.
+* R1 시리즈로 공개된 추론 모델은 **R1, R1-zero, R1-Distill** 의 3가지이다.
+
+|모델|파라미터 개수|설명|
+|---|---|---|
+|R1, R1-zero|6710억 개|- deepseek-v3 을 미세 조정 (fine tuning) 한 모델<br>- 추론 시 전문가 네트워크 여러 개를 사용하는 방식인 **전문가 혼합 (MoE, Mixture-of-Experts)** 아키텍처 사용|
+|R1-Distill||성능은 비교적 낮지만, 하드웨어 효율성이 비교적 높음|
+
+* R1 시리즈의 특징은 다음과 같다.
+  * 전문가 혼합 구조를 통해 **전체 파라미터의 약 5%인 약 340억 개만 활성화** 하고, 이를 통해 추론 비용 및 메모리 사용량을 줄인다.
+  * 추론 특화 LLM에서 사용하는 방식인 강화학습 (RL) 및 미세 조정 (SFT) 중 **SFT 없이도 복잡한 작업을 여러 개로 분해** 할 수 있다.
+* 외부 링크
+  * R1 시리즈의 모델 가중치 및 코드 다운로드 ([HuggingFace](https://huggingface.co/deepseek-ai/DeepSeek-R1))
+  * R1 모델 테스트 링크 ([채팅 플랫폼](https://chat.deepseek.com/sign_in))
+
 ## 2025.01.21 (화)
 **[OpenAI, o3-mini 개발 완료](https://n.news.naver.com/mnews/article/421/0008031358?sid=105)** ```AI``` ```OpenAI``` ```ChatGPT```
 
