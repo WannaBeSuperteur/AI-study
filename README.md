@@ -14,6 +14,10 @@
 * **2025.02.27 ~ 2025.03.12 (예정) : 🔍 비전 이상탐지 필요성 탐구**
   * Vision 분야에서, normal/abnormal 의 Classification (분류) 을 할 수 있는데 **왜 굳이 Anomaly Detection (이상 탐지) 계열의 모델이 필요할까?**
   * 위 질문에 대한 명쾌한 답을 얻기 위해 집중 탐구
+  * [ChatGPT에 질문한 결과](https://chatgpt.com/share/67974281-7fb8-8010-9a1a-4b56c060e71b) 다음과 같은 답을 얻었지만, 상세한 이유에 대한 추가 탐구 필요
+    * abnormal 데이터의 희소성 관련 문제 (데이터 불균형 등)
+    * 다양하고 새로운 abnormal data 의 존재 가능성
+    * 기타 (라벨링 비용 및 환경 문제)
 
 * **2025.03.13 ~ 2025.06.12 (예정) : ⚙ ML-ops 프로젝트**
   * **SPECIAL PROJECT I : ML-ops 프로젝트 개발**
