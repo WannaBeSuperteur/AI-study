@@ -12,7 +12,7 @@ ChatGPT, 생성형 AI를 비롯한 최신 AI 트렌드를 학습하는 공간
 ## 주요 트렌드
 날짜는 **해당 기사를 트렌드로 정리한** 날을 기준으로 함.
 
-* [✒ 1. 거대 언어 모델 (LLM) / 생성형 AI](https://github.com/WannaBeSuperteur/AI-study/edit/main/AI%20Trend/README.md#-1-%EA%B1%B0%EB%8C%80-%EC%96%B8%EC%96%B4-%EB%AA%A8%EB%8D%B8-llm--%EC%83%9D%EC%84%B1%ED%98%95-ai)
+* [✒ 1. 거대 언어 모델 (LLM) / 생성형 AI](https://github.com/WannaBeSuperteur/AI-study/tree/main/AI%20Trend#-1-%EA%B1%B0%EB%8C%80-%EC%96%B8%EC%96%B4-%EB%AA%A8%EB%8D%B8-llm--%EC%83%9D%EC%84%B1%ED%98%95-ai)
   * GPT-4o 등 거대 언어 모델 및 관련 서비스의 신규 출시 및 업데이트 소식
 * [🤖 2. 행동형 AI / 물리 AI / AI 에이전트](https://github.com/WannaBeSuperteur/AI-study/tree/main/AI%20Trend#-2-%ED%96%89%EB%8F%99%ED%98%95-ai--%EB%AC%BC%EB%A6%AC-ai--ai-%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8)
   * 사용자 개입 없이도 알아서 잘 딱 깔끔하고 센스있게 행동하는 **AI 에이전트**
