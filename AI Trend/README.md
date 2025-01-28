@@ -76,6 +76,7 @@ ChatGPT, 생성형 AI를 비롯한 최신 AI 트렌드를 학습하는 공간
 
 |날짜|이벤트|
 |---|---|
+|2025.01.28|[딥시크, 이미지 생성 모델 '야누스' 공개](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Trend/AI_Trend_Jan_2025.md#20250128-%ED%99%94)|
 |2025.01.22<br>2025.01.27|[딥시크, R1 모델 공개](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Trend/AI_Trend_Jan_2025.md#20250122-%EC%88%98)<br>[딥시크 AI 모델, ChatGPT 넘었다](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Trend/AI_Trend_Jan_2025.md#20250127-%EC%9B%94)|
 
 * 기타

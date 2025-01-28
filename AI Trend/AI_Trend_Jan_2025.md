@@ -1,8 +1,17 @@
+## 2025.01.28 (화)
+**[딥시크, 이미지 생성 모델 '야누스' 공개](https://www.techm.kr/news/articleView.html?idxno=135000)** ```AI``` ```Generative AI``` ```DeepSeek```
+
+* 거대 언어 모델 V3, R1을 개발하여 최근 큰 파장을 일으키고 있는 딥시크에서 2025.01.27일 (현지시각) **이미지 생성 모델인 '야누스 프로'를 공개** 했다.
+  * 해당 모델의 성능은 OpenAI의 DALL-E 시리즈 모델 중 하나인 **DALL-E3 보다 우수한 수준** 이라고 한다.
+* 기술 보고서에 따르면, 야누스 프로 모델은 7200만 개의 고품질 합성 이미지를 추가로 이용했다고 한다.
+* 외부 링크
+  * [Janus Pro 공식 웹사이트](https://januspro.org/)
+
 ## 2025.01.27 (월)
 **[딥시크 AI 모델, ChatGPT 넘었다](https://n.news.naver.com/mnews/article/018/0005932788?sid=101)** ```AI``` ```Large Language Model``` ```DeepSeek```
 
 * 딥시크에서 개발한 거대 언어 모델 (LLM) 이 성능 및 효율성 측면은 물론 **무료 앱 순위에서마저 ChatGPT를 넘어서고 1위를 기록** 했다.
-  * 성능 및 효율성 측면에서는 DeepSeek-V3 모델이 OpenAI의 o1 모델과 비슷한 성능이지만 효율성은 더 높다.
+  * 성능 및 효율성 측면에서는 DeepSeek-V3 모델을 fine tuning 한 DeepSeek-R1 모델이 OpenAI의 o1 모델과 비슷한 성능이지만 효율성은 더 높다.
 * DeepSeek의 앱이 단기간에 무료 앱 순위 1위를 달성한 이유는 **DeepSeek-V3 모델의 출시** 때문이다.
   * 출시 이후 미국에서 인기가 급증하고 있다.
 * 한편, DeepSeek-V3 모델의 개발에는 약 558만 달러 (80억 원) 의 비교적 적은 비용이 투자되었다.
