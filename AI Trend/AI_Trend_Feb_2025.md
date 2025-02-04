@@ -1,3 +1,15 @@
+## 2025.02.04 (화)
+**[OpenAI, o3-mini 모델 공개](https://n.news.naver.com/mnews/article/015/0005088513?sid=101)** ```AI``` ```OpenAI``` ```Large Language Model```
+
+* OpenAI가 최근 'o3-mini' 모델을 공개했다.
+  * o1 모델의 후속작에 해당하는 o3-mini 모델에는 **강화학습 및 TTC (Test Time Computing)** 기술이 적용되었다.
+  * 딥시크 공개 당시 o1 모델의 아쉬운 점이었던 **사고 과정을 표시하지 않는다** 는 것을 o3-mini에서 보완했다. 
+* o3-mini 모델의 성능 수준은 다음과 같다.
+  * **o1 모델 이상의 성능** 수준 발휘
+  * 환각 현상 (Hallucination) 의 발생 확률 감소
+  * **속도 측면은 크게 개선** 되었으며, DeepSeek-R1 모델에 비해서도 개선됨 
+* o3-mini 모델의 토큰 당 비용은 딥시크와 유사한 **o1-mini 모델의 1/3 수준** 이다.
+
 ## 2025.02.03 (월)
 **[샘 올트먼 방한, 카카오와 협업 발표](https://n.news.naver.com/mnews/article/001/0015189416?sid=105)** ```AI``` ```OpenAI```
 
