@@ -1,8 +1,8 @@
 ## 목차
-* 1. [EDA란?](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA.md#L7)
-* 2. [EDA의 목적](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA.md#L10)
-* 3. [EDA의 방법](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA.md#L14)
-* 4. [실제 EDA 예시](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA.md#L23)
+* 1. [EDA란?](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA.md#1-eda란)
+* 2. [EDA의 목적](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA.md#2-eda의-목적)
+* 3. [EDA의 방법](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA.md#3-eda의-방법)
+* 4. [실제 EDA 예시](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA.md#4-실제-EDA-예시)
 
 ## 1. EDA란?
 **EDA (탐색적 데이터 분석, Exploratory Data Analysis)** 는 데이터를 이용하여 본격적으로 모델링을 시작하기 전에, 데이터를 **직관적으로 파악**하기 위한 과정을 말한다.
