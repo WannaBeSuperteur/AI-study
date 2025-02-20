@@ -1,18 +1,17 @@
 ## 목차
-1. EDA란?
+* 1. [EDA란?](https://github.com/WannaBeSuperteur/AI-study/blob/6b66993806f31a4dd807afc0984dd9af9732af41/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA.md#L7)
+* 2. [EDA의 목적](https://github.com/WannaBeSuperteur/AI-study/blob/6b66993806f31a4dd807afc0984dd9af9732af41/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA.md#L10)
+* 3. [EDA의 방법](https://github.com/WannaBeSuperteur/AI-study/blob/6b66993806f31a4dd807afc0984dd9af9732af41/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA.md#L14)
+* 4. [실제 EDA 예시](https://github.com/WannaBeSuperteur/AI-study/blob/6b66993806f31a4dd807afc0984dd9af9732af41/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA.md#L23)
 
-2. EDA의 목적
-
-3. EDA의 방법
-
-## EDA란?
+## 1. EDA란?
 **EDA (탐색적 데이터 분석, Exploratory Data Analysis)** 는 데이터를 이용하여 본격적으로 모델링을 시작하기 전에, 데이터를 **직관적으로 파악**하기 위한 과정을 말한다.
 
-## EDA의 목적
+## 2. EDA의 목적
 * 데이터의 전반적인 값의 분포를 찾아내고, 이에 따른 이상치 (outlier) 등을 찾아낸다.
 * 데이터에 있는 여러 feature 중 필요한 feature들과 불필요한 feature들을 찾아내서, 필요한 feature들을 이후에 집중적으로 분석한다.
 
-## EDA의 방법
+## 3. EDA의 방법
 * 각 변수 간의 상관계수를 이용하여 상관관계 (correlation) 를 파악한다.
   * 이를 통해, target 변수를 포함한 다른 모든 변수와 상관관계가 매우 낮은 (상관계수가 0에 가까운) 변수는 무의미한 변수에 가깝다고 할 수 있다.
   * 변수들 간 상관관계가 존재하는 다중공선성 (multicollinearity) 을 추가로 파악해야 할 수 있다.
@@ -20,3 +19,12 @@
 * 각 변수의 분포를 확인한다.
   * 각 변수별로 상자 수염 그림 (box and whisker plot) 을 이용하여, 값의 분포 및 outlier 등을 분석할 수 있다.
 * K-means clustering과 같은 머신러닝 알고리즘을 이용하여 outlier를 찾는다.
+
+## 4. 실제 EDA 예시
+일반적으로 다음과 같은 것들을 EDA의 대상으로 삼는다.
+* 단일 feature 에 대해, 그 값의 분포
+  * Numeric, Categorical, ...
+  * 해당 문서 참고. 
+* feature 간의 상관관계
+  * Numeric features, Categorical features, Numerical vs. Categorical, ...
+  * 해당 문서 참고. 
