@@ -31,4 +31,9 @@
   * [해당 문서](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA_feature_상관관계.md) 참고. 
 
 ## 5. 라이브러리 선택 (Matplotlib vs. Seaborn vs. Plotly)
-작성중
+* 결론 : **Plotly (1순위) > Seaborn (2순위) > Matplotlib (3순위)**
+  * 결과물 (그래프 등) 의 디자인이 Plotly가 다른 라이브러리에 비해 깔끔함
+  * Plotly는 다른 라이브러리에 없는 다음과 같은 특징 존재
+    * 마우스를 hover 하면 자동으로 값 표시 (실무적으로, 보고서 작성 시 정확한 값을 알아야 할 때 중요)
+  * Seaborn은 **KDE (Kernel Density Estimation)** 그래프를 표시할 수 있다는 장점이 있으므로, 경우에 따라 Plotly와 병행 사용 추천
+* 상세 근거는 "4. 실제 EDA 예시" 에 링크된 문서 참고
