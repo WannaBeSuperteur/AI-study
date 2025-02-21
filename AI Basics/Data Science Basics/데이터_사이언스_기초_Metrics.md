@@ -8,8 +8,9 @@
   * [2-1. IoU](#2-1-iou)
   * [2-2. DICE Score](#2-2-dice-score)
   * [2-3. 특이도 (Sensitivity)](#2-3-특이도-sensitivity)
-  * [2-4. 2-4. F1 Score, IOU, DICE의 관계](#2-4-f1-score-iou-dice의-관계)
-* [3. Type 1 Error, Type 2 Error](#3-type-1-error-type-2-error)
+  * [2-4. F1 Score, IOU, DICE의 관계](#2-4-f1-score-iou-dice의-관계)
+* [3. Confusion Matrix](#3-confusion-matrix)
+* [4. Type 1 Error, Type 2 Error](#4-type-1-error-type-2-error)
 
 ## 1. 기본 Metric
 ### 1-1. True Positive, True Negative, False Positive, False Negative
@@ -109,8 +110,8 @@ F1 Score, IOU, DICE Score 간에는 다음 관계가 성립한다. **(단, 계�
 **증명: F1 Score = DICE Score**
 * (F1 Score) = 2 * Precision * Recall / (Precision + Recall)
 * = 2 * {TP / (TP + FP) * TP / (TP + FN)} / (TP / (TP + FP) + TP / (TP + FN))
-* = 2 * (TP * TP) / (TP * (TP + FN) + TP * (TP + FP)) **... (양변에 (TP + FP)(TP + FN) 을 곱함)**
-* = 2 * TP / (2 * TP + FN + FP) **... (양변을 TP 로 나눔)**
+* = 2 * (TP * TP) / (TP * (TP + FN) + TP * (TP + FP)) **... (분자와 분모에 각각 (TP + FP)(TP + FN) 을 곱함)**
+* = 2 * TP / (2 * TP + FN + FP) **... (분자와 분모를 각각 TP 로 나눔)**
 * = 2 * TP / (2 * TP + FP + FN)
 * = (DICE Score)
 
@@ -122,7 +123,24 @@ F1 Score, IOU, DICE Score 간에는 다음 관계가 성립한다. **(단, 계�
 * = a / (a + 2b) 
 * 따라서, IOU = a / (a + 2b) 가 성립한다.
 
-## 3. Type 1 Error, Type 2 Error
+## 3. Confusion Matrix
+**Confusion Matrix** 란, TP, TN, FP, FN의 개수 및 Recall, Precision 등의 성능 Metric 계산값을 직관적으로 보여주기 위한 표로, 일반적으로 다음과 같은 형식을 띈다.
+
+|            | 실제 값 = True    | 실제 값 = False | Preicsion     |
+|------------|----------------|--------------|---------------|
+| 예측 = True  | TP             | FP           | TP / (TP + FP) |
+| 예측 = False | FN             | TN           |               |
+| Recall     | TP / (TP + FN) |              | (Accuracy)    |        
+
+예를 들어, "1-4. 탐구 (어떤 metric이 좋을까?)" 에 있는 표를 이 형식으로 정리하면 다음과 같다.
+
+|            | 실제 값 = True | 실제 값 = False | Preicsion |
+|------------|-------------|--------------|-----------|
+| 예측 = True  | **50**      | 5            | 90.9%     |
+| 예측 = False | 45          | **900**      |           |
+| Recall     | 52.6%       |              | 95.0%     |
+
+## 4. Type 1 Error, Type 2 Error
 * Type 1 Error (1종 오류) : False Negative에 의한 오류
 * Type 2 Error (2종 오류) : False Positive에 의한 오류
 
