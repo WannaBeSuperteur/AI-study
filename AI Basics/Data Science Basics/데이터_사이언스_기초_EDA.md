@@ -1,8 +1,9 @@
 ## 목차
-* 1. [EDA란?](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA.md#1-eda란)
-* 2. [EDA의 목적](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA.md#2-eda의-목적)
-* 3. [EDA의 방법](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA.md#3-eda의-방법)
-* 4. [실제 EDA 예시](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA.md#4-실제-EDA-예시)
+* [1. EDA란?](#1-eda란)
+* [2. EDA의 목적](#2-eda의-목적)
+* [3. EDA의 방법](#3-eda의-방법)
+* [4. 실제 EDA 예시](#4-실제-eda-예시)
+* [5. 라이브러리 선택 (Matplotlib vs. Seaborn vs. Plotly)](#5-라이브러리-선택-matplotlib-vs-seaborn-vs-plotly)
 
 ## 1. EDA란?
 **EDA (탐색적 데이터 분석, Exploratory Data Analysis)** 는 데이터를 이용하여 본격적으로 모델링을 시작하기 전에, 데이터를 **직관적으로 파악**하기 위한 과정을 말한다.
@@ -24,7 +25,10 @@
 일반적으로 다음과 같은 것들을 EDA의 대상으로 삼는다.
 * 단일 feature 에 대해, 그 값의 분포
   * Numeric, Categorical, ...
-  * 해당 문서 참고. 
+  * [해당 문서](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA_단일_feature_분포.md) 참고. 
 * feature 간의 상관관계
   * Numeric features, Categorical features, Numerical vs. Categorical, ...
-  * 해당 문서 참고. 
+  * [해당 문서](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA_feature_상관관계.md) 참고. 
+
+## 5. 라이브러리 선택 (Matplotlib vs. Seaborn vs. Plotly)
+작성중
