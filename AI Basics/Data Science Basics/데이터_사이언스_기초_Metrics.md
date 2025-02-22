@@ -11,8 +11,11 @@
   * [2-2. DICE Score](#2-2-dice-score)
   * [2-3. 특이도 (Sensitivity)](#2-3-특이도-sensitivity)
   * [2-4. F1 Score, IOU, DICE의 관계](#2-4-f1-score-iou-dice의-관계)
-* [3. Confusion Matrix](#3-confusion-matrix)
-* [4. Type 1 Error, Type 2 Error](#4-type-1-error-type-2-error)
+* [3. Curve를 이용한 지표](#3-curve를-이용한-지표)
+  * [3-1. Area Under Precision-Recall Curve (PR-AUC)](#3-1-area-under-precision-recall-curve-pr-auc)
+  * [3-2. Area Under ROC Curve (ROC-AUC)](#3-2-area-under-roc-curve-roc-auc)
+* [4. Confusion Matrix](#4-confusion-matrix)
+* [5. Type 1 Error, Type 2 Error](#5-type-1-error-type-2-error)
 
 ## 1. 기본 Metric
 ### 1-1. True Positive, True Negative, False Positive, False Negative
@@ -125,7 +128,14 @@ F1 Score, IOU, DICE Score 간에는 다음 관계가 성립한다. **(단, 계�
 * = a / (a + 2b) 
 * 따라서, IOU = a / (a + 2b) 가 성립한다.
 
-## 3. Confusion Matrix
+## 3. Curve를 이용한 지표
+### 3-1. Area Under Precision-Recall Curve (PR-AUC)
+작성중
+
+### 3-2. Area Under ROC Curve (ROC-AUC)
+작성중
+
+## 4. Confusion Matrix
 **Confusion Matrix** 란, TP, TN, FP, FN의 개수 및 Recall, Precision 등의 성능 Metric 계산값을 직관적으로 보여주기 위한 표로, 일반적으로 다음과 같은 형식을 띈다.
 
 |            | 실제 값 = True    | 실제 값 = False | Preicsion     |
@@ -149,7 +159,7 @@ F1 Score, IOU, DICE Score 간에는 다음 관계가 성립한다. **(단, 계�
   * (전체 오답의 개수) = (주대각선 외의 성분의 총합)
   * (Accuracy) = (주대각선 성분의 총합) / (모든 성분의 총합)
 
-## 4. Type 1 Error, Type 2 Error
+## 5. Type 1 Error, Type 2 Error
 * Type 1 Error (1종 오류) : False Negative에 의한 오류
 * Type 2 Error (2종 오류) : False Positive에 의한 오류
 
