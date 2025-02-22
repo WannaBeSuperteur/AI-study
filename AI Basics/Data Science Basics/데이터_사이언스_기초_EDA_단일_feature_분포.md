@@ -236,7 +236,7 @@ fig.show()
   * 결과물 (그래프 등) 의 디자인
   * 코드의 간결성
   * 마우스를 hover 하면 자동으로 값 표시 (실무적으로, 보고서 작성 시 정확한 값을 알아야 할 때 중요)
-* 단, **KDE (Kernel Density Estimation)** 그래프를 표시하기 위해 **Seaborn을 병행** 사용하는 것도 좋은 대안임
+* 단, [KDE (Kernel Density Estimation)](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_KDE.md) 그래프를 표시하기 위해 **Seaborn을 병행** 사용하는 것도 좋은 대안임
 
 ### 4-2. Numerical Feature 분포 파악에 사용할 라이브러리 선택
 
