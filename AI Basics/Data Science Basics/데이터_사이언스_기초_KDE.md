@@ -61,7 +61,7 @@
   * bin이 많은 경우 (1개의 bin의 크기가 작은 경우) 이 불연속성이 커짐
 * bin의 시작 위치에 따라서 히스토그램이 달라지므로, 히스토그램은 기준점에 따라 일관적인 결과를 보여주지 못함
   * 커널 밀도 추정의 경우, data point의 값 자체를 기준으로 하므로 항상 일관적인 결과를 보여줄 수 있음 
-* 2차원이 아닌 고차원 데이터에서는 메모리 문제 발생 가능
+* 2차원이 아닌 고차원 데이터에서는 [계산량 및 메모리 문제 (차원의 저주)](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_차원의_저주.md) 발생 가능
 
 ![image](images/KDE_7.PNG)
 

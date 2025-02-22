@@ -1,4 +1,6 @@
 ## 목차
+상위 문서 : [EDA의 개념](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA.md)
+
 * [1. 파악해야 하는 분포](#1-파악해야-하는-분포)
 * [2. Numerical Feature 분포 파악](#2-Numerical-Feature-분포-파악)
   * [2-1. Feature 값의 분포 파악](#2-1-feature-값의-분포-파악)

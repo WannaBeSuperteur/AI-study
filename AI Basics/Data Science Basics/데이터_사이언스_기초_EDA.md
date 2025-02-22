@@ -25,10 +25,10 @@
 일반적으로 다음과 같은 것들을 EDA의 대상으로 삼는다.
 * 단일 feature 에 대해, 그 값의 분포
   * Numeric, Categorical, ...
-  * [해당 문서](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA_단일_feature_분포.md) 참고. 
+  * 방법론 및 코딩 예제는 [해당 문서](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA_단일_feature_분포.md) 참고.
 * feature 간의 상관관계
   * Numeric features, Categorical features, Numerical vs. Categorical, ...
-  * [해당 문서](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA_feature_상관관계.md) 참고. 
+  * 방법론 및 코딩 예제는 [해당 문서](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA_feature_상관관계.md) 참고. 
 
 ## 5. 라이브러리 선택 (Matplotlib vs. Seaborn vs. Plotly)
 * 결론 : **Plotly (1순위) > Seaborn (2순위) > Matplotlib (3순위)**
@@ -37,3 +37,6 @@
     * 마우스를 hover 하면 자동으로 값 표시 (실무적으로, 보고서 작성 시 정확한 값을 알아야 할 때 중요)
   * Seaborn은 **KDE (Kernel Density Estimation)** 그래프를 표시할 수 있다는 장점이 있으므로, 경우에 따라 Plotly와 병행 사용 추천
 * 상세 근거는 "4. 실제 EDA 예시" 에 링크된 각 문서의 **하단에 있는 "탐구" 문단** 참고
+* 총 8가지의 EDA 방법에 대해 각 라이브러리 적용 결과를 비교 분석하여 도출
+  * 단일 Feature 분포 : 3가지 / [해당 문서](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA_단일_feature_분포.md) 참고
+  * Feature 간의 상관관계 : 5가지 / [해당 문서](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA_feature_상관관계.md) 참고

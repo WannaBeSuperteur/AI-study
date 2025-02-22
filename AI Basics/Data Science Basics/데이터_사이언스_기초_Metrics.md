@@ -1,4 +1,6 @@
 ## 목차
+여기서는 Class가 Positive / Negative의 2가지인 경우에 대해 다룬다. Class가 3가지 이상일 때에 대해서는 [해당 문서](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_Metrics_MultiClass.md) 참고.
+
 * [1. 기본 Metric](#1-기본-metric)
   * [1-1. True Positive, True Negative, False Positive, False Negative](#1-1-true-positive-true-negative-false-positive-false-negative)
   * [1-2. Accuracy, Recall, Precision](#1-2-accuracy-recall-precision)
@@ -46,7 +48,7 @@ Recall은 **False Negative**, Precision은 **False Positive**인 것을 고려�
 
 ### 1-4. 탐구 (어떤 metric이 좋을까?)
 각 metric이 적절한 경우는 다음과 같다.
-* **Accuracy (정확도)** : Data imbalance가 충분히 작을 때 사용
+* **Accuracy (정확도)** : [Data imbalance](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_데이터_불균형.md)가 충분히 작을 때 사용
   * 예를 들어 Positive 가 90%, Negative 가 10%인 경우, 모든 데이터를 Positive 로 예측하는 모델은 실질적인 의미가 없지만 **정확도가 무려 90%** 에 달함
   * TP >> TN 일 때, 단순히 Positive와 Negative인 class를 서로 바꾸기만 해도 TP의 개수가 급감하여 Accuracy가 급감함
 
@@ -139,6 +141,13 @@ F1 Score, IOU, DICE Score 간에는 다음 관계가 성립한다. **(단, 계�
 | 예측 = True  | **50**      | 5            | 90.9%     |
 | 예측 = False | 45          | **900**      |           |
 | Recall     | 52.6%       |              | 95.0%     |
+
+* Confusion Matrix의 기본 성질
+  * 실제 값과 예측 값이 일치하는 성분, 즉 **주대각선 위의 성분**은 정답의 개수를 나타낸다.
+  * **주대각선 외의 성분**은 오답의 개수를 나타낸다.
+  * (전체 정답의 개수) = (주대각선 성분의 총합)
+  * (전체 오답의 개수) = (주대각선 외의 성분의 총합)
+  * (Accuracy) = (주대각선 성분의 총합) / (모든 성분의 총합)
 
 ## 4. Type 1 Error, Type 2 Error
 * Type 1 Error (1종 오류) : False Negative에 의한 오류

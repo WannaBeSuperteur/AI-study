@@ -1,4 +1,6 @@
 ## 목차
+상위 문서 : [EDA의 개념](https://github.com/WannaBeSuperteur/AI-study/blob/main/AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_EDA.md)
+
 * [1. 파악해야 하는 상관관계의 유형](#1-파악해야-하는-상관관계의-유형)
 * [2. Numerical과 Numerical의 상관관계](#2-numerical과-numerical의-상관관계)
   * [2-1. 전체 Numerical Feature 의 상관계수 (Correlation) 분석 차트](#2-1-전체-numerical-feature-의-상관계수-correlation-분석-차트)
