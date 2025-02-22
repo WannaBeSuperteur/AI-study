@@ -14,6 +14,7 @@
 * [3. Curve를 이용한 지표](#3-curve를-이용한-지표)
   * [3-1. Area Under Precision-Recall Curve (PR-AUC)](#3-1-area-under-precision-recall-curve-pr-auc)
   * [3-2. Area Under ROC Curve (ROC-AUC)](#3-2-area-under-roc-curve-roc-auc)
+  * [3-3. PR-AUC, ROC-AUC 를 왜 사용하는가?](#3-3-pr-auc-roc-auc-를-왜-사용하는가)
 * [4. Confusion Matrix](#4-confusion-matrix)
 * [5. Type 1 Error, Type 2 Error](#5-type-1-error-type-2-error)
 
@@ -129,10 +130,55 @@ F1 Score, IOU, DICE Score 간에는 다음 관계가 성립한다. **(단, 계�
 * 따라서, IOU = a / (a + 2b) 가 성립한다.
 
 ## 3. Curve를 이용한 지표
+* Recall, Precision, FP rate 등 성능지표들을 좌표로 한 점을 연결하면 곡선이 된다. 이 곡선 아래의 넓이를 통해 모델의 성능을 평가하는 방법들이다.
+
+| 성능지표                                       | 개념                                                                      |
+|--------------------------------------------|-------------------------------------------------------------------------|
+| Area Under Precision-Recall Curve (PR-AUC) | **(Recall, Precision)** 을 좌표평면에 찍은 점들을 연결한 곡선 아래의 넓이                    |
+| Area Under ROC Curve (ROC-AUC)             | **(FP rate, TP rate) = (FP rate, Recall)** 를 좌표평면에 찍은 점들을 연결한 곡선 아래의 넓이 |
+
 ### 3-1. Area Under Precision-Recall Curve (PR-AUC)
-작성중
+**Area Under Precision-Recall Curve (PR-AUC, AU-PRC)** 는 x축을 recall, y축을 precision으로 했을 때, 이 측정값들을 연결한 그래프의 아래쪽 면적이다.
+* 0~1의 값을 가지며, 1에 가까울수록 성능이 좋은 것이다.
+
+PR-AUC의 기반이 되는 아이디어는 다음과 같다.
+* Precision, Recall 모두 0~1의 값을 가지며, **1에 가까울수록 성능이 좋다.**
+* 동일한 데이터셋, 동일한 모델에서 일반적으로 **Precision이 커질수록 Recall은 작아진다.** 
+  * 동일한 데이터셋, 동일한 모델에서 **False Positive가 늘어날수록 False Negative가 줄어들기** 때문이다.
+  * 특정 데이터를 Positive로 분류하기 위한 '기준점'이 높아질수록 False Positive의 비율이 줄어들고, False Negative의 비율이 늘어난다.
+
+예를 들어 다음과 같다.
+
+![image](images/Metrics_1.PNG)
+
+| 기준점                 | TP      | TN      | FP      | FN      | Recall    | Precision | Point              |
+|---------------------|---------|---------|---------|---------|-----------|-----------|--------------------|
+| **모두 Positive로 예측** | **500** | **0**   | **500** | **0**   | **1.000** | **0.500** | **(1.000, 0.500)** |
+| A                   | 490     | 250     | 250     | 10      | 0.980     | 0.662     | (0.980, 0.662)     |
+| B                   | 475     | 400     | 100     | 25      | 0.950     | 0.826     | (0.950, 0.826)     |
+| C                   | 450     | 450     | 50      | 50      | 0.900     | 0.900     | (0.900, 0.900)     |
+| D                   | 400     | 475     | 25      | 100     | 0.800     | 0.941     | (0.800, 0.941)     |
+| E                   | 250     | 490     | 10      | 250     | 0.500     | 0.962     | (0.500, 0.962)     |
+| **모두 Negative로 예측** | **0**   | **500** | **0**   | **500** | **0.000** | **1.000** | **(0.000, 1.000)** |
+
+따라서, Precision-Recall Curve는 (0, 1) 을 지나지만, 직관과는 다르게 **(1, 0) 을 지나지 않고, (1, (실제 Positive data의 비율)) 을 지남** 을 알 수 있다.
 
 ### 3-2. Area Under ROC Curve (ROC-AUC)
+**Area Under ROC Curve (ROC-AUC)** 는 x축을 FP rate (False Positive Rate), y축을 TP rate (True Positive Rate) 라고 할 때, 이 측정값들을 연결한 곡선의 아래쪽의 넓이이다.
+* 0~1의 값을 가지며, 1에 가까울수록 성능이 좋은 것이다.
+* TP rate = TP / (TP + FN) = Recall
+* FP rate = FP / (FP + TN)
+
+ROC-AUC의 기반이 되는 아이디어는 다음과 같다.
+* 모델의 정확도가 높을수록, 0에 가까운 낮은 FP rate로도 1에 가까운 높은 TP rate가 나올 수 있다.
+  * ROC-AUC의 값이 1이면 해당 모델의 ROC curve는 (0, 1) 을 지난다.
+    * 즉, FP rate = 0 일 때 TP rate = 1 이 된다.
+* 동일한 데이터셋, 동일한 모델에서 일반적으로 **TP rate (=Recall) 가 커질수록 FP rate도 커진다.** 
+  * 특정 데이터를 Positive로 분류하기 위한 '기준점'이 낮을수록, 즉 **Positive가 많을수록, TP rate와 FP rate가 함께 커지기 때문** 이다.
+
+작성중
+
+### 3-3. PR-AUC, ROC-AUC 를 왜 사용하는가?
 작성중
 
 ## 4. Confusion Matrix
