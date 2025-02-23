@@ -13,7 +13,8 @@
   * [4-2. 실험 결과 분석](#4-2-실험-결과-분석)
 
 ## 코드
-작성중
+* [Linear vs. Logistic Regression 비교 실험](#4-탐구-어떤-regression이-적절할까) 의 Dataset A : [code (ipynb)](codes/Regression_example_Dataset_A.ipynb)
+* [Linear vs. Logistic Regression 비교 실험](#4-탐구-어떤-regression이-적절할까) 의 Dataset B : [code (ipynb)](codes/Regression_example_Dataset_B.ipynb)
 
 ## 1. Regression
 **Regression (회귀)** 는 **여러 개의 독립 변수와 1개의 종속 변수 사이의 관계를 함수의 형태로 모델링** 하는 기법이다.
@@ -175,14 +176,22 @@ Log Loss의 수식은 다음과 같다.
 | Linear Regression   | - 하나의 직선 형태에 가까운 분포를 이루는 데이터<br>- 연속되는 숫자 값 형태의 데이터                          |
 | Logistic Regression | - 출력값이 binary value (0 또는 1) 또는 확률값인 경우<br>- 이진 분류 문제를 Regression으로 해결하려는 경우 |
 
+* Linear Regression으로 예측한 값이 0.5 이상인지의 여부로 binary value를 예측할 수 있지만, 다음과 같은 문제점이 있다.
+  * Regression 결과가 기울기가 있는 직선이므로, x 값이 매우 크거나 작으면 y < 0 또는 y > 1 이 되어 범위를 벗어남
+  * 직관적으로 보기에도 0과 1로 구분되는 출력값을 모델링하는 것은 직선인 Linear Regression 보다는 곡선인 Logistic Regression 이 더 가까움
+
 ### 4-1. 실험 (예시 데이터셋)
 * 실험 목적
-  * 독립변수들과 하나의 종속변수의 관계가 선형에 가까운 데이터셋에서는 Linear Regression 의 성능이 더 좋음을 확인한다.
+  * 독립변수들과 하나의 종속변수의 관계가 선형에 가까운 데이터셋에서 Linear Regression 의 동작을 확인한다.
   * 종속 변수의 값이 0 또는 1인 데이터셋에서는 Logistic Regression 의 성능이 더 좋음을 확인한다.
+
 * 실험 설계
   * 데이터셋 A : 독립 변수 2개와 종속 변수의 관계가 선형에 가까움
   * 데이터셋 B : 독립 변수 2개에 대해 종속 변수의 값이 0 또는 1임
+
 * 적용할 Regression
+  * 데이터셋 A 는 Linear Regression 만 테스트하는 이유
+    * 데이터셋 A 는 종속 변수가 0~1 범위 외를 포함한 연속된 숫자 값이므로, 0 또는 1로만 예측하는 것은 적합하지 않음
 
 | 데이터셋 \ Regression                       | Linear | Logistic |
 |-----------------------------------------|--------|----------|
@@ -201,3 +210,45 @@ Log Loss의 수식은 다음과 같다.
 ![image](images/Linear_Logistic_Regression_6.PNG)
 
 ### 4-2. 실험 결과 분석
+
+**결론**
+* 종속 변수가 **독립 변수의 선형 결합에 근접한 연속적인 숫자 값** 인 데이터셋
+  * Linear Regression 은 성능이 좋음
+* 종속 변수가 **0 또는 1 의 binary value** 인 데이터셋
+  * Linear Regression 의 예측 결과가 0.5 이상이면 1, 그 미만이면 0으로 최종 예측하면, 정확도 (Accuracy) 및 F1 Score 의 측면에서는 Logistic Regression 과 성능이 비슷함
+  * 하지만, 회귀식을 이용하여 예측했을 때는 Logistic Regression 의 성능이 Linear Regression 보다 유의미하게 좋음
+
+**1. 데이터셋 A + Linear Regression**
+
+![image](images/Linear_Logistic_Regression_7.PNG)
+
+| 구분                | 결과                                 |
+|-------------------|------------------------------------|
+| Mean Square Error | 1.6188                             |
+| 회귀식               | Y = 2.6679 X1 + 3.7791 X2 - 0.0188 |
+| 실제 회귀식            | Y = 2.5 X1 + 3.75 X2               |
+
+**2. 데이터셋 B**
+
+* Linear Regression 의 경우 다음과 같이 예측
+  * 회귀식에 의한 예측값이 0.5 이상이면 최종적으로 1 (Positive) 로 예측
+  * 회귀식에 의한 예측값이 0.5 미만이면 최종적으로 0 (Negative) 로 예측
+
+| 구분             | Linear Regression | Logistic Regression |
+|----------------|-------------------|---------------------|
+| True Positive  | 36                | 35                  |
+| True Negative  | 50                | 50                  |
+| False Positive | 6                 | 6                   |
+| False Negative | 8                 | 9                   |
+| Accuracy       | 0.8600            | 0.8500              |
+| Recall         | 0.8182            | 0.7955              |
+| Precision      | 0.8571            | 0.8537              |
+| F1 Score       | 0.8372            | 0.8235              |
+
+* 회귀식을 이용한 예측값 vs. 실제 값 비교
+
+| 구분                 | Linear Regression                                 | Logistic Regression                                  |
+|--------------------|---------------------------------------------------|------------------------------------------------------|
+| 회귀식                | Y = 2.6679 X1 + 3.7791 X2 - 0.0188                | Z = 2.5519 X1 + 4.1796 X2 - 8.8855<br>Y = sigmoid(Z) |
+| 비교 결과              | ![image](images/Linear_Logistic_Regression_8.PNG) | ![image](images/Linear_Logistic_Regression_9.PNG)    |
+| Mean Squared Error | 0.1124                                            | 0.0979                                               |
