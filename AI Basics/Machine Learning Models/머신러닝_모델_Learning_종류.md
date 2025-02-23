@@ -26,10 +26,16 @@
   * 예시: 개와 고양이 등 동물 분류, 붓꽃의 setosa, versicolor, virginica 분류, 자연어 처리 (NLP) 에서의 감정 분석
 
 지도학습 모델의 예시는 다음과 같다.
-* K-Nearest Neighbor
-* Decision Tree
-* Naive Bayes 모델
-* 입력층과 출력층이 있는 형태의 일반적인 딥러닝 모델
+* 분류 모델
+  * K-Nearest Neighbor
+  * Decision Tree
+  * Naive Bayes 모델
+  * Random Forest
+* 회귀 모델
+  * 선형 회귀 (Linear Regression)
+  * 로지스틱 회귀
+* 분류 모델 또는 회귀 모델
+  * 입력층과 출력층이 있는 형태의 일반적인 딥러닝 모델
 
 ## 3. Unsupervised Learning (비지도학습)
 **Unsupervised Learning (비지도학습)** 이란, **입력값과 출력값의 구분이 따로 없는 데이터** 를 학습 후 군집화한 다음, 새로운 데이터에 대해 그 데이터가 속하는 군집(cluster)을 예측하는 모델이다.
