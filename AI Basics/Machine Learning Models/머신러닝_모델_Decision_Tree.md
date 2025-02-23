@@ -97,8 +97,6 @@ target 값이 A인 데이터만 10개 있는 경우,
   * = (0.5 * 0.48) + (0.5 * 0.32)
   * = **0.4**
 
-![Decision Tree 예시](./images/Decision_Tree_4.PNG)
-
 따라서 맨 처음 기준으로는 아래 그림과 같이 **Gini 값이 가장 작아서** 불순도가 가장 낮다고 판단되는, **"보험"이라는 키워드가 포함되어 있는지의 여부**를 가지고 데이터를 나누어야 한다.
 
 ![Decision Tree 예시](./images/Decision_Tree_3.PNG)
@@ -142,6 +140,8 @@ target 값이 모두 "광고"로 동일하기 때문에, **"보험" 키워드 �
   * = **0.416667**
 
 따라서 **두 조건 feature에 대한 Gini 값이 서로 같으므로**, 두 조건 feature 중 아무 것이나 다음 구분 기준으로 선택할 수 있다. 한편 이렇게 구분을 한 후에는 depth가 2로 max depth에 도달하므로 더 이상 Decision Tree의 node를 추가로 생성할 수 없다.
+
+![Decision Tree 예시](./images/Decision_Tree_4.PNG)
 
 따라서 최종 Decision Tree는 다음 두 가지가 가능하다.
 
