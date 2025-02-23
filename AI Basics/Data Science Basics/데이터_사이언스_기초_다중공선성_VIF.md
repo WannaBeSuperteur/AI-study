@@ -63,4 +63,4 @@ SSE, SST, SSR을 나타낸 그림
 * 상관계수가 매우 높은 feature 중 중복되는 것을 제거
   * target 변수와의 상관계수가 낮은 변수를 제거하는 것이 좋음
 * 차원 축소
-  * PCA (Principle Component Analysis) : 연속되는 숫자 데이터에서 사용 가능
+  * [PCA (Principle Component Analysis)](../Machine%20Learning%20Models/머신러닝_모델_PCA.md) : 연속되는 숫자 데이터에서 사용 가능
