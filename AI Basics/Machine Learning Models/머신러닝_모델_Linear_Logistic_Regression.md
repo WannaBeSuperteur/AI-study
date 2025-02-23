@@ -177,7 +177,7 @@ Log Loss의 수식은 다음과 같다.
 | Logistic Regression | - 출력값이 binary value (0 또는 1) 또는 확률값인 경우<br>- 이진 분류 문제를 Regression으로 해결하려는 경우 |
 
 * Linear Regression으로 예측한 값이 0.5 이상인지의 여부로 binary value를 예측할 수 있지만, 다음과 같은 문제점이 있다.
-  * Regression 결과가 기울기가 있는 직선이므로, x 값이 매우 크거나 작으면 y < 0 또는 y > 1 이 되어 범위를 벗어남
+  * Regression 결과가 기울기가 있는 직선이므로, x 값이 매우 크거나 작으면 원래의 y 값이 y < 0 또는 y > 1 이 되어 범위를 벗어남
   * 직관적으로 보기에도 0과 1로 구분되는 출력값을 모델링하는 것은 직선인 Linear Regression 보다는 곡선인 Logistic Regression 이 더 가까움
 
 ### 4-1. 실험 (예시 데이터셋)
@@ -246,6 +246,8 @@ Log Loss의 수식은 다음과 같다.
 | F1 Score       | 0.8372            | 0.8235              |
 
 * 회귀식을 이용한 예측값 vs. 실제 값 비교
+  * Mean Squared Error 는 Logistic Regression 이 Linear Regression 보다 작다.
+  * 따라서, **Logistic Regression이 0과 1로 구분되는 출력값을 모델링하기에 보다 적절**하다. 
 
 | 구분                 | Linear Regression                                 | Logistic Regression                                  |
 |--------------------|---------------------------------------------------|------------------------------------------------------|
