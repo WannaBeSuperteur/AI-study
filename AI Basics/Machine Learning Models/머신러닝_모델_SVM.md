@@ -1,11 +1,9 @@
 ## 목차
-1. SVM (Support Vector Machine) 이란?
+* [1. SVM (Support Vector Machine) 이란?](#1-svm-support-vector-machine-이란)
+* [2. SVM의 알고리즘](#2-svm의-알고리즘)
+* [3. 커널 트릭 (kernel trick)](#3-커널-트릭-kernel-trick)
 
-2. SVM의 알고리즘
-
-3. 커널 트릭 (kernel trick)
-
-## SVM (Support Vector Machine) 이란?
+## 1. SVM (Support Vector Machine) 이란?
 **SVM (Support Vector Machine)** 은 아래 그림 중 (B)와 같이 각 class 간의 구분을 위한 **'구분선'과 각 class에 속하는 원소들 간의 거리를 최대화**시키는 지도 학습 알고리즘이다.
 
 즉, 각 class에 속하는 data point들과 거리가 가장 먼 구분선, 평면, 또는 초평면 (hyperplane) 을 선택하는 알고리즘이다.
@@ -18,12 +16,12 @@
 
 즉, Support Vector Machine은 **데이터에 노이즈 등이 있을 때 오분류할 수 있다는 문제를 해결**하는 머신러닝 알고리즘이다.
 
-## SVM의 알고리즘
+## 2. SVM의 알고리즘
 SVM의 기본 알고리즘은 앞서 언급한 **margin (점선 사이의 거리) 을 최대화**하는 초평면을 찾는 것이다.
 * 이를 통해 class의 구분선 (실선) 과 점선 사이의 거리도 최대화한다.
 * 단, 주어진 dataset에 있는 데이터를 2개의 class로 완벽히 분류할 수 없는 경우에 error를 허용한다.
 
-## 커널 트릭 (kernel trick)
+## 3. 커널 트릭 (kernel trick)
 SVM에서는 데이터를 2개의 class로 완벽히 분류할 수 없지만 **커널 트릭 (kernel trick)**이라는 변형 방법을 통해 2개의 class로 완벽히 분류할 수 있는 경우가 있다.
 
 ![kernel trick 설명](./images/SVM_2.PNG)

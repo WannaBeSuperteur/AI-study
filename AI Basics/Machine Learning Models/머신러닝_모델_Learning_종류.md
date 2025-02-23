@@ -1,22 +1,18 @@
 ## 목차
-1. 머신러닝 모델의 학습 방식에 따른 분류
+* [1. 머신러닝 모델의 학습 방식에 따른 분류](#1-머신러닝-모델의-학습-방식에-따른-분류)
+* [2. Supervised Learning (지도학습)](#2-supervised-learning-지도학습)
+* [3. Unsupervised Learning (비지도학습)](#3-unsupervised-learning-비지도학습)
+* [4. Semi-supervised Learning (반지도학습)](#4-semi-supervised-learning-반지도학습)
+* [5. Reinforcement Learning (강화학습)](#5-reinforcement-learning-강화학습)
 
-2. Supervised Learning (지도학습)
-
-3. Unsupervised Learning (비지도학습)
-
-4. Semi-supervised Learning (반지도학습)
-
-5. Reinforcement Learning (강화학습)
-
-## 머신러닝 모델의 학습 방식에 따른 분류
+## 1. 머신러닝 모델의 학습 방식에 따른 분류
 머신러닝 모델은 그 학습 방식에 따라 다음과 같이 분류한다.
 * Supervised Learning (지도학습)
 * Unsupervised Learning (비지도학습)
 * Semi-supervised Learning (반지도학습)
 * Reinforcement Learning (강화학습)
 
-## Supervised Learning (지도학습)
+## 2. Supervised Learning (지도학습)
 **Supervised Learning (지도학습)** 이란, **입력값과 출력값이 주어진** 학습 데이터를 이용해서 학습한 후, 새로운 입력값이 있는 데이터에 대해 그 출력값을 예측하는 형태의 머신러닝 모델이다.
 
 지도학습 모델을 통해서 해결할 수 있는 문제는 크게 **회귀, 분류** 의 2가지로 나눌 수 있다.
@@ -35,7 +31,7 @@
 * Naive Bayes 모델
 * 입력층과 출력층이 있는 형태의 일반적인 딥러닝 모델
 
-## Unsupervised Learning (비지도학습)
+## 3. Unsupervised Learning (비지도학습)
 **Unsupervised Learning (비지도학습)** 이란, **입력값과 출력값의 구분이 따로 없는 데이터** 를 학습 후 군집화한 다음, 새로운 데이터에 대해 그 데이터가 속하는 군집(cluster)을 예측하는 모델이다.
 
 비지도학습 모델의 예시는 다음과 같다.
@@ -47,12 +43,12 @@
   * AutoEncoder
   * VAE (Variational AutoEncoder)
 
-## Semi-supervised Learning (반지도학습)
+## 4. Semi-supervised Learning (반지도학습)
 **Seml-supervised Learning (반지도학습)** 이란, **입력값은 있지만 출력값은 없는 데이터를 지도학습에 사용**하는 것이다. 이때 다음과 같이 가정한다.
 * 출력값이 없는 데이터들 중 입력값이 서로 유사한 데이터들은 출력값도 유사할 것이다.
   * 입력값이 서로 유사하다는 것은, K-means Clustering 등 비지도학습 알고리즘 사용 결과 같은 군집에 속하는 데이터가 이에 해당한다.
 
-## Reinforcement Learning (강화학습)
+## 5. Reinforcement Learning (강화학습)
 **Reinforcement Learning (강화학습)** 이란, **환경 (environment)** 안에 있는 **AI 모델 (agent)** 이, **현재 상태 (state)** 에서의 **행동 (action)** 에 대한 **보상 (reward)** 을 최적화하기 위해, 수많은 행동을 반복하면서 최적의 행동 방향성을 찾는 학습 알고리즘이다.
 * 사람이 학습하는 방식인 '시행착오' 방법과 매우 유사하다.
 * 제한된 데이터를 학습하는 것이 아니라 시행착오를 통해 AI 모델이 스스로 데이터를 생성(?)하면서 학습한다. 따라서 학습 데이터가 부족할 때에도 환경 (environment) 및 보상 (reward) 을 적절히 설정하기만 하면 된다.

@@ -1,17 +1,21 @@
 ## 목차
-1. Decision Tree란?
-
-2. Gini vs. Entropy
-* 2-1. Gini
-* 2-2. Entropy
-
-3. Decision Tree 알고리즘 동작 예시
+* [1. Decision Tree란?](#1-decision-tree란)
+* [2. Gini vs. Entropy](#2-gini-vs-entropy)
+  * [2-1. Gini](#2-1-gini)
+  * [2-2. Entropy](#2-2-entropy)
+* [3. Decision Tree 알고리즘 동작 예시](#3-decision-tree-알고리즘-동작-예시)
 
 ## 1. Decision Tree란?
 
 ![Decision Tree 예시](./images/Decision_Tree_1.PNG)
 
-**Decision Tree (의사결정 나무)** 는 위와 같이 입력 데이터의 feature에 대한 조건에 따라 가지치기를 하여 Tree를 생성하고, 그 Tree에 기반하여 판단하는 모델이다. 머신러닝 모델이므로, **가급적 적은 개수의 분류 기준으로 분류가 가장 잘 되는 적절한 Tree를 다음과 같은 알고리즘에 기반하여 자동으로 생성**한다.
+**Decision Tree (의사결정 나무)** 는 위와 같이 학습 데이터의 feature에 대한 조건에 따라 가지치기를 하여 Tree를 생성하고, 그 Tree에 기반하여 판단하는 모델이다.
+* 핵심 아이디어 : **feature에 대한 조건 중 target의 값을 가장 잘 구분할 수 있는 것을 선택** 한다.
+* 학습 데이터셋을 통해 Tree를 먼저 만든 후, 예측할 데이터가 입력되면 해당 데이터의 Class를 이 Tree를 기반으로 예측한다.
+
+----
+
+머신러닝 모델이므로, **가급적 적은 개수의 분류 기준으로 분류가 가장 잘 되는 적절한 Tree를 다음과 같은 알고리즘에 기반하여 자동으로 생성**한다.
 
 예를 들어 위 그림과 같은 광고 메일 여부 판단 모델의 경우, 메일 내용에 "대출"이 포함되어 있으면 왼쪽 sub-tree로 이동하여 그 다음으로 "보험"이 포함되어 있는지 검사한다. 그리고 "보험"이 포함되어 있으면, "취업"이 포함되어 있는지 검사한다. 이때 포함되어 있으면 일반 메일, 없으면 광고 메일로 분류한다.
 
@@ -32,7 +36,7 @@ Decision Tree에서 **target의 값을 가장 잘 구분할 수 있는** feature
 실제로는 각 조건 (입력 데이터의 feature) 별로 다음 수식을 이용하여 target 값을 가장 잘 구분하는 조건을 찾는다.
 * **(조건의 값이 A인 데이터 비율) * (조건의 값이 A인 데이터의 Gini 또는 Entropy) + (조건의 값이 B인 데이터 비율) * (조건의 값이 B인 데이터의 Gini 또는 Entropy) + ...**
 
-### Gini
+### 2-1. Gini
 먼저 Gini는 다음과 같은 수식을 이용하여 target 값을 잘 구분할 수 있는지를 파악하기 위한 척도를 계산한다. (단, $n$은 전체 데이터의 서로 다른 target 값의 개수, $p_i$는 target 값이 (전체 n개 중 i번째 target 값)일 확률을 의미한다.)
 * $$(Gini) = 1 - \sum_{i=1}^n {p_i^2}$$
 
@@ -46,7 +50,7 @@ target 값이 A인 데이터만 10개 있는 경우,
 
 이때 **Gini 값이 작을수록 불순도가 낮으므로 target 값에 대한 더 적합한 구분 기준**이라고 할 수 있다.
 
-### Entropy
+### 2-2. Entropy
 Entropy도 Gini처럼 target 값을 구분할 수 있는지를 파악하는 척도이며, 다음과 같은 수식으로 나타낼 수 있다.
 * $$(Entropy) = - \displaystyle \sum_{i=1}^n (p_i * log_2 (p_i))$$
 
@@ -60,18 +64,18 @@ target 값이 A인 데이터만 10개 있는 경우,
 
 ## 3. Decision Tree 알고리즘 동작 예시
 
-|"대출" 포함|"보험" 포함|"취업" 포함|분류|
-|---|---|---|---|
-|True|True|False|광고|
-|True|False|False|광고|
-|False|True|True|광고|
-|True|True|False|광고|
-|False|False|True|일반|
-|False|False|True|광고|
-|False|True|False|광고|
-|True|False|True|일반|
-|False|False|False|일반|
-|False|False|True|일반|
+| "대출" 포함 | "보험" 포함 | "취업" 포함 | 분류 |
+|---------|---------|---------|----|
+| True    | True    | False   | 광고 |
+| True    | False   | False   | 광고 |
+| False   | True    | True    | 광고 |
+| True    | True    | False   | 광고 |
+| False   | False   | True    | 일반 |
+| False   | False   | True    | 광고 |
+| False   | True    | False   | 광고 |
+| True    | False   | True    | 일반 |
+| False   | False   | False   | 일반 |
+| False   | False   | True    | 일반 |
 
 위 데이터에서 광고 메일과 일반 메일을 구분하기 위한 Decision Tree를 만들면 다음과 같다. (단, Gini를 사용하며, max depth = 2 이다.)
 
@@ -93,7 +97,13 @@ target 값이 A인 데이터만 10개 있는 경우,
   * = (0.5 * 0.48) + (0.5 * 0.32)
   * = **0.4**
 
-따라서 맨 처음 기준으로는 **Gini 값이 가장 작아서** 불순도가 가장 낮다고 판단되는, **"보험"이라는 키워드가 포함되어 있는지의 여부**를 가지고 데이터를 나누어야 한다.
+![Decision Tree 예시](./images/Decision_Tree_4.PNG)
+
+따라서 맨 처음 기준으로는 아래 그림과 같이 **Gini 값이 가장 작아서** 불순도가 가장 낮다고 판단되는, **"보험"이라는 키워드가 포함되어 있는지의 여부**를 가지고 데이터를 나누어야 한다.
+
+![Decision Tree 예시](./images/Decision_Tree_3.PNG)
+
+----
 
 한편, "보험"이라는 키워드가 포함되어 있는 데이터는 다음과 같다.
 

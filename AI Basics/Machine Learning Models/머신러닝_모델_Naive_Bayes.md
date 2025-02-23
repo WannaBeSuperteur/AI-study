@@ -1,9 +1,7 @@
 ## 목차
-1. Bayes 이론과 조건부 독립
-
-2. Naive Bayes 알고리즘이란?
-
-3. Naive Bayes 알고리즘의 예시
+* [1. Bayes 이론과 조건부 독립](#1-bayes-이론과-조건부-독립)
+* [2. Naive Bayes 알고리즘이란?](#2-naive-bayes-알고리즘이란)
+* [3. Naive Bayes 알고리즘의 예시](#3-naive-bayes-알고리즘의-예시)
 
 ## 1. Bayes 이론과 조건부 독립
 **베이즈 정리 (Bayesian Rule)** 는 조건부 확률을 구하는 공식이다.
@@ -23,7 +21,10 @@
 가 성립한다.
 
 ## 2. Naive Bayes 알고리즘이란?
-**Naive Bayes 알고리즘** 은 지도 학습 알고리즘 중 하나로, Bayes 정리를 이용한다.
+**Naive Bayes 알고리즘** 은 지도 학습 알고리즘 중 하나로, Bayes 정리를 이용하여 다음과 같이 각 Class별 확률의 곱을 이용하여, 확률이 가장 높은 Class로 예측한다.
+* **(전체 데이터 중 해당 Class ck 의 비율) * { P(d1=v1|ck) * ... * P(dn=vn|ck) }**
+* 단, P(d=v|c) 는 기존에 학습한 데이터셋의 해당 Class (c) 인 데이터를 기준으로, feature d 의 값이 예측 대상 데이터의 feature d 의 값 v와 같을 확률
+----
 
 모델이 분류할 수 있는 n개의 class $c_1$, $c_2$, ..., $c_n$에 대해서, 입력 feature에 해당하는 m개의 조건 $d_1$, $d_2$, ..., $d_m$ 이 있을 때, Naive Bayes 알고리즘의 작동 방식은 다음과 같다.
 
@@ -75,5 +76,7 @@ $P(일반) \times P("대출" 포함 = True|일반) \times P("보험" 포함 = Tr
 = $(4 / 10) \times (1 / 4) \times (0 / 4) \times (3 / 4)$
 
 = 0.0
+
+![image](images/Naive_Bayes_1.PNG)
 
 따라서 class "광고"에 대한 확률들의 곱이 "일반"에 대한 확률들의 곱보다 크므로, 해당 메일은 **광고 메일**로 분류된다는 것을 알 수 있다.
