@@ -90,7 +90,8 @@
 * $\frac{\delta}{\delta w_1} L$
 * = $\frac{\delta}{\delta w_1} \frac{1}{m} \Sigma_{i=1}^m (y_i - \hat{y}_i)^2$
 * = $\frac{\delta}{\delta w_1} \frac{1}{m} \Sigma_{i=1}^m [y_i - (x_{i1}w_1+x_{i2}w_2+...+x_{in}w_n+b)]^2$
-* = $\frac{1}{m} \Sigma_{i=1}^m [-2x_i \times [y_i - (x_{i1}w_1+x_{i2}w_2+...+x_{in}w_n+b)]]$
+* = $\frac{1}{m} \Sigma_{i=1}^m [-2x_{i1} \times [y_i - (x_{i1}w_1+x_{i2}w_2+...+x_{in}w_n+b)]]$
+* = $\frac{-2}{m} \Sigma_{i=1}^m [x_{i1} \times [y_i - (x_{i1}w_1+x_{i2}w_2+...+x_{in}w_n+b)]]$
 
 **2. bias에 대한 미분값 계산**
 
@@ -98,6 +99,7 @@
 * = $\frac{\delta}{\delta b} \frac{1}{m} \Sigma_{i=1}^m (y_i - \hat{y}_i)^2$
 * = $\frac{\delta}{\delta b} \frac{1}{m} \Sigma_{i=1}^m [y_i - (x_{i1}w_1+x_{i2}w_2+...+x_{in}w_n+b)]^2$
 * = $\frac{1}{m} \Sigma_{i=1}^m [-2 \times [y_i - (x_{i1}w_1+x_{i2}w_2+...+x_{in}w_n+b)]]$
+* = $\frac{-2}{m} \Sigma_{i=1}^m [y_i - (x_{i1}w_1+x_{i2}w_2+...+x_{in}w_n+b)]$
 
 ## 3. Logistic Regression
 **Logistic Regression (로지스틱 회귀)** 는 종속 변수 y를 독립 변수 x1, x2, ... 의 **sigmoid 함수를 이용한 비선형 결합** 으로 나타내는 것을 말한다.
@@ -149,17 +151,21 @@ Log Loss의 수식은 다음과 같다.
 
 * $\frac{\delta}{\delta w_1} L$
 * = $\frac{\delta}{\delta w_1} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{\hat{y}_i} + (1 - y_i) \times \log{(1 - \hat{y}_i)}]$
-* = $\frac{\delta}{\delta w_1} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)} + (1 - y_i) \times \log{(1 - (x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b))}]$
-* = $\frac{-1}{m} \Sigma_{i=1}^m [y_i \times \frac{\delta}{\delta w_1} \log{(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)} + (1 - y_i) \times \frac{\delta}{\delta w_1} \log{(1 - (x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b))}]$
-* = $\frac{-1}{m} \Sigma_{i=1}^m [\frac{x_{i1}y_i}{x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b} + \frac{-x_{1i}(1 - y_i)}{1 - (x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}]$
+* = $\frac{\delta}{\delta w_1} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{(sigmoid(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b))} + (1 - y_i) \times \log{(1 - sigmoid(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b))}]$
+* = $\frac{\delta}{\delta w_1} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{\frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}} + (1 - y_i) \times \log{(1 - \frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}})}]$
+* = $\frac{-1}{m} \Sigma_{i=1}^m [y_i \times \frac{\delta}{\delta w_1} \log{\frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}} + (1 - y_i) \times \frac{\delta}{\delta w_1} \log{(1 - \frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}})}]$
+* = $\frac{-1}{m} \Sigma_{i=1}^m [y_i \times \frac{x_1}{1+e^{x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b}} + (1 - y_i) \times \frac{-x_1}{1+e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}]$
+* = $\frac{-1}{m} \Sigma_{i=1}^m [\frac{x_1y_i}{1+e^{x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b}} + \frac{-x_1(1 - y_i)}{1+e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}]$
 
 **2. bias에 대한 미분값 계산**
 
 * $\frac{\delta}{\delta b} L$
 * = $\frac{\delta}{\delta b} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{\hat{y}_i} + (1 - y_i) \times \log{(1 - \hat{y}_i)}]$
-* = $\frac{\delta}{\delta b} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)} + (1 - y_i) \times \log{(1 - (x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b))}]$
-* = $\frac{-1}{m} \Sigma_{i=1}^m [y_i \times \frac{\delta}{\delta b} \log{(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)} + (1 - y_i) \times \frac{\delta}{\delta b} \log{(1 - (x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b))}]$
-* = $\frac{-1}{m} \Sigma_{i=1}^m [\frac{y_i}{x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b} + \frac{-(1 - y_i)}{1 - (x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}]$
+* = $\frac{\delta}{\delta b} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{(sigmoid(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b))} + (1 - y_i) \times \log{(1 - sigmoid(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b))}]$
+* = $\frac{\delta}{\delta b} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{\frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}} + (1 - y_i) \times \log{(1 - \frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}})}]$
+* = $\frac{-1}{m} \Sigma_{i=1}^m [y_i \times \frac{\delta}{\delta b} \log{\frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}} + (1 - y_i) \times \frac{\delta}{\delta b} \log{(1 - \frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}})}]$
+* = $\frac{-1}{m} \Sigma_{i=1}^m [y_i \times \frac{1}{1+e^{x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b}} + (1 - y_i) \times \frac{-1}{1+e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}]$
+* = $\frac{-1}{m} \Sigma_{i=1}^m [\frac{y_i}{1+e^{x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b}} + \frac{y_i - 1}{1+e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}]$
 
 ## 4. 탐구: 어떤 Regression이 적절할까?
 일반적으로 Linear Regression과 Logistic Regression은 다음의 경우에 적합하다.
@@ -170,5 +176,28 @@ Log Loss의 수식은 다음과 같다.
 | Logistic Regression | - 출력값이 binary value (0 또는 1) 또는 확률값인 경우<br>- 이진 분류 문제를 Regression으로 해결하려는 경우 |
 
 ### 4-1. 실험 (예시 데이터셋)
+* 실험 목적
+  * 독립변수들과 하나의 종속변수의 관계가 선형에 가까운 데이터셋에서는 Linear Regression 의 성능이 더 좋음을 확인한다.
+  * 종속 변수의 값이 0 또는 1인 데이터셋에서는 Logistic Regression 의 성능이 더 좋음을 확인한다.
+* 실험 설계
+  * 데이터셋 A : 독립 변수 2개와 종속 변수의 관계가 선형에 가까움
+  * 데이터셋 B : 독립 변수 2개에 대해 종속 변수의 값이 0 또는 1임
+* 적용할 Regression
+
+| 데이터셋 \ Regression                       | Linear | Logistic |
+|-----------------------------------------|--------|----------|
+| 데이터셋 A<br>(for **Linear** Regression)   | O      |          |
+| 데이터셋 B<br>(for **Logistic** Regression) | O      | O        |
+
+* 학습/테스트 데이터 구분
+  * 모든 실험에서 학습 데이터 400개, 테스트 데이터 100개로 구분 
+
+**데이터셋 A (학습 + 테스트 데이터)**
+
+![image](images/Linear_Logistic_Regression_5.PNG)
+
+**데이터셋 B (학습 + 테스트 데이터)**
+
+![image](images/Linear_Logistic_Regression_6.PNG)
 
 ### 4-2. 실험 결과 분석
