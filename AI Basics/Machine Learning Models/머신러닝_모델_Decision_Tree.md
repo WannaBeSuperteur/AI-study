@@ -4,6 +4,12 @@
   * [2-1. Gini](#2-1-gini)
   * [2-2. Entropy](#2-2-entropy)
 * [3. Decision Tree 알고리즘 동작 예시](#3-decision-tree-알고리즘-동작-예시)
+* [4. 탐구 (Gini vs. Entropy, 무엇이 좋을까?)](#4-탐구-gini-vs-entropy-무엇이-좋을까)
+  * [4-1. 실험 진행](#4-1-실험-진행)
+  * [4-2. 실험 결과](#4-2-실험-결과)
+
+## 코드
+* [Gini vs. Entropy 성능 비교](#4-탐구-gini-vs-entropy-무엇이-좋을까) 실험 코드 : [code (ipynb)](codes/Decision_Tree_example.ipynb)
 
 ## 1. Decision Tree란?
 
@@ -33,8 +39,14 @@ Decision Tree의 알고리즘은 다음과 같다.
 ## 2. Gini vs. Entropy
 Decision Tree에서 **target의 값을 가장 잘 구분할 수 있는** feature 조건을 찾기 위해서 Gini 또는 Entropy를 이용한다.
 
-실제로는 각 조건 (입력 데이터의 feature) 별로 다음 수식을 이용하여 target 값을 가장 잘 구분하는 조건을 찾는다.
+이를 이용하여 새로운 subtree를 생성할 때는, 각 조건 (입력 데이터의 feature) 별로 다음 수식을 이용하여 target 값을 가장 잘 구분하는 조건을 찾는다.
 * **(조건의 값이 A인 데이터 비율) * (조건의 값이 A인 데이터의 Gini 또는 Entropy) + (조건의 값이 B인 데이터 비율) * (조건의 값이 B인 데이터의 Gini 또는 Entropy) + ...**
+
+| 구분                    | Gini                                  | Entropy                                                          |
+|-----------------------|---------------------------------------|------------------------------------------------------------------|
+| 수식                    | $$(Gini) = 1 - \sum_{i=1}^n {p_i^2}$$ | $$(Entropy) = - \displaystyle \sum_{i=1}^n (p_i * log_2 (p_i))$$ |
+| 최댓값                   | 0.25 (p=0.5일 때)                       | 1 (p=0.5일 때)                                                     |
+| 그래프<br>(Class가 2개일 때) | ![image](images/Decision_Tree_5.PNG)  | ![image](images/Decision_Tree_6.PNG)                             |
 
 ### 2-1. Gini
 먼저 Gini는 다음과 같은 수식을 이용하여 target 값을 잘 구분할 수 있는지를 파악하기 위한 척도를 계산한다. (단, $n$은 전체 데이터의 서로 다른 target 값의 개수, $p_i$는 target 값이 (전체 n개 중 i번째 target 값)일 확률을 의미한다.)
@@ -105,25 +117,25 @@ target 값이 A인 데이터만 10개 있는 경우,
 
 한편, "보험"이라는 키워드가 포함되어 있는 데이터는 다음과 같다.
 
-|"대출" 포함|"보험" 포함|"취업" 포함|분류|
-|---|---|---|---|
-|True|True|False|광고|
-|False|True|True|광고|
-|True|True|False|광고|
-|False|True|False|광고|
+| "대출" 포함 | "보험" 포함 | "취업" 포함 | 분류 |
+|---------|---------|---------|----|
+| True    | True    | False   | 광고 |
+| False   | True    | True    | 광고 |
+| True    | True    | False   | 광고 |
+| False   | True    | False   | 광고 |
 
 target 값이 모두 "광고"로 동일하기 때문에, **"보험" 키워드 포함 시 무조건 광고**인 것으로 "보험"이라는 키워드가 포함된 경우의 sub-tree를 종결한다.
 
 또한, "보험"이라는 키워드가 포함되어 있지 않은 데이터는 다음과 같다.
 
-|"대출" 포함|"보험" 포함|"취업" 포함|분류|
-|---|---|---|---|
-|True|False|False|광고|
-|False|False|True|일반|
-|False|False|True|광고|
-|True|False|True|일반|
-|False|False|False|일반|
-|False|False|True|일반|
+| "대출" 포함 | "보험" 포함 | "취업" 포함 | 분류 |
+|---------|---------|---------|----|
+| True    | False   | False   | 광고 |
+| False   | False   | True    | 일반 |
+| False   | False   | True    | 광고 |
+| True    | False   | True    | 일반 |
+| False   | False   | False   | 일반 |
+| False   | False   | True    | 일반 |
 
 여기서 "보험" 포함 여부는 모두 False로 동일하므로 조건 feature로 더 이상 사용할 수 없기 때문에, 조건 feature로는 "대출" 포함 여부와 "취업" 포함 여부를 사용할 수 있다.
 
@@ -146,3 +158,88 @@ target 값이 모두 "광고"로 동일하기 때문에, **"보험" 키워드 �
 따라서 최종 Decision Tree는 다음 두 가지가 가능하다.
 
 ![Decision Tree 최종 결과](./images/Decision_Tree_2.PNG)
+
+## 4. 탐구 (Gini vs. Entropy, 무엇이 좋을까?)
+
+* 실험 목적
+  * Decision Tree에서 새로운 subtree를 생성하기 위한 metric 으로 Gini 와 Entropy를 이용한다.
+  * **Gini와 Entropy 중 성능이 좋은 metric은 무엇인지 탐구한다.**
+* 참고 
+  * Class가 2개일 때, 두 metric의 그래프 형태를 비교하면 다음과 같다.
+
+| 원래 그래프로 비교                           | Gini 를 4배 하여 최댓값 일치 시                |
+|--------------------------------------|--------------------------------------|
+| ![image](images/Decision_Tree_7.PNG) | ![image](images/Decision_Tree_8.PNG) |
+
+### 4-1. 실험 진행
+* 데이터셋
+  * ```sklearn.datasets``` 에 있는 데이터셋 중 **Breast Cancer 데이터셋** 선정
+  * 선정 이유
+    * 샘플 개수가 569개로, Iris, Wine 보다 훨씬 많아서 테스트 데이터를 통해 Gini vs. Entropy 의 성능을 변별하기에 보다 적합
+    * 8x8 이미지 데이터셋인 digits 와 달리, 각 feature가 그 자체로 특성으로서 의미가 있음
+
+![image](images/Decision_Tree_9.PNG)
+
+* 모델 configuration
+  * Decision Tree
+  * subtree 생성을 위한 metric은 'Gini' 와 'Entropy' 로 실험
+  * max_depth는 1, 2, 3, ..., 12 로 실험
+* 성능 metric
+  * Accuracy (정확도)
+  * F1 Score
+  * Recall
+    * 암세포를 암세포로 정확히 분류하는 비율
+    * 해당 비율이 낮으면 암 치료가 늦어지는 중대한 문제가 발생하므로, Recall과 Precision 중 Recall을 선정
+
+### 4-2. 실험 결과
+
+**요약**
+* 모든 성능 metric에 대해서 Gini와 Entropy 간 큰 차이가 없다.
+
+**상세**
+
+* Accuracy
+
+![image](images/Decision_Tree_10.PNG)
+
+* Recall
+
+![image](images/Decision_Tree_11.PNG)
+
+* F1 Score
+
+![image](images/Decision_Tree_12.PNG)
+
+* subtree 생성 metric이 **Gini** 일 때
+
+| Max Depth | Accuracy (%) | Recall (%) | F1-score (%) |
+|-----------|--------------|------------|--------------|
+| 1         | 91.61        | 87.27      | 88.89        |
+| 2         | 90.91        | 87.27      | 88.07        |
+| 3         | 92.31        | 89.09      | 89.91        |
+| 4         | 94.41        | 90.91      | 92.59        |
+| 5         | 93.71        | 96.36      | 92.17        |
+| 6         | 93.01        | 92.73      | 91.07        |
+| 7         | 93.01        | 92.73      | 91.07        |
+| 8         | 93.01        | 92.73      | 91.07        |
+| 9         | 93.01        | 92.73      | 91.07        |
+| 10        | 93.01        | 92.73      | 91.07        |
+| 11        | 93.01        | 92.73      | 91.07        |
+| 12        | 93.01        | 92.73      | 91.07        |
+
+* subtree 생성 metric이 **Entropy** 일 때
+
+| Max Depth | Accuracy (%) | Recall (%) | F1-score (%) |
+|-----------|--------------|------------|--------------|
+| 1         | 91.61        | 87.27      | 88.89        |
+| 2         | 90.91        | 87.27      | 88.07        |
+| 3         | 92.31        | 89.09      | 89.91        |
+| 4         | 93.71        | 89.09      | 91.59        |
+| 5         | 93.71        | 92.73      | 91.89        |
+| 6         | 93.01        | 96.36      | 91.38        |
+| 7         | 92.31        | 94.55      | 90.43        |
+| 8         | 92.31        | 94.55      | 90.43        |
+| 9         | 92.31        | 94.55      | 90.43        |
+| 10        | 92.31        | 94.55      | 90.43        |
+| 11        | 92.31        | 94.55      | 90.43        |
+| 12        | 92.31        | 94.55      | 90.43        |
