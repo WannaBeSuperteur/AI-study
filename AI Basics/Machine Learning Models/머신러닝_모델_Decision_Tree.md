@@ -177,7 +177,7 @@ target 값이 모두 "광고"로 동일하기 때문에, **"보험" 키워드 �
     * ```sklearn.datasets``` 에 있는 데이터셋 중 **covtype 데이터셋** 선정
     * 해당 데이터셋에서 랜덤하게 **10,000 개의 데이터를 추출**
   * 선정 이유
-    * [sklearn.datasets](https://scikit-learn.org/stable/api/sklearn.datasets.html) 의 데이터셋 중 single class classification 에 가장 적합한 데이터셋
+    * [sklearn.datasets](https://scikit-learn.org/stable/api/sklearn.datasets.html) 의 데이터셋 중 single label classification 에 가장 적합한 데이터셋
   * 상세 선정 이유
     * 다른 데이터셋들은 다음과 같은 문제점이 있음 
     * **iris**, **wine** 데이터셋 (❌)
