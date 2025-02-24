@@ -109,13 +109,25 @@
 * 차원의 저주에 대해서는 [해당 문서](../Data%20Science%20Basics/데이터_사이언스_기초_차원의_저주.md) 참고.
 
 ### 5-1. 실험 (예시 데이터셋)
+
+**1. 기본 정보**
+
 * 데이터셋
   * 총 7개의 input feature로 구성
   * 출력값은 0 또는 1 
+
+* 원본 데이터
+
+![image](images/PCA_14.PNG)
+
+* 평균 0, 표준편차 1로 스케일링된 데이터
+
+![image](images/PCA_15.PNG)
+
 * 모델
   * [Logistic Regression](머신러닝_모델_Linear_Logistic_Regression.md#3-logistic-regression)
 
-**1. 상관계수 분석**
+**2. 상관계수 분석**
 
 * 요약
   * **서로 강력한 양의 상관관계를 갖는 feature 들을 중복으로 간주하여 이에 대한 처리 (예: 중복 제거) 필요** 
@@ -125,7 +137,7 @@
 
 ![image](images/PCA_12.PNG)
 
-**2. 각 feature의 분포 분석**
+**3. 각 feature의 분포 분석**
 
 <details>
 <summary>각 feature의 분포 분석 (클릭 시 확장)</summary>
