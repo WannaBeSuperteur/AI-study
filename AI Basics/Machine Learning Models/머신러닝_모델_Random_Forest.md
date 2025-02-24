@@ -43,7 +43,7 @@ Out-of-bag 에 속하는 데이터의 개수는 대략적으로 다음과 같다
   * $r$ : Random Forest 에서의 각 Tree의 학습을 위한 데이터 sampling ratio
   * $N$ : Random Forest 에서 트리의 개수
 * 예를 들어 전체 2만 개의 데이터를 각 트리마다 5% 씩 샘플링하고, 총 100개의 Tree로 Random Forest를 구성한다면 Out-of-bag에 속하는 데이터의 개수는 대략 다음과 같다.
-  * $20000 \times (1 - 0.05)^100$
+  * $20000 \times (1 - 0.05)^{100}$
   * = 약 118.411 개
 
 ![image](images/Random_Forest_2.PNG)
