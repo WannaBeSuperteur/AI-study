@@ -16,7 +16,8 @@
 * [Decision Tree](머신러닝_모델_Decision_Tree.md) 기반 모델
 * Tree를 균형적으로 만들기보다는 **Loss를 최소화하는 방향으로 Tree를 확장하는 [leaf-wise](#3-leaf-wise-vs-depth-wise)** 알고리즘
   * 이를 통해 학습의 효율성이 향상되고, 결과적으로 학습 속도가 빨라진다. 
-  * Loss를 최소화하기 위해, **data loss가 최대인 leaf node** 를 분할한다.
+  * Loss를 최소화하기 위해, **loss가 최대인 leaf node** 를 분할한다.
+* 추가적으로, [GOSS](#4-1-goss-gradient-based-one-side-sampling) 및 [EFB](#4-2-efb-exclusive-feature-bundling) 알고리즘을 통해, 각각 **일부 데이터, 일부 feature를 효율적으로 선택하여 학습** 한다.
 
 LightGBM은 **큰 규모의 데이터셋 (1만 개 이상의 데이터)** 에 사용하기에 보다 적합하다.
 
@@ -109,6 +110,8 @@ EFB가 **학습 데이터셋의 feature 개수를 줄이는** 실제 동작 방�
 
 ![image](images/LightGBM_4.PNG)
 
+* 위 이미지에서 edge의 값이 '1'인 feature 끼리 같은 색으로 연결되었는데, 이것은 **edge의 값이 낮음 → conflict가 적음 → 위 그래프 색칠 문제에서는 서로 연결되지 않음** 을 의미한다.
+
 **2. 선정한 feature를 Bundle로 구성**
 
 Bundle로 단일화된 feature의 값은 다음과 같이 구성한다.
@@ -121,6 +124,7 @@ Bundle로 단일화된 feature의 값은 다음과 같이 구성한다.
 * 2개 이상의 feature가 0이 아닌 경우
   * 기준 feature 등 특정한 1개의 feature의 값 사용 
   * **정보 손실 발생**
+  * 그러나, **feature 선정 과정에서 해당 케이스를 최소화했음**
 
 ![image](images/LightGBM_5.PNG)
 
