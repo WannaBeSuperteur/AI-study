@@ -43,6 +43,7 @@
   * 특정 하이퍼파라미터 조합 하에서의 모델 학습용
   * 하이퍼파라미터 최적화 용
 * **test dataset 으로 하이퍼파라미터를 최적화** 하면 **하이퍼파라미터에 대한 overfitting** 이 발생할 수도 있다. 
+* [ChatGPT Deep Research 결과 : test dataset 으로 모델 하이퍼파라미터를 최적화함으로 인한 overfitting 문제점](https://chatgpt.com/share/67bf316a-116c-8010-aeb8-2d124160542b)
 
 ## 3. 하이퍼파라미터 최적화 방법론
 
