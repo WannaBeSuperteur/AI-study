@@ -363,6 +363,11 @@ print(f'Best Parameters : {best_params_optuna}')
 * 다른 데이터셋이나 다른 모델을 이용하면 overfitting 이 발생할 수도 있을 것으로 추정
 * 단, HPO 에 대한 overfitting 은 일반적으로 말하는 **Train vs. Test dataset 에 대한 overfitting 보다는 약할 것으로 추정**
 
+**Overfitting 확인이 불가했음에도, 다른 데이터셋/모델로 진행 시 Overfitting 발생 가능 추정 근거**
+* Hyper-parameter 가 Surrogate Model 을 위한 Metric 측정용 데이터에 최적화되어 있음
+* 이것은 엄밀히 말하면 **새로운 테스트 데이터에 최적화된 것은 아님**
+* **[25.02.26 23:20 추가]** [데이터 크기 1,500 개, 3,000 Trial 로 조정한 실험](codes/Hyperparam_Opt_experiment_2.ipynb) 결과, 하이퍼파라미터 최적화 관점에서의 Overfitting 이 나타난 것으로 보인다.
+
 **HyperOpt 실험 결과 상세**
 * 각 trial 별 Accuracy 그래프
 
