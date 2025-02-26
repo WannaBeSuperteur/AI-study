@@ -9,10 +9,9 @@
   * [4-2. Optuna](#4-2-optuna)
   * [4-3. HyperOpt vs. Optuna](#4-3-hyperopt-vs-optuna)
 * [5. 탐구: Test dataset 으로 최적화할 때의 Overfitting](#5-탐구-test-dataset-으로-최적화할-때의-overfitting)
-  * [5-1. 실험 설계](#5-1-실험-설계)
-  * [5-2. HyperOpt 실험](#5-2-hyperopt-실험)
-  * [5-3. Optuna 실험](#5-3-optuna-실험)
-  * [5-4. 실험 결과](#5-4-실험-결과)
+  * [5-1. 데이터셋 및 모델](#5-1-데이터셋-및-모델)
+  * [5-2. 실험 진행 방법 및 하이퍼파라미터](#5-2-실험-진행-방법-및-하이퍼파라미터)
+  * [5-3. 실험 결과](#5-3-실험-결과)
 
 ## 코드
 * [하이퍼파라미터 최적화 라이브러리](#4-하이퍼파라미터-최적화-라이브러리) 비교 코드 : [code (ipynb)](codes/Hyperparam_Opt_example.ipynb)
@@ -121,7 +120,7 @@ Acquisition Function에는 대표적으로 **EI (Expected Improvement)** 와 **P
 
 수식
 * 새로운 하이퍼파라미터 조합에 의한 **성능 개선 정도의 기댓값**
-* **[성능 개선 정도]** $EI[x] = E[\max {f(x) - f(x^+), 0}]$
+* **[성능 개선 정도]** $EI[x] = E[\max {(f(x) - f(x^+), 0)}]$
   * $\sigma(x) > 0$ 이면, $EI[x] = (\mu(x) - f(x^+) - \xi) \Phi(Z) + \sigma(x) \phi(Z)$ 
   * $\sigma(x) = 0$ 이면, $EI[x] = 0$
 * 수식 설명
@@ -306,10 +305,54 @@ print(f'Best Parameters : {best_params_optuna}')
 
 ## 5. 탐구: Test dataset 으로 최적화할 때의 Overfitting
 
-### 5-1. 실험 설계
+실험 목적 및 핵심 아이디어
+* Valid dataset 이 아닌 Test dataset 으로 하이퍼파라미터 최적화를 위한 성능지표를 계산했을 때, **새로운 데이터셋에서 overfitting 이 발생하는지** 알아본다.
+* 하이퍼파라미터 최적화를 위한 모델 학습 반복 횟수 (Optuna 기준 Trial 횟수) 별 다음 데이터셋에서의 성능 차이의 추이를 비교한다.
+  * HPO Test dataset (하이퍼파라미터 최적화를 위한 성능지표 계산용) 
+  * New Test dataset (하이퍼파라미터 최적화 완료 후 진짜 성능 측정용)
+  * **(New Test dataset 성능) < (HPO Test dataset 성능)** 이면 overfitting 을 의미한다.
 
-### 5-2. HyperOpt 실험
+### 5-1. 데이터셋 및 모델
 
-### 5-3. Optuna 실험
+**데이터셋**
+* Scikit-learn 의 **CovType (나무 수종 분류)** 데이터셋 (약 58만 개 데이터) 에서 2만 개를 랜덤 추출
+* 선정 이유
+  * HPO Test dataset 에서의 성능과 New Test dataset 에서의 성능의 변별이 가능한 정도의 충분히 큰 크기
+  * 하이퍼파라미터 종류가 많은 Tree 기반 모델을 적용하기에 적절한 Classification task 데이터셋
 
-### 5-4. 실험 결과
+**모델**
+* [**LightGBM**](머신러닝_모델_LightGBM.md) 모델
+* 선정 이유
+  * HPO 최적화를 실험하기에 충분히 많은 하이퍼파라미터
+  * 1만 개 이상의 큰 데이터셋에서 우수한 성능 발휘
+  * 빠른 모델 학습 속도
+
+## 5-2. 실험 진행 방법 및 하이퍼파라미터
+
+**실험 진행 방법**
+* 데이터셋을 다음과 같이 구분
+  * Train dataset (실제 모델 학습 시 일부를 valid dataset 으로 분리)
+  * HPO Test dataset (하이퍼파라미터 최적화 용도)
+  * New Test dataset (하이퍼파라미터 최적화 완료 후 실제 데이터 기준 성능 평가)
+* HPO Test dataset 과 New Test dataset 의 성능 비교
+  * 하이퍼파라미터 최적화를 위한 모델 학습 반복 횟수별 각 데이터셋의 성능 차이의 추이 비교
+  * **(New Test dataset 성능) < (HPO Test dataset 성능)** 이면 overfitting 을 의미한다.
+
+**성능지표 : Accuracy Score**
+* 선정 이유
+  * 3개 이상의 Class 가 있는 데이터셋에서 가장 직관적인 성능 지표
+
+**사용 라이브러리**
+* 하이퍼파라미터 최적화
+  * HyperOpt
+  * Optuna
+* LightGBM 모델
+  * LightGBM 의 LGBMClassifier 
+
+**사용 하이퍼파라미터**
+* learning_rate : LightGBM 모델의 학습률 (Learning Rate)
+* max_depth : 트리의 최대 깊이
+* num_leaves : 1개의 tree의 최대 leaf node 개수
+* min_data_in_leaf : 각 leaf node가 나타내야 하는 최소한의 sample 개수
+
+### 5-3. 실험 결과
