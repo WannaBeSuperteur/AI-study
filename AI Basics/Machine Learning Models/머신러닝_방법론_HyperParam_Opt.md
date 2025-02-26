@@ -15,6 +15,7 @@
 
 ## 코드
 * [하이퍼파라미터 최적화 라이브러리](#4-하이퍼파라미터-최적화-라이브러리) 비교 코드 : [code (ipynb)](codes/Hyperparam_Opt_example.ipynb)
+* [Test Dataset 으로 최적화 시 Overfitting 실험](#5-탐구-test-dataset-으로-최적화할-때의-overfitting) 코드 : [code (ipynb)](codes/Hyperparam_Opt_experiment.ipynb)
 
 ## 1. 하이퍼파라미터 (Hyper-parameter)
 **하이퍼파라미터 (Hyper-parameter)** 는 머신러닝 알고리즘을 통해 직접 찾는 값이 아닌, **해당 알고리즘을 설계하는 데 있어서의 설정값** 을 의미한다.
@@ -354,5 +355,28 @@ print(f'Best Parameters : {best_params_optuna}')
 * max_depth : 트리의 최대 깊이
 * num_leaves : 1개의 tree의 최대 leaf node 개수
 * min_data_in_leaf : 각 leaf node가 나타내야 하는 최소한의 sample 개수
+* lambda_l1, lambda_l2 : [L1, L2 Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#l1-l2-regularization) 에서 각각 사용되는 Lambda 값
 
 ### 5-3. 실험 결과
+**결론**
+* 해당 데이터셋 실험에서는 HPO 에 따른 **overfitting 을 확인할 수 없었음**
+* 다른 데이터셋이나 다른 모델을 이용하면 overfitting 이 발생할 수도 있을 것으로 추정
+* 단, HPO 에 대한 overfitting 은 일반적으로 말하는 **Train vs. Test dataset 에 대한 overfitting 보다는 약할 것으로 추정**
+
+**HyperOpt 실험 결과 상세**
+* 각 trial 별 Accuracy 그래프
+
+![image](images/Hyperparam_Opt_4.PNG)
+
+* 각 trial 별 HPO metric test vs. new dataset 간 Accuracy 차이
+
+![image](images/Hyperparam_Opt_5.PNG)
+
+**Optuna 실험 결과 상세**
+* 각 trial 별 Accuracy 그래프
+
+![image](images/Hyperparam_Opt_6.PNG)
+
+* 각 trial 별 HPO metric test vs. new dataset 간 Accuracy 차이
+
+![image](images/Hyperparam_Opt_7.PNG)
