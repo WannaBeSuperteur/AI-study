@@ -361,6 +361,7 @@ print(f'Best Parameters : {best_params_optuna}')
 ### 5-3. 실험 결과
 **결론**
 * 해당 데이터셋 실험에서는 HPO 에 따른 **overfitting 을 확인할 수 없었음**
+  * 성능 추이를 확실히 확인하려다, 데이터 크기가 overfitting이 일어나지 않을 정도로 충분히 커졌기 때문으로 추정 
 * 다른 데이터셋이나 다른 모델을 이용하면 overfitting 이 발생할 수도 있을 것으로 추정
 * 단, HPO 에 대한 overfitting 은 일반적으로 말하는 **Train vs. Test dataset 에 대한 overfitting 보다는 약할 것으로 추정**
 
