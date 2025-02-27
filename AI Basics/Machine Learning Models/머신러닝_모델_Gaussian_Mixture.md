@@ -14,6 +14,7 @@
   * [5-2. 실험 결과](#5-2-실험-결과)
 
 ## 코드
+* [Gaussian Mixture vs. k-NN / K-means 성능 비교 실험 코드 (ipynb)](codes/Gaussian_Mixture_experiment.ipynb)
 
 ## 1. Gaussian Mixture Model
 **Gaussian Mixture Model (GMM, 가우시안 혼합 모델)** 은 정규분포라고 하는 Gaussian Distribution의 혼합을 통해 데이터의 분포를 근사하는 머신러닝 방법론이다.
@@ -149,6 +150,7 @@ Gaussian Mixture Model 은 다음과 같이 여러 가지 문제에 적용할 �
 ## 4. 실험 - Gaussian Mixture vs. k-NN 분류 성능 비교
 
 **실험 목적**
+
 * Gaussian Mixture Model 과 [k-NN (K Nearest Neighbors)](머신러닝_모델_KNN.md) 의 분류 성능을 비교한다.
 
 ### 4-1. 실험 설계
@@ -158,12 +160,14 @@ Gaussian Mixture Model 은 다음과 같이 여러 가지 문제에 적용할 �
 * 선정한 데이터셋
   * **Kaggle 의 [Credit Card Dataset for Clustering](https://www.kaggle.com/datasets/arjunbhasin2013/ccdata) 데이터셋**
   * 특정 column 을 target column 으로 설정
-  * target column 의 숫자 값을 5 개의 구간으로 나누어 분류 문제로 변환 
+  * target column 의 숫자 값을 4 개의 구간으로 나누어 분류 문제로 변환 
 * 선정 이유
   * 10개 이상의 feature 가 있는, 저차원은 아닌 데이터셋 **(실무에서 만나는 고차원 데이터셋과 거리가 멀지 않음)**
   * target 값이 3~7 개의 Class 로, 분류 및 클러스터링 성능 평가에 적절한 Classification task 데이터셋임
   * 양쪽 모델의 성능 비교가 가능할 만큼 충분히 큰 데이터셋
   * CC-0: Public Domain 으로 라이선스 이슈가 없음
+* 추가 전처리
+  * k-NN 에 적용하기 위해, [각 feature를 표준정규분포로 표준화](../Data%20Science%20Basics/데이터_사이언스_기초_Normalization.md#2-2-standarization-z-score-normalization)
 
 **성능 metric**
 
@@ -172,18 +176,78 @@ Gaussian Mixture Model 은 다음과 같이 여러 가지 문제에 적용할 �
   * **Macro F1 Score**
   * **Weighted F1 Score**
 * 선정 이유
-  * 5개의 각 Class 간에 [데이터 불균형](../Data%20Science%20Basics/데이터_사이언스_기초_데이터_불균형.md) 이 있기는 하지만, 가장 직관적인 성능지표로 Accuracy 를 선정
+  * 4개의 각 Class 간에 [데이터 불균형](../Data%20Science%20Basics/데이터_사이언스_기초_데이터_불균형.md) 이 있기는 하지만, 가장 직관적인 성능지표로 Accuracy 를 선정
   * **3개 이상의 Multi-Class + 데이터 불균형** 상황에 적합한 것으로 [Macro, Weighted F1 Score](../Data%20Science%20Basics/데이터_사이언스_기초_Metrics_MultiClass.md#4-f1-score) 를 선정
   * [Micro F1 Score 는 Accuracy와 계산값이 항상 같으므로](../Data%20Science%20Basics/데이터_사이언스_기초_Metrics_MultiClass.md#4-4-accuracy--micro-f1-score--micro-precision--micro-recall-증명) 중복으로 판단하여 제외
 
-**전처리**
-
-* k-NN 에 적용하기 위해, [각 feature를 표준정규분포로 표준화](../Data%20Science%20Basics/데이터_사이언스_기초_Normalization.md#2-2-standarization-z-score-normalization)
-
 ### 4-2. 실험 결과
+
+**결론 요약**
+
+* Gaussian Mixture Model 은 k-NN 에 비해 **분류 문제** 에서의 **성능이 훨씬 떨어진다.**
+* 다른 데이터셋에서도 k-NN 보다 분류 성능이 비교적 떨어질 것으로 예상된다.
+
+**상세 결과**
+
+| Metric            | Gaussian Mixture Model<br>(Cluster 4개로 고정) | k-Nearest Neighbors<br>(neighbor 1~50개) |
+|-------------------|--------------------------------------------|-----------------------------------------|
+| Accuracy          | 49.93%                                     | 80.50% - 85.36%                         |
+| Macro F1 Score    | 45.66%                                     | 77.23% - 82.15%                         |
+| Weighted F1 Score | 49.22%                                     | 80.15% - 84.67%                         |
+
+* k-NN 의 Number of Neighbors 에 따른 **Accuracy, Macro F1 Score, Weighted F1 Score** 추이
+
+![images](images/Gaussian_Mixture_5.PNG)
+
+![images](images/Gaussian_Mixture_6.PNG)
+
+![images](images/Gaussian_Mixture_7.PNG)
 
 ## 5. 실험 - Gaussian Mixture vs. K-means 클러스터링 성능 비교
 
+**실험 목적**
+
+* Gaussian Mixture Model 과 [K-means Clustering](머신러닝_모델_K-means_Clustering.md) 의 분류 성능을 비교한다.
+
 ### 5-1. 실험 설계
 
+**데이터셋 선정**
+
+* [Gaussian Mixture vs. k-NN 분류 성능 비교 실험](#4-실험---gaussian-mixture-vs-k-nn-분류-성능-비교) 과 동일
+
+**성능 metric**
+
+* 선정한 성능 metric
+  * **[Silhouette Score](머신러닝_모델_K-means_Clustering.md#4-2-실루엣-silhouette-기법)**
+* 선정 이유
+  * K-means 등 Clustering 기법들의 성능 측정을 위한 널리 알려진 성능 metric 
+  * [Elbow 기법](머신러닝_모델_K-means_Clustering.md#4-1-엘보우-elbow-기법) 은 Cluster 의 개수를 다양하게 조절해 가면서 하는데, 본 task 에서는 Cluster 의 개수가 Class의 개수, 즉 4개로 고정되어 있으므로 이 방법은 적절하지 않음
+
 ### 5-2. 실험 결과
+
+**결론 요약**
+
+* Gaussian Mixture Model 은 K-means 에 비해 **Clustering 성능이 훨씬 떨어진다.**
+* 다른 데이터셋에서도 K-means 보다 Clustering 성능이 비교적 떨어질 것으로 예상된다.
+
+**상세 결과**
+
+| Metric           | Gaussian Mixture Model<br>(Cluster 4개) | K-means Clustering<br>(Cluster 4개) |
+|------------------|----------------------------------------|------------------------------------|
+| Silhouette Score | 0.0517                                 | 0.2481                             |
+
+* **Principal Component Analysis** 시각화 결과 비교 (원본 데이터셋 vs. GMM vs. K-means)
+
+|         | Principal Component Analysis             |
+|---------|------------------------------------------|
+| 원본      | ![image](images/Gaussian_Mixture_8.png)  |
+| GMM     | ![image](images/Gaussian_Mixture_10.png) |
+| K-means | ![image](images/Gaussian_Mixture_12.png) |
+
+* **t-SNE** 시각화 결과 비교 (원본 데이터셋 vs. GMM vs. K-means)
+
+|         | t-SNE                                    |
+|---------|------------------------------------------|
+| 원본      | ![image](images/Gaussian_Mixture_9.png)  |
+| GMM     | ![image](images/Gaussian_Mixture_11.png) |
+| K-means | ![image](images/Gaussian_Mixture_13.png) |
