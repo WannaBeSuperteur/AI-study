@@ -43,19 +43,19 @@
 ## 3. Naive Bayes 알고리즘의 예시
 예를 들어 다음과 같은 데이터가 있다고 하자. 이 데이터는 메일 내용에 "대출", "보험", "취업"이라는 단어가 포함되어 있는지를 검토하여, 광고 메일인지 여부를 판단하는 Naive Bayes 모델의 학습 데이터이다.
 
-|"대출" 포함|"보험" 포함|"취업" 포함|분류|
-|---|---|---|---|
-|True|True|False|광고|
-|True|False|False|광고|
-|False|True|True|광고|
-|True|True|False|광고|
-|False|False|True|일반|
-|False|False|True|광고|
-|False|True|False|광고|
-|True|False|True|일반|
-|False|False|False|일반|
-|False|False|True|일반|
-|True|True|True|?|
+| "대출" 포함 | "보험" 포함 | "취업" 포함 | 분류 |
+|---------|---------|---------|----|
+| True    | True    | False   | 광고 |
+| True    | False   | False   | 광고 |
+| False   | True    | True    | 광고 |
+| True    | True    | False   | 광고 |
+| False   | False   | True    | 일반 |
+| False   | False   | True    | 광고 |
+| False   | True    | False   | 광고 |
+| True    | False   | True    | 일반 |
+| False   | False   | False   | 일반 |
+| False   | False   | True    | 일반 |
+| True    | True    | True    | ?  |
 
 위와 같은 데이터가 있다고 할 때, "대출", "보험", "취업"이라는 단어를 모두 포함한 메일은 스팸 메일인지 판단해야 한다.
 

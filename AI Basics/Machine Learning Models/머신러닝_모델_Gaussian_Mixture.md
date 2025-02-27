@@ -151,7 +151,7 @@ Gaussian Mixture Model 은 다음과 같이 여러 가지 문제에 적용할 �
 
 **실험 목적**
 
-* Gaussian Mixture Model 과 [k-NN (K Nearest Neighbors)](머신러닝_모델_KNN.md) 의 분류 성능을 비교한다.
+* Gaussian Mixture Model 과 [k-NN (K Nearest Neighbors)](머신러닝_모델_KNN.md) 의 **분류 (지도 학습)** 성능을 비교한다.
 
 ### 4-1. 실험 설계
 
@@ -207,7 +207,7 @@ Gaussian Mixture Model 은 다음과 같이 여러 가지 문제에 적용할 �
 
 **실험 목적**
 
-* Gaussian Mixture Model 과 [K-means Clustering](머신러닝_모델_K-means_Clustering.md) 의 분류 성능을 비교한다.
+* Gaussian Mixture Model 과 [K-means Clustering](머신러닝_모델_K-means_Clustering.md) 의 **Clustering (비지도 학습)** 성능을 비교한다.
 
 ### 5-1. 실험 설계
 
