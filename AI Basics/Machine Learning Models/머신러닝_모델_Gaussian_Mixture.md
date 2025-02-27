@@ -154,25 +154,30 @@ Gaussian Mixture Model 은 다음과 같이 여러 가지 문제에 적용할 �
 ### 4-1. 실험 설계
 
 **데이터셋 선정**
+
 * 선정한 데이터셋
-  * **Scikit-learn 의 Forest covertypes**
-  * 위 데이터셋에서 **2만 개의 데이터 (row) 를 랜덤하게 추출**
+  * **Kaggle 의 [Credit Card Dataset for Clustering](https://www.kaggle.com/datasets/arjunbhasin2013/ccdata) 데이터셋**
+  * 특정 column 을 target column 으로 설정
+  * target column 의 숫자 값을 5 개의 구간으로 나누어 분류 문제로 변환 
 * 선정 이유
-  * 50개 이상의 feature 가 있는, 저차원은 아닌 데이터셋 **(실무에서 만나는 고차원 데이터셋과 거리가 멀지 않음)**
-  * target 값이 7개의 Class 로, 분류 및 클러스터링 성능 평가에 적절한 Classification task 데이터셋임
+  * 10개 이상의 feature 가 있는, 저차원은 아닌 데이터셋 **(실무에서 만나는 고차원 데이터셋과 거리가 멀지 않음)**
+  * target 값이 3~7 개의 Class 로, 분류 및 클러스터링 성능 평가에 적절한 Classification task 데이터셋임
   * 양쪽 모델의 성능 비교가 가능할 만큼 충분히 큰 데이터셋
+  * CC-0: Public Domain 으로 라이선스 이슈가 없음
 
 **성능 metric**
+
 * 선정한 성능 metric
   * **Accuracy**
   * **Macro F1 Score**
   * **Weighted F1 Score**
 * 선정 이유
-  * 7개의 각 Class 간에 [데이터 불균형](../Data%20Science%20Basics/데이터_사이언스_기초_데이터_불균형.md) 이 있기는 하지만, 가장 직관적인 성능지표로 Accuracy 를 선정
+  * 5개의 각 Class 간에 [데이터 불균형](../Data%20Science%20Basics/데이터_사이언스_기초_데이터_불균형.md) 이 있기는 하지만, 가장 직관적인 성능지표로 Accuracy 를 선정
   * **3개 이상의 Multi-Class + 데이터 불균형** 상황에 적합한 것으로 [Macro, Weighted F1 Score](../Data%20Science%20Basics/데이터_사이언스_기초_Metrics_MultiClass.md#4-f1-score) 를 선정
   * [Micro F1 Score 는 Accuracy와 계산값이 항상 같으므로](../Data%20Science%20Basics/데이터_사이언스_기초_Metrics_MultiClass.md#4-4-accuracy--micro-f1-score--micro-precision--micro-recall-증명) 중복으로 판단하여 제외
 
 **전처리**
+
 * k-NN 에 적용하기 위해, [각 feature를 표준정규분포로 표준화](../Data%20Science%20Basics/데이터_사이언스_기초_Normalization.md#2-2-standarization-z-score-normalization)
 
 ### 4-2. 실험 결과
