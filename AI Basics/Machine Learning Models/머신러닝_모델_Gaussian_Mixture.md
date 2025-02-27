@@ -31,7 +31,7 @@ GMM에서 데이터 값 x가 나타날 확률은 다음과 같이 **가우시안
 
 정규분포 $N(x; \mu_k, \Sigma_k)$ 는 다음과 같은 수식으로 나타낸다.
 
-* $N(x; \mu_k, \Sigma_k) = \frac{1}{(2 \pi)^{D/2} \times |\Sigma|^{1/2}} exp(-\frac{1}{2} (x - \mu)^T \Sigma^{-1} (x - \mu))$
+* $\displaystyle N(x; \mu_k, \Sigma_k) = \frac{1}{(2 \pi)^{D/2} \times |\Sigma|^{1/2}} exp(-\frac{1}{2} (x - \mu)^T \Sigma^{-1} (x - \mu))$
 
 이때, mixing coefficient 를 **모두 합하면 1** 이 된다. 즉 다음과 같다.
 
@@ -77,7 +77,7 @@ GMM을 학습시키기 위해 $\frac{\delta L(X, \theta)}{\delta \mu_k} = \frac{
 
 여기서 다음 부분을 **responsibility (책임값, $\gamma(z_{nk}$))** 이라고 한다.
 
-* \frac{\pi_k N(x_n; \mu_k, \Sigma_k)}{\Sigma_{j=1}^K \pi_j N(x_j; \mu_j, \Sigma_j)}
+* $\frac{\pi_k N(x_n; \mu_k, \Sigma_k)}{\Sigma_{j=1}^K \pi_j N(x_j; \mu_j, \Sigma_j)}$
 
 따라서, 위 수식은 다음과 같이 표현할 수 있다.
 
@@ -101,7 +101,7 @@ Gaussian Mixture Model 의 학습 알고리즘은 다음과 같이 **Expectation
 **Expectation (E step)** 의 핵심 아이디어는 다음과 같다.
 
 * **data point $x_n$ 이 특정 $k$ 번째 Gaussian 에서 온 것일 확률** 인 **책임값 (responsibility)** 계산
-  * $\gamma(z_{nk}) = \frac{\pi_k N(x_n; \mu_k, \Sigma_k)}{\Sigma_{j=1}^K \pi_j N(x_j; \mu_j, \Sigma_j)}$
+  * $\displaystyle \gamma(z_{nk}) = \frac{\pi_k N(x_n; \mu_k, \Sigma_k)}{\Sigma_{j=1}^K \pi_j N(x_j; \mu_j, \Sigma_j)}$
 * 이를 통해 **각 data point 를 responsibility 가 가장 큰 Gaussian 에 할당** 한다.
 
 ![images](images/Gaussian_Mixture_2.PNG)
@@ -121,16 +121,16 @@ Gaussian Mixture Model 의 학습 알고리즘은 다음과 같이 **Expectation
 
 * 갱신 수식
   * $\mu_k^{new} = \frac{1}{N_k} \Sigma_{n=1}^N \gamma(z_{nk}) x_n$
-  * $\Sigma_k^{new} = \frac{1}{N_k} \Sigma_{n=1}^N \gamma(z_{nk}) (x_n - \mu_k^{new})(x_n - \mu_k^{new}^T)$
+  * $\Sigma_k^{new} = \frac{1}{N_k} \Sigma_{n=1}^N [\gamma (z_{nk}) (x_n - \mu_k^{new})(x_n - \mu_k^{new})^T]$
   * $\pi_k^{new} = \frac{N_k}{N}$
 * 수식 설명
   * $N_k = \Sigma_{n=1}^N \gamma(z_{nk})$ 
 
 이 값들은 다음과 같이 **Log likelihood 를 각 매개변수로 편미분한 값을 0으로 만든다. 즉 Likelihood 를 최대화 (GMM 학습의 목표)** 를 할 수 있다.
 
-* $\frac{\delta L(X; \theta)}{\delta \mu_k^{new}} = 0$
-* $\frac{\delta L(X; \theta)}{\delta \Sigma_k^{new}} = 0$
-* $\frac{\delta L(X; \theta)}{\delta \pi_k^{new}} = 0$
+* $\displaystyle \frac{\delta L(X; \theta)}{\delta \mu_k^{new}} = 0$
+* $\displaystyle \frac{\delta L(X; \theta)}{\delta \Sigma_k^{new}} = 0$
+* $\displaystyle \frac{\delta L(X; \theta)}{\delta \pi_k^{new}} = 0$
 
 ### 2-3. 수렴 여부 검사
 
@@ -148,7 +148,32 @@ Gaussian Mixture Model 은 다음과 같이 여러 가지 문제에 적용할 �
 
 ## 4. 실험 - Gaussian Mixture vs. k-NN 분류 성능 비교
 
+**실험 목적**
+* Gaussian Mixture Model 과 [k-NN (K Nearest Neighbors)](머신러닝_모델_KNN.md) 의 분류 성능을 비교한다.
+
 ### 4-1. 실험 설계
+
+**데이터셋 선정**
+* 선정한 데이터셋
+  * **Scikit-learn 의 Forest covertypes**
+  * 위 데이터셋에서 **2만 개의 데이터 (row) 를 랜덤하게 추출**
+* 선정 이유
+  * 50개 이상의 feature 가 있는, 저차원은 아닌 데이터셋 **(실무에서 만나는 고차원 데이터셋과 거리가 멀지 않음)**
+  * target 값이 7개의 Class 로, 분류 및 클러스터링 성능 평가에 적절한 Classification task 데이터셋임
+  * 양쪽 모델의 성능 비교가 가능할 만큼 충분히 큰 데이터셋
+
+**성능 metric**
+* 선정한 성능 metric
+  * **Accuracy**
+  * **Macro F1 Score**
+  * **Weighted F1 Score**
+* 선정 이유
+  * 7개의 각 Class 간에 [데이터 불균형](../Data%20Science%20Basics/데이터_사이언스_기초_데이터_불균형.md) 이 있기는 하지만, 가장 직관적인 성능지표로 Accuracy 를 선정
+  * **3개 이상의 Multi-Class + 데이터 불균형** 상황에 적합한 것으로 [Macro, Weighted F1 Score](../Data%20Science%20Basics/데이터_사이언스_기초_Metrics_MultiClass.md#4-f1-score) 를 선정
+  * [Micro F1 Score 는 Accuracy와 계산값이 항상 같으므로](../Data%20Science%20Basics/데이터_사이언스_기초_Metrics_MultiClass.md#4-4-accuracy--micro-f1-score--micro-precision--micro-recall-증명) 중복으로 판단하여 제외
+
+**전처리**
+* k-NN 에 적용하기 위해, [각 feature를 표준정규분포로 표준화](../Data%20Science%20Basics/데이터_사이언스_기초_Normalization.md#2-2-standarization-z-score-normalization)
 
 ### 4-2. 실험 결과
 
