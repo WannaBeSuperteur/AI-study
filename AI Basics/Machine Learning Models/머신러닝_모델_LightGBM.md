@@ -162,7 +162,7 @@ Bundle로 단일화된 feature의 값은 다음과 같이 구성한다.
 | goss | [GOSS (Gradient-based One-Side Sampling)](#4-1-goss-gradient-based-one-side-sampling)            |
 
 * metric
-  * [Loss 측정용 metric (= Loss Function)](../Deep%20Learning%20Basics/딥러닝_기초_Loss_function.md#다양한-loss-function)
+  * [Loss 측정용 metric (= Loss Function)](../Deep%20Learning%20Basics/딥러닝_기초_Loss_function.md#2-다양한-loss-function)
   * MSE (Mean Squared Error), MAE (Mean Absolute Error) 등
 * early stopping round
   * ```num_iterations``` 횟수만큼 반복 학습 도중, 해당 횟수만큼 연속으로 성능 신기록이 나오지 않으면 학습을 종료한다.

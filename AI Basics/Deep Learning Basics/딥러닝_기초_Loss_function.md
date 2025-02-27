@@ -36,13 +36,13 @@
 
 아래에서 소개할 각 Loss Function 에 대해 간단히 정리하면 다음과 같다.
 
-| Loss Function                  | 설명                                                        | Outlier 민감 | 미분 불가능점                  |
-|--------------------------------|-----------------------------------------------------------|------------|--------------------------|
-| Mean-Squared Error (MSE)       | 오차 제곱의 합                                                  | O          | 없음                       |
-| root mean-squared error (RMSE) | 오차 제곱의 합의 제곱근                                             | O          | 모든 데이터에 대한 오차가 0인 지점     |
-| Mean-Absolute Error (MAE)      | 절대 오차의 합                                                  | X          | 1개 이상의 데이터에 대한 오차가 0인 지점 |
-| Binary Cross Entropy Loss      | 0~1 사이의 확률 예측이 실제와 차이가 클수록 오차 급증<br>**(Class가 2개일 때)**    |            | 없음                       |
-| Categorical Cross Entropy Loss | 0~1 사이의 확률 예측이 실제와 차이가 클수록 오차 급증<br>**(Class가 3개 이상일 때)** |            | 없음                       |
+| Loss Function                  | 설명                                                        | Outlier 민감 | 미분 불가능점                             |
+|--------------------------------|-----------------------------------------------------------|------------|-------------------------------------|
+| Mean-Squared Error (MSE)       | 오차 제곱의 합                                                  | O          | 없음                                  |
+| root mean-squared error (RMSE) | 오차 제곱의 합의 제곱근                                             | O          | **모든 데이터 (row)** 에 대한 오차가 0인 지점     |
+| Mean-Absolute Error (MAE)      | 절대 오차의 합                                                  | X          | **1개 이상의 데이터 (row)** 에 대한 오차가 0인 지점 |
+| Binary Cross Entropy Loss      | 0~1 사이의 확률 예측이 실제와 차이가 클수록 오차 급증<br>**(Class가 2개일 때)**    |            | 없음                                  |
+| Categorical Cross Entropy Loss | 0~1 사이의 확률 예측이 실제와 차이가 클수록 오차 급증<br>**(Class가 3개 이상일 때)** |            | 없음                                  |
 
 ### 2-1. Mean-Squared Error (MSE)
 
