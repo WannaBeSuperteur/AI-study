@@ -74,7 +74,7 @@ K-means Clustering 에서 최적의 클러스터링을 위한 K 값을 선택하
   * 고려 대상
     * 동일 Cluster 내의 샘플 간 거리 (짧을수록 좋음)
     * 가장 가까운 다른 Cluster와의 거리 (길수록 좋음)
-  * **[수식]** $S_i = \frac{b_i - a_i}{\max(a_i, b_i)}$
+  * **[수식]** $\displaystyle S_i = \frac{b_i - a_i}{\max(a_i, b_i)}$
     * 각 샘플마다 계산 
     * $S_i$ : **실루엣 계수 (Silhouette Coef.) (클수록 좋음)**
     * $a_i$ : 동일 cluster 내의 다른 샘플과의 거리의 평균

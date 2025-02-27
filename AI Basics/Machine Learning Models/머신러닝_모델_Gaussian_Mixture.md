@@ -53,13 +53,13 @@ GMM을 학습시키는 것은 다음을 의미한다.
   * $X$ : 전체 데이터셋, $X = {x_1, x_2, ..., x_n}$
   * $\theta$ : 매개변수의 집합
   * $N$ : 전체 데이터의 개수
-* **[목표]** $\frac{\delta L(X, \theta)}{\delta \mu_k} = \frac{\delta}{\delta \mu_k} \log \Pi_{n=1}^N p(x_n; \theta) = 0$ 인 매개변수를 찾는다.
+* **[목표]** $\displaystyle \frac{\delta L(X, \theta)}{\delta \mu_k} = \frac{\delta}{\delta \mu_k} \log \Pi_{n=1}^N p(x_n; \theta) = 0$ 인 매개변수를 찾는다.
 
 ----
 
 **Gaussian Mixture 학습 상세**
 
-GMM을 학습시키기 위해 $\frac{\delta L(X, \theta)}{\delta \mu_k} = \frac{\delta}{\delta \mu_k} \log \Pi_{n=1}^N p(x_n; \theta) = 0$ 인 매개변수를 찾는 과정은 다음과 같다.
+GMM을 학습시키기 위해 $\displaystyle \frac{\delta L(X, \theta)}{\delta \mu_k} = \frac{\delta}{\delta \mu_k} \log \Pi_{n=1}^N p(x_n; \theta) = 0$ 인 매개변수를 찾는 과정은 다음과 같다.
 
 먼저 Log Likelihood 의 수식은 다음과 같다.
 
@@ -68,17 +68,17 @@ GMM을 학습시키기 위해 $\frac{\delta L(X, \theta)}{\delta \mu_k} = \frac{
 
 따라서, 이것을 $\mu_k$ 에 대해 미분했을 때 0이 되려면 다음과 같아야 한다.
 
-* $\frac{\delta L(X; \theta)}{\delta \mu_k} = 0$
-* $\frac{\delta}{\delta \mu_k} [\Sigma_{n=1}^N \log (\Sigma_{j=1}^K \pi_j N(x_n; \mu_j, \Sigma_j))] = 0$
-* $[\Sigma_{n=1}^N \frac{\delta}{\delta \mu_k} \log (\Sigma_{j=1}^K \pi_j N(x_n; \mu_j, \Sigma_j))] = 0$
+* $\displaystyle \frac{\delta L(X; \theta)}{\delta \mu_k} = 0$
+* $\displaystyle \frac{\delta}{\delta \mu_k} [\Sigma_{n=1}^N \log (\Sigma_{j=1}^K \pi_j N(x_n; \mu_j, \Sigma_j))] = 0$
+* $\displaystyle [\Sigma_{n=1}^N \frac{\delta}{\delta \mu_k} \log (\Sigma_{j=1}^K \pi_j N(x_n; \mu_j, \Sigma_j))] = 0$
 
 이 수식을 정리하면 다음과 같다.
 
-* $\Sigma_{n=1}^N \frac{\pi_k N(x_n; \mu_k, \Sigma_k)}{\Sigma_{j=1}^K \pi_j N(x_j; \mu_j, \Sigma_j)} \times \Sigma_k^{-1} (x_n - \mu_k) = 0$
+* $\displaystyle \Sigma_{n=1}^N \frac{\pi_k N(x_n; \mu_k, \Sigma_k)}{\Sigma_{j=1}^K \pi_j N(x_j; \mu_j, \Sigma_j)} \times \Sigma_k^{-1} (x_n - \mu_k) = 0$
 
 여기서 다음 부분을 **responsibility (책임값, $\gamma(z_{nk}$))** 이라고 한다.
 
-* $\frac{\pi_k N(x_n; \mu_k, \Sigma_k)}{\Sigma_{j=1}^K \pi_j N(x_j; \mu_j, \Sigma_j)}$
+* $\displaystyle \frac{\pi_k N(x_n; \mu_k, \Sigma_k)}{\Sigma_{j=1}^K \pi_j N(x_j; \mu_j, \Sigma_j)}$
 
 따라서, 위 수식은 다음과 같이 표현할 수 있다.
 
@@ -121,9 +121,9 @@ Gaussian Mixture Model 의 학습 알고리즘은 다음과 같이 **Expectation
 파라미터 $\theta$ 의 갱신 수식은 다음과 같다.
 
 * 갱신 수식
-  * $\mu_k^{new} = \frac{1}{N_k} \Sigma_{n=1}^N \gamma(z_{nk}) x_n$
-  * $\Sigma_k^{new} = \frac{1}{N_k} \Sigma_{n=1}^N [\gamma (z_{nk}) (x_n - \mu_k^{new})(x_n - \mu_k^{new})^T]$
-  * $\pi_k^{new} = \frac{N_k}{N}$
+  * $\displaystyle \mu_k^{new} = \frac{1}{N_k} \Sigma_{n=1}^N \gamma(z_{nk}) x_n$
+  * $\displaystyle \Sigma_k^{new} = \frac{1}{N_k} \Sigma_{n=1}^N [\gamma (z_{nk}) (x_n - \mu_k^{new})(x_n - \mu_k^{new})^T]$
+  * $\displaystyle \pi_k^{new} = \frac{N_k}{N}$
 * 수식 설명
   * $N_k = \Sigma_{n=1}^N \gamma(z_{nk})$ 
 

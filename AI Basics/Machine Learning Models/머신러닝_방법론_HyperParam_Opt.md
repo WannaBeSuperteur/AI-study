@@ -96,7 +96,7 @@ Acquisition Function에는 대표적으로 **EI (Expected Improvement)** 와 **P
 
 수식
 * 새로운 하이퍼파라미터 조합에 의한 **성능 개선 확률**
-* **[성능 개선 확률]** $POI[x] = \frac{\mu(x) - f(x^+) - \xi}{\sigma(x)}$ 
+* **[성능 개선 확률]** $\displaystyle POI[x] = \frac{\mu(x) - f(x^+) - \xi}{\sigma(x)}$ 
 * 수식 설명
   * $x$ : 새로운 하이퍼파라미터 조합
   * $x^+$ : 기존에 성능이 가장 좋았던 하이퍼파라미터 조합
@@ -127,7 +127,7 @@ Acquisition Function에는 대표적으로 **EI (Expected Improvement)** 와 **P
   * $\sigma(x) = 0$ 이면, $EI[x] = 0$
 * 수식 설명
   * $Z$
-    * $\sigma(x) > 0$ 이면, $Z = \frac{\mu(x) - f(x^+) - \xi}{\sigma (x)}$
+    * $\sigma(x) > 0$ 이면, $\displaystyle Z = \frac{\mu(x) - f(x^+) - \xi}{\sigma (x)}$
     * $\sigma(x) = 0$ 이면, $Z = 0$
   * $\Phi(z)$, $\phi(z)$
     * $\Phi(z)$ : $z$ 에 대한 누적 분포 함수

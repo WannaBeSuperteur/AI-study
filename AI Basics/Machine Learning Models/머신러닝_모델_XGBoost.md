@@ -40,11 +40,11 @@ XGBoost의 장단점은 다음과 같다.
 
 Residual에 대해 자세히 살펴보면 다음과 같다.
 
-* **[Loss Function]** $L = \frac{1}{2} \times (y_i - f(x_i))^2$
+* **[Loss Function]** $\displaystyle L = \frac{1}{2} \times (y_i - f(x_i))^2$
   * $y_i$ : 실제 출력값
   * $x_i$ : 입력값
   * $f(x_i)$ : 모델의 예측값
-* **[Gradient]** $\frac{\delta L}{\delta x_i} = f(x_i) - y_i$
+* **[Gradient]** $\displaystyle \frac{\delta L}{\delta x_i} = f(x_i) - y_i$
 * **[Residual]** $y_i - f(x_i)$ 
   * 실제 출력값과 예측값의 차이
   * $y_i - f(x_i) = -(f(x_i) - y_i)$ 이므로 이것을 **Negative Gradient** 라고 한다.
@@ -59,7 +59,7 @@ XGBoost에서는 다음과 같이 **CART (Classification and Regression Trees)**
 
 | 구분                                                                                                                      | 목적             | 설명                                                                                                                                          |
 |-------------------------------------------------------------------------------------------------------------------------|----------------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| Loss Function 에 [L2 와 유사한 Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#l1-l2-regularization) 적용 | overfitting 방지 | - $Loss = \Sigma_i l(\hat{y}_i, y_i) + \Sigma_k \Omega(f_k)$<br> - $\Omega(f) = \lambda T + \frac{1}{2} \lambda w^2$                        |
+| Loss Function 에 [L2 와 유사한 Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#l1-l2-regularization) 적용 | overfitting 방지 | - $\displaystyle Loss = \Sigma_i l(\hat{y}_i, y_i) + \Sigma_k \Omega(f_k)$<br> - $\Omega(f) = \lambda T + \frac{1}{2} \lambda w^2$          |
 | CART (Classification and Regression Trees)                                                                              |                | - **각 트리의 출력값 (연속된 숫자) 의 가중치 합** 으로 최종 예측값 결정<br>- 회귀 트리 (Regression Tree) 를 이용한 앙상블 (Ensemble)                                             |
 | 병렬 학습 (Split)                                                                                                           | 모델 속도 향상       | 다음과 같이 4가지로 구분<br>- Basic Exact Greedy Algorithm<br>- Approximate Algorithm<br>- Weighted Quantile Search<br>- Sparsity-aware Split Finding |
 | 결측치 데이터 처리 알고리즘 (Sparsity-aware Split Finding)                                                                          | 결측치가 있는 데이터 학습 | - **모든 결측치를 왼쪽, 오른쪽으로 몰아서** 배치했을 때의 information gain 을 각각 계산<br>- **information gain이 가장 높은** split point를 탐색                               |
@@ -69,7 +69,7 @@ XGBoost에서는 다음과 같이 **CART (Classification and Regression Trees)**
 XGBoost의 Loss Function에는 **overfitting 방지를 위하여 다음과 같이 [L2 Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#l1-l2-regularization) 과 유사한 Regularization** 을 적용한다.
 
 * **[수식]** $Loss = \Sigma_i l(\hat{y}_i, y_i) + \Sigma_k \Omega(f_k)$
-  * $\Omega(f) = \lambda T + \frac{1}{2} \lambda w^2$
+  * $\displaystyle \Omega(f) = \lambda T + \frac{1}{2} \lambda w^2$
   * $l$ : 미분 가능한 convex loss function
   * $\hat{y}_i$ : $i$ 번째 데이터에 대한 prediction
   * $y_i$ : $i$ 번째 데이터에 대한 실제 값 (target)
@@ -116,7 +116,7 @@ XGBoost 에서 병렬 학습을 위해 사용되는 Split 알고리즘은 다음
   * = **(왼쪽 leaf node 의 score) + (오른쪽 leaf node 의 score) - (부모 node 의 score)**
 * 이 score 는 1차 편미분값 Gradient 와 2차 편미분값 Hessian 을 이용하여 다음과 같이 계산한다.
   * 각 node 에 해당하는 데이터 (row) 에 대해, 다음 수식 결과의 합산
-    * $\frac{(Gradient)^2}{(Hessian) + \lambda}$ 
+    * $\displaystyle \frac{(Gradient)^2}{(Hessian) + \lambda}$ 
 
 **Loss 감소량** 의 수식
 

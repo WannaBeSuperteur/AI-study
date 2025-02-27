@@ -59,15 +59,15 @@
 * Linear Regression의 손실 함수는 다음을 사용한다고 가정한다.
   * **Mean Square Error (MSE, 평균 제곱 오차)**
     * 종속 변수의 실제 값과 예측 값의 차이를 제곱한 것들의 평균
-  * $L = \frac{1}{m} \Sigma_{i=1}^m (y_i - \hat{y}_i)^2$
+  * $\displaystyle L = \frac{1}{m} \Sigma_{i=1}^m (y_i - \hat{y}_i)^2$
     * $y_i$ : 종속 변수의 실제 값
     * $\hat{y}_i$ : 종속 변수의 예측값
 
 ### 2-2. Regression 최적화 과정
 손실 함수 (MSE) 를 최소화하는 과정은 다음과 같다.
-* 손실 함수를 각 가중치 $w_1, w_2, ..., w_n$ 에 대해 미분하여, 각 가중치에 대한 접선의 기울기 $\frac{\delta}{\delta w} L$ 를 구한다.
+* 손실 함수를 각 가중치 $w_1, w_2, ..., w_n$ 에 대해 미분하여, 각 가중치에 대한 접선의 기울기 $\displaystyle \frac{\delta}{\delta w} L$ 를 구한다.
 * 각 가중치에 해당 접선의 기울기의 일정 배수 ($\alpha$ 배) 를 뺀다.
-  * $w := w - \alpha \frac{\delta}{\delta w} L$ 
+  * $\displaystyle w := w - \alpha \frac{\delta}{\delta w} L$ 
 * 이것을 접선의 기울기가 0으로 수렴할 때까지 반복한다.
 * **이 과정과 동일한 방법이 딥러닝의 역전파에서도 사용된다.**
 
@@ -82,34 +82,34 @@
 | ... | ...   | ...                                                      |
 | (5) | D     | 이런 과정을 충분한 횟수만큼 반복하면 결국 기울기가 0인 최소 지점으로 수렴한다.            |
 
-* 편향 (bias) 역시 마찬가지로 손실 함수를 편향에 대해 미분했을 때의 접선의 기울기 $\frac{\delta}{\delta b} L$ 를 이용하여 다음과 같이 업데이트해 나간다.
-  * $b := b - \alpha \frac{\delta}{\delta b} L$ 
+* 편향 (bias) 역시 마찬가지로 손실 함수를 편향에 대해 미분했을 때의 접선의 기울기 $\displaystyle \frac{\delta}{\delta b} L$ 를 이용하여 다음과 같이 업데이트해 나간다.
+  * $\displaystyle b := b - \alpha \frac{\delta}{\delta b} L$ 
 
 ### 2-3. 손실 함수 미분값의 계산
 **1. weight에 대한 미분값 계산**
 
-* $\frac{\delta}{\delta w_1} L$
-* = $\frac{\delta}{\delta w_1} \frac{1}{m} \Sigma_{i=1}^m (y_i - \hat{y}_i)^2$
-* = $\frac{\delta}{\delta w_1} \frac{1}{m} \Sigma_{i=1}^m [y_i - (x_{i1}w_1+x_{i2}w_2+...+x_{in}w_n+b)]^2$
-* = $\frac{1}{m} \Sigma_{i=1}^m [-2x_{i1} \times [y_i - (x_{i1}w_1+x_{i2}w_2+...+x_{in}w_n+b)]]$
-* = $\frac{-2}{m} \Sigma_{i=1}^m [x_{i1} \times [y_i - (x_{i1}w_1+x_{i2}w_2+...+x_{in}w_n+b)]]$
+* $\displaystyle \frac{\delta}{\delta w_1} L$
+* = $\displaystyle \frac{\delta}{\delta w_1} \frac{1}{m} \Sigma_{i=1}^m (y_i - \hat{y}_i)^2$
+* = $\displaystyle \frac{\delta}{\delta w_1} \frac{1}{m} \Sigma_{i=1}^m [y_i - (x_{i1}w_1+x_{i2}w_2+...+x_{in}w_n+b)]^2$
+* = $\displaystyle \frac{1}{m} \Sigma_{i=1}^m [-2x_{i1} \times [y_i - (x_{i1}w_1+x_{i2}w_2+...+x_{in}w_n+b)]]$
+* = $\displaystyle \frac{-2}{m} \Sigma_{i=1}^m [x_{i1} \times [y_i - (x_{i1}w_1+x_{i2}w_2+...+x_{in}w_n+b)]]$
 
 **2. bias에 대한 미분값 계산**
 
-* $\frac{\delta}{\delta b} L$
-* = $\frac{\delta}{\delta b} \frac{1}{m} \Sigma_{i=1}^m (y_i - \hat{y}_i)^2$
-* = $\frac{\delta}{\delta b} \frac{1}{m} \Sigma_{i=1}^m [y_i - (x_{i1}w_1+x_{i2}w_2+...+x_{in}w_n+b)]^2$
-* = $\frac{1}{m} \Sigma_{i=1}^m [-2 \times [y_i - (x_{i1}w_1+x_{i2}w_2+...+x_{in}w_n+b)]]$
-* = $\frac{-2}{m} \Sigma_{i=1}^m [y_i - (x_{i1}w_1+x_{i2}w_2+...+x_{in}w_n+b)]$
+* $\displaystyle \frac{\delta}{\delta b} L$
+* = $\displaystyle \frac{\delta}{\delta b} \frac{1}{m} \Sigma_{i=1}^m (y_i - \hat{y}_i)^2$
+* = $\displaystyle \frac{\delta}{\delta b} \frac{1}{m} \Sigma_{i=1}^m [y_i - (x_{i1}w_1+x_{i2}w_2+...+x_{in}w_n+b)]^2$
+* = $\displaystyle \frac{1}{m} \Sigma_{i=1}^m [-2 \times [y_i - (x_{i1}w_1+x_{i2}w_2+...+x_{in}w_n+b)]]$
+* = $\displaystyle \frac{-2}{m} \Sigma_{i=1}^m [y_i - (x_{i1}w_1+x_{i2}w_2+...+x_{in}w_n+b)]$
 
 ## 3. Logistic Regression
 **Logistic Regression (로지스틱 회귀)** 는 종속 변수 y를 독립 변수 x1, x2, ... 의 **sigmoid 함수를 이용한 비선형 결합** 으로 나타내는 것을 말한다.
 
 * sigmoid 함수의 수식
-  * $sigmoid(x) = \frac{1}{1 + e^{-x}}$ 
+  * $\displaystyle sigmoid(x) = \frac{1}{1 + e^{-x}}$ 
 * 기본 가정
   * $m$ 개의 학습 데이터 샘플과 $n$ 개의 독립 변수 (feature) 
-* **[수식]** $y = sigmoid(w_1x_1 + w_2x_2 + ... + w_nx_n + b) = \frac{1}{1 + e^{w_1x_1 + w_2x_2 + ... + w_nx_n + b}}$
+* **[수식]** $\displaystyle y = sigmoid(w_1x_1 + w_2x_2 + ... + w_nx_n + b) = \frac{1}{1 + e^{w_1x_1 + w_2x_2 + ... + w_nx_n + b}}$
   * $x_1, x_2, ..., x_n$ : 독립 변수 
   * $w_1, w_2, ..., w_n$ : 각 독립 변수 $x_1, x_2, ..., x_n$ 에 대한 가중치
   * $b$ : bias (스칼라 값)
@@ -131,7 +131,7 @@ Log Loss의 수식은 다음과 같다.
   * 개별 sample에 대한 Loss
     * $Loss_{i} = - [y_i \times \log{\hat{y}_i} + (1 - y_i) \times \log{(1 - \hat{y}_i)}]$
   * 전체 Log Loss
-    * $L = \frac{1}{m} \Sigma_{i=1}^m [Loss_{i}] = \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{\hat{y}_i} + (1 - y_i) \times \log{(1 - \hat{y}_i)}]$
+    * $\displaystyle L = \frac{1}{m} \Sigma_{i=1}^m [Loss_{i}] = \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{\hat{y}_i} + (1 - y_i) \times \log{(1 - \hat{y}_i)}]$
 
 * notation
   * $m$ : 학습 데이터 샘플 개수
@@ -150,23 +150,23 @@ Log Loss의 수식은 다음과 같다.
 ### 3-3. 손실 함수 미분값의 계산
 **1. weight에 대한 미분값 계산**
 
-* $\frac{\delta}{\delta w_1} L$
-* = $\frac{\delta}{\delta w_1} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{\hat{y}_i} + (1 - y_i) \times \log{(1 - \hat{y}_i)}]$
-* = $\frac{\delta}{\delta w_1} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{(sigmoid(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b))} + (1 - y_i) \times \log{(1 - sigmoid(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b))}]$
-* = $\frac{\delta}{\delta w_1} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{\frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}} + (1 - y_i) \times \log{(1 - \frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}})}]$
-* = $\frac{-1}{m} \Sigma_{i=1}^m [y_i \times \frac{\delta}{\delta w_1} \log{\frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}} + (1 - y_i) \times \frac{\delta}{\delta w_1} \log{(1 - \frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}})}]$
-* = $\frac{-1}{m} \Sigma_{i=1}^m [y_i \times \frac{x_1}{1+e^{x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b}} + (1 - y_i) \times \frac{-x_1}{1+e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}]$
-* = $\frac{-1}{m} \Sigma_{i=1}^m [\frac{x_1y_i}{1+e^{x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b}} + \frac{-x_1(1 - y_i)}{1+e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}]$
+* $\displaystyle \frac{\delta}{\delta w_1} L$
+* = $\displaystyle \frac{\delta}{\delta w_1} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{\hat{y}_i} + (1 - y_i) \times \log{(1 - \hat{y}_i)}]$
+* = $\displaystyle \frac{\delta}{\delta w_1} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{(sigmoid(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b))} + (1 - y_i) \times \log{(1 - sigmoid(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b))}]$
+* = $\displaystyle \frac{\delta}{\delta w_1} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{\frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}} + (1 - y_i) \times \log{(1 - \frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}})}]$
+* = $\displaystyle \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \frac{\delta}{\delta w_1} \log{\frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}} + (1 - y_i) \times \frac{\delta}{\delta w_1} \log{(1 - \frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}})}]$
+* = $\displaystyle \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \frac{x_1}{1+e^{x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b}} + (1 - y_i) \times \frac{-x_1}{1+e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}]$
+* = $\displaystyle \frac{-1}{m} \Sigma_{i=1}^m [\frac{x_1y_i}{1+e^{x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b}} + \frac{-x_1(1 - y_i)}{1+e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}]$
 
 **2. bias에 대한 미분값 계산**
 
-* $\frac{\delta}{\delta b} L$
-* = $\frac{\delta}{\delta b} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{\hat{y}_i} + (1 - y_i) \times \log{(1 - \hat{y}_i)}]$
-* = $\frac{\delta}{\delta b} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{(sigmoid(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b))} + (1 - y_i) \times \log{(1 - sigmoid(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b))}]$
-* = $\frac{\delta}{\delta b} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{\frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}} + (1 - y_i) \times \log{(1 - \frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}})}]$
-* = $\frac{-1}{m} \Sigma_{i=1}^m [y_i \times \frac{\delta}{\delta b} \log{\frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}} + (1 - y_i) \times \frac{\delta}{\delta b} \log{(1 - \frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}})}]$
-* = $\frac{-1}{m} \Sigma_{i=1}^m [y_i \times \frac{1}{1+e^{x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b}} + (1 - y_i) \times \frac{-1}{1+e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}]$
-* = $\frac{-1}{m} \Sigma_{i=1}^m [\frac{y_i}{1+e^{x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b}} + \frac{y_i - 1}{1+e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}]$
+* $\displaystyle \frac{\delta}{\delta b} L$
+* = $\displaystyle \frac{\delta}{\delta b} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{\hat{y}_i} + (1 - y_i) \times \log{(1 - \hat{y}_i)}]$
+* = $\displaystyle \frac{\delta}{\delta b} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{(sigmoid(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b))} + (1 - y_i) \times \log{(1 - sigmoid(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b))}]$
+* = $\displaystyle \frac{\delta}{\delta b} \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \log{\frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}} + (1 - y_i) \times \log{(1 - \frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}})}]$
+* = $\displaystyle \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \frac{\delta}{\delta b} \log{\frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}} + (1 - y_i) \times \frac{\delta}{\delta b} \log{(1 - \frac{1}{1 + e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}})}]$
+* = $\displaystyle \frac{-1}{m} \Sigma_{i=1}^m [y_i \times \frac{1}{1+e^{x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b}} + (1 - y_i) \times \frac{-1}{1+e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}]$
+* = $\displaystyle \frac{-1}{m} \Sigma_{i=1}^m [\frac{y_i}{1+e^{x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b}} + \frac{y_i - 1}{1+e^{-(x_{i1}w_1 + x_{i2}w_2 + ... + x_{in}w_n + b)}}]$
 
 ## 4. 탐구: 어떤 Regression이 적절할까?
 일반적으로 Linear Regression과 Logistic Regression은 다음의 경우에 적합하다.

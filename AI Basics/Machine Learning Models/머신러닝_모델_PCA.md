@@ -71,7 +71,7 @@
 
 ### 4-1. 평균 0, 표준편차 1로 scaling
 가장 먼저 각 feature를 평균 0, 표준편차 1이 되도록 (Z score) 다음 수식을 이용하여 scaling 한다.
-* $Z = \frac{X - \mu}{\sigma}$
+* $\displaystyle Z = \frac{X - \mu}{\sigma}$
   * $\mu$ : 해당 feature 의 평균값
   * $\sigma$ : 해당 feature 의 표준편차
 
