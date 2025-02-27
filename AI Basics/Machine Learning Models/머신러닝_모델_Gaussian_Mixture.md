@@ -240,14 +240,14 @@ Gaussian Mixture Model 은 다음과 같이 여러 가지 문제에 적용할 �
 
 |         | Principal Component Analysis             |
 |---------|------------------------------------------|
-| 원본      | ![image](images/Gaussian_Mixture_8.png)  |
-| GMM     | ![image](images/Gaussian_Mixture_10.png) |
-| K-means | ![image](images/Gaussian_Mixture_12.png) |
+| 원본      | ![image](images/Gaussian_Mixture_8.PNG)  |
+| GMM     | ![image](images/Gaussian_Mixture_10.PNG) |
+| K-means | ![image](images/Gaussian_Mixture_12.PNG) |
 
 * **t-SNE** 시각화 결과 비교 (원본 데이터셋 vs. GMM vs. K-means)
 
 |         | t-SNE                                    |
 |---------|------------------------------------------|
-| 원본      | ![image](images/Gaussian_Mixture_9.png)  |
-| GMM     | ![image](images/Gaussian_Mixture_11.png) |
-| K-means | ![image](images/Gaussian_Mixture_13.png) |
+| 원본      | ![image](images/Gaussian_Mixture_9.PNG)  |
+| GMM     | ![image](images/Gaussian_Mixture_11.PNG) |
+| K-means | ![image](images/Gaussian_Mixture_13.PNG) |
