@@ -44,6 +44,8 @@ Adam Optimizer, SGD (Stochastic Gradient Descent), RmsProp 등이 잘 알려진 
 | AdaDelta  | - **지수 이동 평균 (EMA)** 를 이용, **최근의 Gradient** 의 가중치를 더 높임<br>- 시간이 지남에 따라 가중치는 지수적으로 감소                                                                                         |
 | SGD       | - 전체 데이터셋 대신 **1개 샘플 또는 batch** 를 학습하여 파라미터 업데이트<br>- 대규모 데이터셋에서 계산 비용 절감 효과                                                                                                  |
 
+![image](images/Optimizer_3.PNG)
+
 ### 2-1. RMSProp
 
 **핵심 아이디어**
@@ -94,10 +96,10 @@ Adam은 $\alpha$, $\beta_1$, $\beta_2$, $\epsilon$ 이라는 4개의 하이퍼�
 * $S_{db} = \beta_2 S_{db} + (1 - \beta_2)db^2$
 
 RMSProp과 달리, 다음과 같이 bias correction을 적용한다. 이는 **관련 변수들이 $v_{dW} = 0, S_{dW} = 0, v_{db} = 0, S_{db} = 0$으로 초기화** 됨에 따라 처음에 **0을 향한 편향** 이 있기 때문이다.
-* $v_{dW}^{bc} = \displaystyle \frac {v_{dW}}{1 - \beta^t}$
-* $v_{db}^{bc} = \displaystyle \frac {v_{db}}{1 - \beta^t}$
-* $S_{dW}^{bc} = \displaystyle \frac {S_{dW}}{1 - \beta^t}$
-* $S_{db}^{bc} = \displaystyle \frac {S_{db}}{1 - \beta^t}$
+* $v_{dW}^{bc} = \displaystyle \frac {v_{dW}}{1 - \beta_1^t}$
+* $v_{db}^{bc} = \displaystyle \frac {v_{db}}{1 - \beta_1^t}$
+* $S_{dW}^{bc} = \displaystyle \frac {S_{dW}}{1 - \beta_2^t}$
+* $S_{db}^{bc} = \displaystyle \frac {S_{db}}{1 - \beta_2^t}$
 
 마지막으로 RMSProp의 가중치 갱신 방식을 유사하게 적용한다. (단, gradient 대신 bias correction 된 값을 적용한다.)
 * $$(weight) = (weight) - (LearningRate) * \frac{v_{dW}^{bc}}{\sqrt{S_{dW}^{bc} + \epsilon}}$$
@@ -129,7 +131,7 @@ Adam Optimization 의 1차, 2차 moment $v_{dW}$, $S_{dW}$ 에 대해, 그 수�
 * L2 Regularization 에 의한 weight decay 효과가 부족한 것을 **weight 갱신에 weight decay term을 추가하여 해결** 한다.
   * 이것을 weight decay 와 Loss Function 을 **분리** 했다고 하여 **Decoupled** weight decay 라고 한다.
 * Decoupled weight decay 가 적용된 AdamW의 수식은 다음과 같다.
-  * **[AdamW]** $\displaystyle (weight) = (weight) - (LearningRate) * (\frac{v_{dW}^{bc}{\sqrt{S_{dW}^{bc} + \epsilon} + \lambda \theta_t)$
+  * **[AdamW]** $\displaystyle (weight) = (weight) - (LearningRate) * (\frac{v_{dW}^{bc}}{\sqrt {S_{dW}^{bc}} + \epsilon} + \lambda \theta_t)$
 
 ### 2-4. AdaGrad
 
@@ -137,11 +139,12 @@ Adam Optimization 의 1차, 2차 moment $v_{dW}$, $S_{dW}$ 에 대해, 그 수�
 
 * 가끔 업데이트되는 파라미터일수록 학습률 (learning rate) 을 높인다.
   * 이를 통해 sparse dataset 또는 NLP (자연어 처리) 데이터에서 효과를 볼 수 있다.
-* 이를 위해 **각 parameter 에 대해 과거의 gradient 의 제곱 누적** 을 계산하고, 이를 통해 learning rate를 조정한다.
+  * 이를 위해 **각 parameter 에 대해 과거의 gradient 의 제곱 누적** 을 계산하고, 이를 통해 learning rate를 조정한다.
+* SGD (Stochastic Gradient Descent) 대비 개선점으로, **각 파라미터마다 개별적인 learning rate를 적용** 한다.
 
 ----
 
-AdaGrad 는 다음과 같은 방법으로 각 파라미터를 업데이트한다.
+AdaGrad 는 다음과 같은 방법으로 **각 파라미터를** 업데이트한다.
 
 * $G_{t+1} = G_t + g_t^2$
   * $G_t$ : 해당 파라미터의 과거 gradient 의 제곱의 합
@@ -154,10 +157,17 @@ AdaGrad 의 장단점은 다음과 같다.
 
 * 장점
   * sparse dataset 은 '0'이라는 특징이 매우 자주 등장하는데, 이 특징에 대한 학습률을 낮춤으로써 sparse dataset 에서의 성능 향상
-  * parameter 의 빈도수를 반영한 학습률 조정
+  * parameter 마다 그 빈도수를 반영한 **개별적인 학습률 조정**
 * 단점
   * $G_t$ 의 값이 **시간이 갈수록 커지므로** 학습 진행에 따라 학습률이 지나치게 감소할 수 있음
     * 이로 인해 학습을 오랫동안 진행하는 경우 문제가 발생할 수 있음 
+* 개선 방안
+  * 아래 두 방법 (AdaDelta, RMSProp) 모두 **지수 이동 평균 (EMA) 을 사용한다는 공통점** 이 있다. 
+
+| 구분            | [AdaDelta](#2-5-adadelta) | [RMSProp](#2-1-rmsprop)    |
+|---------------|---------------------------|----------------------------|
+| Learning Rate | 자동 조정 (수동 설정 불필요)         | 하이퍼파라미터로 수식에 포함 (수동 설정 필요) |
+| EMA 적용 범위     | Gradient + 파라미터 값 변화량     | Gradient only              |
 
 ### 2-5. AdaDelta
 
@@ -174,7 +184,7 @@ AdaDelta 는 다음과 같은 방법으로 각 파라미터를 업데이트한�
 **지수 이동 평균 (EMA) - Gradient ($g$)**
 
 * 수식
-  * $E[g^2]_t = p * E[g^2]_{t-1} + (1 - p) * g_t^2$
+  * ${E[g^2]}_t = p * {E[g^2]}_{t-1} + (1 - p) * g_t^2$
   * **가중치 갱신 시 분모** 에 위치하여, **gradient 가 큰 파라미터의 갱신을 느리게** 한다.
 * 수식 설명
   * $E[g^2]$ : gradient의 제곱 $g^2$ 에 대한 지수 이동 평균
@@ -223,7 +233,7 @@ AdaDelta의 장단점은 다음과 같다.
 
 **가중치 업데이트 수식**
 
-* $\displaystyle (weight) = (weight) - (Learning Rate) * \frac{1}{m} \Sum_{i=1}^m \nabla_\theta L$
+* $\displaystyle (weight) = (weight) - (Learning Rate) * \frac{1}{m} \Sigma_{i=1}^m \nabla_\theta L$
   * $m$ : minibatch 의 크기
   * $\nabla_\theta L$ : Loss Function 의 gradient
 * 위 수식을 통해 **minibatch 에 있는 각 데이터의 gradient의 평균** 만큼 가중치를 업데이트한다.
@@ -246,6 +256,62 @@ SGD 의 장단점은 다음과 같다.
 
 ## 3. 탐구: 어떤 Optimizer 가 적절할까?
 
+**실험 목적**
+
+* 딥러닝 학습 데이터셋의 성능을 최대한 올릴 수 있는 적절한 Optimizer 를 탐색한다.
+* 각 Optimizer 별로 성능의 차이를 분석하고, 그 이유를 탐구한다.
+
 ### 3-1. 실험 설계
+
+**데이터셋**
+
+* **MNIST 숫자 이미지 분류 데이터셋 (train 60K / test 10K)**
+  * 10 개의 Class 가 있는 Classification Task
+  * 학습 시간 절약을 위해, train dataset 중 일부만을 샘플링하여 학습
+* 선정 이유
+  * 데이터셋이 28 x 28 size 의 작은 이미지들로 구성
+  * 이로 인해 비교적 간단한 신경망을 설계할 수 있으므로, 간단한 딥러닝 실험에 적합하다고 판단
+
+**성능 Metric**
+
+* **Accuracy**
+* 선정 이유
+  * Accuracy 로 성능을 측정해도 될 정도로, [각 Class 간 데이터 불균형](../Data%20Science%20Basics/데이터_사이언스_기초_데이터_불균형.md) 이 적음 
+
+**신경망 구조**
+
+```python
+# 신경망 구조 출력 코드
+
+from torchinfo import summary
+
+model = CNN()
+print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
+```
+
+![image](images/Common_NN_Vision.PNG)
+
+* [활성화 함수](딥러닝_기초_활성화_함수.md) 는 다음과 같이 사용
+
+| Conv. Layers | Fully Connected Layer | Final Layer |
+|--------------|-----------------------|-------------|
+| ReLU only    | Sigmoid               | Softmax     |
+
+**상세 학습 방법**
+
+* 각 Optimizer 별로 하이퍼파라미터 최적화를 실시하여, **최적화된 하이퍼파라미터를 기준으로 한 성능을 기준** 으로 최고 성능의 Optimizer 를 파악
+* Optimizer 종류
+  * Adam, AdamW, AdaDelta (총 3개)
+  * 각 Optimizer 별로 아래와 같이 하이퍼파라미터 최적화
+* 하이퍼파라미터 최적화
+  * [하이퍼파라미터 최적화 라이브러리](../Machine%20Learning%20Models/머신러닝_방법론_HyperParam_Opt.md#4-하이퍼파라미터-최적화-라이브러리) 중 Optuna 를 사용
+  * 하이퍼파라미터 탐색 100 회 반복
+* 각 Optimizer 별 적용 하이퍼파라미터
+
+| Optimizer | 하이퍼파라미터                                                   | 각 하이퍼파라미터 별 탐색 대상 범위                                      |
+|-----------|-----------------------------------------------------------|-----------------------------------------------------------|
+| Adam      | learning rate<br> $\beta_1$<br> $\beta_2$                 | 1e-4 ~ 1e-2<br>0.8 ~ 0.95<br>0.99 ~ 0.9999                |
+| AdamW     | learning rate<br> $\beta_1$<br> $\beta_2$<br>weight decay | 1e-4 ~ 1e-2<br>0.8 ~ 0.95<br>0.99 ~ 0.9999<br>1e-4 ~ 2e-2 |
+| AdaDelta  | $p$ (EMA 용 감쇠율)                                           | 0.5 - 0.999                                               |
 
 ### 3-2. 실험 결과
