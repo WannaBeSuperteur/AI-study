@@ -103,10 +103,11 @@ Dropout은 다음과 같은 효과가 있다.
   * 데이터셋이 28 x 28 size 의 작은 이미지들로 구성
   * 이로 인해 비교적 간단한 신경망을 설계할 수 있으므로, 간단한 딥러닝 실험에 적합하다고 판단
 * 데이터셋 분리
+  * 학습 데이터가 조금 부족한 편이어야지 **Dropout 수준에 따른 overfitting 여부의 변별이 가능** 할 것으로 판단 
 
-| 학습 데이터  | Valid 데이터 (Epoch 단위) | Test 데이터          |
-|---------|----------------------|-------------------|
-| 3,000 장 | 5,000 장              | 10,000 장 (원본 그대로) |
+| 학습 데이터  | Valid 데이터 (Epoch 단위) | Valid 데이터 (Trial 단위) | Test 데이터          |
+|---------|----------------------|----------------------|-------------------|
+| 1,000 장 | 2,000 장              | 5,000 장              | 10,000 장 (원본 그대로) |
 
 **성능 Metric**
 
@@ -125,7 +126,7 @@ model = CNN()
 print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 ```
 
-![image](images/Common_NN_Vision.PNG)
+![image](images/Overfitting_3.PNG)
 
 * [활성화 함수](딥러닝_기초_활성화_함수.md) 는 다음과 같이 사용
 
@@ -139,12 +140,36 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 
 **Dropout 비율**
 
-* Dropout 비율은 0% ~ 75% 까지 1% 단위로 정한다. (총 76가지 경우의 수)
+* 각 레이어 별 Dropout 비율은 **하이퍼파라미터로 하여 자동으로 최적화** 한다. (총 4개, Pooling Layer 제외)
+  * Conv. 및 Fully-connected 의 **각 레이어마다 Dropout 비율이 하이퍼파라미터로 match** 된다.
+  * 1번째, 2번째, 3번째 Conv. Layer (3개)
+  * 1번째 Fully Connected Layer (1개)
+* 하이퍼파라미터 최적화
+  * [하이퍼파라미터 최적화 라이브러리](../Machine%20Learning%20Models/머신러닝_방법론_HyperParam_Opt.md#4-하이퍼파라미터-최적화-라이브러리) 중 Optuna 를 사용
+  * 하이퍼파라미터 탐색 100 회 반복 (= 100 Trials) 실시
+  * 모든 하이퍼파라미터 (dropout 비율) 의 탐색 범위는 0.0 ~ 0.75
 
 ### 4-2. 실험 결과
 
-**결론 요약**
+**결론**
+
 * 실험 진행중
 
-**실험 결과 상세**
-* Dropout 비율에 따른 정확도 차트
+**Best Hyper-param 및 그 성능**
+
+| 구분               | 값 |
+|------------------|---|
+| 최종 테스트셋 성능       |   |
+| HPO Valid set 성능 |   |
+| Best Hyper-param |   |
+
+**하이퍼파라미터 최적화 정확도 추이**
+
+**각 하이퍼파라미터 (= 각 레이어의 dropout rate) 의 값에 따른 성능 분포**
+
+| 하이퍼파라미터 (레이어)      | 성능 분포 |
+|--------------------|-------|
+| Conv1 Dropout Rate |       |
+| Conv2 Dropout Rate |       |
+| Conv3 Dropout Rate |       |
+| FC1 Dropout Rate   |       |
