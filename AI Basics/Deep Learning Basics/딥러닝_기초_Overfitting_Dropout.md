@@ -11,6 +11,8 @@
 
 ## 코드
 
+* [MNIST 데이터셋에서 Dropout의 적절한 비율 탐구](#4-탐구-dropout-은-몇--적용하는-것이-좋을까) 실험 코드 : [code (ipynb)](codes/Dropout_experiment.ipynb)
+
 ## 1. bias와 variance
 
 Overfitting 에 대해 설명하기 위해서 필요한 개념으로 **bias** 와 **variance** 가 있다.
@@ -153,23 +155,29 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 
 **결론**
 
-* 실험 진행중
+* 본 데이터셋에서는 **1번째 Conv. Layer 의 Dropout 이 클수록 성능이 떨어진다.**
+* 이외의 결론은 관측 데이터 표본이 부족하여 추가적인 실험을 진행해야 알 수 있을 것으로 예상된다.
 
-**Best Hyper-param 및 그 성능**
+**Best Hyper-param 및 그 성능 (정확도)**
 
-| 구분               | 값 |
-|------------------|---|
-| 최종 테스트셋 성능       |   |
-| HPO Valid set 성능 |   |
-| Best Hyper-param |   |
+| 구분                | 값                                                                                                                          |
+|-------------------|----------------------------------------------------------------------------------------------------------------------------|
+| 최종 테스트셋 정확도       | 96.57%                                                                                                                     |
+| HPO Valid set 정확도 | 96.12%                                                                                                                     |
+| Best Hyper-param  | ```conv1_dropout``` : 0.0529<br>```conv2_dropout``` : 0.3585<br>```conv3_dropout``` : 0.2060<br>```fc1_dropout``` : 0.7258 |
 
-**하이퍼파라미터 최적화 정확도 추이**
+**하이퍼파라미터 최적화 진행에 따른 정확도 추이**
+
+![image](images/Overfitting_4.PNG)
 
 **각 하이퍼파라미터 (= 각 레이어의 dropout rate) 의 값에 따른 성능 분포**
 
-| 하이퍼파라미터 (레이어)      | 성능 분포 |
-|--------------------|-------|
-| Conv1 Dropout Rate |       |
-| Conv2 Dropout Rate |       |
-| Conv3 Dropout Rate |       |
-| FC1 Dropout Rate   |       |
+* Conv1 (1st Conv. Layer) 의 경우 Dropout Rate 가 클수록 일반적으로 성능이 감소하는 경향이 있다.
+  * 이는 첫번째 Conv. Layer 를 Dropout 함으로써 **low-level feature 의 추출에 지장** 을 주고, 이는 **이후 레이어에서의 복잡한 패턴 학습에 지장** 을 주기 때문으로 추정된다.
+
+| 하이퍼파라미터 (레이어)      | 성능 분포                              |
+|--------------------|------------------------------------|
+| Conv1 Dropout Rate | ![image](images/Overfitting_5.PNG) |
+| Conv2 Dropout Rate | ![image](images/Overfitting_6.PNG) |
+| Conv3 Dropout Rate | ![image](images/Overfitting_7.PNG) |
+| FC1 Dropout Rate   | ![image](images/Overfitting_8.PNG) |
