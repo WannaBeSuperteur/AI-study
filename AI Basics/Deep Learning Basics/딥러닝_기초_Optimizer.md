@@ -202,7 +202,7 @@ AdaDelta 는 다음과 같은 방법으로 각 파라미터를 업데이트한�
 **지수 이동 평균 (EMA) - Parameter ($\theta$)**
 
 * 수식
-  * $E[\Delta \theta^2]_t = p * E[\Delta \theta^2]_{t-1} + (1 - p) * \Delta \theta_t^2$
+  * $E [\Delta \theta^2]t = p * E[\Delta \theta^2]_{t-1} + (1 - p) * \Delta \theta_t^2$
   * **가중치 갱신 시 분자** 에 위치하여, **현재 가중치 갱신을 이전 가중치 갱신의 크기에 비례하게** 한다.
 * 수식 설명
   * $E[\Delta \theta^2]$ : 가중치 갱신량 $\Delta \theta$ 의 제곱 $\Delta \theta^2$ 에 대한 지수 이동 평균 
@@ -391,4 +391,10 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 * 본 데이터셋 실험에 의하면, AdamW 의 weight decay 가 0.001 이하로 매우 낮을 때 모델 학습이 아예 안 되기도 했다.
 * 이와 같은 성능 저하 현상이 일반적으로 나타나는가?
 
+----
 
+**결론: overfitting 이 발생하여 성능 저하가 발생할 수 있다.**
+
+* AdamW 에서는 Adam Optimizer 에서의 성능 저하를 방지하기 위해, **Decoupled Weight Decay** 를 이용하여 weight decay 효과를 보인다.
+* weight decay는 **weight 갱신 시 이전 weight 에 해당하는 부분의 크기를 감소** 시켜 가중치의 절대 크기가 매우 커지는 것을 방지하여, 결과적으로 overfitting 을 방지한다.
+  * 따라서 weight decay 가 매우 낮으면 weight의 감소량이 부족하여 overfitting 이 발생할 수 있다.
