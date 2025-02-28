@@ -312,7 +312,7 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
   * 각 Optimizer 별로 아래와 같이 하이퍼파라미터 최적화
 * 하이퍼파라미터 최적화
   * [하이퍼파라미터 최적화 라이브러리](../Machine%20Learning%20Models/머신러닝_방법론_HyperParam_Opt.md#4-하이퍼파라미터-최적화-라이브러리) 중 Optuna 를 사용
-  * 하이퍼파라미터 탐색 100 회 반복
+  * 각 Optimizer 별로 하이퍼파라미터 탐색 70 회 반복 (= 70 trials) 하여 최적의 하이퍼파라미터 탐색
 * 각 Optimizer 별 적용 하이퍼파라미터
 
 | Optimizer | 하이퍼파라미터                                                   | 각 하이퍼파라미터 별 탐색 대상 범위                                      |
@@ -326,6 +326,7 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 **결론**
 
 * 실험 진행중
+* Optuna 의 랜덤성에 의해서, 본 실험을 여러 번 반복할 경우 그 결과 간 성능 차이가 있을 수 있음
 
 **각 Optimizer 별 테스트 데이터셋 최종 성능 및 최적 하이퍼파라미터**
 
@@ -340,6 +341,31 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 * Adam
 * AdamW
 * AdaDelta
+
+**각 Optimizer 별 특정 하이퍼파라미터의 값에 따른 성능 분포**
+
+* Adam
+* 
+| 하이퍼파라미터       | 성능 분포 |
+|---------------|-------|
+| Learning Rate |       |
+| $\beta_1$     |       |
+| $\beta_2$     |       |
+
+* AdamW
+
+| 하이퍼파라미터       | 성능 분포 |
+|---------------|-------|
+| Learning Rate |       |
+| $\beta_1$     |       |
+| $\beta_2$     |       |
+| weight decay  |       |
+
+* AdaDelta
+
+| 하이퍼파라미터       | 성능 분포 |
+|---------------|-------|
+| $p$           |       |
 
 ### 3-3. 추가 탐구
 

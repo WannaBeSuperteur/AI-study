@@ -1,27 +1,36 @@
 ## 목차
-1. bias와 variance
+* [1. bias와 variance](#1-bias와-variance)
+* [2. 딥러닝에서의 오버피팅 (Overfitting)](#2-딥러닝에서의-오버피팅-overfitting)
+  * [2-1. 오버피팅 해결 방법](#2-1-오버피팅-해결-방법) 
+* [3. Dropout](#3-dropout)
+  * [3-1. Dropout의 개념](#3-1-dropout의-개념)
+  * [3-2. Dropout의 효과](#3-2-dropout의-효과)
+* [4. 탐구: Dropout 은 몇 % 적용하는 것이 좋을까?](#4-탐구-dropout-은-몇--적용하는-것이-좋을까)
+  * [4-1. 실험 설계](#4-1-실험-설계)
+  * [4-2. 실험 결과](#4-2-실험-결과)
 
-2. 딥러닝에서의 오버피팅 (Overfitting)
+## 코드
 
-3. Dropout의 개념
+## 1. bias와 variance
 
-4. Dropout의 효과
+Overfitting 에 대해 설명하기 위해서 필요한 개념으로 **bias** 와 **variance** 가 있다.
 
-## bias와 variance
-**bias** 는 딥러닝 모델의 예측값과 실제 데이터 값의 차이를 나타내고, **variance**는 다양한 데이터에 대해 모델이 예측할 때, 그 값의 편차를 나타낸다.
+* bias: 딥러닝 모델의 예측값과 실제 데이터 값의 차이
+* variance: 다양한 데이터에 대해 모델이 예측할 때, 그 값의 편차
 
 ![오버피팅 예시](./images/Overfitting_1.PNG)
 
 예를 들어 위 그림에서 보라색과 흰색을 분류하는 모델이 있다고 할 때, 각 그림에 따른 bias와 variance를 나타내면 다음과 같다.
 
-|그림|(A)|(B)|(C)|
-|---|---|---|---|
-|bias|높음|중간|낮음|
-|variance|낮음|중간|높음|
+| 그림       | (A) | (B) | (C) |
+|----------|-----|-----|-----|
+| bias     | 높음  | 중간  | 낮음  |
+| variance | 낮음  | 중간  | 높음  |
 
 bias와 variance 모두 모델의 오차이므로, 딥 러닝 모델이 목표로 하는 것은 **bias와 variance의 trade-off**를 고려하여 최적으로 학습하는 것이다. (한쪽이 너무 커지면 안 된다.)
 
-## 딥러닝에서의 오버피팅 (Overfitting)
+## 2. 딥러닝에서의 오버피팅 (Overfitting)
+
 **오버피팅 (Overfitting)** 이란, 위 그림의 (C) 와 같이 딥러닝/머신러닝 모델의 학습 횟수가 과도하게 많아서 해당 모델의 variance가 높아지는 현상을 말한다.
 
 위 그림 중 (A) 는 **언더피팅 (Underfitting)**, (B) 는 알맞게 학습된 모델, (C)는 **오버피팅**이다.
@@ -30,24 +39,111 @@ bias와 variance 모두 모델의 오차이므로, 딥 러닝 모델이 목표�
 
 ![오버피팅 모델 학습 진행 그래프](./images/Overfitting_2.PNG)
 
-오버피팅의 해결 방법은 다음과 같다.
-* 학습 데이터의 샘플 개수를 늘린다.
-  * 이미지 데이터의 경우, Data Augmentation 을 사용할 수 있다.
-* 딥러닝 모델의 퍼셉트론 개수를 줄인다.
-  * 통계학에서도 오버피팅 해결을 위해 불필요한 변수를 제거하기도 한다.
-* Regularization (정규화) 를 이용한다.
-* 드롭아웃 (Dropout) 을 이용한다.
+### 2-1. 오버피팅 해결 방법
 
-## Dropout의 개념
-**드롭아웃 (Dropout)** 이란, 딥러닝 모델에서 퍼셉트론 간의 연결선 (인간 뇌의 뉴런) 을 일정한 확률로 제거하는 것을 말한다. 예를 들어 Dropout rate가 0.25 이면, 모든 뉴런이 **완전히 랜덤하게** 25%의 확률로 제거되는 것을 의미한다.
+오버피팅의 해결 방법은 다음과 같다.
+
+**1. 학습 프로세스 관점**
+
+* 학습 데이터의 샘플 개수를 늘린다.
+  * 이미지 데이터의 경우, [Data Augmentation](../../Image%20Processing/Basics_Image%20Augmentation.md) 을 사용할 수 있다.
+* Valid set 을 이용하여 측정한 성능이 일정 epoch 횟수 이상 갱신되지 않으면 학습을 조기 종료한다. (Early Stopping)
+* [Cross Validation](../Machine%20Learning%20Models/머신러닝_방법론_Cross_Validation.md) 방법을 이용한다.
+
+**2. 모델 설계 관점**
+
+* 딥러닝 모델의 퍼셉트론 개수를 줄인다.
+  * feature 개수를 줄이는 등의 방법이 가능하다. 
+  * 통계학에서도 오버피팅 해결을 위해 불필요한 feature 를 제거하기도 한다.
+* [Weight Decay](딥러닝_기초_Optimizer.md#1-1-중요-개념-weight-decay) 를 조정한다.
+* [L1, L2 Regularization (정규화)](딥러닝_기초_Regularization.md#l1-l2-regularization) 를 이용한다.
+* [드롭아웃 (Dropout)](#3-dropout) 을 이용한다.
+
+## 3. Dropout
+
+오버피팅의 해결 방법 중 대표적인 것으로 Dropout 이 있다.
+
+## 3-1. Dropout의 개념
+
+**드롭아웃 (Dropout)** 이란, 딥러닝 모델의 **학습 단계** 에서 퍼셉트론 간의 연결선 (인간 뇌의 뉴런) 을 일정한 확률로 제거하는 것을 말한다.
+
+* 예를 들어 Dropout rate가 0.25 이면, 모든 뉴런이 **완전히 랜덤하게** 25%의 확률로 제거되는 것을 의미한다.
 
 ![드롭아웃 예시](./images/Dropout_1.PNG)
 
-미니배치 (Mini-batch) 단위로 딥러닝 모델을 학습시킬 경우, 학습 과정 전체가 아닌 **각 Minibatch마다 랜덤하게** 연결선이 제거되며, 제거 비율이 아닌 **확률**의 개념이기 때문에 정확히 해당 확률만큼의 연결선이 제거되지는 않는다. (제거되는 연결선의 비율은 해당 확률과 다소 차이가 있을 수 있다.)
+미니배치 (Mini-batch) 단위로 딥러닝 모델을 학습시킬 경우, 학습 과정 전체가 아닌 **각 Minibatch마다 랜덤하게** 연결선이 제거된다.
 
-모델의 test 시에는 Dropout rate에 따라, 모든 뉴런으로 입력되는 **(직전 뉴런의 입력값) * (가중치) 의 값에 (1 - (Dropout rate)) 를 곱하여** 적용한다. (단, bias 값이 있을 경우, 그 값에는 적용하지 않는다.)
+* 제거 비율이 아닌 **확률**의 개념이기 때문에 정확히 해당 확률만큼의 연결선이 제거되지는 않는다.
+* 즉, 제거되는 연결선의 비율은 해당 확률과 다소 차이가 있을 수 있다.
 
-## Dropout의 효과
+모델의 test 시에는 Dropout rate 에 따라, 모든 뉴런으로 입력되는 **(직전 뉴런의 입력값) * (가중치) 의 값에 (1 - (Dropout rate)) 를 곱하여** 적용한다. (단, bias 값에는 적용하지 않는다.)
+
+* 학습 단계가 아니기 때문에 연결선을 제거하지 않는다.
+
+## 3-2. Dropout의 효과
+
 Dropout은 다음과 같은 효과가 있다.
-* Overfitting 방지
+* 학습 중 Overfitting 방지
   * 매 mini-batch를 학습시킬 때마다 신경망의 연결선이 랜덤하게 제거되기 때문에, 출력값과 큰 상관관계가 있는 feature의 큰 가중치에 의해 **다른 feature들이 학습되지 않는 현상을 방지**할 수 있다.
+
+## 4. 탐구: Dropout 은 몇 % 적용하는 것이 좋을까?
+
+**실험 목표**
+* Dropout의 비율을 어느 정도로 하는 것이 성능 (정확도) 을 가장 높이는지 탐구한다.
+* 다른 조건은 그대로 두고, Dropout 의 비율을 다양하게 바꿔 가면서 MNIST 데이터셋을 대상으로 실험한다.
+
+### 4-1. 실험 설계
+
+**데이터셋**
+
+* **MNIST 숫자 이미지 분류 데이터셋 (train 60K / test 10K)**
+  * 10 개의 Class 가 있는 Classification Task
+  * 학습 시간 절약을 위해, train dataset 중 일부만을 샘플링하여 학습
+* 선정 이유
+  * 데이터셋이 28 x 28 size 의 작은 이미지들로 구성
+  * 이로 인해 비교적 간단한 신경망을 설계할 수 있으므로, 간단한 딥러닝 실험에 적합하다고 판단
+* 데이터셋 분리
+
+| 학습 데이터  | Valid 데이터 (Epoch 단위) | Test 데이터          |
+|---------|----------------------|-------------------|
+| 3,000 장 | 5,000 장              | 10,000 장 (원본 그대로) |
+
+**성능 Metric**
+
+* **Accuracy**
+* 선정 이유
+  * Accuracy 로 성능을 측정해도 될 정도로, [각 Class 간 데이터 불균형](../Data%20Science%20Basics/데이터_사이언스_기초_데이터_불균형.md) 이 적음 
+
+**신경망 구조**
+
+```python
+# 신경망 구조 출력 코드
+
+from torchinfo import summary
+
+model = CNN()
+print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
+```
+
+![image](images/Common_NN_Vision.PNG)
+
+* [활성화 함수](딥러닝_기초_활성화_함수.md) 는 다음과 같이 사용
+
+| Conv. Layers | Fully Connected Layer | Final Layer |
+|--------------|-----------------------|-------------|
+| ReLU only    | Sigmoid               | Softmax     |
+
+* Optimizer 는 ??? 를 사용
+  * 해당 Optimizer 가 [동일 데이터셋을 대상으로 한 성능 실험](딥러닝_기초_Optimizer.md#3-탐구-어떤-optimizer-가-적절할까) 에서 최상의 정확도를 기록했기 때문
+
+**Dropout 비율**
+
+* Dropout 비율은 0% ~ 75% 까지 1% 단위로 정한다. (총 76가지 경우의 수)
+
+### 4-2. 실험 결과
+
+**결론 요약**
+* 실험 진행중
+
+**실험 결과 상세**
+* Dropout 비율에 따른 정확도 차트
