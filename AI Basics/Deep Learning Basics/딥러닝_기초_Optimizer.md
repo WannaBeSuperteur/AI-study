@@ -1,5 +1,6 @@
 ## 목차
 * [1. Optimizer 란?](#1-optimizer-란)
+  * [1-1. 중요 개념: weight decay](#1-1-중요-개념-weight-decay) 
 * [2. Optimizer 의 종류](#2-optimizer-의-종류)
   * [2-1. RMSProp](#2-1-rmsprop)
   * [2-2. Adam](#2-2-adam)
@@ -17,7 +18,19 @@
 ## 1. Optimizer 란?
 딥러닝에서 **최적화 (Optimization) 란, 손실 함수 (loss function) 를 줄여서 모델 예측의 오차를 줄이는 것**이다.
 
-그렇다면 **Optimizer 란, 이 최적화를 수행하는 알고리즘**을 말한다.
+그렇다면 **Optimizer 란, 이 최적화를 수행하는 알고리즘 (학습이 효율적으로 이루어지도록 가중치를 갱신하는)** 을 말한다.
+
+### 1-1. 중요 개념: weight decay
+**weight decay (가중치 감쇠)** 는 Gradient Descent 에서 가중치를 업데이트할 때 **이전 weight의 크기를 일정 비율만큼 감소** 시키는 것이다.
+* 이를 통해 **overfitting을 방지** 할 수 있다.
+
+수식 비교
+
+* 원래 가중치 갱신
+  * $\theta_{t+1} = \theta_t - \alpha \nabla f_t(\theta_t)$
+* **weight decay** 가 적용된 가중치 갱신
+  * $\theta_{t+1} = (1 - \lambda) \theta_t - \alpha \nabla f_t(\theta_t)$
+  * 여기서 하이퍼파라미터인 $\lambda$ 는 **decay rate** 라고 한다.
 
 ## 2. Optimizer 의 종류
 Adam Optimizer, SGD (Stochastic Gradient Descent), RmsProp 등이 잘 알려진 Optimizer 이다. 이들 잘 알려진 Optimizer 들에 대해 간단히 설명하면 다음과 같다.
@@ -33,13 +46,12 @@ Adam Optimizer, SGD (Stochastic Gradient Descent), RmsProp 등이 잘 알려진 
 
 ### 2-1. RMSProp
 
-핵심 아이디어
+**핵심 아이디어**
+
 * Gradient 가 큰 매개변수의 학습 속도 (learning rate) 를 줄인다.
 * Gradient 가 작은 매개변수의 학습 속도를 늘린다.
 
 ![image](images/Optimizer_1.PNG)
-
-----
 
 기존 Gradient Descent 방법에서는 다음과 같은 방식으로 weight과 bias를 갱신했다.
 * (weight) = (weight) - (learning rate) * (weight의 gradient)
@@ -64,15 +76,14 @@ RMSProp은 다음과 같은 방식으로 weight과 bias를 갱신한다.
 
 ### 2-2. Adam
 
-핵심 아이디어
+**핵심 아이디어**
+
 * RMSProp 의 방식에 추가로 **Gradient 갱신 방향의 가속 (Momentum, 일종의 '관성' 개념)** 을 함께 이용한다.
 * Momentum 은 다음의 값으로 구성된다.
   * 1차 moment $v_{dW}$ : 과거 gradient 의 지수적 가중 평균
   * 2차 moment $S_{dW}$ : 과거 gradient 의 제곱의 지수적 가중 평균
 
 ![image](images/Optimizer_2.PNG)
-
-----
 
 Adam은 $\alpha$, $\beta_1$, $\beta_2$, $\epsilon$ 이라는 4개의 하이퍼파라미터를 이용한다.
 
@@ -96,11 +107,134 @@ RMSProp과 달리, 다음과 같이 bias correction을 적용한다. 이는 **�
 
 ### 2-3. AdamW
 
+**핵심 아이디어**
+
+* Adam Optimizer 에서 **weight decay 와 Loss Function 을 분리 (Decoupled Weight Decay)** 한다.
+* weight decay 가 적용된 [L2 Regularization](딥러닝_기초_Regularization#2-l1-l2-reguliarization) 을 Adam Optimizer로 처리할 때, 일부 케이스에서 성능이 저하되는 문제가 해결된다.
+
+참고
+* 간단한 모델에서는 Adam, 복잡한 모델이나 고차원의 복잡한 데이터셋에서는 AdamW Optimizer 를 사용하는 것이 일반적으로 좋다.
+
+----
+
+Adam Optimization 의 1차, 2차 moment $v_{dW}$, $S_{dW}$ 에 대해, 그 수식은 다음과 같다.
+
+* **[Adam]** $$\displaystyle (weight) = (weight) - (LearningRate) * \frac{v_{dW}^{bc}}{\sqrt{S_{dW}^{bc} + \epsilon}}$$
+
+한편, weight decay 수식은 다음과 같다.
+
+* **[Weight Decay]** $\displaystyle \(weight) = (1 - \lambda) (weight) - \alpha \nabla f_t(\theta_t)$
+
+이것을 **weight decay 를 나타내는 term 인 $\lambda \theta_t$ 를 weight 갱신에 추가** 하는 것이 핵심이다.
+* L2 Regularization 에 의한 weight decay 효과가 부족한 것을 **weight 갱신에 weight decay term을 추가하여 해결** 한다.
+  * 이것을 weight decay 와 Loss Function 을 **분리** 했다고 하여 **Decoupled** weight decay 라고 한다.
+* Decoupled weight decay 가 적용된 AdamW의 수식은 다음과 같다.
+  * **[AdamW]** $\displaystyle (weight) = (weight) - (LearningRate) * (\frac{v_{dW}^{bc}{\sqrt{S_{dW}^{bc} + \epsilon} + \lambda \theta_t)$
+
 ### 2-4. AdaGrad
+
+**핵심 아이디어**
+
+* 가끔 업데이트되는 파라미터일수록 학습률 (learning rate) 을 높인다.
+  * 이를 통해 sparse dataset 또는 NLP (자연어 처리) 데이터에서 효과를 볼 수 있다.
+* 이를 위해 **각 parameter 에 대해 과거의 gradient 의 제곱 누적** 을 계산하고, 이를 통해 learning rate를 조정한다.
+
+----
+
+AdaGrad 는 다음과 같은 방법으로 각 파라미터를 업데이트한다.
+
+* $G_{t+1} = G_t + g_t^2$
+  * $G_t$ : 해당 파라미터의 과거 gradient 의 제곱의 합
+  * $g_t$ : 해당 시점 $t$ 에서의 gradient 값
+* $\displaystyle (weight)_{t+1} = (weight)_t - \frac{(Learning Rate)}{\sqrt {G_t + \epsilon}} g_t$
+  * $\epsilon$ : 0으로 나누기 방지를 위한 매우 작은 값
+  * $G_t$ 를 **분모로 보냄** 으로써, **과거 Gradient의 절대 크기가 클수록 학습률이 낮아지는** 효과를 보인다.
+
+AdaGrad 의 장단점은 다음과 같다.
+
+* 장점
+  * sparse dataset 은 '0'이라는 특징이 매우 자주 등장하는데, 이 특징에 대한 학습률을 낮춤으로써 sparse dataset 에서의 성능 향상
+  * parameter 의 빈도수를 반영한 학습률 조정
+* 단점
+  * $G_t$ 의 값이 **시간이 갈수록 커지므로** 학습 진행에 따라 학습률이 지나치게 감소할 수 있음
+    * 이로 인해 학습을 오랫동안 진행하는 경우 문제가 발생할 수 있음 
 
 ### 2-5. AdaDelta
 
+**핵심 아이디어**
+
+* **최근의 Gradient** 에 대해 더 높은 가중치를 둔다.
+  * 이를 위해 **지수 이동 평균 (EMA, Exponential Moving Average)** 를 사용한다.
+* AdaGrad가 **학습이 누적될수록 gradient가 잘 업데이트되지 않는 한계** 를 가지고 있으므로 이를 극복하기 위한 것이다. 
+
+----
+
+AdaDelta 는 다음과 같은 방법으로 각 파라미터를 업데이트한다.
+
+**지수 이동 평균 (EMA) - Gradient ($g$)**
+
+* 수식
+  * $E[g^2]_t = p * E[g^2]_{t-1} + (1 - p) * g_t^2$
+  * **가중치 갱신 시 분모** 에 위치하여, **gradient 가 큰 파라미터의 갱신을 느리게** 한다.
+* 수식 설명
+  * $E[g^2]$ : gradient의 제곱 $g^2$ 에 대한 지수 이동 평균
+    * $E[g^2]_t$ : 시점 t 에서의 지수 이동 평균
+    * $E[g^2]_{t-1}$ : 시점 t-1 에서의 지수 이동 평균
+  * $p$ : 지수 이동 평균을 위한 감쇠율
+    * 값이 클수록 가장 최신 gradient 만 반영
+    * 값이 작을수록 오래된 gradient 의 반영 비율 높음
+    * 일반적으로 0.95 를 사용
+
+**지수 이동 평균 (EMA) - Parameter ($\theta$)**
+
+* 수식
+  * $E[\Delta \theta^2]_t = p * E[\Delta \theta^2]_{t-1} + (1 - p) * \Delta \theta_t^2$
+  * **가중치 갱신 시 분자** 에 위치하여, **현재 가중치 갱신을 이전 가중치 갱신의 크기에 비례하게** 한다.
+* 수식 설명
+  * $E[\Delta \theta^2]$ : 가중치 갱신량 $\Delta \theta$ 의 제곱 $\Delta \theta^2$ 에 대한 지수 이동 평균 
+
+**최종 가중치 갱신**
+
+* 수식
+  * $\displaystyle (weight) = (weight) - \frac{\sqrt {E[\Delta \theta^2]_{t-1} + \epsilon}}{\sqrt E[g^2]_t + \epsilon} * g_t$
+* 수식 설명
+  * 아래 변수를 이용하여 **학습률을 자동으로 조정** 하는 효과가 있다. 
+  * $E[\Delta \theta^2]_{t-1}$ : 직전 파라미터 갱신량 제곱의 지수 이동 평균
+    * 가중치 갱신량을 **직전 가중치 갱신량에 비례** 하게 한다.
+  * $E[g^2]_t$ : 현재 gradient 의 제곱의 지수 이동 평균 
+    * gradient 가 클수록 해당 파라미터의 갱신량을 줄인다. 
+
+AdaDelta의 장단점은 다음과 같다.
+
+* 장점
+  * Learning rate 를 자동으로 조정하므로, 수동으로 설정 불필요
+    * 실무적으로 [최적화 대상 Hyper-Parameter](../Machine%20Learning%20Models/머신러닝_방법론_HyperParam_Opt.md) 로 Learning rate 를 지정해 주지 않아도 되기 때문에, **최적의 하이퍼파라미터를 약간 더 빨리 찾을** 수 있다.
+  * AdaGrad 가 학습률이 감소되어 장기적인 학습이 어렵다는 문제 해결
+
 ### 2-6. SGD (Stochastic Gradient Descent)
+
+**핵심 아이디어**
+
+* 전체 데이터셋 대신, **1개의 데이터 (row)** 또는 일정 개수의 데이터 (row) 를 포함한 **Minibatch 단위** 로 학습하여 가중치를 갱신한다.
+  * 이때, 데이터 row 또는 minibatch 를 구성할 데이터를 **랜덤하게 선택** 하기 때문에, **확률적 (Stochastic)** 경사 하강법이라고 한다. 
+* 이를 통해 큰 데이터셋에서 학습 비용을 절감할 수 있다.
+
+----
+
+**가중치 업데이트 수식**
+
+* $\displaystyle (weight) = (weight) - (Learning Rate) * \frac{1}{m} \Sum_{i=1}^m \nabla_\theta L$
+  * $m$ : minibatch 의 크기
+  * $\nabla_\theta L$ : Loss Function 의 gradient
+* 위 수식을 통해 **minibatch 에 있는 각 데이터의 gradient의 평균** 만큼 가중치를 업데이트한다.
+
+SGD 의 장단점은 다음과 같다.
+
+* 장점
+  * 계산 비용이 절감되기 때문에 빠른 업데이트 가능
+* 단점
+  * minibatch 의 크기는 전체 데이터보다 훨씬 작으므로, 표본 부족으로 인해 '진동' 발생 가능
+  * 이 진동 때문에 모델 학습의 수렴 속도가 느려질 수 있음
 
 ### 2-7. 기타
 
