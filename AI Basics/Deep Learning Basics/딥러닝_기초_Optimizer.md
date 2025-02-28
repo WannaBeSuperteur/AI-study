@@ -16,7 +16,10 @@
 
 ## 코드
 
+* [MNIST 데이터셋에서 성능이 좋은 Optimizer 탐구](#3-탐구-어떤-optimizer-가-적절할까) 실험 코드 : [code (ipynb)](codes/Optimizer_experiment.ipynb)
+
 ## 1. Optimizer 란?
+
 딥러닝에서 **최적화 (Optimization) 란, 손실 함수 (loss function) 를 줄여서 모델 예측의 오차를 줄이는 것**이다.
 
 그렇다면 **Optimizer 란, 이 최적화를 수행하는 알고리즘 (학습이 효율적으로 이루어지도록 가중치를 갱신하는)** 을 말한다.
@@ -304,6 +307,9 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 |--------------|-----------------------|-------------|
 | ReLU only    | Sigmoid               | Softmax     |
 
+* [Dropout](딥러닝_기초_Overfitting_Dropout.md#3-dropout) 미 적용
+* Early Stopping Rounds = 5 로 고정 (5 epoch 동안 valid set 성능 갱신 없으면 종료)
+
 **상세 학습 방법**
 
 * 각 Optimizer 별로 하이퍼파라미터 최적화를 실시하여, **최적화된 하이퍼파라미터를 기준으로 한 성능을 기준** 으로 최고 성능의 Optimizer 를 파악
@@ -325,50 +331,64 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 
 **결론**
 
-* 실험 진행중
-* Optuna 의 랜덤성에 의해서, 본 실험을 여러 번 반복할 경우 그 결과 간 성능 차이가 있을 수 있음
+* **본 데이터셋** 을 기준으로, 각 Optimizer 의 성능은 **"AdamW >= Adam > AdaDelta" (최적 하이퍼파라미터 기준)** 이다.
+* Optuna 의 랜덤성에 의해서, 본 실험을 여러 번 반복하면 그 결과 간 성능 편차가 있을 수 있음
+* 데이터셋 특성에 따라 적합한 Optimizer 가 서로 다를 것으로 추정
 
 **각 Optimizer 별 테스트 데이터셋 최종 성능 및 최적 하이퍼파라미터**
 
-| Optimizer | 최종 성능 | 최적 하이퍼파라미터 |
-|-----------|-------|------------|
-| Adam      |       |            |
-| AdamW     |       |            |
-| AdaDelta  |       |            |
+| Optimizer | 최종 성능      | HPO Valid set 최고 성능 | 최적 하이퍼파라미터                                                                                                  |
+|-----------|------------|---------------------|-------------------------------------------------------------------------------------------------------------|
+| Adam      | 96.65%     | 96.26%              | ```learning_rate```: 0.000918<br>```beta1```: 0.9490<br>```beta2```: 0.9940                                 |
+| AdamW     | **96.77%** | **96.48%**          | ```learning_rate```: 0.000667<br>```beta1```: 0.9115<br>```beta2```: 0.999045<br>```weight_decay```: 0.0054 |
+| AdaDelta  | 95.88%     | 95.58%              | ```p```: 0.8568                                                                                             |
 
 **각 Optimizer 별 HPO 정확도 추이**
 
 * Adam
+
+![image](images/Optimizer_4.PNG)
+
 * AdamW
+
+![image](images/Optimizer_5.PNG)
+
 * AdaDelta
+
+![image](images/Optimizer_6.PNG)
 
 **각 Optimizer 별 특정 하이퍼파라미터의 값에 따른 성능 분포**
 
 * Adam
-* 
-| 하이퍼파라미터       | 성능 분포 |
-|---------------|-------|
-| Learning Rate |       |
-| $\beta_1$     |       |
-| $\beta_2$     |       |
+  * Learning Rate 가 0.002 부근일 때 최고의 성능을 보인다.
+
+| 하이퍼파라미터       | 성능 분포                                                                  |
+|---------------|------------------------------------------------------------------------|
+| Learning Rate | ![image](images/Optimizer_7.PNG)<br>![image](images/Optimizer_8.PNG)   |
+| $\beta_1$     | ![image](images/Optimizer_9.PNG)<br>![image](images/Optimizer_10.PNG)  |
+| $\beta_2$     | ![image](images/Optimizer_11.PNG)<br>![image](images/Optimizer_12.PNG) |
 
 * AdamW
+  * Learning Rate 가 0.001 ~ 0.002 부근일 때 최고의 성능을 보인다.
+  * weight decay 가 0.001 이하로 매우 낮을 때 간혹 모델 학습이 전혀 안 되기도 한다.
 
-| 하이퍼파라미터       | 성능 분포 |
-|---------------|-------|
-| Learning Rate |       |
-| $\beta_1$     |       |
-| $\beta_2$     |       |
-| weight decay  |       |
+| 하이퍼파라미터       | 성능 분포                                                                  |
+|---------------|------------------------------------------------------------------------|
+| Learning Rate | ![image](images/Optimizer_13.PNG)<br>![image](images/Optimizer_14.PNG) |
+| $\beta_1$     | ![image](images/Optimizer_15.PNG)<br>![image](images/Optimizer_16.PNG) |
+| $\beta_2$     | ![image](images/Optimizer_17.PNG)<br>![image](images/Optimizer_18.PNG) |
+| weight decay  | ![image](images/Optimizer_19.PNG)<br>![image](images/Optimizer_20.PNG) |
 
 * AdaDelta
 
-| 하이퍼파라미터       | 성능 분포 |
-|---------------|-------|
-| $p$           |       |
+| 하이퍼파라미터 | 성능 분포                             |
+|---------|-----------------------------------|
+| $p$     | ![image](images/Optimizer_21.PNG) |
 
 ### 3-3. 추가 탐구
 
-* 탐구 사항 1
-* 탐구 사항 2
-* 탐구 사항 3
+**AdamW 의 weight decay 가 매우 낮으면 일반적으로 성능이 저하되는가?**
+* 본 데이터셋 실험에 의하면, AdamW 의 weight decay 가 0.001 이하로 매우 낮을 때 모델 학습이 아예 안 되기도 했다.
+* 이와 같은 성능 저하 현상이 일반적으로 나타나는가?
+
+
