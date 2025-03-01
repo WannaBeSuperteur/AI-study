@@ -187,6 +187,24 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 
 실험 진행중
 
-**2. 하이퍼파라미터 최적화 진행에 따른 정확도 추이**
+**2. Best Hyper-param 및 그 성능 (정확도)**
 
-**3. 각 하이퍼파라미터의 값에 따른 성능 분포**
+| 구분                | 값 |
+|-------------------|---|
+| 최종 테스트셋 정확도       |   |
+| HPO Valid set 정확도 |   |
+| Best Hyper-param  |   |
+
+**3. 하이퍼파라미터 최적화 진행에 따른 정확도 추이**
+
+**4. 각 하이퍼파라미터의 값에 따른 성능 분포**
+
+* Regularization 및 Normalization type 별 최고 성능
+
+* L1, L2 Regularization 에 적용된 $\lambda$ 값에 따른 정확도 (**Regularization** Type 별)
+
+* L1, L2 Regularization 에 적용된 $\lambda$ 값에 따른 정확도 (**Normalization** Type 별)
+
+* Learning Rate 에 따른 정확도 (**Regularization** Type 별)
+
+* Learning Rate 에 따른 정확도 (**Normalization** Type 별)

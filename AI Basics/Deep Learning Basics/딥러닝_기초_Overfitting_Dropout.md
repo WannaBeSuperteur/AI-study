@@ -170,11 +170,11 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 | HPO Valid set 정확도 | 96.12%                                                                                                                     |
 | Best Hyper-param  | ```conv1_dropout``` : 0.0529<br>```conv2_dropout``` : 0.3585<br>```conv3_dropout``` : 0.2060<br>```fc1_dropout``` : 0.7258 |
 
-**하이퍼파라미터 최적화 진행에 따른 정확도 추이**
+**3. 하이퍼파라미터 최적화 진행에 따른 정확도 추이**
 
 ![image](images/Overfitting_4.PNG)
 
-**3. 각 하이퍼파라미터 (= 각 레이어의 dropout rate) 의 값에 따른 성능 분포**
+**4. 각 하이퍼파라미터 (= 각 레이어의 dropout rate) 의 값에 따른 성능 분포**
 
 * Conv1 (1st Conv. Layer) 의 경우 Dropout Rate 가 클수록 일반적으로 성능이 감소하는 경향이 있다.
   * 이는 첫번째 Conv. Layer 를 Dropout 함으로써 **low-level feature 의 추출에 지장** 을 주고, 이는 **이후 레이어에서의 복잡한 패턴 학습에 지장** 을 주기 때문으로 추정된다.
