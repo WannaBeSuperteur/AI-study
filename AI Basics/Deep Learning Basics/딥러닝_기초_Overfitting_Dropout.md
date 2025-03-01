@@ -52,14 +52,18 @@ bias와 variance 모두 모델의 오차이므로, 딥 러닝 모델이 목표�
 * Valid set 을 이용하여 측정한 성능이 일정 epoch 횟수 이상 갱신되지 않으면 학습을 조기 종료한다. (Early Stopping)
 * [Cross Validation](../Machine%20Learning%20Models/머신러닝_방법론_Cross_Validation.md) 방법을 이용한다.
 
-**2. 모델 설계 관점**
+**2. 모델 구조 관점**
 
 * 딥러닝 모델의 퍼셉트론 개수를 줄인다.
   * feature 개수를 줄이는 등의 방법이 가능하다. 
   * 통계학에서도 오버피팅 해결을 위해 불필요한 feature 를 제거하기도 한다.
+* [Batch Normalization](딥러닝_기초_Regularization.md#4-1-batch-normalization) 을 이용한다.
+* [드롭아웃 (Dropout)](#3-dropout) 을 이용한다.
+
+**3. 모델 학습 수식 (weight, loss 등) 관점**
+
 * [Weight Decay](딥러닝_기초_Optimizer.md#1-1-중요-개념-weight-decay) 를 조정한다.
 * [L1, L2 Regularization (정규화)](딥러닝_기초_Regularization.md#2-l1-l2-regularization) 를 이용한다.
-* [드롭아웃 (Dropout)](#3-dropout) 을 이용한다.
 
 ## 3. Dropout
 
@@ -153,12 +157,12 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 
 ### 4-2. 실험 결과
 
-**결론**
+**1. 결론**
 
 * 본 데이터셋에서는 **1번째 Conv. Layer 의 Dropout 이 클수록 성능이 떨어진다.**
 * 이외의 결론은 관측 데이터 표본이 부족하여 추가적인 실험을 진행해야 알 수 있을 것으로 예상된다.
 
-**Best Hyper-param 및 그 성능 (정확도)**
+**2. Best Hyper-param 및 그 성능 (정확도)**
 
 | 구분                | 값                                                                                                                          |
 |-------------------|----------------------------------------------------------------------------------------------------------------------------|
@@ -170,7 +174,7 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 
 ![image](images/Overfitting_4.PNG)
 
-**각 하이퍼파라미터 (= 각 레이어의 dropout rate) 의 값에 따른 성능 분포**
+**3. 각 하이퍼파라미터 (= 각 레이어의 dropout rate) 의 값에 따른 성능 분포**
 
 * Conv1 (1st Conv. Layer) 의 경우 Dropout Rate 가 클수록 일반적으로 성능이 감소하는 경향이 있다.
   * 이는 첫번째 Conv. Layer 를 Dropout 함으로써 **low-level feature 의 추출에 지장** 을 주고, 이는 **이후 레이어에서의 복잡한 패턴 학습에 지장** 을 주기 때문으로 추정된다.

@@ -5,6 +5,7 @@
 * [4. Batch/Layer Normalization](#4-batchlayer-normalization)
   * [4-1. Batch Normalization](#4-1-batch-normalization) 
   * [4-2. Layer Normalization](#4-2-layer-normalization)
+* [5. 탐구 : ]
 
 ## 1. Regularization 이란? 그 목적은?
 
@@ -23,6 +24,10 @@ L1, L2 Regularization은 **loss function의 값에 weight의 크기를 더해 �
 
 * L2 Regularization
   * $L = L_0 + \displaystyle \frac{\lambda}{n} \sum_{w} w^2$
+
+* 상수 $\lambda$ 의 의미
+  * L1, L2 Regularization 의 정도를 조절하는 역할
+  * 너무 작으면 Regularization 의 효과 감소
 
 ![image](images/Regularization_1.PNG)
 
@@ -53,7 +58,7 @@ Gradient Vanishing의 해결 방법은 다음과 같다.
 
 ## 4. Batch/Layer Normalization
 
-overfitting 을 방지하기 위한 대표적인 방법으로 **Normalization** 이 있다. Normalization 은 **Batch Normalization 과 Layer Normalization** 으로 구분된다.
+**overfitting 을 방지** 하기 위한 대표적인 방법으로 **Normalization** 이 있다. Normalization 은 **Batch Normalization 과 Layer Normalization** 으로 구분된다.
 
 * 둘 모두 **레이어 단위** 로 적용된다.
 
@@ -86,3 +91,88 @@ Batch Normalization 과 비교한 Layer Normalization 의 장점은 다음과 �
 
 * batch size가 작을 때도 안정적인 결과가 나온다.
 * [Recurrent Neural Network (RNN)](../../Natural%20Language%20Processing/Basics_RNN과%20LSTM,%20GRU.md#rnn이란) 을 NLP 에 사용할 때, Normalization 대상 데이터 개수가 고정되어 있어서 더 효과적이다.
+
+## 5. 탐구: 어떤 정규화가 가장 좋을까?
+
+**실험 목표**
+* L1, L2 Regularization, Batch/Layer Normalization 중 어떤 것의 효과가 가장 큰지 알아본다.
+* 적용할 Regularization의 종류 및 관련 상수, learning rate를 하이퍼파라미터로 하여, MNIST 데이터셋을 대상으로 하이퍼파라미터 최적화를 실험한다.
+
+### 5-1. 실험 설계
+
+**데이터셋**
+
+* **MNIST 숫자 이미지 분류 데이터셋 (train 60K / test 10K)**
+  * 10 개의 Class 가 있는 Classification Task
+  * 학습 시간 절약을 위해, train dataset 중 일부만을 샘플링하여 학습
+* 선정 이유
+  * 데이터셋이 28 x 28 size 의 작은 이미지들로 구성
+  * 이로 인해 비교적 간단한 신경망을 설계할 수 있으므로, 간단한 딥러닝 실험에 적합하다고 판단
+* 데이터셋 분리
+  * 학습 데이터 양이 **조금 부족해야 Regularization 을 통한 오버피팅 방지 효과에 따른 성능 변별** 이 보다 잘 될 것으로 판단
+
+| 학습 데이터  | Valid 데이터 (Epoch 단위) | Valid 데이터 (Trial 단위) | Test 데이터          |
+|---------|----------------------|----------------------|-------------------|
+| 1,000 장 | 2,000 장              | 5,000 장              | 10,000 장 (원본 그대로) |
+
+**성능 Metric**
+
+* **Accuracy**
+* 선정 이유
+  * Accuracy 로 성능을 측정해도 될 정도로, [각 Class 간 데이터 불균형](../Data%20Science%20Basics/데이터_사이언스_기초_데이터_불균형.md) 이 적음 
+
+**신경망 구조**
+
+```python
+# 신경망 구조 출력 코드
+
+from torchinfo import summary
+
+model = CNN()
+print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
+```
+
+![image](images/Common_NN_Vision.PNG)
+
+* [활성화 함수](딥러닝_기초_활성화_함수.md) 는 다음과 같이 사용
+
+| Conv. Layers | Fully Connected Layer | Final Layer |
+|--------------|-----------------------|-------------|
+| ReLU only    | Sigmoid               | Softmax     |
+
+* [Dropout](딥러닝_기초_Overfitting_Dropout.md#3-dropout) 미 적용
+* Early Stopping Rounds = 5 로 고정 (5 epoch 동안 valid set 성능 갱신 없으면 종료)
+* Optimizer 는 [Adam](딥러닝_기초_Optimizer.md#2-2-adam) 를 사용
+  * 여기에 weight decay 항을 추가한 [AdamW](딥러닝_기초_Optimizer.md#2-3-adamw) 가 [동일 데이터셋을 대상으로 한 성능 실험](딥러닝_기초_Optimizer.md#3-탐구-어떤-optimizer-가-적절할까) 에서 최상의 정확도를 기록했기 때문
+  * 그러나, **L2 Regularization 의 효과를 측정하기 위해 weight decay 를 0으로 고정** 했으므로, AdamW 의 Adam 에 비한 개선점이 희석됨
+
+**상세 학습 방법**
+
+* 다음과 같이 하이퍼파라미터 최적화를 실시하여, **최적화된 하이퍼파라미터를 기준으로 한 성능을 기준** 으로 최고 성능의 Optimizer 를 파악
+  * L1, L2 Regularization 적용 여부
+    * Regularization 미 적용
+    * 모든 레이어에 L1 Regularization 적용
+    * 모든 레이어에 L2 Regularization 적용
+  * L1, L2 Regularization 에 적용할 $\lambda$ 값
+    * 탐색 범위 : 0.0 ~ 0.01 (= 1e-2)
+  * 모든 Conv. + Fully Connected Layer (총 4개) 에 적용할 Normalization
+    * Normalization 미 적용
+    * Batch Normalization 적용
+    * Layer Normalization 적용
+      * 이때 Conv. Layer 의 경우, 모든 channel 을 하나로 묶어서 Layer Normalization 실시 
+  * learning rate
+    * 탐색 범위 : 0.0005 ~ 0.01 (= 5e-4 ~ 1e-2)
+
+* 하이퍼파라미터 최적화
+  * [하이퍼파라미터 최적화 라이브러리](../Machine%20Learning%20Models/머신러닝_방법론_HyperParam_Opt.md#4-하이퍼파라미터-최적화-라이브러리) 중 Optuna 를 사용
+  * 하이퍼파라미터 탐색 200 회 반복 (= 200 Trials) 실시
+
+### 5-2. 실험 결과
+
+**1. 실험 결론**
+
+실험 진행중
+
+**2. 하이퍼파라미터 최적화 진행에 따른 정확도 추이**
+
+**3. 각 하이퍼파라미터의 값에 따른 성능 분포**
