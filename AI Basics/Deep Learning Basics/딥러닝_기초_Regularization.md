@@ -12,6 +12,8 @@
 
 ## 코드
 
+* [MNIST 데이터셋에서 성능이 좋은 Regularization 탐구](#3-탐구-어떤-optimizer-가-적절할까) 실험 코드 : [code (ipynb)](codes/Regularization_experiment.ipynb)
+
 ## 1. Regularization 이란? 그 목적은?
 
 딥러닝에서 **Regularization (정규화)** 란, **[오버피팅](딥러닝_기초_Overfitting_Dropout.md) 방지를 위한 일종의 규제** 를 의미한다.
@@ -162,19 +164,20 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 **상세 학습 방법**
 
 * 다음과 같이 하이퍼파라미터 최적화를 실시하여, **최적화된 하이퍼파라미터를 기준으로 한 성능을 기준** 으로 최고 성능의 Optimizer 를 파악
-  * L1, L2 Regularization 적용 여부
+  * **L1, L2 Regularization 적용 여부** ```reg_type```
     * Regularization 미 적용
     * 모든 레이어에 L1 Regularization 적용
     * 모든 레이어에 L2 Regularization 적용
-    * 모든 레이어에 L1 + L2 = Elastic Net 적용
-  * L1, L2 Regularization 에 적용할 $\lambda$ 값
+    * 모든 레이어에 Elastic Net = L1 Regularization + L2 Regularization 적용
+      * 각 Regularization 의 가중치는 0.5 로 동일 
+  * **L1, L2 Regularization 에 적용할 $\lambda$ 값** ```reg_lambda```
     * 탐색 범위 : 0.000001 ~ 0.01 (= 1e-6 ~ 1e-2)
-  * 모든 Conv. + Fully Connected Layer (총 4개) 에 적용할 Normalization
+  * **모든 Conv. + Fully Connected Layer (총 4개) 에 적용할 Normalization** ```norm_type```
     * Normalization 미 적용
     * Batch Normalization 적용
     * Layer Normalization 적용
       * 이때 Conv. Layer 의 경우, 모든 channel 을 하나로 묶어서 Layer Normalization 실시 
-  * learning rate
+  * **learning rate** ```learning_rate```
     * 탐색 범위 : 0.0005 ~ 0.01 (= 5e-4 ~ 1e-2)
 
 * 하이퍼파라미터 최적화
@@ -185,26 +188,52 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 
 **1. 실험 결론**
 
-실험 진행중
+* Normalization
+  * **Batch Normalization > Layer Normalization > Normalization 미적용** 순으로 성능이 좋다.
+* L1, L2 Regularization
+  * Regularization type 에 따른 성능 차이는 불분명하다.
+  * 해당 Regularization 을 위한 **$\lambda$ 값이 작을수록 성능이 좋다.**
+* Learning Rate
+  * Learning Rate 에 따른 성능 차이는 불분명하다.
 
 **2. Best Hyper-param 및 그 성능 (정확도)**
 
-| 구분                | 값 |
-|-------------------|---|
-| 최종 테스트셋 정확도       |   |
-| HPO Valid set 정확도 |   |
-| Best Hyper-param  |   |
+| 구분                | 값                                                                                                                                                                                             |
+|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 최종 테스트셋 정확도       | 97.91%                                                                                                                                                                                        |
+| HPO Valid set 정확도 | 97.94%                                                                                                                                                                                        |
+| Best Hyper-param  | ```reg_type``` : ```none```<br>```norm_type``` : ```batch_norm```<br>```learning_rate``` : 0.002526<br>(```reg_type``` 가 ```none```, 즉 "Regularization 미적용" 이므로 ```reg_lambda``` 하이퍼파라미터는 없음) |
 
 **3. 하이퍼파라미터 최적화 진행에 따른 정확도 추이**
 
+![image](images/Regularization_6.PNG)
+
 **4. 각 하이퍼파라미터의 값에 따른 성능 분포**
 
-* Regularization 및 Normalization type 별 최고 성능
+* Regularization 및 Normalization type 별 최고 정확도
+  * **Batch Normalization > Layer Normalization > Normalization 미적용** 순으로 성능이 좋다. 
+  * Regularization type 에 따른 성능 차이는 불분명하다.
+
+![image](images/Regularization_7.PNG)
 
 * L1, L2 Regularization 에 적용된 $\lambda$ 값에 따른 정확도 (**Regularization** Type 별)
+  * $\lambda$ 값이 작을수록 정확도가 높다.
+  * Regularization type 에 따른 차이는 불분명하다.
+
+![image](images/Regularization_8.PNG)
 
 * L1, L2 Regularization 에 적용된 $\lambda$ 값에 따른 정확도 (**Normalization** Type 별)
+  * $\lambda$ 값이 작을수록 정확도가 높다.
+  * Normalization type 에 따른 성능 순위는 **Batch Normalization > Layer Normalization > Normalization 미 적용** 이다.
+
+![image](images/Regularization_9.PNG)
 
 * Learning Rate 에 따른 정확도 (**Regularization** Type 별)
+  * Learning Rate 값에 따른 정확도 차이는 불분명하다.
+
+![image](images/Regularization_10.PNG)
 
 * Learning Rate 에 따른 정확도 (**Normalization** Type 별)
+  * Normalization type 에 따른 성능 순위는 **Batch Normalization > Layer Normalization > Normalization 미 적용** 이다.
+
+![image](images/Regularization_11.PNG)
