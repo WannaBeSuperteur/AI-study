@@ -1,11 +1,16 @@
 ## 목차
 * [1. Reguarization 이란? 그 목적은?](#1-regularization-이란-그-목적은)
 * [2. L1, L2 Regularization](#2-l1-l2-regularization)
+  * [2-1. Elastic Net = L1 + L2](#2-1-elastic-net--l1--l2) 
 * [3. Gradient Vanishing](#3-gradient-vanishing)
 * [4. Batch/Layer Normalization](#4-batchlayer-normalization)
   * [4-1. Batch Normalization](#4-1-batch-normalization) 
   * [4-2. Layer Normalization](#4-2-layer-normalization)
-* [5. 탐구 : ]
+* [5. 탐구: 어떤 정규화가 가장 좋을까?](#5-탐구-어떤-정규화가-가장-좋을까)
+  * [5-1. 실험 설계](#5-1-실험-설계) 
+  * [5-2. 실험 결과](#5-2-실험-결과) 
+
+## 코드
 
 ## 1. Regularization 이란? 그 목적은?
 
@@ -31,6 +36,8 @@ L1, L2 Regularization은 **loss function의 값에 weight의 크기를 더해 �
 
 ![image](images/Regularization_1.PNG)
 
+* 위 그림에서 연두색 영역은 **w1, w2 의 값이 가능한 영역, 즉 규제 영역** 을 의미하며, **w1, w2 는 해당 영역을 벗어날 수 없다.**
+
 이와 같은 정규화를 통해서 다음과 같은 효과를 얻을 수 있다.
 
 | 정규화    | 요약                 | 상세                                                                                                                                                                                                           |
@@ -39,6 +46,12 @@ L1, L2 Regularization은 **loss function의 값에 weight의 크기를 더해 �
 | L2 정규화 | 가중치 절대 크기 매우 커짐 방지 | **weight의 절댓값을 제어하여 overfitting 방지**<br>- 가중치 갱신 시 weight 값이 클수록 손실함수의 값에 이에 비례하는 큰 영향<br> - 따라서 특정 가중치가 매우 커지는 것을 방지 가능                                                                                     |
 
 * L1, L2 정규화는 **weight 을 모델의 예측값으로 바꾸면**, [Loss Function](딥러닝_기초_Loss_function.md) 중 각각 **Mean Squared Error, Mean Absolute Error** 와 관련 있다.
+
+### 2-1. Elastic Net = L1 + L2
+
+![image](images/Regularization_5.PNG)
+
+위와 같이 L1, L2 정규화를 합성하여 적용할 수도 있다. 이것을 **Elastic Net** 이라고 한다.
 
 ## 3. Gradient Vanishing
 
@@ -153,8 +166,9 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
     * Regularization 미 적용
     * 모든 레이어에 L1 Regularization 적용
     * 모든 레이어에 L2 Regularization 적용
+    * 모든 레이어에 L1 + L2 = Elastic Net 적용
   * L1, L2 Regularization 에 적용할 $\lambda$ 값
-    * 탐색 범위 : 0.0 ~ 0.01 (= 1e-2)
+    * 탐색 범위 : 0.000001 ~ 0.01 (= 1e-6 ~ 1e-2)
   * 모든 Conv. + Fully Connected Layer (총 4개) 에 적용할 Normalization
     * Normalization 미 적용
     * Batch Normalization 적용
