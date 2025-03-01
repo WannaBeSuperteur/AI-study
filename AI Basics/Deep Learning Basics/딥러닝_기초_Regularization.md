@@ -8,7 +8,8 @@
   * [4-2. Layer Normalization](#4-2-layer-normalization)
 * [5. 탐구: 어떤 정규화가 가장 좋을까?](#5-탐구-어떤-정규화가-가장-좋을까)
   * [5-1. 실험 설계](#5-1-실험-설계) 
-  * [5-2. 실험 결과](#5-2-실험-결과) 
+  * [5-2. 실험 결과](#5-2-실험-결과)
+  * [5-3. 실험 결과에 대한 이유 분석](#5-3-실험-결과에-대한-이유-분석)
 
 ## 코드
 
@@ -93,7 +94,13 @@ Gradient Vanishing의 해결 방법은 다음과 같다.
 
 배치 정규화를 통해 다음과 같은 효과를 얻을 수 있다.
 * **Gradient vanishing 등을 방지**하여 안정적으로 학습할 수 있게 한다.
-* 평균과 분산이 각 batch마다 달라지기 때문에 특정 weight가 매우 커지는 것을 방지할 수 있다.
+  * 정규화를 통해 **활성화 함수의 기울기 (미분값) 를 충분한 값으로 유지** 시켜, 역전파됨에 따라 gradient 가 감소하는 문제를 해결한다.
+
+* 평균과 분산이 각 batch마다 달라지고 이를 이용하여 정규화를 하기 때문에, **특정 weight가 매우 커지는 것을 방지** 할 수 있다.
+  * 특정 weight이 커진다는 것은 해당 weight이 **학습 데이터에서 많이 관측된 feature 값으로 편향** 됨을 의미한다.
+  * 해당 weight이 있는 레이어의 **다음 레이어의 weight** 역시 영향을 받는다.
+    * 이것을 **내부 공변량 변화 (Internal Covariate Shift)** 라고 한다. 
+  * 모델이 편향되므로, overfitting 이 발생할 가능성이 높아진다.
 
 ### 4-2. Layer Normalization
 
@@ -195,6 +202,7 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
   * 해당 Regularization 을 위한 **$\lambda$ 값이 작을수록 성능이 좋다.**
 * Learning Rate
   * Learning Rate 에 따른 성능 차이는 불분명하다.
+* [이유 분석](#5-3-실험-결과에-대한-이유-분석)
 
 **2. Best Hyper-param 및 그 성능 (정확도)**
 
@@ -237,3 +245,19 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
   * Normalization type 에 따른 성능 순위는 **Batch Normalization > Layer Normalization > Normalization 미 적용** 이다.
 
 ![image](images/Regularization_11.PNG)
+
+### 5-3. 실험 결과에 대한 이유 분석
+
+**1. Batch Normalization > Layer Normalization > Normalization 미적용 순으로 성능이 좋다.**
+
+* Normalization 이 적용되는 것 자체가 Gradient Vanishing 을 해결하는 효과가 있다.
+* Batch Normalization > Layer Normalization 인 이유
+  * CNN 의 각 feature map 의 **공간적 특징에 대한 고려** 없이, 전체 feature 대상으로 정규화를 실시하기 때문
+  * 예를 들어, 특정 feature map 은 평균보다 큰 값들로 구성되어 있고 이것은 중요한 특징인데, Layer Normalization을 하면 평균값이 되어 버려서 그 특징이 사라진다.
+
+![image](images/Regularization_12.PNG)
+
+**2. L1, L2 Regularization 을 위한 $\lambda$ 값이 작을수록 성능이 좋다.**
+
+* $\lambda$ 값이 클수록 L1, L2 Regularization 에 의한 weight 크기 규제가 강화된다.
+* 따라서 **이로 인해 모델의 학습 능력과 표현력이 떨어지기** 때문에, 결국 성능이 감소한다.
