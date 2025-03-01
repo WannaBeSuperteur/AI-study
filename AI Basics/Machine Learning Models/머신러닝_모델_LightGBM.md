@@ -133,12 +133,12 @@ Bundle로 단일화된 feature의 값은 다음과 같이 구성한다.
 [Python의 LightGBM 라이브러리](https://github.com/microsoft/LightGBM/tree/master/python-package) 를 기준으로, LightGBM을 구성하는 하이퍼파라미터는 다음과 같다.
 * Scikit-learn 라이브러리의 LightGBM 에서는 아래와 이름이 다를 수 있다.
 
-| 구분             | 하이퍼파라미터                                                                                                   | 의미                                                                                                                                                                              |
-|----------------|-----------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 모델 기본 설정값 관련   | - num_iterations<br>- learning_rate<br>- boosting<br> - objective<br> - metric<br> - early_stopping_round | - [Boosting (부스팅)](머신러닝_모델_Ensemble.md#2-3-boosting) 에서의 모델 학습 반복 횟수<br>- 학습률<br>- 알고리즘 종류<br>- 해결할 문제의 유형<br>- loss 측정용 metric<br>- 해당 반복 횟수만큼 연속으로 성능 신기록이 없으면 학습 종료          |
-| 트리 구조 관련       | - max_depth<br>- num_leaves<br>- min_gain_to_split                                                        | - 트리의 최대 깊이<br>- 1개의 tree의 최대 leaf node 개수<br>- Tree 분기를 위한 최소 information gain                                                                                                 |
-| Overfitting 관련 | - min_data_in_leaf<br>- lambda_l1 <br>- lambda_l2                                                         | - 각 leaf node가 최소 이 값만큼의 row를 의미<br>- L1 [Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#l1-l2-regularization)의 Lambda 값<br>- L2 Regularization의 Lambda 값 | 
-| 기타             | - bagging_freq<br>- bagging_fraction<br>- feature_fraction                                                | - 몇 번의 모델 학습마다 [Bagging](머신러닝_모델_Ensemble.md#2-2-bagging)을 진행할 것인지의 값<br>- 각 Tree에서 샘플링되는 데이터의 비율<br>- 각 Tree에서 선택되는 feature의 비율                                                |                                                                                                                                                           
+| 구분             | 하이퍼파라미터                                                                                                   | 의미                                                                                                                                                                                |
+|----------------|-----------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 모델 기본 설정값 관련   | - num_iterations<br>- learning_rate<br>- boosting<br> - objective<br> - metric<br> - early_stopping_round | - [Boosting (부스팅)](머신러닝_모델_Ensemble.md#2-3-boosting) 에서의 모델 학습 반복 횟수<br>- 학습률<br>- 알고리즘 종류<br>- 해결할 문제의 유형<br>- loss 측정용 metric<br>- 해당 반복 횟수만큼 연속으로 성능 신기록이 없으면 학습 종료            |
+| 트리 구조 관련       | - max_depth<br>- num_leaves<br>- min_gain_to_split                                                        | - 트리의 최대 깊이<br>- 1개의 tree의 최대 leaf node 개수<br>- Tree 분기를 위한 최소 information gain                                                                                                   |
+| Overfitting 관련 | - min_data_in_leaf<br>- lambda_l1 <br>- lambda_l2                                                         | - 각 leaf node가 최소 이 값만큼의 row를 의미<br>- L1 [Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#2-l1-l2-regularization)의 Lambda 값<br>- L2 Regularization의 Lambda 값 | 
+| 기타             | - bagging_freq<br>- bagging_fraction<br>- feature_fraction                                                | - 몇 번의 모델 학습마다 [Bagging](머신러닝_모델_Ensemble.md#2-2-bagging)을 진행할 것인지의 값<br>- 각 Tree에서 샘플링되는 데이터의 비율<br>- 각 Tree에서 선택되는 feature의 비율                                                  |                                                                                                                                                           
 
 ### 5-1. 모델 기본 설정값 관련
 
@@ -190,7 +190,7 @@ Overfitting을 조절하기 위한 목적의 하이퍼파라미터로는 **min_d
   * 즉, 각 leaf node가 나타내야 하는 최소한의 sample 개수를 의미한다.
   * leaf node가 나타내는 **sample 개수가 너무 적으면 overfitting의 위험** 이 있다.
 * lambda_l1, lambda_l2
-  * [L1, L2 Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#l1-l2-regularization) 에서 각각 사용되는 Lambda 값
+  * [L1, L2 Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#2-l1-l2-regularization) 에서 각각 사용되는 Lambda 값
 
 ### 5-4. 기타 하이퍼파라미터
 

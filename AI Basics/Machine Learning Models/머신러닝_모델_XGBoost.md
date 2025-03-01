@@ -29,7 +29,7 @@ XGBoost의 장단점은 다음과 같다.
 
 * 장점
   * 병렬 학습 가능 및 이로 인한 빠른 수행 시간
-  * [Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#l1-l2-regularization) 등을 통해 overfitting 을 방지할 수 있음
+  * [Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#2-l1-l2-regularization) 등을 통해 overfitting 을 방지할 수 있음
   * [자체적인 missing value (결측치) 처리 기능](#4-4-결측치-데이터-처리)
 * 단점
   * 하이퍼파라미터가 많으므로 최적화에 시간이 오래 소요됨
@@ -57,16 +57,16 @@ Residual에 대해 자세히 살펴보면 다음과 같다.
 
 XGBoost에서는 다음과 같이 **CART (Classification and Regression Trees)** 와 **병렬 학습 (이를 위한 Split)** 을 적용한다.
 
-| 구분                                                                                                                      | 목적             | 설명                                                                                                                                          |
-|-------------------------------------------------------------------------------------------------------------------------|----------------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| Loss Function 에 [L2 와 유사한 Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#l1-l2-regularization) 적용 | overfitting 방지 | - $\displaystyle Loss = \Sigma_i l(\hat{y}_i, y_i) + \Sigma_k \Omega(f_k)$<br> - $\Omega(f) = \lambda T + \frac{1}{2} \lambda w^2$          |
-| CART (Classification and Regression Trees)                                                                              |                | - **각 트리의 출력값 (연속된 숫자) 의 가중치 합** 으로 최종 예측값 결정<br>- 회귀 트리 (Regression Tree) 를 이용한 앙상블 (Ensemble)                                             |
-| 병렬 학습 (Split)                                                                                                           | 모델 속도 향상       | 다음과 같이 4가지로 구분<br>- Basic Exact Greedy Algorithm<br>- Approximate Algorithm<br>- Weighted Quantile Search<br>- Sparsity-aware Split Finding |
-| 결측치 데이터 처리 알고리즘 (Sparsity-aware Split Finding)                                                                          | 결측치가 있는 데이터 학습 | - **모든 결측치를 왼쪽, 오른쪽으로 몰아서** 배치했을 때의 information gain 을 각각 계산<br>- **information gain이 가장 높은** split point를 탐색                               |
+| 구분                                                                                                                        | 목적             | 설명                                                                                                                                          |
+|---------------------------------------------------------------------------------------------------------------------------|----------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| Loss Function 에 [L2 와 유사한 Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#2-l1-l2-regularization) 적용 | overfitting 방지 | - $\displaystyle Loss = \Sigma_i l(\hat{y}_i, y_i) + \Sigma_k \Omega(f_k)$<br> - $\Omega(f) = \lambda T + \frac{1}{2} \lambda w^2$          |
+| CART (Classification and Regression Trees)                                                                                |                | - **각 트리의 출력값 (연속된 숫자) 의 가중치 합** 으로 최종 예측값 결정<br>- 회귀 트리 (Regression Tree) 를 이용한 앙상블 (Ensemble)                                             |
+| 병렬 학습 (Split)                                                                                                             | 모델 속도 향상       | 다음과 같이 4가지로 구분<br>- Basic Exact Greedy Algorithm<br>- Approximate Algorithm<br>- Weighted Quantile Search<br>- Sparsity-aware Split Finding |
+| 결측치 데이터 처리 알고리즘 (Sparsity-aware Split Finding)                                                                            | 결측치가 있는 데이터 학습 | - **모든 결측치를 왼쪽, 오른쪽으로 몰아서** 배치했을 때의 information gain 을 각각 계산<br>- **information gain이 가장 높은** split point를 탐색                               |
 
 ### 4-1. Loss Function 의 Regularization
 
-XGBoost의 Loss Function에는 **overfitting 방지를 위하여 다음과 같이 [L2 Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#l1-l2-regularization) 과 유사한 Regularization** 을 적용한다.
+XGBoost의 Loss Function에는 **overfitting 방지를 위하여 다음과 같이 [L2 Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#2-l1-l2-regularization) 과 유사한 Regularization** 을 적용한다.
 
 * **[수식]** $Loss = \Sigma_i l(\hat{y}_i, y_i) + \Sigma_k \Omega(f_k)$
   * $\displaystyle \Omega(f) = \lambda T + \frac{1}{2} \lambda w^2$
@@ -174,7 +174,7 @@ XGBoost 에서 병렬 학습을 위해 사용되는 Split 알고리즘은 다음
 |----------------|---------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 모델 기본 설정값 관련   | - booster<br>- nthread<br>- eta<br>- num_boost_around<br>- objective<br>- eval_metric | - 모델 종류 (tree-based vs. linear)<br> - CPU 스레드 개수<br>- 학습률<br>- [Boosting](머신러닝_모델_Ensemble.md#2-3-boosting) 관점에서의 모델 학습 반복 횟수<br>- objective function (Loss Function)<br>- 성능 metric |
 | 트리 구조 관련       | - gamma<br>- max_depth                                                                | - leaf node를 분할하기 위한 Loss 감소량의 최소값<br>- 트리의 최대 깊이                                                                                                                                    |
-| Overfitting 관련 | - min_child_weight<br> - alpha<br>- lambda                                            | - 각 leaf node가 포함해야 하는 최소 row의 개수<br>- L1 [Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#l1-l2-regularization) 의 Lambda 값<br>- L2 Regularization 의 Lambda 값   |
+| Overfitting 관련 | - min_child_weight<br> - alpha<br>- lambda                                            | - 각 leaf node가 포함해야 하는 최소 row의 개수<br>- L1 [Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#2-l1-l2-regularization) 의 Lambda 값<br>- L2 Regularization 의 Lambda 값 |
 | 기타             | - sub_sample<br>- scale_pos_weight                                                    | - 각 Tree에서 샘플링되는 데이터의 비율<br>- [데이터 불균형](../Data%20Science%20Basics/데이터_사이언스_기초_데이터_불균형.md) 시 label 별 가중치 조절                                                                          |
 
 ### 5-1. 기본 설정값 관련

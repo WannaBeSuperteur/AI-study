@@ -58,7 +58,7 @@ bias와 variance 모두 모델의 오차이므로, 딥 러닝 모델이 목표�
   * feature 개수를 줄이는 등의 방법이 가능하다. 
   * 통계학에서도 오버피팅 해결을 위해 불필요한 feature 를 제거하기도 한다.
 * [Weight Decay](딥러닝_기초_Optimizer.md#1-1-중요-개념-weight-decay) 를 조정한다.
-* [L1, L2 Regularization (정규화)](딥러닝_기초_Regularization.md#l1-l2-regularization) 를 이용한다.
+* [L1, L2 Regularization (정규화)](딥러닝_기초_Regularization.md#2-l1-l2-regularization) 를 이용한다.
 * [드롭아웃 (Dropout)](#3-dropout) 을 이용한다.
 
 ## 3. Dropout

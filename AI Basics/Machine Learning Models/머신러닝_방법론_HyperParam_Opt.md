@@ -22,12 +22,12 @@
 
 대표적인 하이퍼파라미터는 다음과 같다.
 
-| 구분                   | 하이퍼파라미터                                                                                                                                                                                                |
-|----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 딥 러닝 (Deep Learning) | - hidden layer의 개수 및 각 layer에 있는 뉴런 개수<br>- 학습률 (Learning Rate)<br>- weight decay<br>- [L1, L2 Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#l1-l2-regularization) 에서의 lambda 값 |
-| 트리 기반 모델             | - 트리의 최대 깊이<br>- 각 Tree가 갖는 leaf node의 최대 개수                                                                                                                                                           |                                                                                                                                      
-| 기타 주요 머신러닝 모델        | - [k-NN](머신러닝_모델_KNN.md) 에서의 K 값<br> - [K-means Clustering](머신러닝_모델_K-means_Clustering.md) 에서의 K 값                                                                                                     |                                                                                                                                                            
-| 모델별 하이퍼파라미터          | 각 모델별, 해당 모델에서 사용하는 하이퍼파라미터                                                                                                                                                                            |                                                                                                                                                                           
+| 구분                   | 하이퍼파라미터                                                                                                                                                                                                  |
+|----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 딥 러닝 (Deep Learning) | - hidden layer의 개수 및 각 layer에 있는 뉴런 개수<br>- 학습률 (Learning Rate)<br>- weight decay<br>- [L1, L2 Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#2-l1-l2-regularization) 에서의 lambda 값 |
+| 트리 기반 모델             | - 트리의 최대 깊이<br>- 각 Tree가 갖는 leaf node의 최대 개수                                                                                                                                                             |                                                                                                                                      
+| 기타 주요 머신러닝 모델        | - [k-NN](머신러닝_모델_KNN.md) 에서의 K 값<br> - [K-means Clustering](머신러닝_모델_K-means_Clustering.md) 에서의 K 값                                                                                                       |                                                                                                                                                            
+| 모델별 하이퍼파라미터          | 각 모델별, 해당 모델에서 사용하는 하이퍼파라미터                                                                                                                                                                              |                                                                                                                                                                           
 
 ## 2. 하이퍼파라미터 최적화 (튜닝)
 
@@ -356,7 +356,7 @@ print(f'Best Parameters : {best_params_optuna}')
 * max_depth : 트리의 최대 깊이
 * num_leaves : 1개의 tree의 최대 leaf node 개수
 * min_data_in_leaf : 각 leaf node가 나타내야 하는 최소한의 sample 개수
-* lambda_l1, lambda_l2 : [L1, L2 Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#l1-l2-regularization) 에서 각각 사용되는 Lambda 값
+* lambda_l1, lambda_l2 : [L1, L2 Regularization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#2-l1-l2-regularization) 에서 각각 사용되는 Lambda 값
 
 ### 5-3. 실험 결과
 **결론**

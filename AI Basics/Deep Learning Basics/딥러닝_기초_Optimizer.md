@@ -116,7 +116,7 @@ RMSProp과 달리, 다음과 같이 bias correction을 적용한다. 이는 **�
 **핵심 아이디어**
 
 * Adam Optimizer 에서 **weight decay 와 Loss Function 을 분리 (Decoupled Weight Decay)** 한다.
-* weight decay 가 적용된 [L2 Regularization](딥러닝_기초_Regularization#2-l1-l2-reguliarization) 을 Adam Optimizer로 처리할 때, 일부 케이스에서 성능이 저하되는 문제가 해결된다.
+* weight decay 가 적용된 [L2 Regularization](딥러닝_기초_Regularization#2-l1-l2-regularization) 을 Adam Optimizer로 처리할 때, 일부 케이스에서 성능이 저하되는 문제가 해결된다.
 
 참고
 * 간단한 모델에서는 Adam, 복잡한 모델이나 고차원의 복잡한 데이터셋에서는 AdamW Optimizer 를 사용하는 것이 일반적으로 좋다.
