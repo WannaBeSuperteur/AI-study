@@ -66,7 +66,7 @@
 ### 2-2. Regression 최적화 과정
 손실 함수 (MSE) 를 최소화하는 과정은 다음과 같다.
 * 손실 함수를 각 가중치 $w_1, w_2, ..., w_n$ 에 대해 미분하여, 각 가중치에 대한 접선의 기울기 $\displaystyle \frac{\delta}{\delta w} L$ 를 구한다.
-* 각 가중치에 해당 접선의 기울기의 일정 배수 ($\alpha$ 배) 를 뺀다.
+* 각 가중치에 해당 접선의 기울기의 [일정 배수 ($\alpha$ 배)](../Deep%20Learning%20Basics/딥러닝_기초_Learning_Rate.md) 를 뺀다.
   * $\displaystyle w := w - \alpha \frac{\delta}{\delta w} L$ 
 * 이것을 접선의 기울기가 0으로 수렴할 때까지 반복한다.
 * **이 과정과 동일한 방법이 딥러닝의 역전파에서도 사용된다.**
