@@ -254,7 +254,7 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 ![image](images/Common_NN_Vision.PNG)
 
 * [Dropout](딥러닝_기초_Overfitting_Dropout.md#3-dropout) 미 적용
-* Early Stopping Rounds = 10 로 고정 (10 epoch 동안 valid set 성능 갱신 없으면 종료)
+* Early Stopping Rounds = 10 로 고정 (10 epoch 동안 valid set 정확도 최고 기록 갱신 없으면 종료)
   * 각 Learning Rate Scheduler 의 성능을 변별할 수 있도록 epoch 횟수 증가 목적 
 * Optimizer 는 [AdamW](딥러닝_기초_Optimizer.md#2-3-adamw) 를 사용
   * 해당 Optimizer 가 [동일 데이터셋을 대상으로 한 성능 실험](딥러닝_기초_Optimizer.md#3-탐구-어떤-optimizer-가-적절할까) 에서 최상의 정확도를 기록했기 때문

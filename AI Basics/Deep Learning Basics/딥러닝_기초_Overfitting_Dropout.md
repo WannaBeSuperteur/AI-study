@@ -49,7 +49,7 @@ bias와 variance 모두 모델의 오차이므로, 딥 러닝 모델이 목표�
 
 * 학습 데이터의 샘플 개수를 늘린다.
   * 이미지 데이터의 경우, [Data Augmentation](../../Image%20Processing/Basics_Image%20Augmentation.md) 을 사용할 수 있다.
-* Valid set 을 이용하여 측정한 성능이 일정 epoch 횟수 이상 갱신되지 않으면 학습을 조기 종료한다. (Early Stopping)
+* Valid set 을 이용하여 측정한 성능이 일정 epoch 횟수 이상 갱신되지 않으면 학습을 조기 종료한다. [(Early Stopping)](딥러닝_기초_Early_Stopping.md)
 * [Cross Validation](../Machine%20Learning%20Models/머신러닝_방법론_Cross_Validation.md) 방법을 이용한다.
 
 **2. 모델 구조 관점**
