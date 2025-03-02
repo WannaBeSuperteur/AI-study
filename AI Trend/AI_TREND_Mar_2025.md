@@ -1,3 +1,14 @@
+## 2025.03.02 (일)
+**[GPU 부족, OpenAI GPT 새 모델 개발 지장](https://n.news.naver.com/mnews/article/092/0002365115?sid=105)** ```AI``` ```OpenAI``` ```ChatGPT```
+
+* 샘 올트먼 OpenAI CEO는 X (트위터) 를 통해 **현재 OpenAI가 보유한 GPU가 부족** 하다고 했다.
+  * GPU 부족의 원인은 수요 급증 및 관련 예측의 어려움 때문이다.
+* GPU 부족을 해결하기 위해 OpenAI는 **자체적인 AI 칩 개발** 도 고려 중이다. 
+* 이러한 GPU 부족 사태는 AI 인프라를 구축하기 위한 경쟁을 가속화시킬 것으로 전망된다.
+* 한편, OpenAI의 GPT-4.5 출시 일정은 다음과 같다.
+  * 이번 주부터 ChatGPT Pro (월 200달러 플랜) 사용자에게 출시
+  * 다음 주부터 ChatGPT Plus 등 (월 20달러 플랜) 사용자에게 확대 제공
+
 ## 2025.03.01 (토)
 **[방송통신위원회, 생성형 AI 가이드라인 발표](https://n.news.naver.com/mnews/article/003/0013094329?sid=105)** ```AI``` ```Generative AI```
 
