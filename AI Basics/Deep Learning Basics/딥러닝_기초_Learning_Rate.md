@@ -10,6 +10,8 @@
 
 ## 코드
 
+* [MNIST 데이터셋에서 성능이 좋은 Learning Rate 탐구](#5-탐구-어느-정도의-learning-rate-가-좋을까-accuracy-vs-time) 실험 코드 : [code (ipynb)](codes/Learning_Rate_experiment.ipynb)
+
 ## 1. Learning Rate
 
 Gradient Descent 알고리즘에서는 다음과 같이 가중치를 갱신한다. ($W$ : weight) 자세한 것은 [해당 문서](../Machine%20Learning%20Models/머신러닝_모델_Linear_Logistic_Regression.md#2-2-regression-최적화-과정) 참고.

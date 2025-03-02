@@ -2,19 +2,21 @@
 
 * [1. Learning Rate Scheduler 및 그 필요성](#1-learning-rate-scheduler-및-그-필요성)
 * [2. Learning Rate Scheduler 의 종류](#2-learning-rate-scheduler-의-종류)
-  * [2-1. Lambda Scheduler](#2-1-lambda-scheduler)
-  * [2-2. Multiplicative Scheduler](#2-2-multiplicative-scheduler)
-  * [2-3. Exponential Scheduler](#2-3-exponential-scheduler)
-  * [2-4. Step Scheduler](#2-4-step-scheduler)
-  * [2-5. Multi-Step Scheduler](#2-5-multi-step-scheduler)
-  * [2-6. Reduce-LR-On-Plateau Scheduler](#2-6-reduce-lr-on-plateau-scheduler)
-  * [2-7. Cosine-Annealing Scheduler](#2-7-cosine-annealing-scheduler)
-  * [2-8. Cosine-Annealing-Warmup-Restarts Scheduler](#2-8-cosine-annealing-warmup-restarts-scheduler)
-  * [2-9. Cyclic Scheduler](#2-9-cyclic-scheduler)
+  * [2-1. Multiplicative Scheduler](#2-1-multiplicative-scheduler)
+  * [2-2. Exponential Scheduler](#2-2-exponential-scheduler)
+  * [2-3. Step Scheduler](#2-3-step-scheduler)
+  * [2-4. Multi-Step Scheduler](#2-4-multi-step-scheduler)
+  * [2-5. Reduce-LR-On-Plateau Scheduler](#2-5-reduce-lr-on-plateau-scheduler)
+  * [2-6. Cosine-Annealing Scheduler](#2-6-cosine-annealing-scheduler)
+  * [2-7. Cosine-Annealing-Warmup-Restarts Scheduler](#2-7-cosine-annealing-warmup-restarts-scheduler)
+  * [2-8. Cyclic Scheduler](#2-8-cyclic-scheduler)
+  * [2-9. Lambda Scheduler](#2-9-lambda-scheduler)
 * [3. 실험: 가장 성능이 좋은 L.R. Scheduler 는?](#3-실험-가장-성능이-좋은-lr-scheduler-는)
   * [3-1. 실험 설계](#3-1-실험-설계)
   * [3-2. 실험 결과](#3-2-실험-결과)
   * [3-3. 실험 결과에 대한 분석](#3-3-실험-결과에-대한-이유-분석)
+
+## 코드
 
 ## 1. Learning Rate Scheduler 및 그 필요성
 
@@ -32,26 +34,32 @@ Learning Rate Scheduler 의 필요성은 다음과 같다.
 
 | 방법론                              | Learning Rate Scheduler                                  |
 |----------------------------------|----------------------------------------------------------|
-| Learning Rate 를 지수적으로 감소         | - Lambda<br>- Multiplicative<br>- Exponential            |
+| Learning Rate 를 지수적으로 감소         | - Multiplicative<br>- Exponential                        |
 | Learning Rate 를 계단식 (Step) 으로 감소 | - Step<br>- Multi-Step<br>- Reduce-LR-On-Plateau         |
 | 코사인 함수 그래프처럼 조정                  | - Cosine-Annealing<br>- Cosine-Annealing-Warmup-Restarts |
-| 기타                               | - Cyclic<br>- One-Cycle                                  |
+| 기타                               | - Cyclic<br>- Lambda                                     |
 
-### 2-1. Lambda Scheduler
+### 2-1. Multiplicative Scheduler
 
-### 2-2. Multiplicative Scheduler
+![image](images/LR_Scheduler_1.PNG)
 
-### 2-3. Exponential Scheduler
+### 2-2. Exponential Scheduler
 
-### 2-4. Step Scheduler
+![image](images/LR_Scheduler_2.PNG)
 
-### 2-5. Multi-Step Scheduler
+### 2-3. Step Scheduler
 
-### 2-6. Reduce-LR-On-Plateau Scheduler
+![image](images/LR_Scheduler_3.PNG)
 
-### 2-7. Cosine-Annealing Scheduler
+### 2-4. Multi-Step Scheduler
 
-### 2-8. Cosine-Annealing-Warmup-Restarts Scheduler
+![image](images/LR_Scheduler_4.PNG)
+
+### 2-5. Reduce-LR-On-Plateau Scheduler
+
+### 2-6. Cosine-Annealing Scheduler
+
+### 2-7. Cosine-Annealing-Warmup-Restarts Scheduler
 
 **1. 기본 Scheduler**
 
@@ -59,7 +67,9 @@ Learning Rate Scheduler 의 필요성은 다음과 같다.
 
 **3. Custom B: Max Learning Rate 지수적 감소 추가**
 
-### 2-9. Cyclic Scheduler
+### 2-8. Cyclic Scheduler
+
+### 2-9. Lambda Scheduler
 
 ## 3. 실험: 가장 성능이 좋은 L.R. Scheduler 는?
 
