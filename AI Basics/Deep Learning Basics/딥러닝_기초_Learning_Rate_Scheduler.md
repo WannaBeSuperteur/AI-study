@@ -49,11 +49,12 @@ Learning Rate Scheduler 의 필요성은 다음과 같다.
 
 ```python
 optim.lr_scheduler.MultiplicativeLR(optimizer=optimizer,
-                                    lr_lambda=lambda epoch: 0.95 ** epoch)
+                                    lr_lambda=lambda epoch: 0.98 ** epoch)
 ```
 
 * 설명 
   * 기존 learning rate 에 **lambda 함수의 값** 을 곱한 것을 새로운 learning rate 로 한다.
+  * 예를 들어, 위와 같은 경우 2 번째 epoch 에서는 원래 learning rate 의 $(0.98)^1$ = 0.98 배, 3 번째 epoch 에서는 원래 learning rate 의 $0.98 \times (0.98)^2$ = 약 0.9412 배가 된다.  
 * 수식
   * ${LR}_{t+1} = {LR}_t \times \lambda(epoch)$
 
@@ -211,8 +212,95 @@ optim.lr_scheduler.LambdaLR(optimizer=optimizer,
 
 ## 3. 실험: 가장 성능이 좋은 L.R. Scheduler 는?
 
+**실험 목표**
+
+* MNIST 숫자 분류 데이터셋에서 가장 성능이 좋은 Learning Rate Scheduler 를 찾는다.
+* 각 Learning Rate Scheduler 적용 시 성능을 비교 분석한다.
+
 ### 3-1. 실험 설계
 
+**데이터셋**
+
+* **MNIST 숫자 이미지 분류 데이터셋 (train 60K / test 10K)**
+  * 10 개의 Class 가 있는 Classification Task
+  * 학습 시간 절약을 위해, train dataset 중 일부만을 샘플링하여 학습
+* 선정 이유
+  * 데이터셋이 28 x 28 size 의 작은 이미지들로 구성
+  * 이로 인해 비교적 간단한 신경망을 설계할 수 있으므로, 간단한 딥러닝 실험에 적합하다고 판단
+* 데이터셋 분리
+
+| 학습 데이터  | Valid 데이터 (Epoch 단위) | Valid 데이터 (Trial 단위) | Test 데이터          |
+|---------|----------------------|----------------------|-------------------|
+| 2,000 장 | 2,000 장              | 5,000 장              | 10,000 장 (원본 그대로) |
+
+**성능 Metric**
+
+* **Accuracy**
+* 선정 이유
+  * Accuracy 로 성능을 측정해도 될 정도로, [각 Class 간 데이터 불균형](../Data%20Science%20Basics/데이터_사이언스_기초_데이터_불균형.md) 이 적음 
+
+**신경망 구조**
+
+```python
+# 신경망 구조 출력 코드
+
+from torchinfo import summary
+
+model = CNN()
+print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
+```
+
+![image](images/Common_NN_Vision.PNG)
+
+* [Dropout](딥러닝_기초_Overfitting_Dropout.md#3-dropout) 미 적용
+* Early Stopping Rounds = 10 로 고정 (10 epoch 동안 valid set 성능 갱신 없으면 종료)
+  * 각 Learning Rate Scheduler 의 성능을 변별할 수 있도록 epoch 횟수 증가 목적 
+* Optimizer 는 [AdamW](딥러닝_기초_Optimizer.md#2-3-adamw) 를 사용
+  * 해당 Optimizer 가 [동일 데이터셋을 대상으로 한 성능 실험](딥러닝_기초_Optimizer.md#3-탐구-어떤-optimizer-가-적절할까) 에서 최상의 정확도를 기록했기 때문
+
+**상세 학습 방법**
+
+* 다음과 같이 하이퍼파라미터 최적화를 실시하여, **최적화된 하이퍼파라미터를 기준으로 한 성능을 기준** 으로 최고 성능의 Optimizer 를 파악
+  * **Learning Rate Scheduler** ```lr_scheduler```
+    * Multiplicative
+    * Exponential
+    * Step
+    * Multi-Step
+    * Reduce-LR-On-Plateau
+    * Cosine-Annealing
+    * Cosine-Annealing-Warm-Restarts
+    * Cyclic (mode = ```triangular```)
+    * Cyclic (mode = ```triangular2```)
+    * Cyclic (mode = ```exp_range```)
+  * **learning rate** ```learning_rate```
+    * 탐색 범위 : 0.00005 ~ 0.01 (= 5e-5 ~ 1e-2)
+    * 각 Learning Rate Scheduler 의 성능을 변별할 수 있도록 탐색 범위를 보다 확장
+  * Learning Rate Scheduler 의 하이퍼파라미터는 모두 본 문서에 나온 그대로 설정한다. 
+    * 단, 최대 learning rate 를 가리키는 하이퍼파라미터는 위 ```learning_rate``` 하이퍼파라미터 값과 동일하게 한다.
+    * ```ReduceLROnPleateu``` Scheduler 의 경우, 성능지표가 Valid Accuracy 기준이므로 ```mode = max``` 로 설정
+
+* 하이퍼파라미터 최적화
+  * [하이퍼파라미터 최적화 라이브러리](../Machine%20Learning%20Models/머신러닝_방법론_HyperParam_Opt.md#4-하이퍼파라미터-최적화-라이브러리) 중 Optuna 를 사용
+  * 하이퍼파라미터 탐색 100 회 반복 (= 100 Trials) 실시
+
 ### 3-2. 실험 결과
+
+**1. 실험 결론**
+
+**2. Best Hyper-param 및 그 성능 (정확도)**
+
+| 구분                | 값 |
+|-------------------|---|
+| 최종 테스트셋 정확도       |   |
+| HPO Valid set 정확도 |   |
+| Best Hyper-param  |   |
+
+**3. 하이퍼파라미터 최적화 진행에 따른 정확도 추이**
+
+**4. 각 하이퍼파라미터의 값에 따른 성능 분포**
+
+* 각 Learning Rate Scheduler 별 최고 정확도
+
+* 각 Learning Rate Scheduler 별 정확도 분석
 
 ### 3-3. 실험 결과에 대한 이유 분석
