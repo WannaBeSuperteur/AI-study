@@ -119,6 +119,12 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 
 **Learning Rate 가 매우 작을 때 성능이 낮은 이유**
 
-* learning rate 가 매우 낮기 때문에, 초반 5 epoch 동안 모델이 거의 학습되지 않음
-* 이로 인해, 5 epoch 동안 valid dataset 에서의 성능 개선이 이루어지지 않아서 학습이 종료됨
-* 한편, learning rate 가 아주 낮지는 않아서 5 epoch 동안 약간의 성능 개선을 기대할 수 있는 경우 (1e-5 ~ 1e-4 정도) 는 학습 시간이 매우 오래 걸림
+* 결론
+  * **모델이 거의 학습되지 않아서 valid set 성능이 5 epoch 동안 증가하지 않았기 때문** 
+* 모델 학습이 전혀 되지 않음
+  * learning rate 가 매우 낮기 때문에, 초반 5 epoch 동안 모델이 거의 학습되지 않음
+  * 이로 인해, 5 epoch 동안 valid dataset 에서의 성능 개선이 이루어지지 않아서 학습이 종료됨
+* 한편, learning rate 가 아주 낮지는 않아서 5 epoch 동안 약간의 성능 개선을 기대할 수 있는 경우 (1e-5 ~ 1e-4 정도) 에는 다음과 같은 현상을 보임
+  * 학습 시간이 매우 오래 걸림
+  * **학습 성능이 최적의 learning rate 일 때보다는 낮음**
+    * 학습 중반 valid set 정확도 향상 속도가 느려지는 시점에서, 모델 학습이 매우 느려서 valid set 정확도가 5 epochs 동안 최고 기록을 갱신하지 않는 경우가 있기 때문으로 추정
