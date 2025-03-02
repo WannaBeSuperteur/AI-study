@@ -11,7 +11,6 @@
   * [2-7. Cosine-Annealing Scheduler](#2-7-cosine-annealing-scheduler)
   * [2-8. Cosine-Annealing-Warmup-Restarts Scheduler](#2-8-cosine-annealing-warmup-restarts-scheduler)
   * [2-9. Cyclic Scheduler](#2-9-cyclic-scheduler)
-  * [2-10. One-Cycle Scheduler](#2-10-one-cycle-scheduler)
 * [3. 실험: 가장 성능이 좋은 L.R. Scheduler 는?](#3-실험-가장-성능이-좋은-lr-scheduler-는)
   * [3-1. 실험 설계](#3-1-실험-설계)
   * [3-2. 실험 결과](#3-2-실험-결과)
@@ -54,13 +53,19 @@ Learning Rate Scheduler 의 필요성은 다음과 같다.
 
 ### 2-8. Cosine-Annealing-Warmup-Restarts Scheduler
 
-### 2-9. Cyclic Scheduler
+**1. 기본 Scheduler**
 
-### 2-10. One-Cycle Scheduler
+**2. Custom A: Warm-up 추가**
+
+**3. Custom B: Max Learning Rate 지수적 감소 추가**
+
+### 2-9. Cyclic Scheduler
 
 ## 3. 실험: 가장 성능이 좋은 L.R. Scheduler 는?
 
 ### 3-1. 실험 설계
+
+* 모든 Scheduler 의 하이퍼파라미터는 PyTorch 에서 제공하는 기본값으로 설정
 
 ### 3-2. 실험 결과
 

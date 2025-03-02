@@ -109,11 +109,23 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 
 **1. 실험 결론**
 
-* 정확도가 가장 높은 learning rate 구간은 ??? 이다.
-* 성능 (정확도) 과 시간의 trade-off 를 고려할 때, 최적의 learning rate 는 ??? 이다.
+* 정확도가 가장 높은 learning rate 구간은 **0.001 ~ 0.005 부근** 이다.
+* 성능 (정확도) 과 시간의 trade-off 를 고려할 때, 최적의 learning rate 는 **0.002 ~ 0.005 부근** 이다.
 * learning rate 가 1e-5 미만으로 매우 낮으면, 학습이 전혀 진행되지 않는다.
 
 **2. Learning Rate 별 정확도 및 수행 시간**
+
+* learning rate **1e-5 (= 10$\mu$) ~ 2e-5 (= 20$\mu$) 부근** 에서 수행 시간이 가장 길다.
+  * 이후 Learning rate 가 커짐에 따라 수행 시간이 감소한다. 
+* learning rate **0.001 - 0.005 부근** 에서 성능이 가장 좋다.
+
+![image](images/Learning_Rate_2.PNG)
+
+**3. Learning Rate 별 정확도 및 Epoch Count**
+
+* 1 Epoch 당 시간이 거의 일정하기 때문에, Epoch Count 는 학습 수행 시간에 거의 정비례한다.
+
+![image](images/Learning_Rate_3.PNG)
 
 ### 5-3. 실험 결과에 대한 이유 분석
 
