@@ -13,7 +13,7 @@
 
 ## 코드
 
-* [MNIST 데이터셋에서 성능이 좋은 Regularization 탐구](#3-탐구-어떤-optimizer-가-적절할까) 실험 코드 : [code (ipynb)](codes/Regularization_experiment.ipynb)
+* [MNIST 데이터셋에서 성능이 좋은 Regularization 탐구](#5-탐구-어떤-정규화가-가장-좋을까) 실험 코드 : [code (ipynb)](codes/Regularization_experiment.ipynb)
 
 ## 1. Regularization 이란? 그 목적은?
 
