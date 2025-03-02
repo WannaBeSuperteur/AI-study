@@ -25,7 +25,7 @@
 Early Stopping 의 기준으로 다음을 생각해 볼 수 있다.
 
 * Valid data 에 대한 [Metric (Accuracy, Recall, F1 Score 등)](../Data%20Science%20Basics/데이터_사이언스_기초_Metrics.md)
-* Valid data Loss
+* Valid data [Loss](딥러닝_기초_Loss_function.md)
 
 각 기준의 특징은 다음과 같다. 일반적으로는 **Accuracy나 F1 Score 등 성능지표보다는 미세한 변화를 포착할 수 있는 Loss 를 사용하는 것이 비교적 권장** 되고 있다.
 
@@ -38,8 +38,101 @@ Early Stopping 의 기준으로 다음을 생각해 볼 수 있다.
 
 ## 3. 실험 (최적 Early Stopping 기준 및 횟수)
 
+**실험 목표**
+
+* Early Stopping 의 기준으로 성능지표 (Accuracy 등) 와 Loss 중 무엇이 더 적합한지 알아본다.
+  * 최종 성능지표뿐만 아니라, 전체 epoch 수 등 학습 시간 관련 지표까지 고려한다. 
+* 데이터셋에서 최적의 Early Stopping epoch 횟수 (해당 횟수만큼 신기록이 나오지 않으면 학습 종료) 를 찾는다.
+
 ### 3-1. 실험 설계
+
+**데이터셋**
+
+* **MNIST 숫자 이미지 분류 데이터셋 (train 60K / test 10K)**
+  * 10 개의 Class 가 있는 Classification Task
+  * 학습 시간 절약을 위해, train dataset 중 일부만을 샘플링하여 학습
+* 선정 이유
+  * 데이터셋이 28 x 28 size 의 작은 이미지들로 구성
+  * 이로 인해 비교적 간단한 신경망을 설계할 수 있으므로, 간단한 딥러닝 실험에 적합하다고 판단
+* 데이터셋 분리
+  * 학습 데이터가 조금 부족한 편이어야지 **Dropout 수준에 따른 overfitting 여부의 변별이 가능** 할 것으로 판단
+
+| 학습 데이터  | Valid 데이터 (Epoch 단위) | Valid 데이터 (Trial 단위) | Test 데이터          |
+|---------|----------------------|----------------------|-------------------|
+| 1,000 장 | 2,000 장              | 5,000 장              | 10,000 장 (원본 그대로) |
+
+**성능 Metric**
+
+* **Accuracy**
+* 선정 이유
+  * Accuracy 로 성능을 측정해도 될 정도로, [각 Class 간 데이터 불균형](../Data%20Science%20Basics/데이터_사이언스_기초_데이터_불균형.md) 이 적음 
+
+**신경망 구조**
+
+* 신경망 구조가 비교적 복잡해야지 **Dropout 수준에 따른 overfitting 여부의 변별이 가능** 할 것으로 판단하여, 다른 실험에 비해 **모델 구조를 복잡하게** 함
+
+```python
+# 신경망 구조 출력 코드
+
+from torchinfo import summary
+
+model = CNN()
+print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
+```
+
+![image](images/Common_NN_Vision_Large.PNG)
+
+* [Dropout](딥러닝_기초_Overfitting_Dropout.md#3-dropout) 미 적용
+* [Learning Rate Scheduler](딥러닝_기초_Learning_Rate_Scheduler.md) 미 적용
+* Optimizer 는 [AdamW](딥러닝_기초_Optimizer.md#2-3-adamw) 를 사용
+  * 해당 Optimizer 가 [동일 데이터셋을 대상으로 한 성능 실험](딥러닝_기초_Optimizer.md#3-탐구-어떤-optimizer-가-적절할까) 에서 최상의 정확도를 기록했기 때문
+
+**상세 학습 방법**
+
+* 다음과 같이 하이퍼파라미터 최적화를 실시하여, **최적화된 하이퍼파라미터를 기준으로 한 성능을 기준** 으로 최고 성능의 Optimizer 를 파악
+  * **Early Stopping 기준** ```early_stopping_type```
+    * Valid data Accuracy
+    * Valid data Loss
+      * 이때는 아주 미세한 Loss 감소의 반복으로 학습이 매우 길어지는 것을 방지하기 위해, Loss 를 소수점 이하 4째 자리까지 반올림한 값을 이용한다. 
+  * **Early Stopping epoch 횟수** ```early_stopping_rounds```
+    * 탐색 범위 : 3 ~ 20 범위의 자연수 
+  * **learning rate** ```learning_rate```
+    * 탐색 범위 : 0.0005 ~ 0.01 (= 5e-4 ~ 1e-2)
+
+* 하이퍼파라미터 최적화
+  * [하이퍼파라미터 최적화 라이브러리](../Machine%20Learning%20Models/머신러닝_방법론_HyperParam_Opt.md#4-하이퍼파라미터-최적화-라이브러리) 중 Optuna 를 사용
+  * 하이퍼파라미터 탐색 100 회 반복 (= 100 Trials) 실시
 
 ### 3-2. 실험 결과
 
+**1. 실험 결론**
+
+* Early Stopping 기준이 valid loss 이면서 Learning Rate 가 작고 Early Stopping 을 위한 epoch 횟수가 많을 때, **정확도는 가장 높은 편이지만 학습 시간이 매우 오래 걸린다.**
+  * 따라서 Early Stopping 기준을 valid loss 로 하는 경우, 정확도를 기준으로 하는 하이퍼파라미터 최적화 시 학습 수행 시간에 따른 페널티를 주는 것을 고려할 필요가 있다.
+
+**2. Best Hyper-param 및 그 성능 (정확도)**
+
+| 구분                | 값 |
+|-------------------|---|
+| 최종 테스트셋 정확도       |   |
+| HPO Valid set 정확도 |   |
+| Best Hyper-param  |   |
+
+**3. 하이퍼파라미터 최적화 진행에 따른 정확도 추이**
+
+
+**4. 각 하이퍼파라미터의 값에 따른 성능 분포**
+
+* (Early Stopping Type 별) Learning Rate 에 따른 Accuracy 분포
+
+* (Early Stopping Type 별) Early Stopping epoch 횟수에 따른 Accuracy 분포
+
+* (Early Stopping Type 별) Early Stopping epoch 횟수에 따른 Epoch 횟수 분포
+
 ### 3-3. 실험 결과에 대한 이유 분석
+
+**Early Stopping 기준이 valid loss 이면서 Learning Rate 가 작고 Early Stopping epoch 횟수가 많을 때, 학습 시간이 매우 오래 걸림**
+
+* Early Stopping 기준이 valid data loss 이므로, 정확도에 반영이 안 될 정도의 미세한 loss 감소도 신기록 갱신으로 판단함
+* Learning rate 가 작으므로 학습 자체가 느리며, 또한 이로 인해 valid loss 가 안정적으로 수렴함
+* Early Stopping epoch 횟수 자체가 많으므로, 학습 종료 조건에 이르는 데 오래 걸림

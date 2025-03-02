@@ -262,7 +262,7 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 **상세 학습 방법**
 
 * 다음과 같이 하이퍼파라미터 최적화를 실시하여, **최적화된 하이퍼파라미터를 기준으로 한 성능을 기준** 으로 최고 성능의 Optimizer 를 파악
-  * **Learning Rate Scheduler** ```lr_scheduler```
+  * **Learning Rate Scheduler** ```scheduler_name```
     * Learning Rate Scheduler 미 적용 
     * Multiplicative
     * Exponential
