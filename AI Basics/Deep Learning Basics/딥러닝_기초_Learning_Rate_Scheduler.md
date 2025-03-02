@@ -19,6 +19,7 @@
 ## 코드
 
 * [Learning Rate 그래프 출력 예시 코드 (ipynb)](codes/Learning_Rate_Scheduler_example.ipynb)
+* [Learning Rate 실험](#3-실험-가장-성능이-좋은-lr-scheduler-는) 코드 : [code (ipynb)](codes/Learning_Rate_Scheduler_experiment.ipynb)
 
 ## 1. Learning Rate Scheduler 및 그 필요성
 
@@ -262,6 +263,7 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 
 * 다음과 같이 하이퍼파라미터 최적화를 실시하여, **최적화된 하이퍼파라미터를 기준으로 한 성능을 기준** 으로 최고 성능의 Optimizer 를 파악
   * **Learning Rate Scheduler** ```lr_scheduler```
+    * Learning Rate Scheduler 미 적용 
     * Multiplicative
     * Exponential
     * Step
@@ -277,7 +279,7 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
     * 각 Learning Rate Scheduler 의 성능을 변별할 수 있도록 탐색 범위를 보다 확장
   * Learning Rate Scheduler 의 하이퍼파라미터는 모두 본 문서에 나온 그대로 설정한다. 
     * 단, 최대 learning rate 를 가리키는 하이퍼파라미터는 위 ```learning_rate``` 하이퍼파라미터 값과 동일하게 한다.
-    * ```ReduceLROnPleateu``` Scheduler 의 경우, 성능지표가 Valid Accuracy 기준이므로 ```mode = max``` 로 설정
+    * ```ReduceLROnPlateau``` Scheduler 의 경우, 성능지표가 Valid Accuracy 기준이므로 ```mode = max``` 로 설정
 
 * 하이퍼파라미터 최적화
   * [하이퍼파라미터 최적화 라이브러리](../Machine%20Learning%20Models/머신러닝_방법론_HyperParam_Opt.md#4-하이퍼파라미터-최적화-라이브러리) 중 Optuna 를 사용
@@ -287,20 +289,33 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 
 **1. 실험 결론**
 
+* Learning Rate Scheduler 중 [Step Scheduler](#2-3-step-scheduler) 가 다른 Scheduler 보다 성능이 약간 좋은 편임
+* Scheduler 적용 없이 진행해도 Scheduler를 적용한 경우에 비해 **성능이 크게 떨어지지 않음**
+* Learning Rate 가 매우 작거나 (0.0002 이하) 매우 크면 (0.006 이상) **Scheduler 의 종류에 상관없이** 성능이 저하됨
+
 **2. Best Hyper-param 및 그 성능 (정확도)**
 
-| 구분                | 값 |
-|-------------------|---|
-| 최종 테스트셋 정확도       |   |
-| HPO Valid set 정확도 |   |
-| Best Hyper-param  |   |
+| 구분                | 값                                                                               |
+|-------------------|---------------------------------------------------------------------------------|
+| 최종 테스트셋 정확도       | 97.49%                                                                          |
+| HPO Valid set 정확도 | 97.28%                                                                          |
+| Best Hyper-param  | ```scheduler_name``` : ```cosine_annealing```<br>```learning_rate``` : 0.003635 |
 
 **3. 하이퍼파라미터 최적화 진행에 따른 정확도 추이**
+
+![image](images/LR_Scheduler_11.PNG)
 
 **4. 각 하이퍼파라미터의 값에 따른 성능 분포**
 
 * 각 Learning Rate Scheduler 별 최고 정확도
+  * 최고 정확도는 [Cosine Annealing](#2-6-cosine-annealing-scheduler), [Reduce-LR-On-Plateau](#2-5-reduce-lr-on-plateau-scheduler) 등이 높고, Scheduler 미적용 (none) 시에도 성능이 괜찮은 편임
+  * 그러나, **아래 '정확도 분포 분석' 결과, 최고 정확도가 해당 Scheduler 가 성능이 가장 좋다는 것을 말해 주기는 어려움**
 
-* 각 Learning Rate Scheduler 별 정확도 분석
+![image](images/LR_Scheduler_12.PNG)
 
-### 3-3. 실험 결과에 대한 이유 분석
+* 각 Learning Rate Scheduler 별 정확도 분포 분석
+  * Learning Rate Scheduler 중 [Step Scheduler](#2-3-step-scheduler) 가 다른 Scheduler 보다 성능이 약간 좋은 편임
+  * Learning Rate 가 매우 작거나 (0.0002 이하) 매우 크면 (0.006 이상) **Scheduler 의 종류에 상관없이** 성능이 저하됨
+  * Scheduler 미적용 (none) 의 경우도 괜찮은 성능을 보임
+
+![image](images/LR_Scheduler_13.PNG)
