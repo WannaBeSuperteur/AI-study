@@ -9,6 +9,8 @@
 
 ## 코드
 
+* [최적 Early Stopping 기준 및 횟수 실험](#3-실험-최적-early-stopping-기준-및-횟수) 코드 : [code (ipynb)](codes/Early_Stopping_experiment.ipynb)
+
 ## 1. Early Stopping
 
 **Early Stopping** 은 딥러닝 학습 중 [overfitting](딥러닝_기초_Overfitting_Dropout.md#2-딥러닝에서의-오버피팅-overfitting) 을 방지하기 위한 방법 중 하나로, **valid dataset 의 성능지표의 최고/최저 기록이 일정 epoch 횟수 동안 갱신되지 않으면 학습을 조기 종료** 하는 것이다.
@@ -107,32 +109,48 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 
 **1. 실험 결론**
 
-* Early Stopping 기준이 valid loss 이면서 Learning Rate 가 작고 Early Stopping 을 위한 epoch 횟수가 많을 때, **정확도는 가장 높은 편이지만 학습 시간이 매우 오래 걸린다.**
+* **Loss 기준으로 Early Stopping** 하는 경우가 Accuracy 기준일 때보다 정확도가 높다.
+* Early Stopping 을 위한 **epoch 횟수는 10 ~ 18 정도** 가 최고 정확도를 달성할 수 있다.
+* Loss 기준으로 Early Stopping 하면서, 동시에 Early Stopping 을 위한 epoch 횟수가 10 이상일 때, **학습 시간이 매우 오래 걸린다.**
   * 따라서 Early Stopping 기준을 valid loss 로 하는 경우, 정확도를 기준으로 하는 하이퍼파라미터 최적화 시 학습 수행 시간에 따른 페널티를 주는 것을 고려할 필요가 있다.
 
 **2. Best Hyper-param 및 그 성능 (정확도)**
 
-| 구분                | 값 |
-|-------------------|---|
-| 최종 테스트셋 정확도       |   |
-| HPO Valid set 정확도 |   |
-| Best Hyper-param  |   |
+| 구분                | 값                                                                                                                                       |
+|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| 최종 테스트셋 정확도       | 97.47%                                                                                                                                  |
+| HPO Valid set 정확도 | 96.88%                                                                                                                                  |
+| Best Hyper-param  | ```early_stopping_type``` : ```val_loss``` (Valid Dataset Loss 기준)<br>```early_stopping_rounds``` : 16<br>```learing_rate``` : 0.001629 |
 
 **3. 하이퍼파라미터 최적화 진행에 따른 정확도 추이**
 
+![image](images/Early_Stopping_2.PNG)
 
 **4. 각 하이퍼파라미터의 값에 따른 성능 분포**
 
 * (Early Stopping Type 별) Learning Rate 에 따른 Accuracy 분포
+  * Learning Rate 가 0.004 이상으로 크면 **모델의 학습이 아예 되지 않는다.**
+  * Loss 기준으로 Early Stopping 하는 경우가 Accuracy 기준일 때보다 전반적으로 성능이 좋다.
+
+![image](images/Early_Stopping_6.PNG)
+
+![image](images/Early_Stopping_3.PNG)
 
 * (Early Stopping Type 별) Early Stopping epoch 횟수에 따른 Accuracy 분포
+  * 모델의 학습이 잘 된 경우에 한해서, **7 이하의 낮은 값** 인 경우 최고 수준의 정확도를 달성하기 어렵다. 
+  * Loss 기준으로 Early Stopping 하는 경우가 Accuracy 기준일 때보다 전반적으로 성능이 좋다.
+
+![image](images/Early_Stopping_4.PNG)
 
 * (Early Stopping Type 별) Early Stopping epoch 횟수에 따른 Epoch 횟수 분포
+  * Loss 기준으로 Early Stopping 하는 경우, Early Stopping epoch 횟수가 10 이상이면 **200 epochs ~ 최대 500 epochs 이상으로 학습 시간이 매우 많이 소요** 된다.
+
+![image](images/Early_Stopping_5.PNG)
 
 ### 3-3. 실험 결과에 대한 이유 분석
 
-**Early Stopping 기준이 valid loss 이면서 Learning Rate 가 작고 Early Stopping epoch 횟수가 많을 때, 학습 시간이 매우 오래 걸림**
+**Early Stopping 기준이 valid loss 이면서 Early Stopping epoch 횟수가 10 이상일 때, 학습 시간이 매우 오래 걸림**
 
 * Early Stopping 기준이 valid data loss 이므로, 정확도에 반영이 안 될 정도의 미세한 loss 감소도 신기록 갱신으로 판단함
-* Learning rate 가 작으므로 학습 자체가 느리며, 또한 이로 인해 valid loss 가 안정적으로 수렴함
+* 여기에 Learning rate 가 작으면 학습 자체가 느리며, 또한 이로 인해 valid loss 가 안정적으로 수렴하기 때문에 미세한 loss 감소가 계속 발생함
 * Early Stopping epoch 횟수 자체가 많으므로, 학습 종료 조건에 이르는 데 오래 걸림
