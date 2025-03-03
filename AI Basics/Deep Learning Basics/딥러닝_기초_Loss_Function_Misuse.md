@@ -1,7 +1,8 @@
 ## 목차
 
 * [1. Loss Function 의 적절한 사용](#1-loss-function-의-적절한-사용)
-  * [1-1. Multi-Label Classification 에서 Binary C.E. 를 사용하는 이유](#1-1-multi-label-classification-에서-binary-ce-를-사용하는-이유) 
+  * [1-1. Multi-Label Classification 에서 Binary C.E. 를 사용하는 이유](#1-1-multi-label-classification-에서-binary-ce-를-사용하는-이유)  
+  * [1-2. nn.BCELoss vs. nn.BCEWithLogitsLoss](#1-2-nnbceloss-vs-nnbcewithlogitsloss) 
 * [2. 실험 설계](#2-실험-설계)
   * [2-1. 데이터셋 및 성능 Metric](#2-1-데이터셋-및-성능-metric)
   * [2-2. 실험 구성](#2-2-실험-구성)
@@ -41,6 +42,17 @@ Multi-Label Classification 은 **각 Class 별 확률 값을 독립적으로 예
 * **0과 1을 반대로 한 예측에 가까울수록 페널티가 급격하게 증가** 하는 메커니즘은 MSE, MAE 등에는 없고 Cross Entropy 계열 손실 함수에만 있음
 * Cross Entropy 계열 Loss Function은 0부터 1까지의 확률 값을 예측하고 그 확률을 해석하는 데 최적화되어 있음
 
+### 1-2. nn.BCELoss vs. nn.BCEWithLogitsLoss
+
+PyTorch 에서는 Binary Cross Entropy 함수로 **nn.BCELoss** 와 **nn.BCEWithLogitsLoss** 의 2가지 함수를 제공한다. 이들의 차이점은 다음과 같다.
+
+| 함수                         | 설명                                                                                                                                                                                                                                                                   |
+|----------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ```nn.BCELoss```           | 입력되는 prediction 값을 **원래 값 그대로 해서** target 과의 Binary Cross-Entropy Loss 를 계산한다.<br>- 필요한 경우 prediction 값을 이 함수의 입력으로 넣기 위해 따로 Sigmoid 함수를 통해 0~1 범위의 값으로 변환해야 한다.                                                                                                     |
+| ```nn.BCEWithLogitsLoss``` | 입력되는 prediction 값을 **[Sigmoid 함수](딥러닝_기초_활성화_함수.md#2-1-sigmoid-함수) 를 통해 0~1 로 변환시킨 값**과 target 과의 Binary Cross-Entropy Loss 를 계산한다.<br>- sigmoid 를 적용하지 않은 원본 값도 0~1 로 자동으로 변환해서 Loss 를 구하므로, 코드가 간결하고 편리하다.<br> - **이미 Sigmoid 를 통해 변환된 값을 입력으로 넣지 않도록 주의** 가 필요하다. |
+
+![image](images/Loss_Function_4.PNG)
+
 ## 2. 실험 설계
 
 **실험 목표**
@@ -75,11 +87,11 @@ Multi-Label Classification 은 **각 Class 별 확률 값을 독립적으로 예
 
 실험에 대한 상세 구성은 다음과 같다.
 
-| Task                              | Task 상세                                                                                                                                                  | 실험을 진행할 잘못된 Loss Function                                 |
-|-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|
-| Probability Prediction<br>(0 ~ 1) | 숫자 이미지가 곡선 숫자 (0, 3, 6, 8 또는 9) 일 확률 예측                                                                                                                  | - Categorical Cross-Entropy                               |
-| Classification<br>(Binary)        | 숫자를 다음과 같이 분류<br>- Class 1: 곡선 숫자 (0, 3, 6, 8, 9) 인 이미지<br>- Class 2: 나머지 숫자인 이미지                                                                        | - Mean-Squared Error                                      |
-| Classification<br>(Multi-Class)   | 0~9 의 숫자 분류, 총 10개의 Class                                                                                                                                | - Mean-Squared Error<br> - 각 Class 별 Binary Cross-Entropy |
+| Task                              | Task 상세                                                                                                                                                                             | 실험을 진행할 잘못된 Loss Function                                 |
+|-----------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|
+| Probability Prediction<br>(0 ~ 1) | 숫자 이미지가 곡선 숫자 (0, 3, 6, 8 또는 9) 일 확률 예측                                                                                                                                             | - Categorical Cross-Entropy                               |
+| Classification<br>(Binary)        | 숫자를 다음과 같이 분류<br>- Class 1: 곡선 숫자 (0, 3, 6, 8, 9) 인 이미지<br>- Class 2: 나머지 숫자인 이미지                                                                                                   | - Mean-Squared Error                                      |
+| Classification<br>(Multi-Class)   | 0~9 의 숫자 분류, 총 10개의 Class                                                                                                                                                           | - Mean-Squared Error<br> - 각 Class 별 Binary Cross-Entropy |
 | Classification<br>(Multi-Label)   | 숫자를 다음과 같이 4 그룹으로 나누고, 각 그룹에 속할 확률을 **독립적으로** 예측 **<br>(각 그룹에 대한 확률의 합이 1이 아닐 수 있음)**<br>- 짝수 (0, 2, 4, 6, 8)<br>- 소수 (2, 3, 5, 7)<br>- 곡선 숫자 (0, 3, 6, 8, 9)<br>- 제곱수 (0, 1, 4, 9) | - Mean-Squared Error<br> - Categorical Cross-Entropy      |
 
 ### 2-3. 신경망 구조
@@ -107,6 +119,7 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 * [Early Stopping](딥러닝_기초_Early_Stopping.md) Rounds = 10 으로 고정 (10 epoch 동안 valid set 정확도 최고 기록 갱신 없으면 종료)
 * Optimizer 는 [AdamW](딥러닝_기초_Optimizer.md#2-3-adamw) 를 사용
   * 해당 Optimizer 가 [동일 데이터셋을 대상으로 한 성능 실험](딥러닝_기초_Optimizer.md#3-탐구-어떤-optimizer-가-적절할까) 에서 최상의 정확도를 기록했기 때문
+* Learning Rate = 0.001 로, [Learning Rate Scheduler](딥러닝_기초_Learning_Rate_Scheduler.md) 를 적용하지 않은 고정값
 
 ## 3. 실험 결과
 
