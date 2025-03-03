@@ -129,7 +129,7 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 **4. 각 하이퍼파라미터의 값에 따른 성능 분포**
 
 * (Early Stopping Type 별) Learning Rate 에 따른 Accuracy 분포
-  * Learning Rate 가 0.004 이상으로 크면 **모델의 학습이 아예 되지 않는다.**
+  * Learning Rate 가 0.003 이상으로 크면 **모델의 학습이 아예 되지 않는다.**
   * Loss 기준으로 Early Stopping 하는 경우가 Accuracy 기준일 때보다 전반적으로 성능이 좋다.
 
 ![image](images/Early_Stopping_6.PNG)
@@ -143,7 +143,7 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 ![image](images/Early_Stopping_4.PNG)
 
 * (Early Stopping Type 별) Early Stopping epoch 횟수에 따른 Epoch 횟수 분포
-  * Loss 기준으로 Early Stopping 하는 경우, Early Stopping epoch 횟수가 10 이상이면 **200 epochs ~ 최대 500 epochs 이상으로 학습 시간이 매우 많이 소요** 된다.
+  * Loss 기준으로 Early Stopping 하는 경우, Early Stopping epoch 횟수가 10 이상이면 **150 epochs ~ 최대 400 epochs 이상으로 학습 시간이 매우 많이 소요** 된다.
 
 ![image](images/Early_Stopping_5.PNG)
 
