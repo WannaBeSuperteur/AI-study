@@ -85,7 +85,8 @@ optim.lr_scheduler.StepLR(optimizer=optimizer,
 ```
 
 * 설명
-  * 매 ```step_size``` 마다 epoch 를 기존의 ```gamma``` 배로 만든다.
+  * 매 ```step_size``` 마다 learning rate 를 기존의 ```gamma``` 배로 만든다.
+  * 위 경우에는 매 10 epochs 마다 learning rate 를 기존의 0.5 배로 만든다.
 
 ### 2-4. Multi-Step Scheduler
 
