@@ -129,6 +129,10 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
   * Multi-Class Classification 에서 Sigmoid 함수 사용 시, 학습이 전혀 안 됨
   * Multi-Label Classification 에서 Softmax 함수 사용 시, 정상에 비해 성능이 크게 저하됨
 
+**참고**
+
+* 아래에서 Softmax, Sigmoid 는 별도 언급이 없으면 **최종 output 에 대한 활성화 함수** 를 이렇게 설정했음을 의미한다.
+
 ### 3-1. Binary Classification
 
 **Binary Cross-Entropy 대신 Mean-Squared Error 적용 시**
