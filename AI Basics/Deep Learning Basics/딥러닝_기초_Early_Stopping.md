@@ -11,7 +11,7 @@
 ## 코드
 
 * [최적 Early Stopping 기준 및 횟수 실험](#3-실험-최적-early-stopping-기준-및-횟수) 코드 : [code (ipynb)](codes/Early_Stopping_experiment.ipynb)
-* [보충 실험](#3-4-보충-실험-학습-수행-시간-페널티-적용-시) 코드 : TBU
+* [보충 실험](#3-4-보충-실험-학습-수행-시간-페널티-적용-시) 코드 : [code (ipynb)](codes/Early_Stopping_experiment_2.ipynb)
 
 ## 1. Early Stopping
 
@@ -181,12 +181,12 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 
 * 전체 실험 시간, 성능 및 최적 하이퍼파라미터 비교
 
-| 구분                   | 수행 시간 페널티 O                                                                            | 수행 시간 페널티 X                                                                                                                             |
-|----------------------|----------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| 전체 실험 시간             | 1시간 1분                                                                                 | 2시간 14분                                                                                                                                 |
-| 최종 테스트셋 정확도          | 97.00%                                                                                 | 97.47%                                                                                                                                  |
-| HPO Valid set 최고 정확도 | 97.28%                                                                                 | 96.88%                                                                                                                                  |
-| Best Hyper-param     | ```early_stopping_type``` : <br>```early_stopping_rounds``` : <br>```learing_rate``` : | ```early_stopping_type``` : ```val_loss``` (Valid Dataset Loss 기준)<br>```early_stopping_rounds``` : 16<br>```learing_rate``` : 0.001629 |
+| 구분                   | 수행 시간 페널티 O                                                                                                                            | 수행 시간 페널티 X                                                                                                                             |
+|----------------------|----------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| 전체 실험 시간             | 1시간 1분                                                                                                                                 | 2시간 14분                                                                                                                                 |
+| 최종 테스트셋 정확도          | 97.00%                                                                                                                                 | 97.47%                                                                                                                                  |
+| HPO Valid set 최고 정확도 | 97.28%                                                                                                                                 | 96.88%                                                                                                                                  |
+| Best Hyper-param     | ```early_stopping_type``` : ```val_loss``` (Valid Dataset Loss 기준)<br>```early_stopping_rounds``` : 7<br>```learing_rate``` : 0.001002 | ```early_stopping_type``` : ```val_loss``` (Valid Dataset Loss 기준)<br>```early_stopping_rounds``` : 16<br>```learing_rate``` : 0.001629 |
 
 * (Early Stopping Type 별) Early Stopping epoch 횟수에 따른 Accuracy 분포
   * **Valid data Loss 기준으로 Early Stopping** 하는 쪽의 성능이 여전히 좋은 편이다.
