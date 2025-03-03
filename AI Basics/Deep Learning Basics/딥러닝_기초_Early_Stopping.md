@@ -6,10 +6,12 @@
   * [3-1. 실험 설계](#3-1-실험-설계)
   * [3-2. 실험 결과](#3-2-실험-결과)
   * [3-3. 실험 결과에 대한 이유 분석](#3-3-실험-결과에-대한-이유-분석)
+  * [3-4. 보충 실험: 학습 수행 시간 페널티 적용 시](#3-4-보충-실험-학습-수행-시간-페널티-적용-시)
 
 ## 코드
 
 * [최적 Early Stopping 기준 및 횟수 실험](#3-실험-최적-early-stopping-기준-및-횟수) 코드 : [code (ipynb)](codes/Early_Stopping_experiment.ipynb)
+* [보충 실험](#3-4-보충-실험-학습-수행-시간-페널티-적용-시) 코드 : TBU
 
 ## 1. Early Stopping
 
@@ -57,7 +59,7 @@ Early Stopping 의 기준으로 다음을 생각해 볼 수 있다.
   * 데이터셋이 28 x 28 size 의 작은 이미지들로 구성
   * 이로 인해 비교적 간단한 신경망을 설계할 수 있으므로, 간단한 딥러닝 실험에 적합하다고 판단
 * 데이터셋 분리
-  * 학습 데이터가 조금 부족한 편이어야지 **Dropout 수준에 따른 overfitting 여부의 변별이 가능** 할 것으로 판단
+  * 학습 데이터가 조금 부족한 편이어야지 **Early Stopping 설정에 따른 overfitting 여부의 변별이 가능** 할 것으로 판단
 
 | 학습 데이터  | Valid 데이터 (Epoch 단위) | Valid 데이터 (Trial 단위) | Test 데이터          |
 |---------|----------------------|----------------------|-------------------|
@@ -71,7 +73,7 @@ Early Stopping 의 기준으로 다음을 생각해 볼 수 있다.
 
 **신경망 구조**
 
-* 신경망 구조가 비교적 복잡해야지 **Dropout 수준에 따른 overfitting 여부의 변별이 가능** 할 것으로 판단하여, 다른 실험에 비해 **모델 구조를 복잡하게** 함
+* 신경망 구조가 비교적 복잡해야지 **Early Stopping 설정에 따른 overfitting 여부의 변별이 가능** 할 것으로 판단하여, 다른 실험에 비해 **모델 구조를 복잡하게** 함
 
 ```python
 # 신경망 구조 출력 코드
@@ -95,7 +97,8 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
   * **Early Stopping 기준** ```early_stopping_type```
     * Valid data Accuracy
     * Valid data Loss
-      * 이때는 아주 미세한 Loss 감소의 반복으로 학습이 매우 길어지는 것을 방지하기 위해, Loss 를 소수점 이하 4째 자리까지 반올림한 값을 이용한다. 
+      * 아주 미세한 Loss 감소의 반복으로 학습이 매우 길어지는 것을 방지하기 위해, Loss 를 **소수점 이하 4째 자리까지 반올림한 값**을 이용한다.
+      * 성능 향상의 최소 기준인 'Minimum Delta' 를 설정하여, 해당 값 이상으로 Valid data Loss 가 감소해야 성능 개선으로 인정하는 아이디어에서 착안했다.
   * **Early Stopping epoch 횟수** ```early_stopping_rounds```
     * 탐색 범위 : 3 ~ 20 범위의 자연수 
   * **learning rate** ```learning_rate```
@@ -112,15 +115,15 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 * **Loss 기준으로 Early Stopping** 하는 경우가 Accuracy 기준일 때보다 정확도가 높다.
 * Early Stopping 을 위한 **epoch 횟수는 10 ~ 18 정도** 가 최고 정확도를 달성할 수 있다.
 * Loss 기준으로 Early Stopping 하면서, 동시에 Early Stopping 을 위한 epoch 횟수가 10 이상일 때, **학습 시간이 매우 오래 걸린다.**
-  * 따라서 Early Stopping 기준을 valid loss 로 하는 경우, 정확도를 기준으로 하는 하이퍼파라미터 최적화 시 학습 수행 시간에 따른 페널티를 주는 것을 고려할 필요가 있다.
+  * 따라서 Early Stopping 기준을 valid loss 로 하는 경우, 정확도를 기준으로 하는 하이퍼파라미터 최적화 시 학습 수행 시간에 따른 페널티를 주는 것을 고려할 필요가 있다. [(관련 추가 실험)](#3-4-보충-실험-학습-수행-시간-페널티-적용-시)
 
 **2. Best Hyper-param 및 그 성능 (정확도)**
 
-| 구분                | 값                                                                                                                                       |
-|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| 최종 테스트셋 정확도       | 97.47%                                                                                                                                  |
-| HPO Valid set 정확도 | 96.88%                                                                                                                                  |
-| Best Hyper-param  | ```early_stopping_type``` : ```val_loss``` (Valid Dataset Loss 기준)<br>```early_stopping_rounds``` : 16<br>```learing_rate``` : 0.001629 |
+| 구분                   | 값                                                                                                                                       |
+|----------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| 최종 테스트셋 정확도          | 97.47%                                                                                                                                  |
+| HPO Valid set 최고 정확도 | 96.88%                                                                                                                                  |
+| Best Hyper-param     | ```early_stopping_type``` : ```val_loss``` (Valid Dataset Loss 기준)<br>```early_stopping_rounds``` : 16<br>```learing_rate``` : 0.001629 |
 
 **3. 하이퍼파라미터 최적화 진행에 따른 정확도 추이**
 
@@ -154,3 +157,44 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 * Early Stopping 기준이 valid data loss 이므로, 정확도에 반영이 안 될 정도의 미세한 loss 감소도 신기록 갱신으로 판단함
 * 여기에 Learning rate 가 작으면 학습 자체가 느리며, 또한 이로 인해 valid loss 가 안정적으로 수렴하기 때문에 미세한 loss 감소가 계속 발생함
 * Early Stopping epoch 횟수 자체가 많으므로, 학습 종료 조건에 이르는 데 오래 걸림
+
+### 3-4. 보충 실험: 학습 수행 시간 페널티 적용 시
+
+**1. 실험 목적**
+
+* [원래 실험 결론](#3-2-실험-결과) 에서 Early Stopping 기준이 Valid data Loss 일 때 학습 수행 시간이 너무 오래 걸리는 문제를, **학습 수행 시간에 따라 하이퍼파라미터 최적화 목표값에 페널티** 를 줌으로써 해결하려고 함
+
+**2. 실험 설계**
+
+* 각 Trial 별 학습에 소요된 **Epoch 횟수가 많으면 다음과 같이 페널티** 를 부여
+* Epoch 횟수 50 회 이하
+  * 페널티 없음 (Optuna feedback 목표값 = **정확도 값** 그대로)
+* Epoch 횟수 50 회 초과
+  * 50회를 초과한 Epoch 1회 당 Optuna 에 feedback 되는 목표값에 **0.00005 (= 5e-5 = 0.004%) 의 감점** 부여
+  * 예를 들어 150 epoch 기록 시, feedback 되는 값은 원래 정확도에서 0.5% 페널티 부여된 값
+
+**3. 실험 결과**
+
+* 실험 결론
+  * **수행 시간 페널티를 줌으로써 학습 시간을 2배 가량 감소** 시켰다.
+  * 최종 테스트셋, HPO Valid Set 최고 정확도를 모두 고려할 때, **성능은 수행 시간 페널티가 없을 때와 비슷한 수준** 으로 보인다.
+
+* 전체 실험 시간, 성능 및 최적 하이퍼파라미터 비교
+
+| 구분                   | 수행 시간 페널티 O                                                                            | 수행 시간 페널티 X                                                                                                                             |
+|----------------------|----------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| 전체 실험 시간             | 1시간 1분                                                                                 | 2시간 14분                                                                                                                                 |
+| 최종 테스트셋 정확도          | 97.00%                                                                                 | 97.47%                                                                                                                                  |
+| HPO Valid set 최고 정확도 | 97.28%                                                                                 | 96.88%                                                                                                                                  |
+| Best Hyper-param     | ```early_stopping_type``` : <br>```early_stopping_rounds``` : <br>```learing_rate``` : | ```early_stopping_type``` : ```val_loss``` (Valid Dataset Loss 기준)<br>```early_stopping_rounds``` : 16<br>```learing_rate``` : 0.001629 |
+
+* (Early Stopping Type 별) Early Stopping epoch 횟수에 따른 Accuracy 분포
+  * **Valid data Loss 기준으로 Early Stopping** 하는 쪽의 성능이 여전히 좋은 편이다.
+  * 최고 성능을 기록하는 Early Stopping epoch 횟수는 **5 ~ 10회 정도** 로 다소 감소했다.
+
+![image](images/Early_Stopping_7.PNG)
+
+* (Early Stopping Type 별) Early Stopping epoch 횟수에 따른 Epoch 횟수 분포
+  * 150 epochs 를 초과하는 Trial 이 페널티를 주지 않았을 때와 달리 거의 사라졌다.
+
+![image](images/Early_Stopping_8.PNG)
