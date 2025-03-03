@@ -117,7 +117,7 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 
 **2. Learning Rate 별 정확도 및 수행 시간**
 
-* learning rate **1e-5 (= 10$\mu$) ~ 2e-5 (= 20$\mu$) 부근** 에서 수행 시간이 가장 길다.
+* learning rate **1e-5 (= 10 $\mu$ ) ~ 2e-5 (= 20 $\mu$ ) 부근** 에서 수행 시간이 가장 길다.
   * 이후 Learning rate 가 커짐에 따라 수행 시간이 감소한다. 
 * learning rate **0.001 - 0.005 부근** 에서 성능이 가장 좋다.
 
