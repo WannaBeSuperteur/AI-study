@@ -169,6 +169,8 @@ Xavier, He Initialization 에서 **균등 분포 구간 수식의 분자에 들�
 
 **신경망 구조**
 
+* weight initialization 방법들의 효과를 보다 잘 확인하기 위해, 다른 실험보다 깊은 신경망을 설계했다.
+
 ```python
 # 신경망 구조 출력 코드
 
@@ -178,34 +180,72 @@ model = CNN()
 print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 ```
 
-![image](images/Common_NN_Vision.PNG)
+![image](images/Common_NN_Vision_Deep.PNG)
 
 * [Dropout](딥러닝_기초_Overfitting_Dropout.md#3-dropout) 미 적용
 * [Learning Rate Scheduler](딥러닝_기초_Learning_Rate_Scheduler.md) 미 적용
 * Optimizer 는 [AdamW](딥러닝_기초_Optimizer.md#2-3-adamw) 를 사용
   * 해당 Optimizer 가 [동일 데이터셋을 대상으로 한 성능 실험](딥러닝_기초_Optimizer.md#3-탐구-어떤-optimizer-가-적절할까) 에서 최상의 정확도를 기록했기 때문
+* [Early Stopping](딥러닝_기초_Early_Stopping.md) Rounds (epoch 횟수) = 5 로 고정
+  * Valid dataset Accuracy 기준
+  * Valid dataset Loss 를 기준으로 하면 [전체 학습 시간이 오래 걸림](딥러닝_기초_Early_Stopping.md#3-4-보충-실험-학습-수행-시간-페널티-적용-시)
 
 **상세 학습 방법**
 
 * 다음과 같이 하이퍼파라미터 최적화를 실시하여, **최적화된 하이퍼파라미터를 기준으로 한 성능을 기준** 으로 최고 성능의 Optimizer 를 파악
-  * **Conv. Layer 의 Weight Initialization 방법** ```winit_conv```
+  * **Conv. Layer (총 3개) 의 Weight Initialization 방법** ```winit_conv```
     * 상수로 초기화 (0.0) ```const_zero```
     * 상수로 초기화 (0.5) ```const_0.5```
     * Gaussian Distribution ```gaussian```
-      * 관련 상수 : 표준편차 ```gaussian_std``` 
+      * 해당 방법 적용 시, 표준편차 ```gaussian_std_conv``` ```gaussian_std_fc``` 를 하이퍼파라미터로 추가
+      * 이때, 표준편차의 탐색 범위는 0.25 - 4.0
     * Xavier Initialization - 균등 분포 ```xavier_uniform```
     * Xavier Initialization - 정규 분포 ```xavier_normal```
     * He Initialization - 균등 분포 ```he_uniform```
     * He Initialization - 정규 분포 ```he_normal```
-  * **Fully-Connected Layer 의 Weight Initialization 방법** ```winit_fc```
+  * **Fully-Connected Layer (총 2개) 의 Weight Initialization 방법** ```winit_fc```
     * Conv. Layer 의 Weight Initialization 방법 과 동일한 조합
   * **learning rate** ```learning_rate```
     * 탐색 범위 : 0.0005 ~ 0.01 (= 5e-4 ~ 1e-2)
 
 * 하이퍼파라미터 최적화
   * [하이퍼파라미터 최적화 라이브러리](../Machine%20Learning%20Models/머신러닝_방법론_HyperParam_Opt.md#4-하이퍼파라미터-최적화-라이브러리) 중 Optuna 를 사용
-  * 하이퍼파라미터 탐색 100 회 반복 (= 100 Trials) 실시
+  * 하이퍼파라미터 탐색 200 회 반복 (= 200 Trials) 실시
 
 ### 7-2. 실험 결과
+
+**1. 실험 결론**
+
+* **Conv. Layer (w/ ReLU) : He Init** 을 적용, **Fully-Connected Layer (w/ Sigmoid) : Xavier Init** 을 적용하는 것으로 조합하는 것이 가장 좋은 성능을 나타낼 것으로 예상된다.
+
+**2. Best Hyper-param 및 그 성능 (정확도)**
+
+| 구분                   | 값 |
+|----------------------|---|
+| 최종 테스트셋 정확도          |   |
+| HPO Valid set 최고 정확도 |   |
+| Best Hyper-param     |   |
+
+**3. 하이퍼파라미터 최적화 진행에 따른 정확도 추이**
+
+**4. 각 하이퍼파라미터의 값에 따른 성능 분포**
+
+* 4-1. Conv. Layer 초기화 방법 & Fully-Connected Layer 초기화 방법에 따른 최고 정확도
+
+* 4-2. **Conv. Layer** 초기화 방법 별 정확도 분포
+
+* 4-3. **Fully-Connected Layer** 초기화 방법 별 정확도 분포
+
+* 4-4. **Conv. Layer** 초기화 방법 별 **epoch 수** (대략적 학습 시간) 분포
+
+* 4-5. **Fully-Connected Layer** 초기화 방법 별 **epoch 수** (대략적 학습 시간) 분포
+
+* 4-6. **Conv. Layer** weight 를 **Gaussian** Distribution 으로 초기화 시, 표준편차에 따른 **정확도** 분포
+
+* 4-7. **Fully-Connected Layer** weight 를 **Gaussian** Distribution 으로 초기화 시, 표준편차에 따른 **정확도** 분포
+
+* 4-8. **Conv. Layer** weight 를 **Gaussian** Distribution 으로 초기화 시, 표준편차에 따른 **epoch 수** (대략적 학습 시간) 분포
+
+* 4-9. **Fully-Connected Layer** weight 를 **Gaussian** Distribution 으로 초기화 시, 표준편차에 따른 **epoch 수** (대략적 학습 시간) 분포
 
 ### 7-3. 실험 결과에 대한 이유 분석
