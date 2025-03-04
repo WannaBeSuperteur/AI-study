@@ -83,15 +83,37 @@ Xavier Initialization 으로 초기화되는 **가중치 값 분포**에 대한 
   * $\displaystyle [-\sqrt{\frac{6}{n_{in} + n_{out}}}, +\sqrt{\frac{6}{n_{in} + n_{out}}}]$
 
 * 정규 분포
-  * $\displaystyle (weight) ~ N(0, \frac{2}{n_{in} + n_{out}})$ 
+  * weight 의 분포는 표준정규분포 $\displaystyle N(0, \frac{2}{n_{in} + n_{out}})$ 를 따른다.
   * 평균 0, 표준편차 $\displaystyle \sqrt{\frac{2}{n_{in} + n_{out}}}$
 
 * 수식 설명
-  * $n_in$ : 해당 뉴런의 input node 의 개수 = 직전 layer 의 뉴런 개수
-  * $n_out$ : 해당 뉴런의 output node 의 개수 = 직후 layer 의 뉴런 개수
-  * 제곱근 안쪽 분수의 분자 부분의 상수 (균등 분포 6, 정규 분포 2) 는 데이터셋 별로 다르게 최적화할 수 있음
+  * notation 
+    * $n_in$ : 해당 뉴런의 input node 의 개수 = 직전 layer 의 뉴런 개수
+    * $n_out$ : 해당 뉴런의 output node 의 개수 = 직후 layer 의 뉴런 개수
+  * $n_{in}$ 뿐만 아니라 $n_{out}$ 까지 고려하기 때문에, **정규분포의 분산 값의 분자가 2가 되어야 가중치의 분산이 1** 이 된다. 
+  * 균등 분포 수식에서의 제곱근 안쪽 분수의 분자 상수 (6) 는 데이터셋 별로 다르게 최적화할 수 있음
+
+Xavier Initialization 에 적합한 활성화 함수는 **Sigmoid 계열** 이다.
 
 ## 5. He Initialization
+
+**He Initialization (또는 Kaiming Initialization)** 의 핵심 아이디어는 다음과 같다.
+
+* ReLU 함수에 대해 Xavier Initialization 을 적용하면 **이후 layer 로 진행됨에 따라 출력값이 점차 감소** 한다.
+  * 이는 Sigmoid 와 같은 함수와 달리, ReLU 는 **$x < 0$ 인 구간에서 함숫값이 항상 0** 이기 때문이다.
+* 이를 해결하기 위해, **가중치의 분산이 1 이 아닌 2 가 되게** 한다.
+* 또한, Xavier initialization 과 달리 **input node 만을 고려** 한다.
+
+He Initialization 으로 초기화되는 **가중치 값 분포**에 대한 수식은 다음과 같다.
+
+* 균등 분포
+  * $\displaystyle [-\sqrt{\frac{6}{n_{in}}}, +\sqrt{\frac{6}{n_{in}}}]$
+
+* 정규 분포
+  * weight 의 분포는 표준정규분포 $\displaystyle N(0, \frac{2}{n_{in}}})$ 를 따른다.
+  * 평균 0, 표준편차 $\displaystyle \sqrt{\frac{2}{n_{in}}}$
+
+He Initialization 에 적합한 활성화 함수는 **ReLU 및 그 파생 (Leaky ReLU 등)** 이다.
 
 ## 6. 실험: 가장 적절한 Initialization
 
