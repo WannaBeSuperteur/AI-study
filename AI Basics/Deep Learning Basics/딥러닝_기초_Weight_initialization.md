@@ -26,7 +26,7 @@
 * [Gradient Vanishing / Explosion](딥러닝_기초_Regularization.md#3-gradient-vanishing)
   * 가중치를 어떻게 초기화하는지에 따라 Gradient Vanishing 이나 Gradient Explosion (Gradient 의 절댓값이 너무 커지는 것) 이 발생할 수 있다.
 
-## 1-1. 가중치 초기화 방법 요약
+### 1-1. 가중치 초기화 방법 요약
 
 잘 알려진 가중치 초기화 방법은 다음과 같다.
 
