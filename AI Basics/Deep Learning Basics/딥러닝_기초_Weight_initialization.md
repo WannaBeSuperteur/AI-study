@@ -14,6 +14,7 @@
 
 ## 코드
 
+* [가장 적절한 initialization method 실험](#7-실험-가장-적절한-initialization) 코드 : [code (ipynb)](codes/Weight_initialization_experiment.ipynb)
 
 ## 1. 딥러닝에서의 가중치 초기화
 
@@ -216,36 +217,82 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 
 **1. 실험 결론**
 
-* **Conv. Layer (w/ ReLU) : He Init** 을 적용, **Fully-Connected Layer (w/ Sigmoid) : Xavier Init** 을 적용하는 것으로 조합하는 것이 가장 좋은 성능을 나타낼 것으로 예상된다.
+* 실험 결과 종합
+  * **Conv.** Layer 초기화 방법은 **Xavier** > He > Gaussian > Constant 순으로 성능이 좋음
+  * **Fully-Connected** Layer 초기화 방법은 **Gaussian** > He > Xavier > Constant 순으로 성능이 좋음 
+  * 이는 **Conv. Layer (w/ ReLU) : He Init** 을 적용, **Fully-Connected Layer (w/ Sigmoid) : Xavier Init** 을 적용하는 것으로 조합하는 것이 가장 좋은 성능을 나타낼 것이라는 예상과 차이가 있다.
+* 가중치 초기화 방법에 따라 초기 학습이 매우 느려지는 현상은 확인되지 않음
 
 **2. Best Hyper-param 및 그 성능 (정확도)**
 
-| 구분                   | 값 |
-|----------------------|---|
-| 최종 테스트셋 정확도          |   |
-| HPO Valid set 최고 정확도 |   |
-| Best Hyper-param     |   |
+| 구분                   | 값                                                                                                                                              |
+|----------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| 최종 테스트셋 정확도          | 97.99%                                                                                                                                         |
+| HPO Valid set 최고 정확도 | 97.44%                                                                                                                                         |
+| Best Hyper-param     | ```winit_conv``` : ```xavier_normal```<br>```winit_fc``` : ```gaussian```<br>```learning_rate```: 0.000874<br>```gaussian_std_fc``` : 0.317877 |
 
 **3. 하이퍼파라미터 최적화 진행에 따른 정확도 추이**
+
+![image](images/Weight_init_5.PNG)
 
 **4. 각 하이퍼파라미터의 값에 따른 성능 분포**
 
 * 4-1. Conv. Layer 초기화 방법 & Fully-Connected Layer 초기화 방법에 따른 최고 정확도
+  * Conv. Layer 초기화 방법은 He 또는 Xavier 가 좋음
+  * Fully-Connected Layer 초기화 방법은 HE, Xavier 또는 Gaussian 이 좋음
+
+![image](images/Weight_init_6.PNG)
+
+![image](images/Weight_init_7.PNG)
 
 * 4-2. **Conv. Layer** 초기화 방법 별 정확도 분포
+  * Conv. Layer 초기화 방법은 He 또는 Xavier 가 좋으며, Constant 초기화는 성능이 매우 떨어짐
+  * 그 중에서도 최고 성능을 기록하는 방법은 Xavier 임
+
+![image](images/Weight_init_8.PNG)
+
+![image](images/Weight_init_9.PNG)
 
 * 4-3. **Fully-Connected Layer** 초기화 방법 별 정확도 분포
+  * Fully-Connected Layer 초기화 방법은 Gaussian > He > Xavier 순으로 좋음
+  * Constant 초기화 시 성능이 매우 떨어짐
+
+![image](images/Weight_init_10.PNG)
+
+![image](images/Weight_init_11.PNG)
 
 * 4-4. **Conv. Layer** 초기화 방법 별 **epoch 수** (대략적 학습 시간) 분포
+  * 가중치 초기화 방법에 따라 초기 학습이 매우 느려지는 (epoch 수가 많이 증가하는) 현상은 발생하지 않음 
+
+![image](images/Weight_init_12.PNG)
 
 * 4-5. **Fully-Connected Layer** 초기화 방법 별 **epoch 수** (대략적 학습 시간) 분포
+  * 가중치 초기화 방법에 따라 초기 학습이 매우 느려지는 (epoch 수가 많이 증가하는) 현상은 발생하지 않음 
 
-* 4-6. **Conv. Layer** weight 를 **Gaussian** Distribution 으로 초기화 시, 표준편차에 따른 **정확도** 분포
+![image](images/Weight_init_13.PNG)
 
-* 4-7. **Fully-Connected Layer** weight 를 **Gaussian** Distribution 으로 초기화 시, 표준편차에 따른 **정확도** 분포
+* 4-6. **Fully-Connected Layer** weight 를 **Gaussian** Distribution 으로 초기화 시, 표준편차에 따른 **정확도** 분포
+  * Gaussian Distribution 의 표준편차가 0.25 ~ 0.35 정도일 때 최고 성능을 기록한다.
 
-* 4-8. **Conv. Layer** weight 를 **Gaussian** Distribution 으로 초기화 시, 표준편차에 따른 **epoch 수** (대략적 학습 시간) 분포
+![image](images/Weight_init_16.PNG)
 
-* 4-9. **Fully-Connected Layer** weight 를 **Gaussian** Distribution 으로 초기화 시, 표준편차에 따른 **epoch 수** (대략적 학습 시간) 분포
+![image](images/Weight_init_14.PNG)
+
+* 4-7. **Fully-Connected Layer** weight 를 **Gaussian** Distribution 으로 초기화 시, 표준편차에 따른 **epoch 수** (대략적 학습 시간) 분포
+  * Gaussian Distribution 의 표준편차가 너무 크면 학습이 아예 안 되기 때문에 조기 종료되는 것을 제외하고 특이점을 찾기 어렵다.
+
+![image](images/Weight_init_17.PNG)
+
+![image](images/Weight_init_15.PNG)
 
 ### 7-3. 실험 결과에 대한 이유 분석
+
+**1. Conv. Layer 초기화 방법은 He 가 아닌 Xavier 가 최고 성능**
+
+* Conv. Layer 의 깊이가 5개 레이어 정도로, He 와 Xavier 의 성능에 큰 차이가 있을 정도는 아님 (추정)
+* He 와 Xavier 는 유사한 컨셉 하에서 분산이 2배 차이가 날 뿐, 근본적으로 큰 차이가 있는 방법은 아니기에 성능이 크게 차이 나지 않을 수 있음 (추정)
+
+**2. Fully-Connected 초기화 방법은 Xavier 가 아닌 Gaussian 이 최고 성능**
+
+* Gaussian Distribution 사용 시 표준편차를 하이퍼파라미터로 적용하여 최적화가 가능
+* 결국, Gaussian 을 적용하면서 표준편차를 최적화하고, 본 실험에 사용한 데이터셋 및 모델 조합에서는 Xavier 보다도 최적의 분산을 찾았을 수 있음
