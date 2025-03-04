@@ -177,11 +177,11 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 
 | Loss Function                                                    | Valid dataset 최고 정확도 | Test dataset 정확도 |
 |------------------------------------------------------------------|----------------------|------------------|
-| ✅ Categorical Cross-Entropy (w/ Softmax)                         | 96.83%               | 97.17%           |
-| ❌ Mean-Squared Error (최종 output 활성화 함수 Softmax)                  | 96.90%               | 97.48%           |
-| ❌ Mean-Squared Error (최종 output 활성화 함수 Sigmoid)                  | 10.97%               | 10.28%           |
+| ✅ Categorical Cross-Entropy<br>(w/ Softmax)                      | 96.83%               | 97.17%           |
+| ❌ Mean-Squared Error<br>(최종 output 활성화 함수 Softmax)               | 96.90%               | 97.48%           |
+| ❌ Mean-Squared Error<br>(최종 output 활성화 함수 Sigmoid)               | **10.97%**           | **10.28%**       |
 | ❌ Binary Cross-Entropy<br>(```nn.BCELoss``` + Softmax)           | 97.20%               | 97.39%           |
-| ❌ Binary Cross-Entropy<br>(```nn.BCELoss``` + Sigmoid)           | 10.97%               | 10.28%           |
+| ❌ Binary Cross-Entropy<br>(```nn.BCELoss``` + Sigmoid)           | **10.97%**           | **10.28%**       |
 | ❌ Binary Cross-Entropy<br>(```nn.BCEWithLogitsLoss``` + Softmax) | 97.13%               | 97.37%           |
 
 ### 3-3. Multi-Label Classification
@@ -204,9 +204,9 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 * 성능 결과
   * 모든 Sigmoid 함수 사용 성능 > 모든 Softmax 함수 사용 성능
 
-| Loss Function                                          | Valid dataset 최고 정확도 | Test dataset 정확도 |
-|--------------------------------------------------------|----------------------|------------------|
-| ✅ Binary Cross-Entropy (w/ Sigmoid)                    | 98.28%               | 98.59%           |
-| ❌ Mean-Squared Error (최종 output 활성화 함수 Softmax)        | 76.34%               | 76.80%           |
-| ❌ Mean-Squared Error (최종 output 활성화 함수 Sigmoid)        | 98.21%               | 98.49%           |
-| ❌ Categorical Cross-Entropy (최종 output 활성화 함수 Softmax) | 79.10%               | 79.41%           |
+| Loss Function                                             | Valid dataset 최고 정확도 | Test dataset 정확도 |
+|-----------------------------------------------------------|----------------------|------------------|
+| ✅ Binary Cross-Entropy<br>(w/ Sigmoid)                    | 98.28%               | 98.59%           |
+| ❌ Mean-Squared Error<br>(최종 output 활성화 함수 Softmax)        | **76.34%**           | **76.80%**       |
+| ❌ Mean-Squared Error<br>(최종 output 활성화 함수 Sigmoid)        | 98.21%               | 98.49%           |
+| ❌ Categorical Cross-Entropy<br>(최종 output 활성화 함수 Softmax) | **79.10%**           | **79.41%**       |
