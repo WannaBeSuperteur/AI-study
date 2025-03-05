@@ -2,7 +2,8 @@
 
 * [1. 활성화 함수의 적절한 사용](#1-활성화-함수의-적절한-사용)
   * [1-1. Regression 에서 데이터 자체에 Sigmoid 를 적용하고, 출력에 역함수를 적용하는 방법이 권장되지 않는 이유](#1-1-regression-에서-데이터-자체에-sigmoid-를-적용하고-출력에-역함수를-적용하는-방법이-권장되지-않는-이유) 
-  * [1-2. Multi-Class Classification 에서 Sigmoid 가 권장되지 않는 이유](#1-2-multi-class-classification-에서-sigmoid-가-권장되지-않는-이유)
+  * [1-2. Regression 에서 정규화의 필요성](#1-2-regression-에서-정규화의-필요성)
+  * [1-3. Multi-Class Classification 에서 Sigmoid 가 권장되지 않는 이유](#1-3-multi-class-classification-에서-sigmoid-가-권장되지-않는-이유)
 * [2. 실험 설계](#2-실험-설계)
   * [2-1. 데이터셋 및 성능 Metric](#2-1-데이터셋-및-성능-metric)
   * [2-2. 실험 구성](#2-2-실험-구성)
@@ -46,7 +47,29 @@ Regression Task 에서 다음과 같은 방법을 이용하는 것은 적합하�
 * 모델의 원래 출력값이 15 이상, -15 이하 등 절댓값이 너무 크면 Sigmoid 적용 시 **컴퓨터가 표현 가능한 자릿수의 한계로 인해 각각 1.0, 0.0 과 동일한 값으로 인식** 하여, 역함수 적용 자체가 어려울 수 있다.
   * Sigmoid(15), Sigmoid(-15) 의 값은 각각 1.0, 0.0 에 매우 가깝다.
 
-### 1-2. Multi-Class Classification 에서 Sigmoid 가 권장되지 않는 이유
+### 1-2. Regression 에서 정규화의 필요성
+
+Regression Task 에서 모델 학습 시 다음과 같이 **출력값을 표준정규분포로 정규화** 하는 방법을 이용하는 것이 필요할 수 있다.
+
+* 학습 데이터의 출력값을 먼저 이들의 평균과 표준편차를 이용하여 표준정규분포로 정규화시킨다.
+  * 학습 데이터의 평균을 $\mu_{train}$, 표준편차를 $\sigma_{train}$ 으로 정의하고 따로 저장한다. 
+  * 이렇게 하면, 모델의 출력값은 표준정규분포로 정규화된 값이 된다. 
+* 테스트 데이터 입력 시, 다음과 같이 처리한다.
+  * 모델의 출력값 $O_{model}$ 에 대해, 정규화 적용된 것을 원래 값으로 되돌린다. 이때 다음 수식을 이용한다.
+    * 수식 : $O_{model} \times \sigma_{train} + \mu_{train}$ 
+
+![image](images/활성화_함수_19.PNG)
+
+그 이유는 다음과 같다.
+
+* 출력값의 **절댓값 크기가 매우 크기 때문에 (예: 100 이상) 딥러닝 모델의 원활한 학습 불가**
+  * 이는 최종 출력에 활성화 함수를 별도로 적용하지 않았기 때문
+  * 최종 출력 직전의 layer 의 뉴런 개수가 적은 경우, 이들의 가중치 합으로 절댓값이 너무 큰 출력값 자체를 표현하기 어려울 수 있음
+* 정규화된 입력 데이터 사용 시
+  * 이미지 데이터의 경우, 일반적으로 모든 픽셀 값이 0 ~ 255 를 255 로 나누어서 0 ~ 1 로 정규화된 상태임 
+  * 정규화된 입력을 신경망에 통과시키는 경우, 출력 역시 정규화하면 성능 향상 가능
+
+### 1-3. Multi-Class Classification 에서 Sigmoid 가 권장되지 않는 이유
 
 Multi-Class Classification (with [Categorical Cross-Entropy](딥러닝_기초_Loss_function.md#2-5-categorical-cross-entropy-loss)) 에서 Sigmoid 함수가 권장되지 않는 이유는 다음과 같다.
 
@@ -144,7 +167,8 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 * 결론에 대한 이유
 
 * 성능 결과
-  * Mean-Squared Error (MSE) 는 **원래 실제 값** 기준으로 측정 
+  * Mean-Squared Error (MSE) 는 **원래 실제 값** 기준으로 측정
+  * Loss Function 은 모두 MSE 를 사용
 
 | 최종 레이어 활성화 함수               | Valid dataset 최고 MSE | Test dataset MSE |
 |-----------------------------|----------------------|------------------|
