@@ -12,9 +12,11 @@
   * [2-3. 신경망 구조](#2-3-신경망-구조)
   * [2-4. 상세 configuration](#2-4-상세-configuration)
 * [3. 실험 결과](#3-실험-결과)
-  * [3-1. Binary Classification](#3-1-binary-classification)
-  * [3-2. Multi-Class Classification](#3-2-multi-class-classification)
-  * [3-3. Multi-Label Classification](#3-3-multi-label-classification)
+  * [3-1. Regression](#3-1-regression)
+  * [3-2. Probability Prediction](#3-2-probability-prediction)
+  * [3-3. Binary Classification (2 outputs)](#3-3-binary-classification-2-outputs)
+  * [3-4. Multi-Class Classification](#3-4-multi-class-classification)
+  * [3-5. Multi-Label Classification](#3-5-multi-label-classification)
 
 ## 코드
 
@@ -25,6 +27,8 @@
 **본인이 2024년 현업 실무에서 중대한 오류를 범한 부분이라 철저히 짚고 넘어가야 한다.**
 
 [Loss Function](딥러닝_기초_Loss_function.md) 을 잘못 사용하면 모델 학습이 잘 안 될 수 있다. Loss Function 을 적절히 사용하는 것이 중요하며, 그 방법은 다음과 같다.
+
+**논리적으로 부적절한 Loss Function 을 사용하는 경우, 당장 지금 있는 데이터셋에서는 성능이 잘 나오지만, 새로운 데이터셋에서는 적절한 Loss Function 을 적용했을 때보다 성능이 현저히 안 나올 수 있다.**
 
 | Task                              | Task 설명                                                                  | Loss Function                                                                                 |
 |-----------------------------------|--------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
@@ -155,10 +159,11 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 **최종 결론**
 
 * 권장되는 Loss Function 을 사용한 경우 모두 정상적인 수준의 성능 도출
-* 권장되지 않는 Loss Function 을 사용한 경우에도, 다음과 같이 잘못된 [활성화 함수](딥러닝_기초_활성화_함수.md) 를 사용한 경우를 제외하고 정상에 가까운 성능 도출
+* 권장되지 않는 Loss Function 을 사용한 경우에도, 다음과 같이 잘못된 [활성화 함수](딥러닝_기초_활성화_함수.md) 등을 사용한 경우를 제외하고 정상에 가까운 성능 도출
+  * Regression 에서 BCE Loss 함수 사용 시, 학습이 전혀 안 되거나 런타임 오류 발생
+  * Probability Prediction 및 이를 확장한 task 인 Multi-Label Classification 에서 Softmax 함수 사용 시, 성능이 크게 저하됨
   * Multi-Class Classification 에서 Sigmoid 함수 사용 시, 학습이 전혀 안 됨
-  * Multi-Label Classification 에서 Softmax 함수 사용 시, 정상에 비해 성능이 크게 저하됨
-
+  
 **참고**
 
 * 아래에서 Softmax, Sigmoid 는 별도 언급이 없으면 **최종 output 에 대한 활성화 함수** 를 이렇게 설정했음을 의미한다.
@@ -166,86 +171,93 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 ### 3-1. Regression
 
 * 결론
-
+  * MSE, MAE, RMSE 적용 시, 모두 정상적으로 동작하며, 성능에 큰 차이는 없다.
+  * Binary Cross Entropy 실험 결과는 다음과 같다.
+    * ```nn.BCELoss``` 적용 시 ```CUDA error: device-side assert triggered``` 오류 발생
+    * ```nn.BCEWithLogitsLoss``` 적용 시 오차가 매우 크게 나타남
 * 결론에 대한 이유
-
+  * ```nn.BCELoss``` 에서 출력값이 0 ~ 1 의 범위 밖에 있으면, 잘못된 값 감지로 인해 오류를 발생시키는 메커니즘이 존재
+  * ```nn.BCEWithLogitsLoss``` 사용 시 자체적으로 Sigmoid 가 적용되므로 모델의 출력값은 0 ~ 1 범위 안에는 있다. 이것은 실제 값의 분포 범위인 1 ~ 6 과 **큰 차이가 있으며, 모델의 출력값은 최대 1이므로 아무리 학습해도 오차를 줄일 수 없다.** 
 * 성능 결과
 
-| Loss Function                                                     | Valid dataset 최저 MSE | Test dataset MSE |
-|-------------------------------------------------------------------|----------------------|------------------|
-| ✅ Mean-Squared Error<br>(출력값 정규화 O)                               |                      |                  |
-| ✅ Mean-Absolute Error<br>(출력값 정규화 O)                              |                      |                  |
-| ✅ Root Mean-Squared Error<br>(출력값 정규화 O)                          |                      |                  |
-| ❌ Binary Cross-Entropy<br>(출력값 정규화 O, ```nn.BCELoss```)           |                      |                  |
-| ❌ Binary Cross-Entropy<br>(출력값 정규화 O, ```nn.BCEWithLogitsLoss```) |                      |                  |
+| Loss Function                                                     | Valid dataset 최저 MSE                           | Test dataset MSE                               |
+|-------------------------------------------------------------------|------------------------------------------------|------------------------------------------------|
+| ✅ Mean-Squared Error<br>(출력값 정규화 O)                               | 0.0735                                         | 0.0574                                         |
+| ✅ Mean-Absolute Error<br>(출력값 정규화 O)                              | 0.0799                                         | 0.0547                                         |
+| ✅ Root Mean-Squared Error<br>(출력값 정규화 O)                          | 0.0667                                         | 0.0520                                         |
+| ❌ Binary Cross-Entropy<br>(출력값 정규화 O, ```nn.BCELoss```)           | ```CUDA error: device-side assert triggered``` | ```CUDA error: device-side assert triggered``` |
+| ❌ Binary Cross-Entropy<br>(출력값 정규화 O, ```nn.BCEWithLogitsLoss```) | **15.8230**                                    | **15.6859**                                    |
 
 * [출력값을 정규화해야 원하는 성능이 나온다.](딥러닝_기초_활성화_함수_Misuse.md#1-2-regression-에서-정규화의-필요성) 그 방법은 학습 데이터 출력값의 평균과 표준편차를 이용하여 모든 데이터셋의 출력값에 대해 Gaussian Normalization 적용하는 것이다.
-* 모든 실험 case 에서 활성화 함수 미 적용
+* ```nn.BCEWithLogitsLoss``` 에서 Sigmoid 가 자동 적용되는 것을 제외하고, 모든 실험 case 에서 활성화 함수 미 적용
 
 ### 3-2. Probability Prediction
 
 * 결론
-
+  * BCE (권장), MSE, MAE, RMSE 적용 시, 모두 정상적으로 동작하며, 성능에 큰 차이는 없다.
+  * Categorical Cross-Entropy 적용 시 **학습이 아예 되지 않는다.**
+  * MSE, MAE, RMSE 적용 시에는 **활성화 함수 미적용했을 때** 성능이 조금 더 좋은 듯한데, 추가 실험이 필요해 보인다.
 * 결론에 대한 이유
-
+  * 최종 output 이 0 ~ 1 의 확률로, 예측값 관점에서는 연속적인 숫자 값임
+  * **MSE, MAE, RMSE** 손실 함수 역시 **예측 확률과 실제 Class 값 (0 or 1) 간의 오차를 최소화** 하기 때문
+  * Categorical Cross-Entropy 적용 시에는 Softmax 함수를 사용하는데, 단일 output 값인 경우 항상 1이 되어 학습 자체가 불가능하다. 
 * 성능 결과
 
 | Loss Function                                          | Valid dataset 최고 정확도 | Test dataset 정확도 |
 |--------------------------------------------------------|----------------------|------------------|
-| ✅ Binary Cross-Entropy<br>(```nn.BCELoss``` + Sigmoid) |                      |                  |
-| ❌ Mean-Squared Error<br>(활성화 함수 미 적용)                  |                      |                  |
-| ❌ Mean-Squared Error<br>(with Sigmoid)                 |                      |                  |
-| ❌ Mean-Absolute Error<br>(활성화 함수 미 적용)                 |                      |                  |
-| ❌ Mean-Absolute Error<br>(with Sigmoid)                |                      |                  |
-| ❌ Root Mean-Squared Error<br>(활성화 함수 미 적용)             |                      |                  |
-| ❌ Root Mean-Squared Error<br>(with Sigmoid)            |                      |                  |
-| ❌ Categorical Cross-Entropy<br>(with Softmax)          |                      |                  |
+| ✅ Binary Cross-Entropy<br>(```nn.BCELoss``` + Sigmoid) | 96.30%               | 96.76%           |
+| ❌ Mean-Squared Error<br>(활성화 함수 미 적용)                  | 97.43%               | 97.79%           |
+| ❌ Mean-Squared Error<br>(with Sigmoid)                 | 96.57%               | 97.13%           |
+| ❌ Mean-Absolute Error<br>(활성화 함수 미 적용)                 | 97.03%               | 97.88%           |
+| ❌ Mean-Absolute Error<br>(with Sigmoid)                | 96.20%               | 96.54%           |
+| ❌ Root Mean-Squared Error<br>(활성화 함수 미 적용)             | 98.13%               | 98.32%           |
+| ❌ Root Mean-Squared Error<br>(with Sigmoid)            | 96.43%               | 97.24%           |
+| ❌ Categorical Cross-Entropy<br>(with Softmax)          | **49.87%**           | **49.31%**       |
 
 * Regression 과 달리, MSE, MAE, RMSE 를 손실 함수로 사용하는 모든 실험 case 에서 출력값 정규화 미 적용
 
-### 3-3. Binary Classification
+### 3-3. Binary Classification (2 outputs)
 
 * 결론
   * Categorical Cross-Entropy (권장), Binary Cross-Entropy, Mean-Squared Error 사이에 **큰 성능 차이 없음 (오차 범위 이내로 판단)**
   * 최종 output 활성화 함수 (Softmax or Sigmoid) 옵션에 따른 성능 차이 역시 오차 범위 이내 
 * 결론에 대한 이유 
-  * 최종 output 이 Sigmoid 또는 Softmax 활성화 함수를 적용하여 0 ~ 1 의 확률로 변환된 값임
-  * 결국 **Binary Cross-Entropy** 및 **Mean Squared Error** 손실 함수 역시 **예측 확률과 실제 Class 의 One-hot Label 간의 오차를 최소화** 하기 때문으로 추정
+  * 최종 output 은 결국 Sigmoid 또는 Softmax 활성화 함수를 적용하여 0 ~ 1 의 확률로 변환된 값임
+  * 결국 **Binary Cross-Entropy** 및 **Mean Squared Error** 손실 함수 역시 **예측 확률과 실제 Class 의 One-hot Label 간의 오차를 최소화** 하는 것이 목표임
 * 성능 결과
 
 | Loss Function                                                    | Valid dataset 최고 정확도 | Test dataset 정확도 |
 |------------------------------------------------------------------|----------------------|------------------|
-| ✅ Categorical Cross-Entropy<br>(with Softmax)                    |                      |                  |
-| ❌ Binary Cross-Entropy<br>(```nn.BCELoss``` + Softmax)           |                      |                  |
-| ❌ Binary Cross-Entropy<br>(```nn.BCELoss``` + Sigmoid)           |                      |                  |
-| ❌ Binary Cross-Entropy<br>(```nn.BCEWithLogitsLoss``` + Softmax) |                      |                  |
-| ❌ Mean-Squared Error<br>(with Softmax)                           |                      |                  |
-| ❌ Mean-Squared Error<br>(with Sigmoid)                           |                      |                  |
+| ✅ Categorical Cross-Entropy<br>(with Softmax)                    | 96.57%               | 97.01%           |
+| ❌ Binary Cross-Entropy<br>(```nn.BCELoss``` + Softmax)           | 95.97%               | 96.68%           |
+| ❌ Binary Cross-Entropy<br>(```nn.BCELoss``` + Sigmoid)           | 96.50%               | 97.00%           |
+| ❌ Binary Cross-Entropy<br>(```nn.BCEWithLogitsLoss``` + Softmax) | 96.90%               | 97.12%           |
+| ❌ Mean-Squared Error<br>(with Softmax)                           | 96.93%               | 97.64%           |
+| ❌ Mean-Squared Error<br>(with Sigmoid)                           | 96.37%               | 96.97%           |
 
 ### 3-4. Multi-Class Classification
 
 * 결론
-  * **Softmax 함수를 사용한 모든 경우** 성능이 정상적으로 나옴
-    * Categorical Cross-Entropy Loss (권장) 및 Softmax + MSE, Softmax + BCE 
-  * **Sigmoid 함수를 사용한 모든 경우** 아예 학습이 되지 않음
-    * Sigmoid + MSE, Sigmoid + BCE 
+  * Categorical Cross-Entropy Loss (권장) 외에도, BCE, MSE 에서 Softmax 를 사용한 경우 성능이 괜찮게 나옴 
+  * **Sigmoid 함수를 사용한 모든 경우** 에서는 아예 학습이 되지 않음
 * 결론에 대한 이유 **(추정)**
 
-|                | Softmax + (MSE or BCE)                                                                                                                    | Sigmoid + (MSE or BCE)                                                               |
-|----------------|-------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
-| 각 출력의 분포 및 독립성 | 각 출력이 그 합이 1인 확률분포를 이루므로, MSE, BCE 등 Loss Function과 관계없이 특정 Class 로 수렴함<br>- 각 Class의 확률 값들이 상호 의존적임<br>- 따라서, **각 Class 간 경쟁 관계** 고려에 적합 | 각 출력이 독립적이며, Class 간 경쟁 관계를 고려하지 못함                                                  |
-| 출력값의 해석        | Softmax의 출력값은 **해당 Class 에 속할 확률** 로 해석<br>- Multi-Class 분류 역시 출력이 각 Class 에 속할 확률로 해석 가능하므로, Softmax와 잘 조합됨                              | Sigmoid 의 출력값은 독립적임<br>- 따라서 Multi-Class 출력값의 기본적인 해석인 '각 Class에 속할 확률'을 **반영하지 못함** |
+|                | Softmax + (Categorical CE or BCE or MSE)                                                                                                  | Sigmoid + (BCE or MSE)                                                                                                                         |
+|----------------|-------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| 성능             | **정상적인 수준**                                                                                                                               | **학습이 전혀 되지 않음**                                                                                                                               |
+| 각 출력의 분포 및 독립성 | 각 출력이 그 합이 1인 확률분포를 이루므로, MSE, BCE 등 Loss Function과 관계없이 특정 Class 로 수렴함<br>- 각 Class의 확률 값들이 상호 의존적임<br>- 따라서, **각 Class 간 경쟁 관계** 고려에 적합 | 각 출력이 독립적이며, Class 간 경쟁 관계를 고려하지 못함<br>- output이 2개인 Binary Classification 의 경우, **상호 배타적인 Class 가 2개에 불과** 하므로 독립성이 성능에 큰 악영향을 주지 못함 **(추정)** |
+| 출력값의 해석        | Softmax의 출력값은 **해당 Class 에 속할 확률** 로 해석<br>- Multi-Class 분류 역시 출력이 각 Class 에 속할 확률로 해석 가능하므로, Softmax와 잘 조합됨                              | Sigmoid 의 출력값은 독립적임<br>- 따라서 Multi-Class 출력값의 기본적인 해석인 '각 Class에 속할 확률'을 **반영하지 못함**                                                           |
 
 * 성능 결과
 
 | Loss Function                                                    | Valid dataset 최고 정확도 | Test dataset 정확도 |
 |------------------------------------------------------------------|----------------------|------------------|
-| ✅ Categorical Cross-Entropy<br>(with Softmax)                    |                      |                  |
-| ❌ Binary Cross-Entropy<br>(```nn.BCELoss``` + Softmax)           |                      |                  |
-| ❌ Binary Cross-Entropy<br>(```nn.BCELoss``` + Sigmoid)           |                      |                  |
-| ❌ Binary Cross-Entropy<br>(```nn.BCEWithLogitsLoss``` + Softmax) |                      |                  |
-| ❌ Mean-Squared Error<br>(with Softmax)                           |                      |                  |
-| ❌ Mean-Squared Error<br>(with Sigmoid)                           |                      |                  |
+| ✅ Categorical Cross-Entropy<br>(with Softmax)                    | 97.07%               | 97.40%           |
+| ❌ Binary Cross-Entropy<br>(```nn.BCELoss``` + Softmax)           | 97.13%               | 97.39%           |
+| ❌ Binary Cross-Entropy<br>(```nn.BCELoss``` + Sigmoid)           | **11.03%**           | **10.10%**       |
+| ❌ Binary Cross-Entropy<br>(```nn.BCEWithLogitsLoss``` + Softmax) | 97.33%               | 97.53%           |
+| ❌ Mean-Squared Error<br>(with Softmax)                           | 97.13%               | 97.43%           |
+| ❌ Mean-Squared Error<br>(with Sigmoid)                           | **10.53%**           | **11.35%**       |
 
 ### 3-5. Multi-Label Classification
 
@@ -262,13 +274,14 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 * 결론
   * Binary Cross Entropy (권장) 를 포함, 모든 Sigmoid 활성화 함수 사용 사례에서 정상 성능
   * 모든 Softmax 활성화 함수 사용 사례에서 다소 낮은 성능
+    * 이 부분에서 성능이 다소 떨어지는 원인이 **데이터셋의 난이도가 높은 것으로 추정하고 아, 그런가 보다! 하는 것은 금물!!**
 * 결론에 대한 이유
-  * Softmax 함수는 각 Class 별 확률의 합산이 1이므로, Multi-Label 에서처럼 각 Class 의 확률의 합산이 1이 넘어가거나 0에 가까운 경우를 학습하지 못함
+  * Softmax 함수는 각 Class 별 확률의 합산이 1이므로, Multi-Label 에서처럼 각 Class 의 확률의 합산이 1이 넘어가거나 0에 가까운 경우를 제대로 학습하지 못함
 * 성능 결과
 
 | Loss Function                                 | Valid dataset 최고 정확도 | Test dataset 정확도 |
 |-----------------------------------------------|----------------------|------------------|
-| ✅ Binary Cross-Entropy<br>(with Sigmoid)      |                      |                  |
-| ❌ Mean-Squared Error<br>(with Softmax)        |                      |                  |
-| ❌ Mean-Squared Error<br>(with Sigmoid)        |                      |                  |
-| ❌ Categorical Cross-Entropy<br>(with Softmax) |                      |                  |
+| ✅ Binary Cross-Entropy<br>(with Sigmoid)      | 98.21%               | 98.53%           |
+| ❌ Mean-Squared Error<br>(with Softmax)        | **76.43%**           | **76.74%**       |
+| ❌ Mean-Squared Error<br>(with Sigmoid)        | 98.31%               | 98.49%           |
+| ❌ Categorical Cross-Entropy<br>(with Softmax) | **76.57%**           | **76.95%**       |
