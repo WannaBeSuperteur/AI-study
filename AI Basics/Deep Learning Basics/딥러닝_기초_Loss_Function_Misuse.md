@@ -1,8 +1,8 @@
 ## 목차
 
 * [1. Loss Function 의 적절한 사용](#1-loss-function-의-적절한-사용)
-  * [1-1. Binary Classification (2 output) 에서 Binary C. E. 가 부적절한 이유](#1-1-binary-classification-2-output-에서-binary-c-e-가-부적절한-이유)
-  * [1-2. Probability Prediction (0 ~ 1 범위 단일 output) 에서 MSE Loss 등이 부적절한 이유](#1-2-probability-prediction-0--1-범위-단일-output-에서-mse-loss-등이-부적절한-이유)
+  * [1-1. Probability Prediction (0 ~ 1 범위 단일 output) 에서 MSE Loss 등이 부적절한 이유](#1-1-probability-prediction-0--1-범위-단일-output-에서-mse-loss-등이-부적절한-이유)
+  * [1-2. Binary Classification (2 outputs) 에서 Binary C. E. 가 부적절한 이유](#1-2-binary-classification-2-outputs-에서-binary-c-e-가-부적절한-이유)
   * [1-3. Multi-Class Classification 에서 MSE Loss 등이 부적절한 이유](#1-3-multi-class-classification-에서-mse-loss-등이-부적절한-이유)
   * [1-4. Multi-Label Classification 에서 Binary C.E. 를 사용하는 이유](#1-4-multi-label-classification-에서-binary-ce-를-사용하는-이유)  
   * [1-5. nn.BCELoss vs. nn.BCEWithLogitsLoss](#1-5-nnbceloss-vs-nnbcewithlogitsloss) 
@@ -34,14 +34,7 @@
 | Classification<br>(Multi-Class)   | 각 Class 에 대한 0 ~ 1 사이의 확률<br>(Class 3개 이상, 확률 합산은 1)                     | - Categorical Cross Entropy                                                                   |
 | Classification<br>(Multi-Label)   | 각 Class 에 대한 0 ~ 1 사이의 확률<br>(**각 Class 별 독립적으로 계산** 하며, 합산이 1이 아닐 수 있음) | - 각 Class 별 BCE (Binary Cross Entropy)                                                        |
 
-### 1-1. Binary Classification (2 output) 에서 Binary C. E. 가 부적절한 이유
-
-결론적으로, **각 Class 별 확률을 output 으로 하는 Binary Classification 은 Class 개수가 2개인 Multi-Class Classification 과 근본적으로 동일** 하기 때문이다.
-
-* Task 의 특성상 output 은 그 확률 값이 상호 배타적이지만, BCE Loss 는 **이들 확률 각각을 독립적으로 간주** 하기 때문에 논리적으로 부적절하다.
-* Task 의 특성상 각 Class 간 배타성을 고려하는 **[Softmax 활성화 함수](딥러닝_기초_활성화_함수.md#2-5-softmax-함수)를 사용**하는데, 이는 각 확률을 독립적으로 계산하는 BCE Loss 와는 맞지 않는다.
-
-### 1-2. Probability Prediction (0 ~ 1 범위 단일 output) 에서 MSE Loss 등이 부적절한 이유
+### 1-1. Probability Prediction (0 ~ 1 범위 단일 output) 에서 MSE Loss 등이 부적절한 이유
 
 Probability Prediction 은 얼핏 보기에 **Regression Task와 유사** 하고, 따라서 MSE Loss 등을 적용해도 문제가 없을 것처럼 보인다. 그러나 **출력값이 0 ~ 1 범위 내에 있다는 점에서 본질적으로 Regression 과 차이가 있기에, MSE Loss 등은 부적절하다.**
 
@@ -49,6 +42,13 @@ Probability Prediction 은 얼핏 보기에 **Regression Task와 유사** 하고
 
 * 확률 값은 0 ~ 1 에 분포해 있으며, 연속적인 실수 값이므로 MSE, MAE 등을 적용해도 성능은 그럭저럭 나올 수 있다. 그러나 **0 ~ 1 의 확률 예측에는 Cross-Entropy 계열 함수가 더 적절** 하다.
 * Cross-Entropy 계열 함수에 있는 **반대되는 것에 가까운 예측** (예: 실제 특정 Class 에 해당하는데, 해당 Class 일 확률을 0.01 로 예측) 에 대해 **큰 페널티** 를 주는 메커니즘이 MSE, MAE 등에는 없다.
+
+### 1-2. Binary Classification (2 outputs) 에서 Binary C. E. 가 부적절한 이유
+
+결론적으로, **각 Class 별 확률을 output 으로 하는 Binary Classification 은 Class 개수가 2개인 Multi-Class Classification 과 근본적으로 동일** 하기 때문이다.
+
+* Task 의 특성상 output 은 그 확률 값이 상호 배타적이지만, BCE Loss 는 **이들 확률 각각을 독립적으로 간주** 하기 때문에 논리적으로 부적절하다.
+* Task 의 특성상 각 Class 간 배타성을 고려하는 **[Softmax 활성화 함수](딥러닝_기초_활성화_함수.md#2-5-softmax-함수)를 사용**하는데, 이는 각 확률을 독립적으로 계산하는 BCE Loss 와는 맞지 않는다.
 
 ### 1-3. Multi-Class Classification 에서 MSE Loss 등이 부적절한 이유
 
