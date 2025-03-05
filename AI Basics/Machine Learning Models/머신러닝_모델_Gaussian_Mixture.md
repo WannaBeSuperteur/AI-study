@@ -48,7 +48,7 @@ GMM을 학습시키는 것은 다음을 의미한다.
   * 평균, $\mu_1, \mu_2, ..., \mu_k$
   * Covariance Matrix, $\Sigma_1, \Sigma_2, ..., \Sigma_k$ 
 
-이때, 다음과 같이 **로그 가능도 (Log-likelihood, L(X))** 라는 개념을 이용한다. 즉, **L(X; \theta) = \log p(X; \theta) 의 $\mu_k$ 에 대한 미분값이 0이 되는 지점** 을 찾는다.
+이때, 다음과 같이 **로그 가능도 (Log-likelihood, L(X))** 라는 개념을 이용한다. 즉, **$L(X; \theta) = \log p(X; \theta)$ 의 $\mu_k$ 에 대한 미분값이 0이 되는 지점** 을 찾는다.
 * **[로그 가능도]** $L(X, \theta) = \log p(X, \theta) = \log \Pi_{n=1}^N p(x_n; \theta)$
   * $X$ : 전체 데이터셋, $X = {x_1, x_2, ..., x_n}$
   * $\theta$ : 매개변수의 집합
