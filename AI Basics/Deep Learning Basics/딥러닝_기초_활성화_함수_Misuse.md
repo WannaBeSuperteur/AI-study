@@ -26,6 +26,8 @@
 
 [Loss Function](딥러닝_기초_Loss_function.md) 과 마찬가지로, [활성화 함수](딥러닝_기초_활성화_함수.md) 를 잘못 사용하면 학습이 잘 되지 않을 수 있다. 따라서 활성화 함수 역시 다음과 같이 **적절히 사용하는 것** 이 중요하다.
 
+**논리적으로 부적절한 Loss Function 을 사용하는 경우, 당장 지금 있는 데이터셋에서는 성능이 잘 나오지만, 새로운 데이터셋에서는 적절한 Loss Function 을 적용했을 때보다 성능이 현저히 안 나올 수 있다.**
+
 | Task                              | Task 설명                                                                  | 활성화 함수                                           |
 |-----------------------------------|--------------------------------------------------------------------------|--------------------------------------------------|
 | Regression                        |                                                                          | 활성화 함수 미사용<br>(단, 항상 0 이상의 값을 출력할 때는 ReLU 사용 가능) |
@@ -159,7 +161,7 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
   * 대부분의 task type 에서 정상적인 성능을 보임 
   * 단, Regression 의 경우 모델 출력값에 대해 적절한 정규화 (예: Gaussian Normalization) 를 추가로 해야 함 
 * 권장되지 않는 활성화 함수를 사용했을 때
-  * Probability Prediction 또는 이를 확장한 Multi-Label Classification 에서 Softmax 함수를 사용했을 때 학습 오류 발생
+  * Probability Prediction 또는 이를 확장한 task 인 Multi-Label Classification 에서 Softmax 함수를 사용했을 때 학습 오류 발생
   * Multi-Class Classification 에서 Sigmoid + BCE 적용 시 학습이 아예 안 됨
   * 이외의 경우에는 정상적인 성능이 나옴
 
