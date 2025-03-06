@@ -170,7 +170,7 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 * Epoch 횟수 50 회 이하
   * 페널티 없음 (Optuna feedback 목표값 = **정확도 값** 그대로)
 * Epoch 횟수 50 회 초과
-  * 50회를 초과한 Epoch 1회 당 Optuna 에 feedback 되는 목표값에 **0.00005 (= 5e-5 = 0.004%) 의 감점** 부여
+  * 50회를 초과한 Epoch 1회 당 Optuna 에 feedback 되는 목표값에 **0.00005 (= 5e-5 = 0.005%) 의 감점** 부여
   * 예를 들어 150 epoch 기록 시, feedback 되는 값은 원래 정확도에서 0.5% 페널티 부여된 값
 
 **3. 실험 결과**
