@@ -54,7 +54,7 @@ PEFT 의 세부 방법론은 다음과 같다.
 * [QLoRA (Quantized LoRA)](LLM_기초_Fine_Tuning_LoRA_QLoRA.md#3-qlora-quantized-lora)
   * [양자화 (Quantization)](LLM_기초_Quantization.md) 가 적용된 LoRA
 * Prefix Tuning
-  * 사용자 입력 프롬프트의 앞에 "Task 에 특화된 Vector" 를 추가
+  * 각각의 [Transformer](../../Natural%20Language%20Processing/Basics_트랜스포머%20모델.md) Layer 의 앞에 "Task 에 특화된 Vector" 를 추가
 * Prompt Tuning
   * 학습 가능한 "Prompt Vector" 를 도입하여 LLM을 Fune-tuning 
 
