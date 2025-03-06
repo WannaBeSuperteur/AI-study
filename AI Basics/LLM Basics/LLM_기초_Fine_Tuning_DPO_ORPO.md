@@ -7,6 +7,7 @@
   * [2-1. DPO의 Loss Function](#2-1-dpo의-loss-function)
 * [3. ORPO (Odds Ratio Preference Optimization)](#3-orpo-odds-ratio-preference-optimization)
   * [3-1. ORPO의 Loss Function](#3-1-orpo의-loss-function)
+  * [3-2. ORPO의 Loss Function 의 Gradient](#3-2-orpo의-loss-function의-gradient)
 
 ## 1. DPO와 ORPO 요약
 
@@ -126,7 +127,7 @@ DPO와 ORPO를 비교하면 다음과 같다.
 
 여기서 $\delta(d)$, $h(d)$ 는 각각 다음과 같이 기능한다.
 
-| 수식          | 기능                                                                      |
-|-------------|-------------------------------------------------------------------------|
-| $\delta(d)$ | 사용자가 선택하지 않은 답변을 생성했을 때의 penalty term<br>- 선택되지 않은 답변 생성 확률 $P(y_l      |x)$ 이 늘어나면 이 값은 0 에 가까워진다. |
-| $h(d)$      | 모델의 출력값 분포를 선택된 답변 쪽으로 이동시킴<br>- 선택된 답변과 그렇지 않은 답변 각각의 gradient 의 차이이다. |
+| 수식          | 기능                                                                                                  |
+|-------------|-----------------------------------------------------------------------------------------------------|
+| $\delta(d)$ | 사용자가 선택하지 않은 답변을 생성했을 때의 penalty term<br>- 선택되지 않은 답변 생성 확률 $P(y_l \vert x)$ 이 늘어나면 이 값은 0 에 가까워진다. |
+| $h(d)$      | 모델의 출력값 분포를 선택된 답변 쪽으로 이동시킴<br>- 선택된 답변과 그렇지 않은 답변 각각의 gradient 의 차이이다.                             |
