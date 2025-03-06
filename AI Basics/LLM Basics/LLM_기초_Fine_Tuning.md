@@ -34,7 +34,7 @@ Fine-tuning 의 방법론에 대해 정리하면 다음과 같다.
 |-----------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
 | [PEFT (Parameter-Efficient Fine-Tuning)](LLM_기초_Fine_Tuning_PEFT)                                                     | LLM 의 대부분의 파라미터를 freeze 하고, 소수의 파라미터만 Fine-tuning 실시<br>- [LoRA, QLoRA](LLM_기초_Fine_Tuning_LoRA_QLoRA.md)<br>- Prefix Tuning, Prompt Tuning |
 | [SFT (Supervised Fine-Tuning)](LLM_기초_Fine_Tuning_SFT)                                                                | 지도 학습 방식의 Fine-tuning                                                                                                                       |
-| [DPO (Direct Preference Optimization)](LLM_기초_Fine_Tuning_DPO_ORPO.md#2-dpo-direct-preference-optimization)           | 인간의 선호도에 대한 데이터를 **기존에 학습된 참조 모델을 통해** 학습                                                                                                   |
+| [DPO (Direct Preference Optimization)](LLM_기초_Fine_Tuning_DPO_ORPO.md#2-dpo-direct-preference-optimization)           | 인간의 선호도에 대한 데이터와 함께 **기존에 학습된 참조 모델을 활용** 하여 학습                                                                                             |
 | [ORPO (Odds Ratio Preference Optimization)](LLM_기초_Fine_Tuning_DPO_ORPO.md#3-orpo-odds-ratio-preference-optimization) | 인간의 선호도에 대한 데이터를 **참조 모델 없이** 학습                                                                                                            |
 
 ![image](images/Fine_Tuning_1.PNG)
@@ -68,15 +68,15 @@ PEFT 의 세부 방법론은 다음과 같다.
 
 **[DPO (Direct Preference Optimization)](LLM_기초_Fine_Tuning_DPO_ORPO.md#2-dpo-direct-preference-optimization)** 의 핵심 아이디어는 다음과 같다.
 
-* 거대 언어 모델의 답변에 대한 인간의 선호도 정보를 DB화 하여 **선호도 모델 (Classification task)** 을 학습
-* 선호도 모델을 이용하여 LLM이 사용자의 선호도를 고려한 답변 제공
+* 거대 언어 모델의 답변에 대한 인간의 선호도 정보와 함께 **참조 모델 (reference model) 을 활용하여** 학습
+* 참조 모델을 이용하여 LLM이 사용자의 선호하는 답변을 제공할 확률 향상
 * **강화학습 방식을 이용하지 않아도 됨**
 
 ### 2-4. ORPO (Odds Ratio Preference Optimization)
 
 **[ORPO (Odds Ratio Preference Optimization)](LLM_기초_Fine_Tuning_DPO_ORPO.md#3-orpo-odds-ratio-preference-optimization)** 의 핵심 아이디어는 다음과 같다.
 
-* 선호도 모델을 **별도로 학습하지 않고, LLM 자체적으로 사용자의 선호도 데이터까지 학습** 한다.
+* LLM 자체적으로 **참조 모델 없이 사용자의 선호도 데이터까지 학습** 한다.
 * 사용자가 선호하는 답변과 그렇지 않은 답변을 구분하기 위해 **선호하는 답변과 그렇지 않은 답변의 발생 확률** 의 개념을 이용한다.
 
 ## 3. Fine-Tuning 의 과정
