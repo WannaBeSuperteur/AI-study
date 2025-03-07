@@ -120,7 +120,7 @@ GPTQ 의 상세 알고리즘은 다음과 같다.
 **Double Quantization (이중 양자화)** 는 [Quantized LoRA (QLoRA)](LLM_기초_Fine_Tuning_LoRA_QLoRA.md#3-qlora-quantized-lora) 에서 쓰이는 양자화 방법으로, 말 그대로 **양자화를 2번 실시** 하는 것이다.
 
 * 1번째 양자화에서는 모든 parameter 를 양자화하되, 32 bit 의 양자화되지 않은 scaling factor 를 1개 추가한다.
-* **2번째 양자화** 에서는 이 scaling factor 마저 8 bit 로 양자화하고, 일정 개수의 scaling factor 마다 그 scaling factor 들을 scaling 하기 위한, 양자화되지 않은 새로운 quantization factor 를 1개 추가한다.
+* **2번째 양자화** 에서는 이 scaling factor 마저 8 bit 로 양자화하고, 일정 개수의 scaling factor 마다 그 scaling factor 들에 대한, 양자화되지 않은 새로운 quantization factor 를 1개 추가한다.
 
 ![image](images/Quantization_5.PNG)
 
