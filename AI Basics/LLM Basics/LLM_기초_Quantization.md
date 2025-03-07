@@ -8,7 +8,7 @@
   * [2-4. GPTQ (Post-Training Quantization for GPT Models)](#2-4-gptq-post-training-quantization-for-gpt-models)
 * [3. 양자화 이후의 자료형](#3-양자화-이후의-자료형)
 * [4. Double Quantization](#4-double-quantization)
-* [5. Paged Quantization](#5-paged-quantization)
+* [5. Paged Optimizer](#5-paged-optimizer)
 
 ## 1. Quantization (양자화)
 
@@ -106,7 +106,35 @@ GPTQ 의 상세 알고리즘은 다음과 같다.
 
 ## 3. 양자화 이후의 자료형
 
+양자화 이후에 모델의 가중치 행렬 등에 적용되는 자료형에는 다음과 같은 것들이 있다.
+
+| 자료형  | 설명                                                                  |
+|------|---------------------------------------------------------------------|
+| FP16 | **2바이트로 표현** 되는, 모델 경량화를 위해 쉽게 사용할 수 있는 자료형 중 하나                    |
+| BF16 | 16비트 부동 소수점 자료형<br>- **8비트 지수, 7비트 가수 (Mantissa)** 를 사용             |
+| INT8 | 8-bit integer, 즉 **8비트 정수 자료형**<br>- 메모리 사용량이 크게 감소하지만, **정밀도가 낮음** |
+| NF4  | 4-bit NormalFloat, 즉 4비트 양자화<b>- 비트 수가 기존 32비트에서 대폭 감소              |
+
 ## 4. Double Quantization
 
-## 5. Paged Quantization
+**Double Quantization (이중 양자화)** 는 [Quantized LoRA (QLoRA)](LLM_기초_Fine_Tuning_LoRA_QLoRA.md#3-qlora-quantized-lora) 에서 쓰이는 양자화 방법으로, 말 그대로 **양자화를 2번 실시** 하는 것이다.
 
+* 1번째 양자화에서는 모든 parameter 를 양자화하되, 32 bit 의 양자화되지 않은 scaling factor 를 1개 추가한다.
+* **2번째 양자화** 에서는 이 scaling factor 마저 8 bit 로 양자화하고, 일정 개수의 scaling factor 마다 그 scaling factor 들을 scaling 하기 위한, 양자화되지 않은 새로운 quantization factor 를 1개 추가한다.
+
+![image](images/Quantization_5.PNG)
+
+Scaling Factor 를 64 개의 parameter 마다 추가하고, 이 Scaling Factor 256 개마다 2차 양자화를 위한 Quantization factor 를 추가할 때, 각 양자화 별 parameter 당 bit 수를 비교하면 다음과 같다.
+
+| 양자화 단계 | parameter 당 비트 수       |
+|--------|------------------------|
+| 양자화 없음 | 32 bits / param        |
+| 1차 양자화 | **8.5 bits** / param   |
+| 2차 양자화 | **8.127 bits** / param |
+
+## 5. Paged Optimizer
+
+**Paged Optimizer** 는 [Quantized LoRA (QLoRA)](LLM_기초_Fine_Tuning_LoRA_QLoRA.md#3-qlora-quantized-lora) 에서 쓰이는 기술로, **GPU 에서 Out-of Memory (OOM) 오류 발생** 시 [Optimizer](../Deep%20Learning%20Basics/딥러닝_기초_Optimizer.md) 가 자동으로 CPU에서 동작하게 하는 기술이다. 즉 다음과 같이 동작한다.
+
+* Optimizer 의 현재 state가 CPU RAM 으로 이동
+* Optimizer 의 갱신을 위해 GPU 에서 필요로 할 때 다시 자동으로 GPU 로 optimizer state 를 이동

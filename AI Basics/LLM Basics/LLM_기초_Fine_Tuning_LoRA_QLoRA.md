@@ -81,7 +81,7 @@ LoRA 의 메모리 사용량이 행렬의 원소 개수에 비례한다고 가�
 
 QLoRA 를 적용하는 구체적인 방법은 다음과 같다.
 
-* Pre-trained LLM 부분에는 **NF4 양자화** 적용
+* Pre-trained LLM 부분에는 **[NF4](LLM_기초_Quantization.md#3-양자화-이후의-자료형) 양자화** 적용
 * LoRA 를 적용하면서 추가한 Low-Rank 가중치 행렬에는 **BF16 양자화** 적용
-* **이중 양자화** 적용
-* VRAM 사용량 초과 시 Out Of Memory 오류가 발생하지 않고, 대신 **Paged Optimization** 기법을 적용한다.
+* **[이중 양자화 (Double Quantization)](LLM_기초_Quantization.md#4-double-quantization)** 적용
+* VRAM 사용량 초과 시 Out Of Memory 오류가 발생하지 않고, 대신 [**Paged Optimization** 기법](LLM_기초_Quantization.md#5-paged-quantization) 을 적용한다.
