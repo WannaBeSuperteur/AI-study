@@ -25,7 +25,7 @@
 | [Data Science Basics](https://github.com/WannaBeSuperteur/AI-study/tree/main/AI%20Basics/Data%20Science%20Basics)         | 내용 정리 및 필요 내용 추가          | 2025.02.20 - 02.22 (2d) |
 | [Machine Learning Models](https://github.com/WannaBeSuperteur/AI-study/tree/main/AI%20Basics/Machine%20Learning%20Models) | 내용 정리 및 필요 내용 추가          | 2025.02.23 - 02.27 (5d) |
 | [Deep Learning Basics](https://github.com/WannaBeSuperteur/AI-study/tree/main/AI%20Basics/Deep%20Learning%20Basics)       | 내용 정리 및 필요 내용 추가          | 2025.02.27 - 03.05 (7d) |
-| [LLM Basics](https://github.com/WannaBeSuperteur/AI-study/tree/main/AI%20Basics/LLM%20Basics)                             | 필요 내용 추가                  | 2025.03.06 - 03.07 (2d) |
+| [LLM Basics](https://github.com/WannaBeSuperteur/AI-study/tree/main/AI%20Basics/LLM%20Basics)                             | 필요 내용 추가                  | 2025.03.06 - 03.08 (3d) |
 | [Image Processing (Vision)](https://github.com/WannaBeSuperteur/AI-study/tree/main/Image%20Processing)                    | 내용 정리 및 필요 내용 추가          | 2025.03.08 - 03.09 (2d) |
 
 ----
