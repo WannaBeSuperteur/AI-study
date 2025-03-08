@@ -2,6 +2,7 @@
 
 * [1. Image Augmentation 이란?](#1-image-augmentation-이란)
 * [2. Image Augmentation 의 방법](#2-image-augmentation-의-방법)
+* [3. Image Augmentation 방법 상세](#3-image-augmentation-방법-상세)
 
 ## 1. Image Augmentation 이란?
 
@@ -31,3 +32,7 @@ Image Augmentation의 방법은 다음과 같다.
 * Image Augmentation을 사용하기 위해서는, 그 방법 (예: 회전, 대칭이동) 을 적용해도 머신러닝 모델을 통해 예측하려는 label (예: 특정 분류일 확률, 분류 그 자체 등)이 변화하지 않아야 한다.
   * 예를 들어, MNIST 숫자 (0~9) 분류 문제에서는 특정 숫자를 180도 회전시켜서 다른 숫자로 만들 수 있는 예시가 있으므로 회전은 추천하지 않는다.
 * train dataset에만 적용하고, valid, test dataset에서는 적용하지 않아야 한다.
+
+## 3. Image Augmentation 방법 상세
+
+자세한 것은 [해당 문서](Basics_Image_Augmentation_Methods.md) 참고.
