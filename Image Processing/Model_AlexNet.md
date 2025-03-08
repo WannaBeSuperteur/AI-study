@@ -1,4 +1,4 @@
-# 이미지 프로세싱 기초 - AlexNet
+# 이미지 프로세싱 모델 - AlexNet
 
 * [1. AlexNet이란?](#1-alexnet이란)
 * [2. AlexNet의 특징](#2-alexnet의-특징)

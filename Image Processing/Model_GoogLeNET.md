@@ -1,4 +1,4 @@
-# 이미지 프로세싱 기초 - GoogLeNET
+# 이미지 프로세싱 모델 - GoogLeNET
 
 * [1. GoogLeNet이란?](#1-googlenet이란)
 * [2. GoogLeNet의 Inception Module](#2-googlenet의-inception-module)

@@ -1,4 +1,4 @@
-# 이미지 프로세싱 기초 - DenseNet
+# 이미지 프로세싱 모델 - DenseNet
 
 * [1. DenseNet이란?](#1-densenet이란)
 * [2. ImageNet에 사용하는 DenseNet의 구조](#2-imagenet에-사용하는-densenet의-구조)

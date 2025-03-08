@@ -1,4 +1,4 @@
-# 이미지 프로세싱 기초 - ResNet
+# 이미지 프로세싱 모델 - ResNet
 
 * [1. ResNet이란?](#1-resnet이란)
 * [2. Residual Learning](#2-residual-learning)

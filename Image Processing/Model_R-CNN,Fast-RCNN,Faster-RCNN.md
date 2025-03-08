@@ -1,4 +1,4 @@
-# 이미지 프로세싱 기초 - R-CNN, Fast R-CNN, Faster R-CNN
+# 이미지 프로세싱 모델 - R-CNN, Fast R-CNN, Faster R-CNN
 
 * [1. R-CNN](#1-r-cnn)
 * [2. Fast R-CNN](#2-fast-r-cnn)
