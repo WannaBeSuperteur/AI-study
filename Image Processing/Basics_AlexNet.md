@@ -1,6 +1,10 @@
 # 이미지 프로세싱 기초 - AlexNet
 
-## AlexNet이란?
+* [1. AlexNet이란?](#1-alexnet이란)
+* [2. AlexNet의 특징](#2-alexnet의-특징)
+* [3. 실험 결과 및 논문 상세](#3-실험-결과-및-논문-상세)
+
+## 1. AlexNet이란?
 
 [AlexNet 논문](https://proceedings.neurips.cc/paper_files/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf)
 
@@ -17,14 +21,16 @@ AlexNet은 다음과 같은 구조를 가지고 있다.
 
 따라서 AlexNet은 이미지의 class가 최대 1000개일 때, 그 이미지들을 분류하는 CNN이라고 할 수 있다.
 
-## AlexNet의 특징
+## 2. AlexNet의 특징
+
 AlexNet은 다음과 같은 특징이 있다.
 
 * tanh 등 다른 활성화 함수에 비해 학습 속도를 빠르게 하기 위해 **ReLU 활성화 함수** 를 적용하였다.
 * 이미지 데이터에 대한 overfitting을 방지하기 위해 **Data Augmentation** 을 적용했다.
 * Dropout rate = 0.5의 **Dropout** 을 적용했다.
 
-## 실험 결과 및 논문 상세
+## 3. 실험 결과 및 논문 상세
+
 * 논문에서는 모델을 학습시킬 때 momentum을 0.9, weight decay를 0.0005로 한 stochastic gradient descent를 적용했다.
 * ILSVRC-2010 기준으로 Top-1에서는 37.5%, Top-5에서는 17.0%의 error rate를 보였다.
 * ILSVRC-2012 에도 참여했지만 테스트 데이터가 공개되어 있지 않아서 test error를 측정할 수 없었다.

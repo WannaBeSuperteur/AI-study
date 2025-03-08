@@ -1,18 +1,18 @@
 # 이미지 프로세싱 기초 - CNN (Convolutional Neural Network)
 
-## CNN이란?
+* [1. CNN이란?](#1-cnn이란)
+* [2. CNN의 기본 구조](#2-cnn의-기본-구조)
+  * [2-1. Channel (채널)](#2-1-channel-채널)
+  * [2-2. Convolutional Layer의 원리](#2-2-convolutional-layer의-원리)
+  * [2-3. Pooling Layer의 원리](#2-3-pooling-layer의-원리)
+* [3. Padding, Stride](#3-padding-stride)
+* [4. 다음 레이어의 이미지 크기](#4-다음-레이어의-이미지-크기)
+
+## 1. CNN이란?
+
 **CNN (Convolutional Neural Network, 합성곱 신경망)** 이란, **인간의 시각을 모방** 하여 만들어진 딥러닝 모델로, **이미지 인식** 분야에서 좋은 성능을 발휘한다.
 
-## CNN의 기본 구조
-이미지를 컴퓨터가 인식할 수 있는 일정한 형태의 숫자 데이터로 나타내려면 다음을 생각해 볼 수 있다.
-* 이미지는 가로 ```w```, 세로 ```h```의 크기이고, 각 픽셀에 ```R, G, B```라는 3개의 숫자 값이 있다.
-
-따라서, CNN으로 입력되는 이미지 데이터는 다음과 같음을 생각할 수 있다.
-* **흑백** 이미지의 경우, 가로 ```w```, 세로 ```h``` 크기의 **1개의 채널** 이 있는 이미지
-* **컬러** 이미지의 경우, 가로 ```w```, 세로 ```h``` 크기의 **R, G, B 3개의 채널** 이 있는 이미지
-* **컬러 + 투명도** 이미지의 경우, 가로 ```w```, 세로 ```h``` 크기의 **R, G, B, 투명도 4개의 채널** 이 있는 이미지
-
-여기서 R, G, B와 같은 값을 CNN에서는 **채널 (channel)** 이라고 한다.
+## 2. CNN의 기본 구조
 
 ![CNN의 구조](./images/CNN_1.PNG)
 
@@ -25,7 +25,22 @@
 
 CNN에서는 **vanishing gradient를 해결** 하기 위해 일반적으로 **ReLU** 활성화 함수를 사용한다.
 
-### Convolutional Layer의 원리
+### 2-1. Channel (채널)
+
+Channel 은 **특정 레이어에서, 이미지에 대한 특징 정보를 담은 feature map의 개수** 를 의미한다고 할 수 있다.
+
+이미지를 컴퓨터가 인식할 수 있는 일정한 형태의 숫자 데이터로 나타내려면 다음을 생각해 볼 수 있다.
+* 이미지는 가로 ```w```, 세로 ```h```의 크기이고, 각 픽셀에 ```R, G, B```라는 3개의 숫자 값이 있다.
+
+따라서, CNN으로 입력되는 이미지 데이터는 다음과 같음을 생각할 수 있다.
+* **흑백** 이미지의 경우, 가로 ```w```, 세로 ```h``` 크기의 **1개의 채널** 이 있는 이미지
+* **컬러** 이미지의 경우, 가로 ```w```, 세로 ```h``` 크기의 **R, G, B 3개의 채널** 이 있는 이미지
+* **컬러 + 투명도** 이미지의 경우, 가로 ```w```, 세로 ```h``` 크기의 **R, G, B, 투명도 4개의 채널** 이 있는 이미지
+
+여기서 R, G, B와 같은 값을 CNN에서는 **채널 (channel)** 이라고 한다.
+
+### 2-2. Convolutional Layer의 원리
+
 Convolutional Layer는 다음과 같이 원본 이미지와 필터를 이용하여 **합성곱 연산** 을 진행한다.
 
 ![Conv. Layer의 연산](./images/CNN_2.PNG)
@@ -35,8 +50,10 @@ Convolutional Layer는 다음과 같이 원본 이미지와 필터를 이용하�
 
 이와 같이, 입력 이미지에서 filter와 크기가 일치하는 각 부분들을 찾아서, **해당 부분들에 대한 합성곱 결과** 를 나타낸 것이 Convolution의 결과이다.
 
-### Pooling Layer의 원리
+### 2-3. Pooling Layer의 원리
+
 Pooling Layer는 다음과 같이 Max Pooling 또는 Average Pooling을 이용하여 이미지 크기를 줄인다.
+
 * **Max Pooling** : Pooling 된 후의 각 부분은 Pooling 되기 전의 이미지의 대응되는 부분의 **최댓값** 이다.
 * **Average Pooling** : Pooling 된 후의 각 부분은 Pooling 되기 전의 이미지의 대응되는 부분의 **평균값** 이다.
 
@@ -51,7 +68,8 @@ Pooling Layer는 다음과 같이 Max Pooling 또는 Average Pooling을 이용�
 **Max Pooling 장점 :** 이미지 내의 가장 두드러지는 강력한 특징을 그대로 가져갈 수 있다.
 **Average Pooling 장점 :** 덜 중요한 feature도 반영하므로, 다양한 feature가 최종 출력에 영향을 미치는 경우도 고려할 수 있다. 
 
-## Padding, Stride
+## 3. Padding, Stride
+
 ![Padding 설명](./images/CNN_4.PNG)
 
 **Padding** : Convolutional Layer를 거친 후의 이미지를 그 직전의 이미지와 동일한 크기로 유지할지의 옵션
@@ -75,7 +93,7 @@ Pooling에서도 마찬가지로 입력 이미지의 각 2x2 영역을 sliding �
 * **Stride가 1** 일 때는 입력 이미지의 각 2x2 영역을 **1칸씩 sliding** 하면서 ```max``` 연산을 수행하므로, Pooling Layer를 통과한 이후의 출력 이미지에서도 입력 이미지에서 **가로, 세로로 각각 2칸** 떨어져 있었던 2x2의 **실선** 영역과 **점선** 영역이 **가로, 세로로 각각 2칸** 떨어져 있다.
 * **Stride가 2** 일 때는 입력 이미지의 각 2x2 영역을 **2칸씩 sliding** 하면서 ```max``` 연산을 수행하므로, Pooling Layer를 통과한 이후의 출력 이미지에서는 입력 이미지에서 **가로, 세로로 각각 2칸** 떨어져 있었던 2x2의 **실선** 영역과 **점선** 영역이 **가로, 세로로 각각 1칸** 떨어져 있다.
 
-### 다음 레이어의 이미지 크기
+## 4. 다음 레이어의 이미지 크기
 
 Padding과 Stride, 그리고 필터의 크기에 따라 Convolutional 또는 Pooling Layer를 통과한 이미지의 크기가 각각 다음과 같이 결정된다.
 

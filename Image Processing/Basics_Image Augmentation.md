@@ -1,13 +1,18 @@
 # 이미지 프로세싱 기초 - Image Augmentation
 
-## Image Augmentation 이란?
+* [1. Image Augmentation 이란?](#1-image-augmentation-이란)
+* [2. Image Augmentation 의 방법](#2-image-augmentation-의-방법)
+
+## 1. Image Augmentation 이란?
+
 **Image Augmentation (이미지 증식)** 은 머신러닝 모델을 통해 이미지를 학습시킬 때, 이미지 데이터가 부족한 경우 (특정 class의 이미지가 부족한 경우 포함) 그 개수를 늘리기 위해 사용하는 방법이다.
 
 따라서 다음과 같은 효과가 있다.
 * 데이터 양 증가로 인해 overfitting을 줄일 수 있다.
 * 이미지 데이터셋 구축에 비용이 많이 드는 (무료 데이터셋은 제한적으로 제공되는 등) 문제를 해결할 수 있다.
 
-## Image Augmentation 의 방법
+## 2. Image Augmentation 의 방법
+
 Image Augmentation의 방법은 다음과 같다.
 
 **이미지의 내용은 유지하고, 틀(?)만 바꾸는 방법**

@@ -1,6 +1,10 @@
 # 이미지 프로세싱 기초 - DenseNet
 
-## DenseNet이란?
+* [1. DenseNet이란?](#1-densenet이란)
+* [2. ImageNet에 사용하는 DenseNet의 구조](#2-imagenet에-사용하는-densenet의-구조)
+* [3. DenseNet의 Dense Block 구조](#3-densenet의-dense-block-구조)
+
+## 1. DenseNet이란?
 
 [DenseNet 논문](https://arxiv.org/pdf/1608.06993.pdf)
 
@@ -18,7 +22,7 @@ DenseNet은 다음과 같은 구조를 가지고 있다.
   * Pooling Layer : **2x2 average pooling** 을 사용한다.
   * Batch Normalization Layer를 포함한다.
 
-## ImageNet에 사용하는 DenseNet의 구조
+## 2. ImageNet에 사용하는 DenseNet의 구조
 
 ![ImageNet용 DenseNet의 구조](./images/DenseNet_3.PNG)
 
@@ -26,7 +30,7 @@ DenseNet은 다음과 같은 구조를 가지고 있다.
 
 ImageNet에 사용하기 위한 DenseNet 구조는 위와 같이 Convolutional Layer의 출력 크기가 112 x 112이고, fully-connected layer의 최종 출력은 1000차원의 softmax이다.
 
-## DenseNet의 Dense Block 구조
+## 3. DenseNet의 Dense Block 구조
 
 ![Dense Block 구조](./images/DenseNet_2.PNG)
 

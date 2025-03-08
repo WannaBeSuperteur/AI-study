@@ -1,6 +1,11 @@
 # 이미지 프로세싱 기초 - R-CNN, Fast R-CNN, Faster R-CNN
 
-## R-CNN
+* [1. R-CNN](#1-r-cnn)
+* [2. Fast R-CNN](#2-fast-r-cnn)
+* [3. Faster R-CNN](#3-faster-r-cnn)
+
+## 1. R-CNN
+
 [R-CNN 논문](https://arxiv.org/pdf/1311.2524.pdf)
 
 ![R-CNN의 구조](./images/R-CNN_1.PNG)
@@ -10,6 +15,7 @@
 **R-CNN (Regions with CNN features)** 은 이미지로부터 region을 추출하여, CNN을 통해 그 region이 무엇인지 판별하는 CNN 응용 구조 중 하나이다.
 
 R-CNN은 다음과 같이 동작한다.
+
 * 1. 이미지를 입력받는다.
 * 2. 약 2,000개의 region을 추출한다. (bottom-up region proposal)
 * 3. 각 region proposal에 대해, 먼저 해당 region을 CNN에 입력시킬 수 있도록 크기를 227 x 227 픽셀로 조절 (warp) 시킨다. 그 후 CNN에 해당 region을 입력하여 feature에 해당하는 값들을 계산한다.
@@ -25,7 +31,8 @@ R-CNN은 다음과 같이 동작한다.
 **Feature와 SVM**
 * class가 N개일 때, feature matrix는 보통 2000 x 4096 차원이고, SVM의 가중치 행렬은 보통 4096 x N 차원이다.
 
-## Fast R-CNN
+## 2. Fast R-CNN
+
 [Fast R-CNN 논문](https://arxiv.org/pdf/1504.08083.pdf)
 
 ![Fast R-CNN의 구조](./images/R-CNN_2.PNG)
@@ -49,7 +56,8 @@ R-CNN은 다음과 같이 동작한다.
   * VGG16에서는 ```H = W = 7```로 지정했다.
 * 각 RoI가 softmax와 bbox (bounding-box) regressor에 의한 output을 최종 출력한다.
 
-## Faster R-CNN
+## 3. Faster R-CNN
+
 [Faster R-CNN 논문](https://arxiv.org/pdf/1506.01497.pdf)
 
 ![Faster R-CNN의 구조](./images/R-CNN_3.PNG)

@@ -1,6 +1,9 @@
 # 이미지 프로세싱 기초 - ResNet
 
-## ResNet이란?
+* [1. ResNet이란?](#1-resnet이란)
+* [2. Residual Learning](#2-residual-learning)
+
+## 1. ResNet이란?
 
 [ResNet 논문](https://arxiv.org/pdf/1512.03385.pdf)
 
@@ -16,7 +19,7 @@
 * 최종 fully connected layer의 출력은 1000-dimension 이다.
 * 논문에서는 구현 시 미니배치 크기가 256인 SGD를 사용했으며, weight decay = 0.0001, momentum = 0.9를 적용했다.
 
-## Residual Learning
+## 2. Residual Learning
 
 [ResNet의 Short Connection Block 구조](./images/ResNet_2.png)
 
