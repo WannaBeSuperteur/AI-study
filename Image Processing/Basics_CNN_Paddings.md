@@ -247,10 +247,94 @@ tensor([[[ 9., 22.,  1.,  9., 13.,  8., 14.,  9., 22.,  1.],
 
 ## 2. 실험: 어떤 Padding 적용 방법의 성능이 가장 좋을까?
 
-* MNIST + Additional 1 Dataset
+**실험 목표**
+
+* 데이터셋 특징에 따라 위에서 알아본 Padding 방법들 중 Layer 별로 어떤 것을 적용해야 최적의 성능이 나오는지 알아본다. 
+* **[Circular Padding](#1-4-circular) 을 적용했을 때 불연속의 느낌이 있는 것 / 없는 것** 각각 확인한다.
 
 ### 2-1. 실험 설계
 
+**데이터셋**
+
+* 데이터셋 2개
+  * 1개는 상하좌우 4방향의 경계가 모두 일정한 색으로 서로 같은 것, 1개는 그렇지 않은 것 
+
+| 데이터셋                                                                      | 상하좌우 경계                                                                     | 예시 이미지                        |
+|---------------------------------------------------------------------------|-----------------------------------------------------------------------------|-------------------------------|
+| MNIST 숫자 이미지 분류 데이터셋 (train 60K / test 10K)<br>- 빠른 실험 진행을 위해, 그 중 일부만 사용 | 4방향 경계가 **모두 검은색 (#000000) 으로 일정함**<br>- circular padding 으로 해도 불연속의 느낌이 없음 | ![image](images/SAMPLE_0.png) |
+| CIFAR-10 데이터셋 (train 50K / test 10K)<br>- 빠른 실험 진행을 위해, 그 중 일부만 사용        | 4방향 경계가 **일정하지 않고 서로 다름**<br>- circular padding 으로 하면 불연속의 느낌이 있음           | ![image](images/SAMPLE_1.png) |
+
+* 선정 이유
+  * 데이터셋이 각각 28 x 28, 32 x 32 size 의 작은 이미지들로 구성
+  * 이로 인해 비교적 간단한 신경망을 설계할 수 있으므로, 간단한 딥러닝 실험에 적합하다고 판단
+* 데이터셋 분리
+  * 빠른 실험 진행을 위해서 학습 데이터 1,000 장 사용
+
+| 학습 데이터  | Valid 데이터 (Epoch 단위) | Valid 데이터 (Trial 단위) | Test 데이터          |
+|---------|----------------------|----------------------|-------------------|
+| 1,000 장 | 2,000 장              | 5,000 장              | 10,000 장 (원본 그대로) |
+
+**성능 Metric**
+
+* **Accuracy**
+* 선정 이유
+  * Accuracy 로 성능을 측정해도 될 정도로, [각 Class 간 데이터 불균형](../Data%20Science%20Basics/데이터_사이언스_기초_데이터_불균형.md) 이 적음 
+
+**신경망 구조**
+
+* 신경망 구조가 비교적 복잡해야지 **Early Stopping 설정에 따른 overfitting 여부의 변별이 가능** 할 것으로 판단하여, 다른 실험에 비해 **모델 구조를 복잡하게** 함
+
+```python
+# 신경망 구조 출력 코드
+
+from torchinfo import summary
+
+model = CNN()
+print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
+```
+
+![image](images/CNN_Paddings_2.PNG)
+
+* [Dropout](딥러닝_기초_Overfitting_Dropout.md#3-dropout) 미 적용
+* [Learning Rate Scheduler](딥러닝_기초_Learning_Rate_Scheduler.md) 미 적용
+* Optimizer 는 [AdamW](딥러닝_기초_Optimizer.md#2-3-adamw) 를 사용
+  * 해당 Optimizer 가 [동일 데이터셋을 대상으로 한 성능 실험](딥러닝_기초_Optimizer.md#3-탐구-어떤-optimizer-가-적절할까) 에서 최상의 정확도를 기록했기 때문
+* [Early Stopping](../AI%20Basics/Deep%20Learning%20Basics/딥러닝_기초_Early_Stopping.md) 을 위한 Epoch 수는 10 으로 고정
+
+**상세 학습 방법**
+
+* 다음과 같이 하이퍼파라미터 최적화를 실시하여, **최적화된 하이퍼파라미터를 기준으로 한 성능을 기준** 으로 최고 성능의 Optimizer 를 파악
+  * **레이어 별 Padding 의 종류 (총 3개)** ```padding_mode_conv{1|2|4}```
+    * 3개의 Layer 에 대해 각각 서로 다른 Padding 적용 
+    * input layer 에 가까운 순으로 각각 conv1, conv2, conv4
+    * Padding 의 종류는 ```zeros``` (Zero Padding), ```reflect```, ```replicate```, ```circular``` 의 4가지
+  * **learning rate** ```learning_rate```
+    * 탐색 범위 : 0.0001 ~ 0.003 (= 1e-4 ~ 3e-3)
+
+* 하이퍼파라미터 최적화
+  * [하이퍼파라미터 최적화 라이브러리](../Machine%20Learning%20Models/머신러닝_방법론_HyperParam_Opt.md#4-하이퍼파라미터-최적화-라이브러리) 중 Optuna 를 사용
+  * 하이퍼파라미터 탐색 200 회 반복 (= 200 Trials) 실시
+
 ### 2-2. 실험 결과
+
+**1. 실험 결론**
+
+**2. Best Hyper-param 및 그 성능 (정확도)**
+
+| 구분                   | 값 |
+|----------------------|---|
+| 최종 테스트셋 정확도          |   |
+| HPO Valid set 최고 정확도 |   |
+| Best Hyper-param     |   |
+
+**3. 하이퍼파라미터 최적화 진행에 따른 정확도 추이**
+
+**4. 각 하이퍼파라미터의 값에 따른 성능 분포**
+
+* ```Conv1``` Layer 의 Padding 종류에 따른 성능
+
+* ```Conv2``` Layer 의 Padding 종류에 따른 성능
+
+* ```Conv4``` Layer 의 Padding 종류에 따른 성능
 
 ### 2-3. 실험 결과에 대한 이유
