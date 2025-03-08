@@ -79,6 +79,8 @@ Pooling Layer는 다음과 같이 Max Pooling 또는 Average Pooling을 이용�
 
 위 그림에서는 ```f=3```이므로, Same Padding, Full Padding에서 주변 4방향으로 각각 ```1```, ```2``` 크기만큼 ```0```으로 채운다.
 
+Padding 의 다양한 적용 방법에 대해서는 [해당 문서](Basics_CNN_Paddings.md) 참고.
+
 ![Stride 설명](./images/CNN_5.PNG)
 
 **Stride** : Convolutional Layer와 Pooling Layer에서, 연산을 적용할 픽셀 간격 (몇 칸씩 건너뛰면서 연산할 것인가?)
