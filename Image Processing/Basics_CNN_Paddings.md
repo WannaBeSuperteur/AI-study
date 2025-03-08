@@ -49,8 +49,16 @@ y = tensor([[[23., 29., 26., 17., 24., 22.,  6.],
 PyTorch 에서는 다음과 같이 코드를 작성한다.
 
 ```python
+# Padding of torch.nn.functional
 import torch.nn.functional as F
 y_padding = F.pad(y, (left, right, up, down), "constant", const)
+
+# in Conv. Layer (Zero Padding)
+conv = torch.nn.Conv2d(in_channels,
+                       out_channels,
+                       kernel_size,
+                       padding=(left, right, up, down),
+                       padding_mode='zeros')
 ```
 
 * left: 좌측 패딩
@@ -94,8 +102,16 @@ tensor([[[ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
 PyTorch 에서는 다음과 같이 코드를 작성한다.
 
 ```python
+# Padding of torch.nn.functional
 import torch.nn.functional as F
 y_padding = F.pad(y, (left, right, up, down), "reflect")
+
+# in Conv. Layer
+conv = torch.nn.Conv2d(in_channels,
+                       out_channels,
+                       kernel_size,
+                       padding=(left, right, up, down),
+                       padding_mode='reflect')
 ```
 
 **예시**
@@ -137,8 +153,16 @@ tensor([[[ 2., 15.,  2., 12., 22.,  9., 24., 20., 24.,  9.],
 PyTorch 에서는 다음과 같이 코드를 작성한다.
 
 ```python
+# Padding of torch.nn.functional
 import torch.nn.functional as F
 y_padding = F.pad(y, (left, right, up, down), "replicate")
+
+# in Conv. Layer
+conv = torch.nn.Conv2d(in_channels,
+                       out_channels,
+                       kernel_size,
+                       padding=(left, right, up, down),
+                       padding_mode='replicate')
 ```
 
 **예시**
@@ -180,8 +204,16 @@ tensor([[[23., 23., 29., 26., 17., 24., 22.,  6.,  6.,  6.],
 PyTorch 에서는 다음과 같이 코드를 작성한다.
 
 ```python
+# Padding of torch.nn.functional
 import torch.nn.functional as F
 y_padding = F.pad(y, (left, right, up, down), "circular")
+
+# in Conv. Layer
+conv = torch.nn.Conv2d(in_channels,
+                       out_channels,
+                       kernel_size,
+                       padding=(left, right, up, down),
+                       padding_mode='circular')
 ```
 
 **예시**
