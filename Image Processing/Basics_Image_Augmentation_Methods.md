@@ -148,6 +148,8 @@ torchvision 에서는 다음과 같이 여러 개의 transform 을 **Compose (�
 * 이미지를 ```transform_composed_``` 를 이용하여 변환한다.
 
 ```python
+from torchvision.transforms import v2
+
 # read image and convert to PyTorch tensor
 img = PIL.Image.open('lena.PNG').convert('RGB')
 img_tensor = transform.to_tensor(img)
@@ -269,8 +271,121 @@ transform_example = v2.Compose([
 
 ## 3. 실험: 최선의 Augmentation 방법 탐색
 
+**실험 목표**
+
+* 데이터셋 특징에 따라 위에서 알아본 Augmentation 방법들 중 **어떤 종류를 얼마나 큰 실행 확률 및 얼마나 큰 강도로** 적용해야 최적의 성능이 나오는지 알아본다. 
+* [기하학적 형태 변환](#1-1-이미지-형태의-기하학적-변형) 시 문제가 발생하는 데이터셋 1개 (MNIST 숫자 분류) 와, 그렇지 않은 데이터셋 1개 (CIFAR-10) 를 대상으로 실험하여 비교한다.
+
 ### 3-1. 실험 설계
 
+**데이터셋**
+
+* 데이터셋 2개
+  * 1개는 기하학적 변환 Augmentation 시 문제가 발생할 수 있는 것, 1개는 그렇지 않은 것 
+
+| 데이터셋                                                                             | Task                                   | 특징                                  | 예시 이미지                        |
+|----------------------------------------------------------------------------------|----------------------------------------|-------------------------------------|-------------------------------|
+| **MNIST 숫자 이미지 분류** 데이터셋<br>- train 60K / test 10K<br>- 빠른 실험 진행을 위해, 그 중 일부만 사용 | Classification<br>(10 Classes)         | - 180도 회전 적용 시 6과 9 의 Class 를 혼동 가능 | ![image](images/SAMPLE_0.png) |
+| **CIFAR-10** 데이터셋<br>- train 50K / test 10K<br>- 빠른 실험 진행을 위해, 그 중 일부만 사용        | Classification<br>(10 → **4 Classes**) | - 기하학적 변형 및 색 조정에도 Class 값이 달라지지 않음 | ![image](images/SAMPLE_1.png) |
+
+* 선정 이유
+  * **실험 목적에 적합한 데이터셋** 
+  * 데이터셋이 각각 28 x 28, 32 x 32 size 의 작은 이미지들로 구성
+  * 이로 인해 비교적 간단한 신경망을 설계할 수 있으므로, 간단한 딥러닝 실험에 적합하다고 판단
+* 데이터셋 분리
+  * 빠른 실험 진행 및 **Augmentation 에 의한 성능 향상 파악** 을 위해서 학습 데이터의 일부분만 사용
+  * CIFAR-10 데이터셋의 경우 **10개 Class 중 특정 4개에 해당하는 데이터** 로만 Train / Valid / Test 데이터셋 구성
+
+| 데이터셋                     | 학습 데이터                      | Valid 데이터 (Epoch 단위) | Valid 데이터 (Trial 단위) | Test 데이터           |
+|--------------------------|-----------------------------|----------------------|----------------------|--------------------|
+| MNIST 숫자 분류              | 500 장 x 3배 (Augmentation)   | 2,000 장              | 5,000 장              | 10,000 장 (원본 그대로)  |
+| CIFAR-10 **(4 Classes)** | 1,000 장 x 3배 (Augmentation) | 2,000 장              | 5,000 장              | 4,000 장 (4개 Class) |
+
+**성능 Metric**
+
+* **Accuracy**
+* 선정 이유
+  * Accuracy 로 성능을 측정해도 될 정도로, [각 Class 간 데이터 불균형](../Data%20Science%20Basics/데이터_사이언스_기초_데이터_불균형.md) 이 적음 
+
+**신경망 구조**
+
+* 아래 그림은 위쪽부터 각각 MNIST 숫자 분류 데이터셋, CIFAR-10 데이터셋에 대한 신경망임
+
+```python
+# 신경망 구조 출력 코드
+
+from torchinfo import summary
+
+model = CNN()
+print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
+```
+
+![image](images/CNN_Paddings_2.PNG)
+
+![image](images/CNN_Paddings_7.PNG)
+
+* [Dropout](딥러닝_기초_Overfitting_Dropout.md#3-dropout) 미 적용
+* [Learning Rate Scheduler](딥러닝_기초_Learning_Rate_Scheduler.md) 미 적용
+* Optimizer 는 [AdamW](딥러닝_기초_Optimizer.md#2-3-adamw) 를 사용
+  * 해당 Optimizer 가 [동일 데이터셋을 대상으로 한 성능 실험](딥러닝_기초_Optimizer.md#3-탐구-어떤-optimizer-가-적절할까) 에서 최상의 정확도를 기록했기 때문
+* [Early Stopping](../AI%20Basics/Deep%20Learning%20Basics/딥러닝_기초_Early_Stopping.md) 을 위한 Epoch 수는 10 으로 고정
+
+**상세 학습 방법**
+
+* 다음과 같이 하이퍼파라미터 최적화를 실시하여, **최적화된 하이퍼파라미터를 기준으로 한 성능을 기준** 으로 최고 성능의 Optimizer 를 파악
+  * **Augmentation type** ```aug_type```
+    * 미 적용 ```none```
+    * 기하학적 형태 변형 ```geometric```
+    * 색상 변형 ```color```
+  * **Augmentation 적용 확률** ```aug_prob```
+    * 공통 탐색 범위 : 0.1 - 1.0
+    * 본 문서에 언급된, 해당 type 의 모든 Augmentation 방법을 확률적으로 적용
+      * 단, Horizontal Flip, Vertical Flip, Grayscale, Invert 의 적용 확률은 모두 0.5 * ```aug_prob``` (최대 50%)
+      * Rotation, Affine Transformation, Normalization 은 미 적용
+    * 참고 : 180도 회전 = Horizontal Flip + Vertical Flip 
+  * **Augmentation 적용 정도 (강도)** ```aug_degree```
+    * 공통 탐색 범위 : 0.1 - 1.0
+    * 값이 클수록 Augmentation 적용 정도 (강도) 가 큼
+  * **learning rate** ```learning_rate```
+    * MNIST 탐색 범위 : 0.0001 ~ 0.003 (= 1e-4 ~ 3e-3)
+    * CIFAR-10 탐색 범위 : 0.00003 ~ 0.001 (= 3e-5 ~ 1e-3)
+
+* 하이퍼파라미터 최적화
+  * [하이퍼파라미터 최적화 라이브러리](../Machine%20Learning%20Models/머신러닝_방법론_HyperParam_Opt.md#4-하이퍼파라미터-최적화-라이브러리) 중 Optuna 를 사용
+  * 각 데이터셋 별 하이퍼파라미터 탐색 150 회 반복 (= 150 Trials) 실시
+
 ### 3-2. 실험 결과
+
+**1. 실험 결론**
+
+**2. Best Hyper-param 및 그 성능 (정확도)**
+
+| 구분                   | MNIST 숫자 분류 | CIFAR-10 |
+|----------------------|-------------|----------|
+| 최종 테스트셋 정확도          |             |          |
+| HPO Valid set 최고 정확도 |             |          |
+| Best Hyper-param     |             |          |
+
+**3. 하이퍼파라미터 최적화 진행에 따른 정확도 추이**
+
+* MNIST 숫자 분류
+
+* CIFAR-10
+
+**4. (MNIST 숫자 분류) 각 하이퍼파라미터의 값에 따른 성능 분포**
+
+* Augmentation Type 별 성능 (가로축 : Learning Rate)
+
+* Augmentation Type + 적용 확률 별 성능
+
+* Augmentation Type + 적용 강도 별 성능
+
+**5. (CIFAR-10) 각 하이퍼파라미터의 값에 따른 성능 분포**
+
+* Augmentation Type 별 성능 (가로축 : Learning Rate)
+
+* Augmentation Type + 적용 확률 별 성능
+
+* Augmentation Type + 적용 강도 별 성능
 
 ### 3-3. 실험 결과에 대한 이유 분석
