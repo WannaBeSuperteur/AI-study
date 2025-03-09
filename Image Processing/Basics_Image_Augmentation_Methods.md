@@ -15,6 +15,8 @@
 
 ## 코드
 
+* MNIST 숫자 분류 Dataset [실험](#3-실험-최선의-augmentation-방법-탐색) 코드 : [code (ipynb)](codes/CNN_Image_Aug_experiment_MNIST.ipynb)
+
 ## 1. Image Augmentation 방법 상세
 
 [Image Augmentation](Basics_Image_Augmentation.md) 의 방법은 다음과 같이 분류할 수 있다.
@@ -358,27 +360,41 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 
 **1. 실험 결론**
 
+* MNIST 숫자 분류 데이터셋에서는 **Augmentation 미 적용 = 색상 변형 > 기하학적 형태 변형** 순으로 성능이 좋으며, Augmentation 확률 및 강도에 따른 성능 차이는 눈에 띄지 않는다.
+
 **2. Best Hyper-param 및 그 성능 (정확도)**
 
-| 구분                   | MNIST 숫자 분류 | CIFAR-10 |
-|----------------------|-------------|----------|
-| 최종 테스트셋 정확도          |             |          |
-| HPO Valid set 최고 정확도 |             |          |
-| Best Hyper-param     |             |          |
+| 구분                   | MNIST 숫자 분류                                                                                                              | CIFAR-10 |
+|----------------------|--------------------------------------------------------------------------------------------------------------------------|----------|
+| 최종 테스트셋 정확도          | 95.25%                                                                                                                   |          |
+| HPO Valid set 최고 정확도 | 94.72%                                                                                                                   |          |
+| Best Hyper-param     | ```aug_type```: ```none``` (미 적용)<br>```aug_prob```: 0.3892<br>```aug_degree```: 0.6888<br>```learning_rate```: 0.002456 |          |
 
 **3. 하이퍼파라미터 최적화 진행에 따른 정확도 추이**
 
 * MNIST 숫자 분류
+
+![image](images/Image_Augmentation_Methods_6.PNG)
 
 * CIFAR-10
 
 **4. (MNIST 숫자 분류) 각 하이퍼파라미터의 값에 따른 성능 분포**
 
 * Augmentation Type 별 성능 (가로축 : Learning Rate)
+  * Augmentation 미 적용 케이스들과 색상 변형 케이스들은 그 분포를 볼 때 성능의 큰 차이가 없어 보인다.
+  * 기하학적 변형 케이스들의 성능은 나머지 유형들에 비해 성능이 현저히 떨어진다.
+
+![image](images/Image_Augmentation_Methods_7.PNG)
 
 * Augmentation Type + 적용 확률 별 성능
+  * **색상 변형, 기하학적 변형** 케이스를 볼 때, 각 Augmentation 방법의 적용 확률에 따른 성능 차이는 눈에 띄지 않는다.
+
+![image](images/Image_Augmentation_Methods_8.PNG)
 
 * Augmentation Type + 적용 강도 별 성능
+  * **색상 변형, 기하학적 변형** 케이스를 볼 때, 각 Augmentation 방법의 적용 정도 (강도) 에 따른 성능 차이는 눈에 띄지 않는다.
+
+![image](images/Image_Augmentation_Methods_9.PNG)
 
 **5. (CIFAR-10) 각 하이퍼파라미터의 값에 따른 성능 분포**
 
@@ -389,3 +405,8 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 * Augmentation Type + 적용 강도 별 성능
 
 ### 3-3. 실험 결과에 대한 이유 분석
+
+**1. MNIST 숫자 분류에서 성능이 "색상 변형 > 기하학적 형태 변형" 인 이유**
+
+* 상술한 대로, 180도 회전하면 서로 같아지는 숫자 (6과 9, 2와 5 등) 가 있기 때문
+  * 상하 반전 + 좌우 반전 = 180도 회전
