@@ -13,6 +13,7 @@
 ## 코드
 
 * MNIST 숫자 분류 Dataset [실험](#2-실험-어떤-padding-적용-방법의-성능이-가장-좋을까) 코드 : [code (ipynb)](codes/CNN_Padding_experiment_MNIST.ipynb)
+* CIFAR-10 이미지 분류 Dataset [실험](#2-실험-어떤-padding-적용-방법의-성능이-가장-좋을까) 코드 : [code (ipynb)](codes/CNN_Padding_experiment_CIFAR10.ipynb)
 
 ## 1. CNN 의 Padding 적용 방법의 유형
 
@@ -326,15 +327,18 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 
 **1. 실험 결론**
 
-* **상하좌우 4방향의 경계가 모두 검은색으로 일정** 한 MNIST 데이터셋의 경우, 각 레이어 별 Padding 방식에 따른 성능 차이가 **눈에 띄지 않음**
+* 모든 데이터셋, 모든 레이어에 대해서 **Padding Option 에 따른 성능의 큰 차이가 없음**
+  * **상하좌우 4방향의 경계가 모두 검은색으로 일정** 한 MNIST 데이터셋의 경우, 각 레이어 별 Padding 방식에 따른 성능 차이가 **눈에 띄지 않음**
+  * **상-하 경계, 좌-우 경계 간 연결 시 불연속** 으로 느껴지는 **CIFAR-10** 데이터셋의 경우에도, 4 가지의 Padding option 사이에 성능의 큰 차이가 없는 것으로 보인다.
+* 단 Zero Padding 의 경우, 두 데이터셋 모두, 추가 실험 시 다른 Padding 방법들보다 성능이 떨어질 수도 있음
 
 **2. Best Hyper-param 및 그 성능 (정확도)**
 
-| 구분                   | MNIST 숫자 분류                                                                                                                                                      | CIFAR-10 |
-|----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
-| 최종 테스트셋 정확도          | 96.40%                                                                                                                                                           |          |
-| HPO Valid set 최고 정확도 | 96.40%                                                                                                                                                           |          |
-| Best Hyper-param     | ```padding_mode_conv1```: ```replicate```<br>```padding_mode_conv2```: ```zeros```<br>```padding_mode_conv4```: ```replicate```<br>```learning_rate```: 0.001229 |          |
+| 구분                   | MNIST 숫자 분류                                                                                                                                                      | CIFAR-10                                                                                                                                                  |
+|----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 최종 테스트셋 정확도          | 96.40%                                                                                                                                                           | 74.48%                                                                                                                                                    |
+| HPO Valid set 최고 정확도 | 96.40%                                                                                                                                                           | 73.78%                                                                                                                                                    |
+| Best Hyper-param     | ```padding_mode_conv1```: ```replicate```<br>```padding_mode_conv2```: ```zeros```<br>```padding_mode_conv4```: ```replicate```<br>```learning_rate```: 0.001229 | ```padding_mode_conv1```: ```reflect```<br>```padding_mode_2```: ```circular```<br>```padding_mode_4```: ```replicate```<br>```learning_rate```: 0.000168 |
 
 **3. 하이퍼파라미터 최적화 진행에 따른 정확도 추이**
 
@@ -343,6 +347,8 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 ![image](images/CNN_Paddings_3.PNG)
 
 * CIFAR-10
+
+![image](images/CNN_Paddings_8.PNG)
 
 **4. (MNIST 숫자 분류) 각 하이퍼파라미터의 값에 따른 성능 분포**
 
@@ -364,9 +370,24 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 **5. (CIFAR-10) 각 하이퍼파라미터의 값에 따른 성능 분포**
 
 * ```Conv1``` Layer 의 Padding 종류에 따른 성능
+  * 4 가지의 Padding option 사이에 성능의 큰 차이가 없는 것으로 보인다. 
+
+![image](images/CNN_Paddings_9.PNG)
 
 * ```Conv2``` Layer 의 Padding 종류에 따른 성능
+  * 4 가지의 Padding option 사이에 성능의 큰 차이가 없는 것으로 보인다. 
+
+![image](images/CNN_Paddings_10.PNG)
 
 * ```Conv4``` Layer 의 Padding 종류에 따른 성능
+  * 4 가지의 Padding option 사이에 성능의 큰 차이가 없는 것으로 보인다. 
+
+![image](images/CNN_Paddings_11.PNG)
 
 ### 2-3. 실험 결과에 대한 이유
+
+**모든 레이어에 대해, Padding Option 에 따른 성능의 큰 차이가 없음**
+
+* 이미지를 분류하는 데 핵심적인 부분은 feature map 의 padding 이 아닌 main 부분에 이미 포함되어 있기 때문으로 추정
+* Padding 부분은 이미지 Class 분류에 영향을 거의 미치지 못했을 것으로 추정됨
+* 단, Zero Padding 의 경우, Padding 부분이 constant 값으로 이미지에 대한 정보를 담지 못하기 때문에, 다른 Padding 방법들에 비해 성능이 떨어질 가능성이 있음
