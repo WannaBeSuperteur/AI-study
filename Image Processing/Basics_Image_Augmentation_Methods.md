@@ -89,7 +89,7 @@
 * Gaussian Blur 적용
 * Sharpness 추가
 * JPEG 이미지로 변환
-  * 실무적 관점에서, PNG와 JPEG 이미지가 학습 데이터에 섞여 있거나, 실제 사용자가 입력하는 이미지가 JPEG 이미지일 때 유용하다.
+  * 실무적 관점에서, PNG와 JPEG 이미지가 학습 데이터에 섞여 있거나, 실제 사용자가 모델에 입력하는 이미지가 JPEG 이미지일 때 유용하다.
 
 ## 2. torchvision 을 이용한 Augmentation
 
@@ -202,14 +202,14 @@ img_tensor = transform_example(img_tensor)
 
 **2. 이미지 색상 변형**
 
-| Augmentation 방법    | 함수                    | 인수 설명                                                                                                                       |
-|--------------------|-----------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| 밝기 조정              | ```ColorJitter```     | ```brightness``` : (factor 최솟값, factor 최댓값) 형식<br>- 범위 내에서 랜덤하게 factor 가 정해짐<br> - factor 가 0이면 검은색, 1이면 원래 이미지, 1 이상이면 밝아짐 |
-| 대비 (contrast) 조정   | ```ColorJitter```     | ```contrast``` : (factor 최솟값, factor 최댓값) 형식<br> - ```brightness``` 와 동일한 원리                                                |
-| 채도 (saturation) 조정 | ```ColorJitter```     | ```saturation``` : (factor 최솟값, factor 최댓값) 형식<br> - ```brightness```, ```contrast``` 와 동일한 원리                              |
-| 회색조 (Grayscale)    | ```RandomGrayscale``` |                                                                                                                             |
-| 반전 (Invert)        | ```RandomInvert```    |                                                                                                                             |
-| 정규화 (Normalize)    | ```Normalize```       | ```mean``` : 각 channel 별, 0-1 로 linear 하게 정규화된 픽셀 값들의 평균<br>```std``` : 각 channel 별, 0-1 로 linear 하게 정규화된 픽셀 값들의 표준편차       |
+| Augmentation 방법    | 함수                    | 인수 설명                                                                                                                                                                          |
+|--------------------|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 밝기 조정              | ```ColorJitter```     | ```brightness``` : (factor 최솟값, factor 최댓값) 형식<br>- 범위 내에서 랜덤하게 factor 가 정해짐<br> - factor 가 0이면 검은색, 1이면 원래 이미지, 1 이상이면 밝아짐                                                    |
+| 대비 (contrast) 조정   | ```ColorJitter```     | ```contrast``` : (factor 최솟값, factor 최댓값) 형식<br> - ```brightness``` 와 동일한 원리                                                                                                   |
+| 채도 (saturation) 조정 | ```ColorJitter```     | ```saturation``` : (factor 최솟값, factor 최댓값) 형식<br> - ```brightness```, ```contrast``` 와 동일한 원리                                                                                 |
+| 회색조 (Grayscale)    | ```RandomGrayscale``` |                                                                                                                                                                                |
+| 반전 (Invert)        | ```RandomInvert```    |                                                                                                                                                                                |
+| 정규화 (Normalize)    | ```Normalize```       | **이미지를 정규화하여 딥러닝 성능을 올리기 위한, 거의 필수 Augmentation** 이다.<br>```mean``` : 각 channel 별, 0-1 로 linear 하게 정규화된 픽셀 값들의 평균<br>```std``` : 각 channel 별, 0-1 로 linear 하게 정규화된 픽셀 값들의 표준편차 |
 
 **3. 기타 변형 or 노이즈 추가**
 
@@ -235,6 +235,37 @@ img_tensor = transform_example(img_tensor)
 | 행동 (Action)      | 아래의 Policy 를 이용하여 이미지 데이터셋을 처리하는 신경망을 학습                                                                                                      |
 | 보상 (Reward)      | 이미지 데이터셋 처리 신경망의 Valid Accuracy                                                                                                               |
 | 정책 (Policy)      | - 5개의 Sub-policy 로 구성<br> - 각 Sub-policy 는 Augmentation 방법 2가지를 연속 적용하는 것                                                                     |
+
+----
+
+AutoAugment 는 torchvision 과 함께, 예를 들어 다음과 같이 사용할 수 있다.
+
+* [AutoAugment Github](https://github.com/DeepVoltaire/AutoAugment) 을 Clone 하여 사용한다.
+* 위 AutoAugment 라이브러리에서는 다음과 같은 3가지 Policy 를 제공한다.
+  * ImageNetPolicy
+  * CIFAR10Policy
+  * SVHNPolicy
+
+```python
+from torchvision.transforms import v2
+import torchvision.transforms.functional as transform
+
+import PIL
+
+# import AutoAugment Policy
+from AutoAugment.autoaugment import CIFAR10Policy
+
+# read image and convert to PyTorch tensor
+img = PIL.Image.open('lena.PNG').convert('RGB')
+img_tensor = transform.to_tensor(img)
+
+# define composed transform
+transform_example = v2.Compose([
+    v2.Normalize(mean=[0.485, 0.456, 0.406],
+                 std=[0.229, 0.224, 0.225]),
+    CIFAR10Policy()  # appliy CIFAR-10 Policy from AutoAugment
+])
+```
 
 ## 3. 실험: 최선의 Augmentation 방법 탐색
 
