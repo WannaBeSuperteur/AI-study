@@ -209,7 +209,7 @@ img_tensor = transform_example(img_tensor)
 | 채도 (saturation) 조정 | ```ColorJitter```     | ```saturation``` : (factor 최솟값, factor 최댓값) 형식<br> - ```brightness```, ```contrast``` 와 동일한 원리                              |
 | 회색조 (Grayscale)    | ```RandomGrayscale``` |                                                                                                                             |
 | 반전 (Invert)        | ```RandomInvert```    |                                                                                                                             |
-| 정규화 (Normalize)    | ```Normalize```       | ```mean``` : 각 channel 별, 0~1 로 linear 하게 정규화된 픽셀 값들의 평균<br>```std``` : 각 channel 별, 0~1 로 linear 하게 정규화된 픽셀 값들의 표준편차       |
+| 정규화 (Normalize)    | ```Normalize```       | ```mean``` : 각 channel 별, 0-1 로 linear 하게 정규화된 픽셀 값들의 평균<br>```std``` : 각 channel 별, 0-1 로 linear 하게 정규화된 픽셀 값들의 표준편차       |
 
 **3. 기타 변형 or 노이즈 추가**
 
