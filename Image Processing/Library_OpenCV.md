@@ -51,7 +51,7 @@ OpenCV에서 이미지를 열기 위해서는 **cv2.imread** 함수를 사용해
   * 텐서의 각 성분은 0 ~ 255 의 정규화되지 않은 원래 픽셀 값
 
 ```
-img = cv2.imread('img_path', flag)
+img = cv2.imread(img_path, flag)
 ```
 
 **함수 인수 설명**
