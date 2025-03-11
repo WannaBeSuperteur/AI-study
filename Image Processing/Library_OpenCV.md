@@ -50,7 +50,7 @@ OpenCV에서 이미지를 열기 위해서는 **cv2.imread** 함수를 사용해
   * (```H```, ```W```, ```C```) 차원의 텐서 (RGB 의 경우 ```C``` 의 값은 3 이며 **Blue - Green - Red** 순서)
   * 텐서의 각 성분은 0 ~ 255 의 정규화되지 않은 원래 픽셀 값
 
-```
+```python
 img = cv2.imread(img_path, flag)
 ```
 
@@ -63,7 +63,7 @@ img = cv2.imread(img_path, flag)
 
 **사용 예시**
 
-```
+```python
 img = cv2.imread('lena.png', cv2.IMREAD_UNCHANGED)
 ```
 
@@ -79,7 +79,7 @@ OpenCV에서 이미지를 저장하기 위해서는 **cv2.imwrite** 함수를 �
 
 * 텐서 형태의 이미지인 ```image``` 를 ```save_path``` 경로에 저장한다.
 
-```
+```python
 cv2.imwrite(save_path, image)
 ```
 
@@ -92,7 +92,7 @@ cv2.imwrite(save_path, image)
 
 **사용 예시**
 
-```
+```python
 cv2.imwrite('lena2.png', image)
 ```
 
@@ -107,7 +107,7 @@ OpenCV에서 이미지를 새 창에 표시하기 위해서는 **cv2.imshow** �
 
 * 텐서 형태의 이미지인 ```image``` 를 ```window_title``` 이라는 제목의 새 창으로 표시한다.
 
-```
+```python
 cv2.imshow(window_title, image)
 ```
 
@@ -120,7 +120,7 @@ cv2.imshow(window_title, image)
 
 **사용 예시**
 
-```
+```python
 cv2.imshow('Lena', img)
 ```
 
