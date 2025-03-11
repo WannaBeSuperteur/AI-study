@@ -11,7 +11,7 @@
   * [3-3. 색상 변형](#3-3-색상-변형)
   * [3-4. 기타 변형 및 노이즈 추가](#3-4-기타-변형-및-노이즈-추가)
   * [3-5. 표시 추가](#3-5-표시-추가)
-* [4. channel 별 분포 히스토그램 출력](#4-channel-별-분포-히스토그램-출력)
+* [4. channel 별 색상 값 분포 히스토그램 출력](#4-channel-별-색상-값-분포-히스토그램-출력)
 
 ## 1. OpenCV 개요
 
@@ -321,4 +321,41 @@ img = cv2.putText(img, 'Example Text', (20, 35), cv2.FONT_HERSHEY_SIMPLEX, 1, (0
 
 ![image](images/OpenCV_1.PNG)
 
-## 4. channel 별 분포 히스토그램 출력
+## 4. channel 별 색상 값 분포 히스토그램 출력
+
+Channel 별 색상 값 분포에 대한 히스토그램은 다음과 같이 ```cv2.calcHist``` 를 이용하여 계산하고, 이를 출력할 수 있다.
+
+```
+colors = ['blue', 'green', 'red']
+channels = cv2.split(image)
+
+# Plotly 차트를 그리기 위한 Figure 생성
+fig = go.Figure()
+
+# 각 channel 별 히스토그램 계산
+for channel, color in zip(channels, colors):
+
+    # channel : 각 채널 별 해당 채널에 대한 픽셀 값, shape = (H, W)
+    # hist    : 각 채널 별 픽셀 값이 0 ~ 255 인 픽셀의 개수, shape = (256, 1)
+
+    hist = cv2.calcHist([channel], [0], None, [256], [0, 256])
+    
+    fig.add_trace(go.Scatter(y=hist.flatten(),
+                             mode="lines",
+                             name=color,
+                             line=dict(color=color)))
+
+# Plotly 차트 제목 및 각 축의 제목
+fig.update_layout(
+    title="Channel-wise Histogram",
+    xaxis_title="Pixel Value",
+    yaxis_title="Frequency"
+)
+
+# Plotly 차트 표시
+fig.show()
+```
+
+그 결과는 다음과 같다.
+
+![image](images/OpenCV_2.PNG)
