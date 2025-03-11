@@ -8,7 +8,6 @@
   * [2-4. GPTQ (Post-Training Quantization for GPT Models)](#2-4-gptq-post-training-quantization-for-gpt-models)
 * [3. 양자화 이후의 자료형](#3-양자화-이후의-자료형)
 * [4. Double Quantization](#4-double-quantization)
-* [5. Paged Optimizer](#5-paged-optimizer)
 
 ## 1. Quantization (양자화)
 
@@ -131,10 +130,3 @@ Scaling Factor 를 64 개의 parameter 마다 추가하고, 이 Scaling Factor 2
 | 양자화 없음 | 32 bits / param        |
 | 1차 양자화 | **8.5 bits** / param   |
 | 2차 양자화 | **8.127 bits** / param |
-
-## 5. Paged Optimizer
-
-**Paged Optimizer** 는 [Quantized LoRA (QLoRA)](LLM_기초_Fine_Tuning_LoRA_QLoRA.md#3-qlora-quantized-lora) 에서 쓰이는 기술로, **GPU 에서 Out-of Memory (OOM) 오류 발생** 시 [Optimizer](../Deep%20Learning%20Basics/딥러닝_기초_Optimizer.md) 가 자동으로 CPU에서 동작하게 하는 기술이다. 즉 다음과 같이 동작한다.
-
-* Optimizer 의 현재 state가 CPU RAM 으로 이동
-* Optimizer 의 갱신을 위해 GPU 에서 필요로 할 때 다시 자동으로 GPU 로 optimizer state 를 이동

@@ -6,6 +6,7 @@
   * [2-2. LoRA 의 Loss Function](#2-2-lora-의-loss-function) 
   * [2-3. LoRA 의 메모리 사용량 절약 효과](#2-3-lora-의-메모리-사용량-절약-효과)
 * [3. QLoRA (Quantized LoRA)](#3-qlora-quantized-lora)
+  * [3-1. Paged Optimizer](#3-1-paged-optimizer)
 
 ## 1. LoRA와 QLoRA 요약
 
@@ -85,3 +86,10 @@ QLoRA 를 적용하는 구체적인 방법은 다음과 같다.
 * LoRA 를 적용하면서 추가한 Low-Rank 가중치 행렬에는 **BF16 양자화** 적용
 * **[이중 양자화 (Double Quantization)](LLM_기초_Quantization.md#4-double-quantization)** 적용
 * VRAM 사용량 초과 시 Out Of Memory 오류가 발생하지 않고, 대신 [**Paged Optimization** 기법](LLM_기초_Quantization.md#5-paged-quantization) 을 적용한다.
+
+### 3-1. Paged Optimizer
+
+**Paged Optimizer** 는 QLoRA 에서 쓰이는 기술로, **GPU 에서 Out-of Memory (OOM) 오류 발생** 시 [Optimizer](../Deep%20Learning%20Basics/딥러닝_기초_Optimizer.md) 가 자동으로 CPU에서 동작하게 하는 기술이다. 즉 다음과 같이 동작한다.
+
+* Optimizer 의 현재 state가 CPU RAM 으로 이동
+* Optimizer 의 갱신을 위해 GPU 에서 필요로 할 때 다시 자동으로 GPU 로 optimizer state 를 이동
