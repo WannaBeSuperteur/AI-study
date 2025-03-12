@@ -22,9 +22,9 @@
 * **입력, 출력** 문장의 각 token 을 **각각의 Encoder, Decoder** 로 매칭시킨다.
   * 각 입력/출력 token 에 Embedding + Positional Encoding 을 적용한다.
 * 세부 동작 방식
-  * 입력 문장은 Attention + Position-wise Feed Forward 를 거쳐 다음 Encoder 로 입력된다. 이것이 반복된다.
+  * 입력 문장은 Attention + Position-wise Feed Forward 를 거쳐 다음 Encoder 로 입력된다. 이것이 **입력 문장이 끝날 때까지 반복** 된다.
   * 마지막 Encoder 의 출력은 첫 번째 Decoder 의 Encoder-Decoder Attention 의 입력으로 들어간다.
-  * Decoder 역시, N 번째 Decoder 의 출력이 N + 1 번째 Decoder 의 입력으로 들어가는 것이 문장이 끝날 때까지 반복된다.
+  * Decoder 역시, N 번째 Decoder 의 출력이 N + 1 번째 Decoder 의 입력으로 들어가는 것이 **출력 문장이 끝날 때까지** 반복된다.
 
 ![image](images/Transformer_6.PNG)
 
@@ -61,7 +61,7 @@ Transformer 모델에서는 임베딩 벡터가 입력되기 전에 **Positional
 
 ![트랜스포머에서의 어텐션 1](./images/Transformer_4.PNG)
 
-여기서 ```E1, E2, ..., En```은 각각 Encoder, ```D1, D2, ..., Dn```은 각각 Decoder를 나타낸다.
+여기서 ```E1, E2, ..., En```은 각각 Encoder, ```D1, D2, ..., Dm```은 각각 Decoder를 나타낸다.
 
 각 어텐션이 Encoder와 Decoder에서 실시되는 것을 그림으로 나타내면 다음과 같다.
 
