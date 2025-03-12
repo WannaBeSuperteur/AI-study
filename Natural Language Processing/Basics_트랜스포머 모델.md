@@ -8,8 +8,9 @@
   * [3-1. Encoder Self-Attention](#3-1-encoder-self-attention)
   * [3-2. Masked Decoder Self-Attention](#3-2-masked-decoder-self-attention)
   * [3-3. Encoder-Decoder Attention](#3-3-encoder-decoder-attention)
-  * [3-4. Position-wise Feed Forward](#3-4-position-wise-feed-forward)
-* [4. GPT (Generative Pre-trained Transformer)](#4-gpt-generative-pre-trained-transformer)
+* [4. Position-wise Feed Forward](#4-position-wise-feed-forward)
+* [5. GPT (Generative Pre-trained Transformer)](#5-gpt-generative-pre-trained-transformer)
+* [6. Vision 에의 응용 : Vision Transformer (ViT)](#6-vision-에의-응용--vision-transformer-vit)
 
 ## 1. 트랜스포머 모델
 
@@ -67,17 +68,49 @@ Transformer 모델에서는 임베딩 벡터가 입력되기 전에 **Positional
 
 ![트랜스포머에서의 어텐션 2](./images/Transformer_5.PNG)
 
-여기서 N은 Encoder와 Decoder의 개수 (서로 같음) 를 나타낸다.
+여기서 N 은 Encoder의 개수, M 은 Decoder의 개수를 나타낸다.
 
 ### 3-1. Encoder Self-Attention
+
+**Encoder Self-Attention** 은 **입력 문장의 단어 (token) 간 관계** 를 고려한 Attention 이며, **Encoder** 에 위치한다.
+
+* 이때 **Multi-head Attention** 를 적용하여, 입력 token 을 임베딩한 벡터의 차원을 **여러 개의 head 에 균등하게 분배** 한다.
+* 단어 간 관계는 **자기 자신을 포함** 한다.
+
+Self-Attention 의 효과는 다음과 같다.
+
+* **입력 문장 내의 각 token 간 관계** 에 대한 분석
+* 이를 통해, 지시대명사가 가리키는 것 등을 AI 모델이 파악할 수 있음
+
+Encoder Self-Attention 을 수식으로 나타내면 다음과 같다.
+
+* $\displaystyle SelfAttention(Q, K, V) = Softmax(\frac{Q \times K^T}{\sqrt {d_k}}) V$
+  * $Q, K, V$ : 각각 Query, Key, Value
+  * $d_k$ : 각 token 을 나타내는 Key 벡터의 차원 (Query, Value 벡터와 차원 동일)
+* Encoder Self-Attention Matrix 의 shape 는 **(token 개수, $d_k$)** 이다.
+
+----
+
+Encoder Self-Attention 에 대해 보다 깊이 들어가면 다음과 같다.
+
+![image](images/Transformer_7.PNG)
+
+Attention Head 의 개수가 **8개** (예시) 이고, 문장의 입력 token 이 $N$ 개일 때, 다음과 같이 동작한다.
+
+* 각 단어 벡터가 **512 차원** (예시) 인 Embedding + Pos Embedding 에 가중치 행렬을 곱해서 **$d_k$ = (512 / Head 개수) = 64 차원** 의 Query, Key, Value 행렬을 만든다.
+* $N \times N$ 의 $QK^T$ 행렬을 구한다.
+* $QK^T$ 행렬을 $d_k$ 의 제곱근으로 나누어 Attention Score 행렬 ($N \times N$) 을 구한다.
+* $QK^T$ 행렬에 Value 에 해당하는 행렬 $V$ 를 곱하여 $N \times 64$ 의 Attention Matrix 를 구한다.
+* 나머지 7개의 head 에서 계산된 Attention Matrix 들과 concatenate 한다.
+* 마지막으로 가중치 행렬 $W_O$ 를 지나고, 이것이 Multi-head Self-Attention 의 최종 출력값이다.
 
 ### 3-2. Masked Decoder Self-Attention
 
 ### 3-3. Encoder-Decoder Attention
 
-### 3-4. Position-wise Feed Forward
+## 4. Position-wise Feed Forward
 
-## 4. GPT (Generative Pre-trained Transformer)
+## 5. GPT (Generative Pre-trained Transformer)
 
 **GPT (Generative Pre-trained Transformer)** 는 OpenAI의 Large Language Model (거대 언어 모델)로, 그대로 풀어 쓰면 **사전 학습된 생성형 트랜스포머** 이다.
 * 생성 (Generative) 은 생성형 AI 기술을 적용하여 답변을 생성한다는 의미이다.
@@ -91,3 +124,7 @@ GPT의 역사는 다음과 같다.
 * GPT-4가 2023년 3월 14일 출시되었다.
 
 2022년 11월 30일, GPT의 응용으로 전 세계 AI의 역사에 한 획을 그은 **ChatGPT** 가 등장했으며, 2023년 3월 GPT-4가 적용되었다. (GPT-4 API는 2023년 7월부터 일반인이 사용 가능하다.)
+
+## 6. Vision 에의 응용 : Vision Transformer (ViT)
+
+Transformer 의 구조를 Vision 분야에 응용한 모델로 **Vision Transformer (ViT)** 가 있다. 자세한 것은 [해당 문서](../Image%20Processing/Basics_Vision_Transformer_ViT.md) 참고.
