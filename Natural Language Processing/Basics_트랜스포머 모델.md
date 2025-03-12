@@ -72,7 +72,7 @@ Transformer 모델에서는 임베딩 벡터가 입력되기 전에 **Positional
 
 ### 3-1. Encoder Self-Attention
 
-**Encoder Self-Attention** 은 **입력 문장의 단어 (token) 간 관계** 를 고려한 Attention 이며, **Encoder** 에 위치한다.
+**(Multi-head) Encoder Self-Attention** 은 **입력 문장의 단어 (token) 간 관계** 를 고려한 Attention 이며, **Encoder** 에 위치한다.
 
 * 이때 **Multi-head Attention** 를 적용하여, 입력 token 을 임베딩한 벡터의 차원을 **여러 개의 head 에 균등하게 분배** 한다.
 * 단어 간 관계는 **자기 자신을 포함** 한다.
@@ -106,9 +106,32 @@ Attention Head 의 개수가 **8개** (예시) 이고, 문장의 입력 token �
 
 ### 3-2. Masked Decoder Self-Attention
 
+**Masked Decoder Self-Attention** 은 **출력 문장의 단어 (token) 간 관계** 를 고려한 Attention 이며, **Encoder** 에 위치한다.
+
+* 단, Encoder Self-Attention 과는 달리 **매 순간 이전에 등장했던 단어들만 고려** 한다. 즉, **Attention Score 를 나타내는 행렬에서 이후의 단어를 masking 처리** 한다.
+* 이외의 과정은 앞에서 설명한 Encoder Self-Attention 과 동일하다.
+
+![image](images/Transformer_8.PNG)
+
 ### 3-3. Encoder-Decoder Attention
 
+**Encoder-Decoder Attention** 은 **출력 문장을 생성할 때, 입력 문장의 단어와의 관계를 고려한 Attention** 이다. **Decoder** 에 위치한다.
+
+* Query, Key, Value 는 각각 다음의 Block 의 결과물로부터 얻는다.
+  * **Query** 는 **첫 번째 Decoder** 의 결과물로부터 얻음
+  * **Key, Value** 는 모두 **마지막 Encoder** 의 결과물로부터 얻음
+* 이로 인해 Attention Score Matrix 가 **입력 문장의 token N 개와 출력 문장의 token M 개에 대해 $M \times N$ 의 크기** 로 만들어진다.
+* 이외의 사항은 나머지 Encoder Self-Attention, Masked Decoder Self-Attention 과 동일하다.
+
+![image](images/Transformer_9.PNG)
+
 ## 4. Position-wise Feed Forward
+
+Encoder와 Decoder 의 Attention Layer 이후에 있는 **Position-wise Feed Forward** 는 **Fully-Connected Neural Network (FFNN)** 라고 할 수 있다.
+
+* Position-wise Feed-Forward 는 다음과 같은 구조를 갖는다.
+
+![image](images/Transformer_10.PNG)
 
 ## 5. GPT (Generative Pre-trained Transformer)
 
