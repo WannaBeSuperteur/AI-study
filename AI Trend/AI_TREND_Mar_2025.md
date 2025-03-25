@@ -1,3 +1,12 @@
+## 2025.03.25 (화)
+**[딥시크, DeepSeek-V3 업데이트 버전 공개](https://n.news.naver.com/mnews/article/001/0015287174?sid=101)** ```AI``` ```DeepSeek``` ```Large Language Model```
+
+* DeepSeek 가 자사 거대 언어 모델 DeepSeek-V3 의 업데이트 버전인 **V3-0324** 를 공개했다.
+  * 해당 모델은 [Hugging Face](../AI%20Basics/LLM%20Basics/LLM_기초_HuggingFace.md) 에 공개된 상태이다.
+* V3-0324 의 특징은 다음과 같다.
+  * 코드 생성 및 디버깅, 알고리즘 개발 등 개발자 지원과 관련된 **프로그래밍 능력 향상**
+  * 정확성 및 효율성 기준 제시를 통해 문제 해결 능력 향상을 강조
+
 ## 2025.03.24 (월)
 **[네이버, 'AI 브리핑' 출시](https://n.news.naver.com/mnews/article/015/0005109943?sid=105)** ```AI``` ```Naver AI```
 
