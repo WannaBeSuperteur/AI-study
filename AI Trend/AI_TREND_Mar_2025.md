@@ -1,3 +1,17 @@
+## 2025.03.27 (목)
+**[코난테크놀로지, 추론 모델 ENT-11 출시 예정](https://n.news.naver.com/mnews/article/018/0005970923?sid=105)** ```AI``` ```Large Language Model```
+
+* AI 기업 코난테크놀로지가 거대 언어 모델 ENT-11 을 출시할 예정이다.
+  * ENT-11은 **Konan MT Bench, MT Bench 등의 [LLM 벤치마크](../AI%20Basics/LLM%20Basics/LLM_기초_LLM의_성능_평가.md#4-llm-벤치마크-데이터셋) 에서 DeepSeek-R1 보다 좋은 성능을 기록** 했다.
+* ENT-11 모델의 특징은 다음과 같다.
+  * 일반 모드와 추론 모드를 통합, 이를 통해 **하나의 모델로 일반 질문-답변은 물론 고난도 추론까지 처리 가능**
+  * GPU 자원 효율적으로 고성능 AI 서비스 개발 가능
+  * 한국어 최적화 (한국어 처리 정확도 및 응답 속도 높음)
+* ENT-11 의 성능 수준은 다음과 같다.
+  * **DeepSeek-R1 의 671B 의 약 5% 수준인 32B 의 파라미터 개수** 에도 불구하고 DeepSeek-R1 수준의 성능 달성
+  * 한국어 데이터셋인 Konan MT-Bench 기준 **동일 크기의 DeepSeek-R1 모델에 비해 높은 성능** 기록
+    * 특히 **수학 등 추론 성능** 이 우수
+
 ## 2025.03.26 (수)
 **[구글, 제미나이 프로 2.5 공개](https://n.news.naver.com/mnews/article/009/0005465393?sid=101)** ```AI``` ```Gemini``` ```Large Language Model```
 
