@@ -56,6 +56,22 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
 * 실험 대상 모델 최종 선정
   * TBU 
 
+**3. 실험 후보 모델**
+
+* Vision Classification
+
+| 후보 모델                          | Top-1 정확도 | # Params |
+|--------------------------------|-----------|----------|
+| FixEfficientNet-B7             | 87.1%     | 66.0 M   |
+| SwinV2-B                       | 87.1%     | 88.0 M   |
+| NoisyStudent                   | 86.9%     | 66.0 M   |
+| FixEfficientNet-B6             | 86.7%     | 43.0 M   |
+| FixEfficientNet-B4             | 85.9%     | 19.0 M   |
+| NoisyStudent (EfficientNet-B4) | 85.3%     | 19.0 M   |
+| FixEfficientNet-B3             | 85.0%     | 12.0 M   |
+
+* Vision Anomaly Detection
+
 ### 1-3. 실험 대상 모델 선정 기준
 
 **1. 실험 대상 데이터셋**
