@@ -94,19 +94,21 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
     * [PapersWithCode : Anomaly Detection on MVTec AD](https://paperswithcode.com/sota/anomaly-detection-on-mvtec-ad)
 
 * 모델 후보 기본 조건 **(아래 4가지 모두 만족)**
-  * 모델 정확도
-    * 각 분야 (Classification, Anomaly Detection) 별 **LeaderBoard 300 위 이내**
-  * 모델 파라미터 개수
-    * **100M (1억 개) 이하**
-    * 기본적으로 학습 및 추론에 너무 많은 시간이 걸릴 것으로 예상되는 모델은 제외 
+  * 모델 성능 기준
+    * Classification : **Top-1 Accuracy (300위 이내)**
+    * Anomaly Detection : **Detection [AUROC](../AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_Metrics.md#3-2-area-under-roc-curve-roc-auc) (100위 이내)**
+  * 모델 규모 및 속도
+    * 기본적으로 학습 및 추론에 **너무 많은 시간이 걸릴 것으로 예상되는 모델은 제외**
+    * Classification : Parameter 개수 **100M (1억 개) 이하**
+    * Anomaly Detection : 기준 없음
   * **512 x 512 이상의 해상도** 에서 사용 가능한 모델
     * 미세한 Anomaly 도 탐지할 수 있어야 함 (= 이상 탐지를 위해 인간 노동력 대신 AI를 사용할 만한 이유)
   * Github 등에 **구현 코드가 존재** 하는 모델
 
 * 모델 선정 기준
   * 아래 각각에 대해 다음과 같은 방법으로 선정 **(아래 그림 참고)**
-    * **정확도 (분류의 경우 Top 1 Accuracy) 및 파라미터 개수를 scatter plot** 으로 나타낸다.
-    * 다른 어떤 모델도 해당 모델보다 **정확도가 더 높음과 동시에 파라미터 개수가 더 적은** 경우가 없는 모델만 Candidate 로 선정한다.
+    * **성능지표 및 파라미터 개수 (또는 추론 시간) 를 scatter plot** 으로 나타낸다.
+    * 다른 어떤 모델도 해당 모델보다 **성능지표 값이 더 높음과 동시에 파라미터 개수 (또는 추론 시간) 가 더 적은** 경우가 없는 모델만 Candidate 로 선정한다.
     * Candidate Model 의 추세선을 그린다.
     * Candidate Model 중 이 추세선을 기준으로 **가장 왼쪽 위에** 있는 모델을 최종 선택한다.
   * PapersWithCode LeaderBoard 정보만으로 선정 후, 다음을 반복
