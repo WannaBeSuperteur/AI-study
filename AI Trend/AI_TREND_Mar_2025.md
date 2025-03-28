@@ -1,3 +1,14 @@
+## 2025.03.28 (금)
+**[OpenAI, 이미지 생성 모델로 서버 과부화?](https://n.news.naver.com/mnews/article/014/0005327685?sid=105)** ```AI``` ```OpenAI``` ```Generative AI```
+
+* OpenAI가 최근 선보인 **ChatGPT-4o Image Generation** 모델이 인기를 끌면서, **OpenAI 서버에 과부화** 가 발생하고 있다.
+  * 이는 해당 모델을 이용하여 생성한 이미지가 SNS를 통해 바이럴 되고 있기 때문이다.
+  * OpenAI CEO 샘 올트먼은 이에 대해 **사람들이 새로운 ChatGPT 모델을 활용해 만든 이미지 보기를 좋아한다. 이로 인해 우리의 GPU가 녹고 있다.** 고 했다.
+* 이에 대한 OpenAI의 대응책은 다음과 같다.
+  * ChatGPT Image 의 사용을 일시적으로 제한 (생성 속도 제한)
+  * ChatGPT 무료 사용자는 1일 3장만 생성 가능하도록 건수 제한
+* 한편, OpenAI는 **생성이 가능해야 하는 이미지 중 일부를 생성하지 못하는 버그** 가 있다며, 이를 수정 중이라고 했다.
+
 ## 2025.03.27 (목)
 **[코난테크놀로지, 추론 모델 ENT-11 출시 예정](https://n.news.naver.com/mnews/article/018/0005970923?sid=105)** ```AI``` ```Large Language Model```
 
