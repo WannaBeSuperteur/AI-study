@@ -4,10 +4,13 @@
 * [1. 개요](#1-개요)
   * [1-1. Vision 분야에서의 Anomaly Detection 모델의 필요성](#1-1-vision-분야에서의-anomaly-detection-모델의-필요성) 
   * [1-2. 실험 대상 모델](#1-2-실험-대상-모델)
-  * [1-3. 실험 대상 모델 선정 기준](#1-3-실험-대상-모델-선정-기준)
+  * [1-3. 실험 대상 데이터셋](#1-3-실험-대상-데이터셋)
+  * [1-4. 실험 대상 모델 선정 기준](#1-4-실험-대상-모델-선정-기준)
 * [2. 실험](#2-실험)
   * [2-1. 실험 설계](#2-1-실험-설계) 
   * [2-2. 실험 결과](#2-2-실험-결과)
+* [3. 참고](#3-참고)
+  * [3-1. Vision Anomaly Detection 에서 모델 규모 및 학습/추론 속도 기준의 불명확성](#3-1-vision-anomaly-detection-에서-모델-규모-및-학습추론-속도-기준의-불명확성)
 
 ## 1. 개요
 
@@ -72,17 +75,17 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
 
 * Vision Anomaly Detection
 
-### 1-3. 실험 대상 모델 선정 기준
-
-**1. 실험 대상 데이터셋**
+### 1-3. 실험 대상 데이터셋
 
 * 데이터셋
   * [MVTec AD Dataset](https://www.kaggle.com/datasets/ipythonx/mvtec-ad)
   * **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0)** 이므로, 원칙적으로 **상업적 사용이 불가** 하다.
 * 세부 카테고리
-  * TBU 
+  * TBU
 
-**2. 실험 대상 모델 선정 기준**
+### 1-4. 실험 대상 모델 선정 기준
+
+**1. 실험 대상 모델 탐색 기준**
 
 * 기본 컨셉
   * **정확도와 학습 및 추론 시간을 모두 고려할 때, 성능이 가장 좋은 모델** 을 선정한다.
@@ -93,29 +96,35 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
   * Vision Anomaly Detection
     * [PapersWithCode : Anomaly Detection on MVTec AD](https://paperswithcode.com/sota/anomaly-detection-on-mvtec-ad)
 
-* 모델 후보 기본 조건 **(아래 4가지 모두 만족)**
+* 모델 기본 조건 **(아래 4가지 모두 만족)**
   * 모델 성능 기준
     * Classification : **Top-1 Accuracy (300위 이내)**
     * Anomaly Detection : **Detection [AUROC](../AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_Metrics.md#3-2-area-under-roc-curve-roc-auc) (100위 이내)**
   * 모델 규모 및 속도
-    * 기본적으로 학습 및 추론에 **너무 많은 시간이 걸릴 것으로 예상되는 모델은 제외**
-    * Classification : Parameter 개수 **100M (1억 개) 이하**
-    * Anomaly Detection : 기준 없음
+    * Classification : 학습 및 추론 속도를 고려하여, Parameter 개수 **100M (1억 개) 이하**
+    * Anomaly Detection : [모델 규모 및 학습/추론 속도 기준 불명확.](#3-1-vision-anomaly-detection-에서-모델-규모-및-학습추론-속도-기준의-불명확성) 따라서 이를 대체할 기준으로 **인지도 기준 (GitHub 공식 repo. 의 Star 개수 100개 이상) 을 이용** 
   * **512 x 512 이상의 해상도** 에서 사용 가능한 모델
     * 미세한 Anomaly 도 탐지할 수 있어야 함 (= 이상 탐지를 위해 인간 노동력 대신 AI를 사용할 만한 이유)
   * Github 등에 **구현 코드가 존재** 하는 모델
 
-* 모델 선정 기준
-  * 아래 각각에 대해 다음과 같은 방법으로 선정 **(아래 그림 참고)**
-    * **성능지표 및 파라미터 개수 (또는 추론 시간) 를 scatter plot** 으로 나타낸다.
-    * 다른 어떤 모델도 해당 모델보다 **성능지표 값이 더 높음과 동시에 파라미터 개수 (또는 추론 시간) 가 더 적은** 경우가 없는 모델만 Candidate 로 선정한다.
-    * Candidate Model 의 추세선을 그린다.
-    * Candidate Model 중 이 추세선을 기준으로 **가장 왼쪽 위에** 있는 모델을 최종 선택한다.
-  * PapersWithCode LeaderBoard 정보만으로 선정 후, 다음을 반복
-    * 최종 선택된 모델이 **512 x 512 이상에서 사용 불가능함이 확인** 되는 경우, 해당 모델을 제외하고 위 방법으로 최종 모델 재선정
-    * 이것을 최종 선택된 모델이 512 x 512 이상에서 사용 가능함이 확인될 때까지 반복
+**2. 실험 대상 모델 후보 (Candidate) 및 최종 선정 기준**
+
+* 아래 각각에 대해 다음과 같은 방법으로 선정 **(아래 그림 참고)**
+  * **성능지표 및 파라미터 개수 (또는 Star 개수) 를 scatter plot** 으로 나타낸다.
+  * 다른 어떤 모델도 해당 모델보다 **성능지표 값이 더 높음** 과 동시에, 또한 **파라미터 개수가 더 작거나 Star 가 더 많은** 경우가 없는 모델만 Candidate 로 선정한다.
+  * Candidate Model 의 추세선을 그린다.
+  * Candidate Model 중 이 추세선을 기준으로 **가장 왼쪽 위에** 있는 모델을 최종 선택한다.
+* PapersWithCode LeaderBoard 정보만으로 선정 후, 다음을 반복
+  * 최종 선택된 모델이 **512 x 512 이상에서 사용 불가능함이 확인** 되는 경우, 해당 모델을 제외하고 위 방법으로 최종 모델 재선정
+  * 이것을 최종 선택된 모델이 512 x 512 이상에서 사용 가능함이 확인될 때까지 반복
+
+**[ Vision Classification ]**
 
 ![image](images/Special_Anomaly_Detection_Need_1.PNG)
+
+**[ Vision Anomaly Detection ]**
+
+![image](images/Special_Anomaly_Detection_Need_3.PNG)
 
 **2. 실험 대상 모델 선정 이유**
 
@@ -126,3 +135,15 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
 ### 2-1. 실험 설계
 
 ### 2-2. 실험 결과
+
+## 3. 참고
+
+### 3-1. Vision Anomaly Detection 에서 모델 규모 및 학습/추론 속도 기준의 불명확성
+
+* Vision Anomaly Detection 에서는 **모델 규모 및 학습/추론 속도의 기준** 을 정하기 어렵다.
+  * Vision Classification 과 달리, Vision Anomaly Detection 은 **모델의 구조가 다양하기 때문에 파라미터 개수를 모델 규모 지표로 사용하기 어렵다.**
+  * 또한, 학습 및 추론 속도는 **여러 논문에서 각각 다른 환경 (GPU 장비) 으로 테스트** 하기 때문에, 일정한 기준을 정하기 어렵다.
+  * 이외의 다른 측정 지표 역시 생각하기 어렵다.
+* 따라서 이를 대체할 지표를 선택해야 한다.
+  * 여기서는 **모델의 인지도가 높을수록 사람들이 많이 쓰는 모델, 즉 학습/추론 속도 역시 만족스러운 모델** 일 것이라고 기본적으로 가정한다.
+  * 따라서, 모델 인지도 지표로 많이 쓰이는 **Github 공식 repo. 의 Star 개수** 를 사용한다.
