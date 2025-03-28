@@ -4,7 +4,7 @@
 * [1. 개요](#1-개요)
   * [1-1. Vision 분야에서의 Anomaly Detection 모델의 필요성](#1-1-vision-분야에서의-anomaly-detection-모델의-필요성) 
   * [1-2. 실험 대상 모델](#1-2-실험-대상-모델)
-  * [1-3. 실험 대상 모델 선정 이유](#1-3-실험-대상-모델-선정-기준-및-이유)
+  * [1-3. 실험 대상 모델 선정 기준](#1-3-실험-대상-모델-선정-기준)
 * [2. 실험](#2-실험)
   * [2-1. 실험 설계](#2-1-실험-설계) 
   * [2-2. 실험 결과](#2-2-실험-결과)
@@ -43,7 +43,20 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
 
 ### 1-2. 실험 대상 모델
 
-### 1-3. 실험 대상 모델 선정 기준 및 이유
+**1. Vision Classification**
+
+* 실험 대상 모델 최종 선정
+  * **TinyViT-21M-512-distill**
+  * ImageNet Top-1 Accuracy **86.5 %**, Parameter Count **21.0 M (2100만 개)**
+
+![image](images/Special_Anomaly_Detection_Need_2.PNG)
+
+**2. Vision Anomaly Detection**
+
+* 실험 대상 모델 최종 선정
+  * TBU 
+
+### 1-3. 실험 대상 모델 선정 기준
 
 **1. 실험 대상 데이터셋**
 
