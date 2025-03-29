@@ -28,7 +28,7 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
 | 계획 내용                                   | 일정                     |
 |-----------------------------------------|------------------------|
 | 실험 대상 Vision Classification 모델 1개 선정    | 03.28 금 (1d)           |
-| 실험 대상 Vision Anomaly Detection 모델 1개 선정 | 03.28 금 (1d)           |
+| 실험 대상 Vision Anomaly Detection 모델 1개 선정 | 03.28 금 - 03.29 토 (2d) |
 | 실험 대상 Vision Classification 모델 논문 탐독    | 03.29 토 (1d)           |
 | 실험 대상 Vision Anomaly Detection 모델 논문 탐독 | 03.30 일 (1d)           |
 | 실험 설계                                   | 03.31 월 (1d)           |
@@ -57,23 +57,36 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
 **2. Vision Anomaly Detection**
 
 * 실험 대상 모델 최종 선정
-  * TBU 
+  * **GLASS**
+  * Detection AUROC **99.9 %** (Star 개수보다는 정확도에 큰 비중을 두어 선정)
+
+![image](images/Special_Anomaly_Detection_Need_4.PNG)
 
 **3. 실험 후보 모델**
 
 * Vision Classification
 
-| 후보 모델                          | Top-1 정확도 | # Params |
-|--------------------------------|-----------|----------|
-| FixEfficientNet-B7             | 87.1%     | 66.0 M   |
-| SwinV2-B                       | 87.1%     | 88.0 M   |
-| NoisyStudent                   | 86.9%     | 66.0 M   |
-| FixEfficientNet-B6             | 86.7%     | 43.0 M   |
-| FixEfficientNet-B4             | 85.9%     | 19.0 M   |
-| NoisyStudent (EfficientNet-B4) | 85.3%     | 19.0 M   |
-| FixEfficientNet-B3             | 85.0%     | 12.0 M   |
+| 후보 모델                          | Top-1 정확도 | # Params  |
+|--------------------------------|-----------|-----------|
+| FixEfficientNet-B7             | 87.1%     | 66.0 M    |
+| SwinV2-B                       | 87.1%     | 88.0 M    |
+| NoisyStudent                   | 86.9%     | 66.0 M    |
+| FixEfficientNet-B6             | 86.7%     | 43.0 M    |
+| **TinyViT-21M-512-distill**    | **86.5%** | **21.0M** |
+| FixEfficientNet-B4             | 85.9%     | 19.0 M    |
+| NoisyStudent (EfficientNet-B4) | 85.3%     | 19.0 M    |
+| FixEfficientNet-B3             | 85.0%     | 12.0 M    |
 
 * Vision Anomaly Detection
+
+| 후보 모델                         | Top-1 정확도 | Github Stars |
+|-------------------------------|-----------|--------------|
+| **GLASS**                     | **99.9%** | **253**      |
+| Efficient-AD (early stopping) | 99.8%     | 324          |
+| PatchCore Large               | 99.6%     | 845          |
+| SimpleNet                     | 99.6%     | 488          |
+| PatchCore                     | 99.2%     | 845          |
+| PatchCore (16-shot)           | 95.4%     | 845          |
 
 ### 1-3. 실험 대상 데이터셋
 
@@ -102,7 +115,7 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
     * Anomaly Detection : **Detection [AUROC](../AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_Metrics.md#3-2-area-under-roc-curve-roc-auc) (100위 이내)**
   * 모델 규모 및 속도
     * Classification : 학습 및 추론 속도를 고려하여, Parameter 개수 **100M (1억 개) 이하**
-    * Anomaly Detection : [모델 규모 및 학습/추론 속도 기준 불명확.](#3-1-vision-anomaly-detection-에서-모델-규모-및-학습추론-속도-기준의-불명확성) 따라서 이를 대체할 기준으로 **인지도 기준 (GitHub 공식 repo. 의 Star 개수 100개 이상) 을 이용** 
+    * Anomaly Detection : [모델 규모 및 학습/추론 속도 기준 불명확.](#3-1-vision-anomaly-detection-에서-모델-규모-및-학습추론-속도-기준의-불명확성) 따라서 이를 대체할 기준으로 **인지도 기준 (GitHub 공식 repo. 의 Star 개수 20개 이상 / 2025.03.29 기준) 을 이용** 
   * **512 x 512 이상의 해상도** 에서 사용 가능한 모델
     * 미세한 Anomaly 도 탐지할 수 있어야 함 (= 이상 탐지를 위해 인간 노동력 대신 AI를 사용할 만한 이유)
   * Github 등에 **구현 코드가 존재** 하는 모델
@@ -125,10 +138,6 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
 **[ Vision Anomaly Detection ]**
 
 ![image](images/Special_Anomaly_Detection_Need_3.PNG)
-
-**2. 실험 대상 모델 선정 이유**
-
-* TBU
 
 ## 2. 실험
 
