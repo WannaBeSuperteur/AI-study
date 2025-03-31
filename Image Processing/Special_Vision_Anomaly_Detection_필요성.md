@@ -32,7 +32,7 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
 | 실험 대상 Vision Classification 모델 논문 탐독    | 03.29 토 - 03.30 일 (2d) |
 | 실험 대상 Vision Anomaly Detection 모델 논문 탐독 | 03.31 월 (1d)           |
 | 실험 설계                                   | 03.31 월 (1d)           |
-| 실험 실시                                   | 04.01 화 - 04.02 수 (2d) |
+| 실험 실시                                   | 04.01 화 - 04.03 목 (3d) |
 | 실험 결과 정리                                | 04.03 목 (1d)           |
 
 ### 1-1. Vision 분야에서의 Anomaly Detection 모델의 필요성
@@ -101,7 +101,12 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
   * [MVTec AD Dataset](https://www.kaggle.com/datasets/ipythonx/mvtec-ad)
   * **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0)** 이므로, 원칙적으로 **상업적 사용이 불가** 하다.
 * 세부 카테고리
-  * TBU
+  * 전체 15 개 
+    * 최대한 많은 insight 를 도출하기 위해, 전체 데이터셋 내의 모든 세부 카테고리를 이용 
+  * Texture 계열 5 개
+    * Carpet, Grid, Leather, Tile, Wood
+  * Object 계열 10 개
+    * Bottle, Cable, Capsule, Hazelnut, Metal nut, Pill, Screw, Toothbrush, Transistor, Zipper 
 
 ### 1-4. 실험 대상 모델 선정 기준
 
@@ -149,6 +154,82 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
 ## 2. 실험
 
 ### 2-1. 실험 설계
+
+**1. 정량적 성능 평가**
+
+* 목표
+  * Vision Anomaly Detection vs. Classification Model 의 성능 비교 
+
+* Vision Classification & Anomaly Detection 공통
+  * 성능 평가 대상 데이터셋 단위
+    * MVTec AD 데이터셋 전체
+    * MVTec AD 데이터셋의 Texture 계열 전체 (5개 카테고리)
+    * MVTec AD 데이터셋의 Object 계열 전체 (10개 카테고리)
+    * MVTec AD 데이터셋의 각 세부 카테고리 (총 15개 카테고리)
+  * [성능 평가 Metric](../AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_Metrics.md)
+    * [Accuracy, **Recall**, Precision](../AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_Metrics.md#1-2-accuracy-recall-precision) (Positive = **Abnormal**)
+    * [F1 Score](../AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_Metrics.md#1-3-f1-score) (Positive = **Abnormal**)
+    * Anomaly Detection 에서는 일반적으로 **실제 불량품을 불량품으로 예측** 하는 것이 중요하기 때문에, 여기서 Recall 이 중요함
+
+* Vision Anomaly Detection 의 Train/Valid/Test 데이터 구분
+  * **각 카테고리 별로** 다음과 같이 데이터를 랜덤하게 배분
+  * Valid/Test Dataset 의 경우, 'good' 디렉토리에 속한 이미지를 Normal Data 로 간주
+
+|                 | Train Data                 | Valid Data                                     | Test Data                                      |
+|-----------------|----------------------------|------------------------------------------------|------------------------------------------------|
+| Normal Sample   | 원본 데이터셋의 Train Data **전체** | 원본 데이터셋의 Test Data 중 Normal Sample 의 **50%**   | 원본 데이터셋의 Test Data 중 Normal Sample 의 **50%**   |
+| Abnormal Sample | -                          | 원본 데이터셋의 Test Data 중 Abnormal Sample 의 **50%** | 원본 데이터셋의 Test Data 중 Abnormal Sample 의 **50%** |
+
+* Vision Classification Detection 의 Train/Valid/Test 데이터 구분
+  * **각 카테고리 별로** 다음과 같이 데이터를 랜덤하게 배분
+
+|                 | Train Data                                     | Valid Data                                     | Test Data                                      |
+|-----------------|------------------------------------------------|------------------------------------------------|------------------------------------------------|
+| Normal Sample   | 원본 데이터셋의 Train Data **전체**                     | 원본 데이터셋의 Test Data 중 Normal Sample 의 **50%**   | 원본 데이터셋의 Test Data 중 Normal Sample 의 **50%**   |
+| Abnormal Sample | 원본 데이터셋의 Test Data 중 Abnormal Sample 의 **50%** | 원본 데이터셋의 Test Data 중 Abnormal Sample 의 **25%** | 원본 데이터셋의 Test Data 중 Abnormal Sample 의 **25%** |
+
+**2. 설명 능력 평가**
+
+* 목표
+  * Vision Anomaly Detection 의 Anomaly Score vs. Classification Model 의 XAI 모델 (Grad-CAM 등) 간 Abnormal Region 설명 능력 비교 
+
+* 모델 및 데이터셋
+  * **1. 정량적 성능 평가** 실험 과정에서 학습된 모델 대상 실험
+    * Classification 모델 (TinyViT-21M-512-distill)
+    * Anomaly Detection 모델 (GLASS)
+  * 테스트 대상 데이터
+    * **1. 정량적 성능 평가** 의 Test Dataset 중 모든 Abnormal Sample 을 대상으로 평가 
+  * Classification 모델에 사용되는 XAI 모델
+    * [pytorch-grad-cam (by jacobgil)](https://github.com/jacobgil/pytorch-grad-cam/tree/master)
+    * [ViT 계열 모델에서의 사용 예시](https://github.com/jacobgil/pytorch-grad-cam/blob/master/usage_examples/vit_example.py)
+
+* 설명 능력 평가 방법
+  * Ground Truth Abnormal Region 과 XAI 모델에 의해 도출된 Heatmap 에서 값이 큰 영역을 비교
+  * 정성적 평가 
+
+**3. 새로운 Abnormal Class 탐지 성능 평가**
+
+* 목표
+  * Vision Classification 모델이 Normal image 들과 1 가지 유형의 Abnormal image 들을 학습했을 때, **다른 유형의 Abnormal 이미지들도 Abnormal image 로 분류하는지에 대한 성능** 을 평가한다.
+
+* 정량적 성능 평가 방법
+  * **Vision Classification 모델 (TinyViT-21M-512-distill)** 만을 대상으로 함
+  * 성능 평가 대상 데이터셋 단위는 **1. 정량적 성능 평가** 와 동일
+  * 성능 평가 Metric 은 **Accuracy 만 사용**
+  * 각 카테고리 별로 다음과 같이 데이터를 랜덤하게 배분
+    * **LAC (Largest Abnormal Class)** : 원본 데이터를 기준으로, 해당 카테고리의 test data 중 abnormal image 가 가장 많이 있는 class 
+
+|                 | Train Data                                 | Valid Data                                 | Test Data                                             |
+|-----------------|--------------------------------------------|--------------------------------------------|-------------------------------------------------------|
+| Normal Sample   | 원본 데이터셋의 Train Data **전체**                 | 원본 데이터셋의 Test Data 중 Normal Sample **전체**  | -                                                     |
+| Abnormal Sample | 원본 데이터셋의 Test Data 중 LAC 에 있는 이미지의 **75%** | 원본 데이터셋의 Test Data 중 LAC 에 있는 이미지의 **25%** | 원본 데이터셋의 Test Data 중 LAC 를 제외한 Abnormal Sample **전체** |
+
+* 설명 능력 평가 - 모델 및 데이터셋
+  * 위 **정량적 성능 평가 방법** 에서 학습한 모델 및 Test Dataset 을 대상으로 평가
+  * 해당 모델 및 데이터셋에 대해, [pytorch-grad-cam (by jacobgil)](https://github.com/jacobgil/pytorch-grad-cam/tree/master) 를 이용한 Abnormal Region 설명 능력 평가
+
+* 설명 능력 평가 방법
+  * **2. 설명 능력 평가** 와 동일하게, 정성적 평가 실시
 
 ### 2-2. 실험 결과
 
