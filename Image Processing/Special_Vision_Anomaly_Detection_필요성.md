@@ -30,7 +30,7 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
 | 실험 대상 Vision Classification 모델 1개 선정    | 03.28 금 (1d)           |
 | 실험 대상 Vision Anomaly Detection 모델 1개 선정 | 03.28 금 - 03.29 토 (2d) |
 | 실험 대상 Vision Classification 모델 논문 탐독    | 03.29 토 - 03.30 일 (2d) |
-| 실험 대상 Vision Anomaly Detection 모델 논문 탐독 | 03.30 일 (1d)           |
+| 실험 대상 Vision Anomaly Detection 모델 논문 탐독 | 03.31 월 (1d)           |
 | 실험 설계                                   | 03.31 월 (1d)           |
 | 실험 실시                                   | 04.01 화 - 04.02 수 (2d) |
 | 실험 결과 정리                                | 04.03 목 (1d)           |
