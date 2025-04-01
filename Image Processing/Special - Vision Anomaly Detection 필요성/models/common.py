@@ -4,7 +4,8 @@ from torchview import draw_graph
 
 # 모델 그래프를 이미지로 그리기
 # Create Date : 2025.04.01
-# Last Update Date : -
+# Last Update Date : 2025.04.01
+# - 모델 그래프 format 을 PNG -> PDF 로 변경
 
 # Arguments:
 # - model      (nn.Module) : 모델 (TinyViT-21M-512-distill 또는 GLASS)
@@ -19,11 +20,8 @@ def save_model_graph_image(model, model_name, img_size=512):
     visual_graph = model_graph.visual_graph
 
     # Model Graph 이미지 저장
-    visual_graph.render(format='png')
-
-    # Model Graph 이미지 이름 변경
     file_path = os.path.abspath(os.path.dirname(__file__))
-    graph_img_name = f'{file_path}/model.gv.png'
-    dest_name = f'{file_path}/{model_name}.png'
+    dest_name = f'{file_path}/{model_name}.pdf'
 
-    os.rename(graph_img_name, dest_name)
+    visual_graph.render(format='pdf', outfile=dest_name)
+
