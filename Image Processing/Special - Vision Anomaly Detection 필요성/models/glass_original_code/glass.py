@@ -603,3 +603,26 @@ class GLASS(torch.nn.Module):
                 image_scores = image_scores.cpu().numpy()
 
         return list(image_scores), list(masks)
+
+    # additional forward function for torchinfo summary and model graph image
+    def forward(self, img):
+        img = img.to(torch.float).to(self.device)
+
+        patch_features, patch_shapes = self._embed(img, provide_patch_shapes=True, evaluation=True)
+
+        if self.pre_proj > 0:
+            patch_features = self.pre_projection(patch_features)
+            patch_features = patch_features[0] if len(patch_features) == 2 else patch_features
+
+        patch_scores = image_scores = self.discriminator(patch_features)
+        patch_scores = self.patch_maker.unpatch_scores(patch_scores, batchsize=img.shape[0])
+        scales = patch_shapes[0]
+        patch_scores = patch_scores.reshape(img.shape[0], scales[0], scales[1])
+        masks = self.anomaly_segmentor.convert_to_segmentation(patch_scores)
+
+        image_scores = self.patch_maker.unpatch_scores(image_scores, batchsize=img.shape[0])
+        image_scores = self.patch_maker.score(image_scores)
+        if isinstance(image_scores, torch.Tensor):
+            image_scores = image_scores.cpu().numpy()
+
+        return image_scores, masks
