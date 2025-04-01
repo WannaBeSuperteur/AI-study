@@ -1,11 +1,24 @@
 # Original GLASS Implementation, from https://github.com/cqylunlun/GLASS/blob/main/glass.py
 
+try:
+    from loss import FocalLoss
+    from model import Discriminator, Projection, PatchMaker
 
-from loss import FocalLoss
+    import metrics
+    import utils
+    import common
+
+except:
+    from glass_original_code.loss import FocalLoss
+    from glass_original_code.model import Discriminator, Projection, PatchMaker
+
+    import glass_original_code.metrics as metrics
+    import glass_original_code.utils as utils
+    import glass_original_code.common as common
+
 from collections import OrderedDict
 from torchvision import transforms
 from torch.utils.tensorboard import SummaryWriter
-from model import Discriminator, Projection, PatchMaker
 
 import numpy as np
 import pandas as pd
@@ -16,12 +29,10 @@ import os
 import math
 import torch
 import tqdm
-import common
-import metrics
 import cv2
-import utils
 import glob
 import shutil
+
 
 LOGGER = logging.getLogger(__name__)
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
