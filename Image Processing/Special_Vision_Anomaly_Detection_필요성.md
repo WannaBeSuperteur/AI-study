@@ -190,7 +190,7 @@ IEEE Conference on Computer Vision and Pattern Recognition, 2019
 | Normal Sample   | 원본 데이터셋의 Train Data **전체** | 원본 데이터셋의 Test Data 중 Normal Sample 의 **50%**   | 원본 데이터셋의 Test Data 중 Normal Sample 의 **50%**   |
 | Abnormal Sample | -                          | 원본 데이터셋의 Test Data 중 Abnormal Sample 의 **50%** | 원본 데이터셋의 Test Data 중 Abnormal Sample 의 **50%** |
 
-* Vision Classification Detection 의 Train/Valid/Test 데이터 구분
+* Vision Classification 의 Train/Valid/Test 데이터 구분
   * **각 카테고리 별로** 다음과 같이 데이터를 랜덤하게 배분
 
 |                 | Train Data                                     | Valid Data                                     | Test Data                                      |
