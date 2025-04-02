@@ -16,7 +16,7 @@ from gradcam_original_code.grad_cam import GradCAM
 # - xai_model (nn.Module) : pytorch-grad-cam 모델
 
 def get_xai_model(original_model, target_layers):
-    return GradCAM(model=original_model, target_layers=target_layers)
+    return GradCAM(model=original_model, target_layers=target_layers).model
 
 
 if __name__ == '__main__':
