@@ -1,6 +1,7 @@
 import os
 import cv2
 import numpy as np
+import shutil
 
 import random
 random.seed(2025)
@@ -64,26 +65,34 @@ def resize_all_images(img_dir, dest_size=512):
 
 # 원본 데이터셋의 데이터를 여러 그룹으로 분리하여 각 그룹에 해당하는 이미지 경로 반환
 # Create Date : 2025.04.01
-# Last Update Date : -
+# Last Update Date : 2025.04.02
+# - MVTec dataset 디렉토리 이름 변경 반영
+# - 전체 이미지가 아닌, 각 카테고리 별 image shuffle 하도록 수정
 
 # Arguments:
-# - dataset_type  (str)         : 'train' or 'test'
-# - dataset_class (str)         : 'normal' or 'abnormal'
-# - category_list (list(str))   : 세부 카테고리 목록
-# - group_names   (list(str))   : 그룹 이름 목록
-# - split_ratio   (list(float)) : 각 그룹에 할당할 이미지의 비율
+# - dataset_type      (str)         : 'train' or 'test'
+# - dataset_class     (str)         : 'normal' or 'abnormal'
+# - category_list     (list(str))   : 세부 카테고리 목록
+# - group_names       (list(str))   : 그룹 이름 목록
+# - split_ratio       (list(float)) : 각 그룹에 할당할 이미지의 비율
+# - original_data_dir (str)         : 원래 데이터셋 디렉토리 이름
 
 # Returns:
 # - image_paths_per_group (dict(list)) : 각 그룹에 해당하는 이미지의 리스트를 저장한 dict
 
-def split_dataset_into_groups(dataset_type, dataset_class, category_list, group_names, split_ratio):
+def split_dataset_into_groups(dataset_type, dataset_class, category_list, group_names, split_ratio, original_data_dir):
     assert sum(split_ratio) == 1.0, "SUM OF SPLIT RATIO MUST BE 1.0"
     assert len(group_names) == len(split_ratio), "LENGTH OF group_names MUST BE SAME WITH LENGTH OF split_ratio"
 
-    image_path_list = []
+    image_path_list = {}
+    image_paths_per_group = {}
+
+    for group_name in group_names:
+        image_paths_per_group[group_name] = []
 
     for category in category_list:
-        dataset_dir = f'{PROJECT_DIR_PATH}/mvtec_dataset_512/{category}/{dataset_type}'
+        image_path_list[category] = []
+        dataset_dir = f'{PROJECT_DIR_PATH}/{original_data_dir}/{category}/{dataset_type}'
 
         if dataset_class == 'normal':
             img_dir_path = f'{dataset_dir}/good'
@@ -100,44 +109,62 @@ def split_dataset_into_groups(dataset_type, dataset_class, category_list, group_
 
                 img_paths += img_path_list
 
-        image_path_list += img_paths
+        image_path_list[category] += img_paths
 
-    # apply random shuffle
-    shuffle(image_path_list)
+        # apply random shuffle
+        shuffle(image_path_list[category])
 
-    image_cnt = len(image_path_list)
-    current_cum_ratio = 0.0
-    image_paths_per_group = {}
+        image_cnt = len(image_path_list[category])
+        current_cum_ratio = 0.0
 
-    for group_name, part_ratio in zip(group_names, split_ratio):
+        for group_name, part_ratio in zip(group_names, split_ratio):
+            part_start_idx = int(image_cnt * current_cum_ratio)
+            part_end_idx = int(image_cnt * (current_cum_ratio + part_ratio))
 
-        part_start_idx = int(image_cnt * current_cum_ratio)
-        part_end_idx = int(image_cnt * (current_cum_ratio + part_ratio))
+            image_path_list_part = image_path_list[category][part_start_idx:part_end_idx]
+            image_paths_per_group[group_name] += image_path_list_part
 
-        image_path_list_part = image_path_list[part_start_idx:part_end_idx]
-        image_paths_per_group[group_name] = image_path_list_part
-
-        current_cum_ratio += part_ratio
+            current_cum_ratio += part_ratio
 
     return image_paths_per_group
 
 
 # 각 그룹에 해당하는 이미지 경로의 이미지를 특정 디렉토리에 복사
-# Create Date : 2025.04.01
+# Create Date : 2025.04.02
 # Last Update Date : -
 
 # Arguments:
 # - image_paths_per_group (dict(list)) : 각 그룹에 해당하는 이미지의 리스트를 저장한 dict
-# - dir_names_to_copy     (dict(str))  : 각 그룹에 해당하는 이미지를 복사할 경로
+# - dir_name_to_copy      (dict(str))  : 각 그룹에 해당하는 이미지를 복사할 경로
 #                                        (key 조합은 image_paths_per_group 의 key 조합과 동일)
 
 # Returns:
 # - 각 그룹에 해당하는 이미지를 dir_names_to_copy 가 가리키는 디렉토리에 복사
 
-def copy_images(image_paths_per_group, dir_names_to_copy):
-    os.makedirs(f'{PROJECT_DIR_PATH}/{dir_names_to_copy}', exist_ok=True)
+def copy_images(image_paths_per_group, dir_name_to_copy):
+    dir_path = f'{PROJECT_DIR_PATH}/{dir_name_to_copy}'
+    os.makedirs(dir_path, exist_ok=True)
 
-    raise NotImplementedError
+    print('--------')
+
+    for group_name, img_paths in image_paths_per_group.items():
+        print(f'group: {group_name}, image count: {len(img_paths)}')
+
+        img_type = group_name.split('_')[0]   # 'train' or 'test'
+        img_class = group_name.split('_')[1]  # 'normal' or 'abnormal'
+
+        for img_path in img_paths:
+            category_name = img_path.split('/')[-4]
+
+            original_type = img_path.split('/')[-3]
+            original_class_name = img_path.split('/')[-2]
+            copied_img_name = f'{original_type}_{original_class_name}_{img_path.split("/")[-1]}'
+
+            copy_dir_path = f'{dir_path}/{category_name}/{img_type}/{img_class}'
+            copied_img_path = f'{copy_dir_path}/{copied_img_name}'
+
+            os.makedirs(copy_dir_path, exist_ok=True)
+            shutil.copy(img_path, copied_img_path)
 
 
 # 원본 데이터 기준으로, 해당 카테고리의 test data 중 abnormal image 가 가장 많은 class 인 LAC 찾기

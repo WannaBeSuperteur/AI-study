@@ -30,7 +30,9 @@ def get_category_list():
 
 # 정량적 성능 평가 - Vision Anomaly Detection 의 Train/Valid/Test 데이터 구분
 # Create Date : 2025.04.01
-# Last Update Date : -
+# Last Update Date : 2025.04.02
+# - 변수명 수정 : dir_names_to_copy -> dir_name_to_copy
+# - split_dataset_into_groups 함수에 original_data_dir 인수 추가 반영
 
 # Arguments:
 # - category_list (list(str)) : 세부 카테고리 목록
@@ -45,34 +47,41 @@ def get_category_list():
 #                                           Test Data 의 Abnormal Sample (50%) 로 분리
 
 def split_data_exp1_anomaly(category_list):
+    original_data_dir = 'mvtec_dataset_256'
+
     image_path_train = split_dataset_into_groups(dataset_type='train',
                                                  dataset_class='normal',
                                                  category_list=category_list,
                                                  group_names=['train_normal'],
-                                                 split_ratio=[1.0])
+                                                 split_ratio=[1.0],
+                                                 original_data_dir=original_data_dir)
 
     image_path_test_normal = split_dataset_into_groups(dataset_type='test',
                                                        dataset_class='normal',
                                                        category_list=category_list,
                                                        group_names=['valid_normal', 'test_normal'],
-                                                       split_ratio=[0.5, 0.5])
+                                                       split_ratio=[0.5, 0.5],
+                                                       original_data_dir=original_data_dir)
 
     image_path_test_abnormal = split_dataset_into_groups(dataset_type='test',
                                                          dataset_class='abnormal',
                                                          category_list=category_list,
                                                          group_names=['valid_abnormal', 'test_abnormal'],
-                                                         split_ratio=[0.5, 0.5])
+                                                         split_ratio=[0.5, 0.5],
+                                                         original_data_dir=original_data_dir)
 
     image_path_dicts = [image_path_train, image_path_test_normal, image_path_test_abnormal]
 
     for image_path_dict in image_path_dicts:
         copy_images(image_paths_per_group=image_path_dict,
-                    dir_names_to_copy='mvtec_dataset_exp1_anomaly')
+                    dir_name_to_copy='mvtec_dataset_exp1_anomaly')
 
 
 # 정량적 성능 평가 - Vision Classification 의 Train/Valid/Test 데이터 구분
 # Create Date : 2025.04.01
-# Last Update Date : -
+# Last Update Date : 2025.04.02
+# - 변수명 수정 : dir_names_to_copy -> dir_name_to_copy
+# - split_dataset_into_groups 함수에 original_data_dir 인수 추가 반영
 
 # Arguments:
 # - category_list (list(str)) : 세부 카테고리 목록
@@ -88,35 +97,39 @@ def split_data_exp1_anomaly(category_list):
 #                                           Test Data 의 Abnormal Sample (25%) 로 분리
 
 def split_data_exp1_classify(category_list):
+    original_data_dir = 'mvtec_dataset_512'
+
     image_path_train = split_dataset_into_groups(dataset_type='train',
                                                  dataset_class='normal',
                                                  category_list=category_list,
                                                  group_names=['train_normal'],
-                                                 split_ratio=[1.0])
+                                                 split_ratio=[1.0],
+                                                 original_data_dir=original_data_dir)
 
     image_path_test_normal = split_dataset_into_groups(dataset_type='test',
                                                        dataset_class='normal',
                                                        category_list=category_list,
                                                        group_names=['valid_normal', 'test_normal'],
-                                                       split_ratio=[0.5, 0.5])
+                                                       split_ratio=[0.5, 0.5],
+                                                       original_data_dir=original_data_dir)
 
     image_path_test_abnormal = split_dataset_into_groups(dataset_type='test',
                                                          dataset_class='abnormal',
                                                          category_list=category_list,
                                                          group_names=['train_abnormal', 'valid_abnormal', 'test_abnormal'],
-                                                         split_ratio=[0.5, 0.25, 0.25])
+                                                         split_ratio=[0.5, 0.25, 0.25],
+                                                         original_data_dir=original_data_dir)
 
     image_path_dicts = [image_path_train, image_path_test_normal, image_path_test_abnormal]
 
     for image_path_dict in image_path_dicts:
         copy_images(image_paths_per_group=image_path_dict,
-                    dir_names_to_copy='mvtec_dataset_exp1_classify')
+                    dir_name_to_copy='mvtec_dataset_exp1_classify')
 
 
 # 새로운 Abnormal Class 탐지 성능 평가 - Vision Classification 의 Train/Valid/Test 데이터 구분
-# Create Date : 2025.04.01
-# Last Update Date : 2025.04.02
-# - 변수명 수정 : lac_list -> lac_dict
+# Create Date : 2025.04.02
+# Last Update Date : -
 
 # Arguments:
 # - category_list (list(str)) : 세부 카테고리 목록
@@ -132,17 +145,21 @@ def split_data_exp1_classify(category_list):
 #                                           Test Data 의 Abnormal Sample (LAC 외의 모든 Class) 로 분리
 
 def split_data_exp3_classify(category_list, lac_dict):
+    original_data_dir = 'mvtec_dataset_512'
+
     image_path_train = split_dataset_into_groups(dataset_type='train',
                                                  dataset_class='normal',
                                                  category_list=category_list,
                                                  group_names=['train_normal'],
-                                                 split_ratio=[1.0])
+                                                 split_ratio=[1.0],
+                                                 original_data_dir=original_data_dir)
 
     image_path_test_normal = split_dataset_into_groups(dataset_type='test',
                                                        dataset_class='normal',
                                                        category_list=category_list,
                                                        group_names=['valid_normal'],
-                                                       split_ratio=[1.0])
+                                                       split_ratio=[1.0],
+                                                       original_data_dir=original_data_dir)
 
     image_path_test_abnormal = None  # TODO: implement
 
@@ -150,7 +167,7 @@ def split_data_exp3_classify(category_list, lac_dict):
 
     for image_path_dict in image_path_dicts:
         copy_images(image_paths_per_group=image_path_dict,
-                    dir_names_to_copy='mvtec_dataset_exp3_classify')
+                    dir_name_to_copy='mvtec_dataset_exp3_classify')
 
     raise NotImplementedError
 
