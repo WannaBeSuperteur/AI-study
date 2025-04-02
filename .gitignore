@@ -56,8 +56,10 @@ Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하
 Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기/regression_background_mean/*
 Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기/regression_background_std/*
 Generative AI/Project 002. Conditional VAE 를 이용한 사람 얼굴 생성하기/regression_other_person/*
-Image Processing/Special - Vision Anomaly Detection 필요성/mvtec_dataset
-Image Processing/Special - Vision Anomaly Detection 필요성/mvtec_dataset/*
+Image Processing/Special - Vision Anomaly Detection 필요성/mvtec_dataset_512
+Image Processing/Special - Vision Anomaly Detection 필요성/mvtec_dataset_512/*
+Image Processing/Special - Vision Anomaly Detection 필요성/mvtec_dataset_256
+Image Processing/Special - Vision Anomaly Detection 필요성/mvtec_dataset_256/*
 Image Processing/Special - Vision Anomaly Detection 필요성/mvtec_dataset_exp1_anomaly
 Image Processing/Special - Vision Anomaly Detection 필요성/mvtec_dataset_exp1_anomaly/*
 Image Processing/Special - Vision Anomaly Detection 필요성/mvtec_dataset_exp1_classify

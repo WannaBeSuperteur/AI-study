@@ -1,12 +1,17 @@
 from tvt_split import resize_all_images, split_dataset_into_groups, copy_images, get_lac
 
 import os
+PROJECT_DIR_PATH = os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+
+TINYVIT_IMG_SIZE = 512
+GLASS_IMG_SIZE = 256  # to reduce GPU memory (12GB)
 
 
 # MVTec-AD Dataset 의 카테고리 목록
 # Create Date : 2025.04.01
 # Last Update Date : 2025.04.02
 # - *.txt file 제외 처리
+# - MVTec dataset 디렉토리 이름 변경 반영
 
 # Arguments:
 # - 없음
@@ -15,8 +20,7 @@ import os
 # - category_list (list) : MVTec-AD 데이터셋의 전체 카테고리 목록
 
 def get_category_list():
-    file_path = os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-    mvtec_dataset_path = f'{file_path}/mvtec_dataset'
+    mvtec_dataset_path = f'{PROJECT_DIR_PATH}/mvtec_dataset_512'
 
     file_list = os.listdir(mvtec_dataset_path)
     category_list = list(filter(lambda x: '.' not in x, file_list))
@@ -159,7 +163,8 @@ if __name__ == '__main__':
     print(f'CATEGORY LIST:\n{category_list}')
     print(f'LAC LIST:\n{lac_list}')
 
-    resize_all_images()
+    resize_all_images(img_dir='mvtec_dataset_512', dest_size=TINYVIT_IMG_SIZE)
+    resize_all_images(img_dir='mvtec_dataset_256', dest_size=GLASS_IMG_SIZE)
 
     # experiment dataset setting
     split_data_exp1_anomaly(category_list)
