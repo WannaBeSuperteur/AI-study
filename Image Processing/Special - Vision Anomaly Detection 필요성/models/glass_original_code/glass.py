@@ -138,7 +138,7 @@ class GLASS(torch.nn.Module):
         self.svd = svd
         self.step = step
         self.limit = limit
-        self.distribution = 0
+        self.distribution = 2  # suppose MANIFOLD distribution for all sub-categories
         self.focal_loss = FocalLoss()
 
         self.patch_maker = PatchMaker(patchsize, stride=patchstride)
@@ -210,6 +210,8 @@ class GLASS(torch.nn.Module):
 
     def trainer(self, training_data, val_data, name):
         state_dict = {}
+        entire_loss_list = []
+
         ckpt_path = glob.glob(self.ckpt_dir + '/ckpt_best*')
         ckpt_path_save = os.path.join(self.ckpt_dir, "ckpt.pth")
         if len(ckpt_path) != 0:
@@ -226,7 +228,6 @@ class GLASS(torch.nn.Module):
                     for k, v in self.pre_projection.state_dict().items()})
 
         self.distribution = training_data.dataset.distribution
-        xlsx_path = './datasets/excel/' + name.split('_')[0] + '_distribution.xlsx'
         try:
             if self.distribution == 1:  # rejudge by image-level spectrogram analysis
                 self.distribution = 1
@@ -237,14 +238,6 @@ class GLASS(torch.nn.Module):
             elif self.distribution == 3:  # hypersphere
                 self.distribution = 0
                 self.svd = 1
-            elif self.distribution == 4:  # opposite choose by file
-                self.distribution = 0
-                df = pd.read_excel(xlsx_path)
-                self.svd = 1 - df.loc[df['Class'] == name, 'Distribution'].values[0]
-            else:  # choose by file
-                self.distribution = 0
-                df = pd.read_excel(xlsx_path)
-                self.svd = df.loc[df['Class'] == name, 'Distribution'].values[0]
         except:
             self.distribution = 1
             self.svd = 1
@@ -254,7 +247,7 @@ class GLASS(torch.nn.Module):
             self.forward_modules.eval()
             with torch.no_grad():
                 for i, data in enumerate(training_data):
-                    img = data["image"]
+                    img = data[0]
                     img = img.to(torch.float).to(self.device)
                     batch_mean = torch.mean(img, dim=0)
                     if i == 0:
@@ -276,7 +269,7 @@ class GLASS(torch.nn.Module):
             self.forward_modules.eval()
             with torch.no_grad():  # compute center
                 for i, data in enumerate(training_data):
-                    img = data["image"]
+                    img = data[0]
                     img = img.to(torch.float).to(self.device)
                     if self.pre_proj > 0:
                         outputs = self.pre_projection(self._embed(img, evaluation=False)[0])
@@ -293,7 +286,9 @@ class GLASS(torch.nn.Module):
                         self.c += batch_mean
                 self.c /= len(training_data)
 
-            pbar_str, pt, pf = self._train_discriminator(training_data, i_epoch, pbar, pbar_str1)
+            pbar_str, pt, pf, entire_loss = self._train_discriminator(training_data, i_epoch, pbar, pbar_str1)
+            entire_loss_list.append(entire_loss)
+
             update_state_dict()
 
             if (i_epoch + 1) % self.eval_epochs == 0:
@@ -333,8 +328,7 @@ class GLASS(torch.nn.Module):
                 pbar_str += pbar_str1
                 pbar.set_description_str(pbar_str)
 
-            torch.save(state_dict, ckpt_path_save)
-        return best_record
+        return best_record, entire_loss_list
 
     def _train_discriminator(self, input_data, cur_epoch, pbar, pbar_str1):
         self.forward_modules.eval()
@@ -491,7 +485,7 @@ class GLASS(torch.nn.Module):
             if sample_num > self.limit:
                 break
 
-        return pbar_str2, all_p_true_, all_p_fake_
+        return pbar_str2, all_p_true_, all_p_fake_, all_loss_
 
     def tester(self, test_data, name):
         ckpt_path = glob.glob(self.ckpt_dir + '/ckpt_best*')

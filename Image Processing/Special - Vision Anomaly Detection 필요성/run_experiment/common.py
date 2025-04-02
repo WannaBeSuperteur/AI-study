@@ -4,11 +4,15 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 PROJECT_DIR_PATH = os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, DataLoader
 from torchvision.io import read_image
 import torchvision.transforms as transforms
 
 import pandas as pd
+
+TRAIN_BATCH_SIZE = 16
+VALID_BATCH_SIZE = 4
+TEST_BATCH_SIZE = 4
 
 
 class CustomMVTecDataset(Dataset):
@@ -16,12 +20,13 @@ class CustomMVTecDataset(Dataset):
         self.img_paths = dataset_df['img_path'].tolist()
         self.labels = dataset_df['label'].tolist()
         self.transform = transform
+        self.distribution = 2  # (for GLASS, Anomaly Detection) suppose MANIFOLD distribution for all sub-categories
 
     def __len__(self):
         return len(self.img_paths)
 
     def __getitem__(self, idx):
-        img_path = f'{PROJECT_DIR_PATH}/{self.img_paths[idx]}'
+        img_path = self.img_paths[idx]
         image = read_image(img_path)
         image = self.transform(image)
         label = self.labels[idx]
@@ -106,10 +111,15 @@ def create_dataset_df(category_name, dataset_dir_name, dataset_type):
 # - valid_dataset (Dataset)   : 검증 데이터셋 (카테고리 별)
 
 # Returns:
-# - val_loss_list (list) : Valid Loss 기록
+# - entire_loss_list (list) : GLASS 모델의 Loss 기록
 
 def run_train_glass(model, train_dataset, valid_dataset):
-    raise NotImplementedError
+    train_loader = DataLoader(train_dataset, batch_size=TRAIN_BATCH_SIZE, shuffle=True)
+    valid_loader = DataLoader(valid_dataset, batch_size=TRAIN_BATCH_SIZE, shuffle=False)
+
+    model.ckpt_dir = f'{PROJECT_DIR_PATH}/run_experiment/exp1_glass_ckpt'
+    entire_loss_list = model.trainer(train_loader, valid_loader, name="exp1_anomaly_detection")
+    return entire_loss_list
 
 
 # TinyViT 모델 학습 실시
@@ -142,6 +152,9 @@ def run_train_tinyvit(model, train_dataset, valid_dataset):
 # - confusion_matrix (Pandas DataFrame) : 테스트 성능 평가 시 생성된 Confusion Matrix
 
 def run_test_glass(model, test_dataset):
+    test_loader = DataLoader(test_dataset, batch_size=TEST_BATCH_SIZE, shuffle=False)
+    _, _, _, _, _, _, anomaly_score_info = model.tester(test_loader, name="exp1_anomaly_detection")
+
     raise NotImplementedError
 
 
