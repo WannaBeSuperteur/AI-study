@@ -1,7 +1,10 @@
-import glob
 import os
 import cv2
 import numpy as np
+
+import random
+random.seed(2025)
+from random import shuffle
 
 PROJECT_DIR_PATH = os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
@@ -77,7 +80,46 @@ def split_dataset_into_groups(dataset_type, dataset_class, category_list, group_
     assert sum(split_ratio) == 1.0, "SUM OF SPLIT RATIO MUST BE 1.0"
     assert len(group_names) == len(split_ratio), "LENGTH OF group_names MUST BE SAME WITH LENGTH OF split_ratio"
 
-    return NotImplementedError
+    image_path_list = []
+
+    for category in category_list:
+        dataset_dir = f'{PROJECT_DIR_PATH}/mvtec_dataset_512/{category}/{dataset_type}'
+
+        if dataset_class == 'normal':
+            img_dir_path = f'{dataset_dir}/good'
+            img_paths = os.listdir(img_dir_path)
+            img_paths = [f'{img_dir_path}/{x}' for x in img_paths]
+        else:
+            img_dirs = list(filter(lambda x: x != 'good', os.listdir(dataset_dir)))
+            img_paths = []
+
+            for img_dir in img_dirs:
+                img_dir_path = f'{dataset_dir}/{img_dir}'
+                img_path_list = os.listdir(img_dir_path)
+                img_path_list = [f'{img_dir_path}/{x}' for x in img_path_list]
+
+                img_paths += img_path_list
+
+        image_path_list += img_paths
+
+    # apply random shuffle
+    shuffle(image_path_list)
+
+    image_cnt = len(image_path_list)
+    current_cum_ratio = 0.0
+    image_paths_per_group = {}
+
+    for group_name, part_ratio in zip(group_names, split_ratio):
+
+        part_start_idx = int(image_cnt * current_cum_ratio)
+        part_end_idx = int(image_cnt * (current_cum_ratio + part_ratio))
+
+        image_path_list_part = image_path_list[part_start_idx:part_end_idx]
+        image_paths_per_group[group_name] = image_path_list_part
+
+        current_cum_ratio += part_ratio
+
+    return image_paths_per_group
 
 
 # 각 그룹에 해당하는 이미지 경로의 이미지를 특정 디렉토리에 복사
@@ -93,7 +135,9 @@ def split_dataset_into_groups(dataset_type, dataset_class, category_list, group_
 # - 각 그룹에 해당하는 이미지를 dir_names_to_copy 가 가리키는 디렉토리에 복사
 
 def copy_images(image_paths_per_group, dir_names_to_copy):
-    return NotImplementedError
+    os.makedirs(f'{PROJECT_DIR_PATH}/{dir_names_to_copy}', exist_ok=True)
+
+    raise NotImplementedError
 
 
 # 원본 데이터 기준으로, 해당 카테고리의 test data 중 abnormal image 가 가장 많은 class 인 LAC 찾기
