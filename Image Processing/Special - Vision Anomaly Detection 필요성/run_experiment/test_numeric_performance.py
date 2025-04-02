@@ -29,10 +29,10 @@ if __name__ == '__main__':
         train_dataset_tinyvit, valid_dataset_tinyvit, test_dataset_tinyvit = (
             get_datasets(category_name, dataset_dir_name='mvtec_dataset_exp1_classify', img_size=512))
 
-        entire_loss_list = run_train_glass(glass_model, train_dataset_glass, valid_dataset_glass)
+        entire_loss_list = run_train_glass(glass_model, train_dataset_glass, valid_dataset_glass, category_name)
         run_train_tinyvit(tinyvit_model, train_dataset_tinyvit, valid_dataset_tinyvit)
 
-        test_result_glass, confusion_matrix_glass = run_test_glass(glass_model, test_dataset_glass)
+        test_result_glass, confusion_matrix_glass = run_test_glass(glass_model, test_dataset_glass, category_name)
         test_result_tinyvit, confusion_matrix_tinyvit = run_test_tinyvit(tinyvit_model, test_dataset_tinyvit)
 
         print(f'\n==== TRAIN RESULT ({category_name}) of GLASS ====')

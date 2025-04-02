@@ -204,24 +204,26 @@ def create_dataset_df(category_name, dataset_dir_name, dataset_type):
 
 # GLASS 모델 학습 실시
 # Create Date : 2025.04.02
-# Last Update Date : -
+# Last Update Date : 2025.04.03
+# - category 별 checkpoint 구분을 위해 category name 인수 추가
 
 # Arguments:
 # - model         (nn.Module) : 학습 및 성능 테스트에 사용할 GLASS 모델
 # - train_dataset (Dataset)   : 학습 데이터셋 (카테고리 별)
 # - valid_dataset (Dataset)   : 검증 데이터셋 (카테고리 별)
+# - category      (str)       : MVTec AD 데이터셋의 세부 카테고리 이름
 
 # Returns:
 # - entire_loss_list (list) : GLASS 모델의 Loss 기록
 
-def run_train_glass(model, train_dataset, valid_dataset):
+def run_train_glass(model, train_dataset, valid_dataset, category):
     train_loader = DataLoader(train_dataset, batch_size=TRAIN_BATCH_SIZE, shuffle=True)
     valid_loader = DataLoader(valid_dataset, batch_size=TRAIN_BATCH_SIZE, shuffle=False)
 
     glass_model_dir = f'{PROJECT_DIR_PATH}/run_experiment/exp1_glass_ckpt'
-    model.set_model_dir(glass_model_dir, dataset_name="exp1_anomaly_detection")
+    model.set_model_dir(glass_model_dir, dataset_name=f"exp1_anomaly_detection_{category}")
 
-    entire_loss_list = model.trainer(train_loader, valid_loader, name="exp1_anomaly_detection")
+    entire_loss_list = model.trainer(train_loader, valid_loader, name=f"exp1_anomaly_detection_{category}")
     return entire_loss_list
 
 
@@ -242,21 +244,22 @@ def run_train_tinyvit(model, train_dataset, valid_dataset):
 
 
 # GLASS 모델 테스트 실시
-# Create Date : 2025.04.02
+# Create Date : 2025.04.03
 # Last Update Date : -
 
 # Arguments:
 # - model        (nn.Module) : 학습 및 성능 테스트에 사용할 GLASS 모델
 # - test_dataset (Dataset)   : 테스트 데이터셋 (카테고리 별)
+# - category     (str)       : MVTec AD 데이터셋의 세부 카테고리 이름
 
 # Returns:
 # - test_result      (dict)             : 테스트 성능 평가 결과
 #                                         {'accuracy': float, 'recall': float, 'precision': float, 'f1_score': float}
 # - confusion_matrix (Pandas DataFrame) : 테스트 성능 평가 시 생성된 Confusion Matrix
 
-def run_test_glass(model, test_dataset):
+def run_test_glass(model, test_dataset, category):
     test_loader = DataLoader(test_dataset, batch_size=TEST_BATCH_SIZE, shuffle=False)
-    _, _, _, _, _, _, anomaly_score_info = model.tester(test_loader, name="exp1_anomaly_detection")
+    _, _, _, _, _, _, anomaly_score_info = model.tester(test_loader, name=f"exp1_anomaly_detection_{category}")
 
     raise NotImplementedError
 
