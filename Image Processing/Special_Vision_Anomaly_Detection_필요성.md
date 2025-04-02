@@ -215,7 +215,7 @@ IEEE Conference on Computer Vision and Pattern Recognition, 2019
 
 * 설명 능력 평가 방법
   * Ground Truth Abnormal Region 과 XAI 모델에 의해 도출된 Heatmap 에서 값이 큰 영역을 비교
-  * 정성적 평가 
+  * 정성적 평가
 
 **3. 새로운 Abnormal Class 탐지 성능 평가**
 
@@ -240,6 +240,13 @@ IEEE Conference on Computer Vision and Pattern Recognition, 2019
 
 * 설명 능력 평가 방법
   * **2. 설명 능력 평가** 와 동일하게, 정성적 평가 실시
+
+**Citation for XAI model**
+
+```
+PyTorch library for CAM methods, by Jacob Gildenblat and contributors (2021),
+Github URL : https://github.com/jacobgil/pytorch-grad-cam}
+```
 
 ### 2-2. 실험 결과
 
