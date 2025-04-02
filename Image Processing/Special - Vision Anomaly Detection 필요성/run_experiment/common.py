@@ -8,6 +8,9 @@ from torch.utils.data import Dataset
 from torchvision.io import read_image
 import torchvision.transforms as transforms
 
+import pandas as pd
+
+
 class CustomMVTecDataset(Dataset):
     def __init__(self, dataset_df, transform):
         self.img_paths = dataset_df['img_path'].tolist()
@@ -32,7 +35,7 @@ class CustomMVTecDataset(Dataset):
 
 # Arguments:
 # - category_name    (str) : 카테고리 이름
-# - dataset_dir_name (str) : 데이터셋 디렉토리 이름 (mvtec_dataset_256 or mvtec_dataset_512)
+# - dataset_dir_name (str) : 데이터셋 디렉토리 이름
 
 # Returns:
 # - train_dataset (Dataset) : 해당 카테고리의 학습 데이터셋
@@ -60,7 +63,7 @@ def get_datasets(category_name, dataset_dir_name):
 
 # Arguments:
 # - category_name    (str) : 카테고리 이름
-# - dataset_dir_name (str) : 데이터셋 디렉토리 이름 (mvtec_dataset_256 or mvtec_dataset_512)
+# - dataset_dir_name (str) : 데이터셋 디렉토리 이름
 # - dataset_type     (str) : 'train', 'valid' or 'test'
 
 # Returns:
@@ -68,7 +71,29 @@ def get_datasets(category_name, dataset_dir_name):
 #                                   columns = ['img_path', 'label']
 
 def create_dataset_df(category_name, dataset_dir_name, dataset_type):
-    raise NotImplementedError
+    dataset_dir_path = f'{PROJECT_DIR_PATH}/{dataset_dir_name}/{category_name}/{dataset_type}'
+
+    img_paths = []
+    labels = []
+
+    # 이미지 찾기
+    for (path, _, files) in os.walk(dataset_dir_path):
+        path_ = path.replace(os.sep, '/')
+
+        for file_name in files:
+            ext = os.path.splitext(file_name)[-1]
+
+            if ext == '.png':
+                img_path = f'{path_}/{file_name}'
+                label = path_.split('/')[-1]
+
+                img_paths.append(img_path)
+                labels.append(label)
+
+    dataset_dict = {'img_path': img_paths, 'label': labels}
+    dataset_df = pd.DataFrame(dataset_dict)
+
+    return dataset_df
 
 
 # GLASS 모델 학습 실시
