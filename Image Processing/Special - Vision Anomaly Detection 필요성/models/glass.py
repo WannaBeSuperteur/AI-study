@@ -15,7 +15,8 @@ GLASS_IMG_SIZE = 256  # to reduce GPU memory (12GB)
 
 # GLASS 모델 가져오기
 # Create Date : 2025.04.01
-# Last Update Date : -
+# Last Update Date : 2025.04.02
+# - meta_epochs 값 수정
 
 # Arguments:
 # - 없음
@@ -40,7 +41,7 @@ def get_model():
         pretrain_embed_dimension=384,                    # originally 1536
         target_embed_dimension=384,                      # originally 1536
         patchsize=3,
-        meta_epochs=5,
+        meta_epochs=50,
         eval_epochs=1,
         dsc_layers=2,
         dsc_hidden=256,                                  # originally 1024

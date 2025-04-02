@@ -1,5 +1,9 @@
 # Original GLASS Implementation, from https://github.com/cqylunlun/GLASS/blob/main/glass.py
 
+import os
+PROJECT_DIR_PATH = os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
+
+
 try:
     from loss import FocalLoss
     from model import Discriminator, Projection, PatchMaker
@@ -302,8 +306,12 @@ class GLASS(torch.nn.Module):
                 self.logger.logger.add_scalar("p-ap", pixel_ap, i_epoch)
                 self.logger.logger.add_scalar("p-pro", pixel_pro, i_epoch)
 
-                eval_path = './results/eval/' + name + '/'
-                train_path = './results/training/' + name + '/'
+                eval_path = PROJECT_DIR_PATH + '/run_experiment/exp1_glass_results/eval/' + name + '/'
+                train_path = PROJECT_DIR_PATH + '/run_experiment/exp1_glass_results/training/' + name + '/'
+
+                os.makedirs(eval_path, exist_ok=True)
+                os.makedirs(train_path, exist_ok=True)
+
                 if best_record is None:
                     best_record = [image_auroc, image_ap, pixel_auroc, pixel_ap, pixel_pro, i_epoch]
                     ckpt_path_best = os.path.join(self.ckpt_dir, "ckpt_best_{}.pth".format(i_epoch))
@@ -328,6 +336,8 @@ class GLASS(torch.nn.Module):
                 pbar_str += pbar_str1
                 pbar.set_description_str(pbar_str)
 
+                print('')
+
         return best_record, entire_loss_list
 
     def _train_discriminator(self, input_data, cur_epoch, pbar, pbar_str1):
@@ -343,9 +353,9 @@ class GLASS(torch.nn.Module):
             if self.pre_proj > 0:
                 self.proj_opt.zero_grad()
 
-            aug = data_item["aug"]
+            aug = data_item[3]
             aug = aug.to(torch.float).to(self.device)
-            img = data_item["image"]
+            img = data_item[0]
             img = img.to(torch.float).to(self.device)
             if self.pre_proj > 0:
                 fake_feats = self.pre_projection(self._embed(aug, evaluation=False)[0])
@@ -358,7 +368,7 @@ class GLASS(torch.nn.Module):
                 true_feats = self._embed(img, evaluation=False)[0]
                 true_feats.requires_grad = True
 
-            mask_s_gt = data_item["mask_s"].reshape(-1, 1).to(self.device)
+            mask_s_gt = data_item[4].reshape(-1, 1).to(self.device)
             noise = torch.normal(0, self.noise, true_feats.shape).to(self.device)
             gaus_feats = true_feats + noise
 
@@ -564,13 +574,11 @@ class GLASS(torch.nn.Module):
 
         with tqdm.tqdm(test_dataloader, desc="Inferring...", leave=False, unit='batch') as data_iterator:
             for data in data_iterator:
-                if isinstance(data, dict):
-                    labels_gt.extend(data["is_anomaly"].numpy().tolist())
-                    if data.get("mask_gt", None) is not None:
-                        masks_gt.extend(data["mask_gt"].numpy().tolist())
-                    image = data["image"]
-                    images.extend(image.numpy().tolist())
-                    img_paths.extend(data["image_path"])
+                labels_gt += list(data[1])
+                image = data[0]
+                images.extend(image.numpy().tolist())
+                img_paths.extend(data[2])
+
                 _scores, _masks = self._predict(image)
                 for score, mask in zip(_scores, _masks):
                     scores.append(score)

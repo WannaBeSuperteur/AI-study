@@ -100,7 +100,7 @@ class CustomMVTecDataset(Dataset):
         transform_aug = transforms.Compose(transform_aug)
         return transform_aug
 
-    def get_aug_image(self, img_path):
+    def get_aug_image_and_mask_s(self, img_path):
         image = PIL.Image.open(img_path).convert("RGB")
         image = self.transform_img(image)
 
@@ -111,13 +111,14 @@ class CustomMVTecDataset(Dataset):
         aug = transform_aug(aug)
 
         mask_all = perlin_mask(image.shape, self.img_size // self.downsampling, 0, 6, mask_fg, 1)
+        mask_s = torch.from_numpy(mask_all[0])
         mask_l = torch.from_numpy(mask_all[1])
 
         beta = np.random.normal(loc=self.mean, scale=self.std)
         beta = np.clip(beta, .2, .8)
         aug_image = image * (1 - mask_l) + (1 - beta) * aug * mask_l + beta * image * mask_l
 
-        return aug_image
+        return aug_image, mask_s
 
     def __getitem__(self, idx):
         img_path = self.img_paths[idx]
@@ -126,10 +127,10 @@ class CustomMVTecDataset(Dataset):
         label = self.labels[idx]
 
         if self.dataset_type == 'train':
-            aug_image = self.get_aug_image(img_path)
-            return image, label, aug_image
+            aug_image, mask_s = self.get_aug_image_and_mask_s(img_path)
+            return image, label, img_path, aug_image, mask_s
         else:
-            return image, label
+            return image, label, img_path
 
 
 # 학습, 검증 및 테스트 데이터셋 정의
@@ -217,7 +218,9 @@ def run_train_glass(model, train_dataset, valid_dataset):
     train_loader = DataLoader(train_dataset, batch_size=TRAIN_BATCH_SIZE, shuffle=True)
     valid_loader = DataLoader(valid_dataset, batch_size=TRAIN_BATCH_SIZE, shuffle=False)
 
-    model.ckpt_dir = f'{PROJECT_DIR_PATH}/run_experiment/exp1_glass_ckpt'
+    glass_model_dir = f'{PROJECT_DIR_PATH}/run_experiment/exp1_glass_ckpt'
+    model.set_model_dir(glass_model_dir, dataset_name="exp1_anomaly_detection")
+
     entire_loss_list = model.trainer(train_loader, valid_loader, name="exp1_anomaly_detection")
     return entire_loss_list
 
