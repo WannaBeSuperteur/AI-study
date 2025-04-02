@@ -5,7 +5,8 @@ import os
 
 # MVTec-AD Dataset 의 카테고리 목록
 # Create Date : 2025.04.01
-# Last Update Date : -
+# Last Update Date : 2025.04.02
+# - *.txt file 제외 처리
 
 # Arguments:
 # - 없음
@@ -17,7 +18,10 @@ def get_category_list():
     file_path = os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
     mvtec_dataset_path = f'{file_path}/mvtec_dataset'
 
-    return os.listdir(mvtec_dataset_path)
+    file_list = os.listdir(mvtec_dataset_path)
+    category_list = list(filter(lambda x: '.' not in x, file_list))
+
+    return category_list
 
 
 # 정량적 성능 평가 - Vision Anomaly Detection 의 Train/Valid/Test 데이터 구분
