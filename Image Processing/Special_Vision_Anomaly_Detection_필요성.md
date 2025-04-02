@@ -103,6 +103,13 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
 * 데이터셋
   * [MVTec AD Dataset](https://www.kaggle.com/datasets/ipythonx/mvtec-ad)
   * **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0)** 이므로, 원칙적으로 **상업적 사용이 불가** 하다.
+
+```
+Paul Bergmann, Michael Fauser, David Sattlegger, and Carsten Steger,
+"A Comprehensive Real-World Dataset for Unsupervised Anomaly Detection",
+IEEE Conference on Computer Vision and Pattern Recognition, 2019
+```
+
 * 세부 카테고리
   * 전체 15 개 
     * 최대한 많은 insight 를 도출하기 위해, 전체 데이터셋 내의 모든 세부 카테고리를 이용 
@@ -183,7 +190,7 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
 | Normal Sample   | 원본 데이터셋의 Train Data **전체** | 원본 데이터셋의 Test Data 중 Normal Sample 의 **50%**   | 원본 데이터셋의 Test Data 중 Normal Sample 의 **50%**   |
 | Abnormal Sample | -                          | 원본 데이터셋의 Test Data 중 Abnormal Sample 의 **50%** | 원본 데이터셋의 Test Data 중 Abnormal Sample 의 **50%** |
 
-* Vision Classification Detection 의 Train/Valid/Test 데이터 구분
+* Vision Classification 의 Train/Valid/Test 데이터 구분
   * **각 카테고리 별로** 다음과 같이 데이터를 랜덤하게 배분
 
 |                 | Train Data                                     | Valid Data                                     | Test Data                                      |
