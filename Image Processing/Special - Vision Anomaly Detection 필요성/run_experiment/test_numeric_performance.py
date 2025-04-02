@@ -21,13 +21,17 @@ if __name__ == '__main__':
         tinyvit_model = get_tinyvit_model()
         print('model load finished')
 
-        train_dataset, valid_dataset, test_dataset = get_datasets(category_name)
+        train_dataset_glass, valid_dataset_glass, test_dataset_glass = (
+            get_datasets(category_name, dataset_dir_name='mvtec_dataset_256'))
 
-        run_train_glass(glass_model, train_dataset, valid_dataset)
-        run_train_tinyvit(tinyvit_model, train_dataset, valid_dataset)
+        train_dataset_tinyvit, valid_dataset_tinyvit, test_dataset_tinyvit = (
+            get_datasets(category_name, dataset_dir_name='mvtec_dataset_512'))
 
-        test_result_glass, confusion_matrix_glass = run_test_glass(glass_model, test_dataset)
-        test_result_tinyvit, confusion_matrix_tinyvit = run_test_tinyvit(tinyvit_model, test_dataset)
+        run_train_glass(glass_model, train_dataset_glass, valid_dataset_glass)
+        run_train_tinyvit(tinyvit_model, train_dataset_tinyvit, valid_dataset_tinyvit)
+
+        test_result_glass, confusion_matrix_glass = run_test_glass(glass_model, test_dataset_glass)
+        test_result_tinyvit, confusion_matrix_tinyvit = run_test_tinyvit(tinyvit_model, test_dataset_tinyvit)
 
         print(f'\n==== TEST RESULT ({category_name}) of GLASS ====')
         print(test_result_glass)
