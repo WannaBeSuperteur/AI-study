@@ -22,10 +22,10 @@ if __name__ == '__main__':
         print('model load finished')
 
         train_dataset_glass, valid_dataset_glass, test_dataset_glass = (
-            get_datasets(category_name, dataset_dir_name='mvtec_dataset_exp1_anomaly'))
+            get_datasets(category_name, dataset_dir_name='mvtec_dataset_exp1_anomaly', img_size=256))
 
         train_dataset_tinyvit, valid_dataset_tinyvit, test_dataset_tinyvit = (
-            get_datasets(category_name, dataset_dir_name='mvtec_dataset_exp1_classify'))
+            get_datasets(category_name, dataset_dir_name='mvtec_dataset_exp1_classify', img_size=512))
 
         entire_loss_list = run_train_glass(glass_model, train_dataset_glass, valid_dataset_glass)
         run_train_tinyvit(tinyvit_model, train_dataset_tinyvit, valid_dataset_tinyvit)

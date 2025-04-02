@@ -66,6 +66,8 @@ Image Processing/Special - Vision Anomaly Detection 필요성/mvtec_dataset_exp1
 Image Processing/Special - Vision Anomaly Detection 필요성/mvtec_dataset_exp1_classify/*
 Image Processing/Special - Vision Anomaly Detection 필요성/mvtec_dataset_exp3_classify
 Image Processing/Special - Vision Anomaly Detection 필요성/mvtec_dataset_exp3_classify/*
+Image Processing/Special - Vision Anomaly Detection 필요성/models/glass_anomaly_source
+Image Processing/Special - Vision Anomaly Detection 필요성/models/glass_anomaly_source/*
 *.pyc
 __pycache__/
 .idea/*
