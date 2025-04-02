@@ -56,6 +56,22 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
 | Vision Classification    | TinyViT-21M-512-distill [(논문 - 2022.07)](https://arxiv.org/pdf/2207.10666v1) | [Paper Study](../Paper%20Study/Vision%20Model/%5B2025.03.29%5D%20TinyViT%20-%20Fast%20Pretraining%20Distillation%20for%20Small%20Vision%20Transformers.md)                                                 |
 | Vision Anomaly Detection | GLASS [(논문 - 2024.07)](https://arxiv.org/pdf/2407.09359v1)                   | [Paper Study](../Paper%20Study/Vision%20Model/%5B2025.03.31%5D%20A%20Unified%20Anomaly%20Synthesis%20Strategy%20with%20Gradient%20Ascent%20for%20Industrial%20Anomaly%20Detection%20and%20Localization.md) |
 
+* Citation for **TinyViT-21M-512-distill**
+
+``` 
+TinyViT: Fast Pretraining Distillation for Small Vision Transformers,
+by Wu, Kan and Zhang, Jinnian and Peng, Houwen and Liu, Mengchen and Xiao, Bin and Fu, Jianlong and Yuan, Lu,
+European conference on computer vision (ECCV), 2022
+```
+
+* Citation for **GLASS**
+
+``` 
+A unified anomaly synthesis strategy with gradient ascent for industrial anomaly detection and localization,
+by Chen, Qiyu and Luo, Huiyuan and Lv, Chengkan and Zhang, Zhengtao,
+European Conference on Computer Vision, 2025
+```
+
 **2. Vision Classification**
 
 * 실험 대상 모델 최종 선정
