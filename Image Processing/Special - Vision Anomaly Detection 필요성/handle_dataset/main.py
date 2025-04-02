@@ -1,4 +1,15 @@
-from tvt_split import resize_all_images, split_dataset_into_groups, split_dataset_into_groups_lac, copy_images, get_lac
+try:
+    from tvt_split import (resize_all_images,
+                           split_dataset_into_groups,
+                           split_dataset_into_groups_lac,
+                           copy_images,
+                           get_lac)
+except:
+    from handle_dataset.tvt_split import (resize_all_images,
+                                          split_dataset_into_groups,
+                                          split_dataset_into_groups_lac,
+                                          copy_images,
+                                          get_lac)
 
 import os
 PROJECT_DIR_PATH = os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
