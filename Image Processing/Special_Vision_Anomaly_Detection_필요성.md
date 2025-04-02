@@ -127,12 +127,12 @@ IEEE Conference on Computer Vision and Pattern Recognition, 2019
 ```
 
 * 세부 카테고리
-  * 전체 15 개 
-    * 최대한 많은 insight 를 도출하기 위해, 전체 데이터셋 내의 모든 세부 카테고리를 이용 
-  * Texture 계열 5 개
-    * Carpet, Grid, Leather, Tile, Wood
-  * Object 계열 10 개
-    * Bottle, Cable, Capsule, Hazelnut, Metal nut, Pill, Screw, Toothbrush, Transistor, Zipper 
+  * 전체 4 개 
+    * 전체 데이터셋 내의 15 개의 모든 세부 카테고리 중 아래와 같은 4 개를 대상으로 실험 
+  * Texture 계열 2 개
+    * Carpet, Grid
+  * Object 계열 2 개
+    * Bottle, Hazelnut
 
 ### 1-4. 실험 대상 모델 선정 기준
 

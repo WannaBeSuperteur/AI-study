@@ -16,7 +16,7 @@ PROJECT_DIR_PATH = os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirna
 
 
 if __name__ == '__main__':
-    category_list = get_category_list()
+    category_list = ['bottle', 'hazelnut', 'carpet', 'grid']  # get_category_list()
 
     for category_name in category_list:
         glass_model = get_glass_model()
