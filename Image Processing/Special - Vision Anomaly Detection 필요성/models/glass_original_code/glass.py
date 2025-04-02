@@ -314,7 +314,7 @@ class GLASS(torch.nn.Module):
 
                 if best_record is None:
                     best_record = [image_auroc, image_ap, pixel_auroc, pixel_ap, pixel_pro, i_epoch]
-                    ckpt_path_best = os.path.join(self.ckpt_dir, "ckpt_best_{}.pth".format(i_epoch))
+                    ckpt_path_best = os.path.join(self.ckpt_dir, "ckpt_best_at_epoch_{}.pth".format(i_epoch))
                     torch.save(state_dict, ckpt_path_best)
                     shutil.rmtree(eval_path, ignore_errors=True)
                     shutil.copytree(train_path, eval_path)
@@ -322,7 +322,7 @@ class GLASS(torch.nn.Module):
                 elif image_auroc + pixel_auroc > best_record[0] + best_record[2]:
                     best_record = [image_auroc, image_ap, pixel_auroc, pixel_ap, pixel_pro, i_epoch]
                     os.remove(ckpt_path_best)
-                    ckpt_path_best = os.path.join(self.ckpt_dir, "ckpt_best_{}.pth".format(i_epoch))
+                    ckpt_path_best = os.path.join(self.ckpt_dir, "ckpt_best_at_epoch_{}.pth".format(i_epoch))
                     torch.save(state_dict, ckpt_path_best)
                     shutil.rmtree(eval_path, ignore_errors=True)
                     shutil.copytree(train_path, eval_path)
@@ -520,7 +520,9 @@ class GLASS(torch.nn.Module):
 
     def _evaluate(self, images, scores, segmentations, labels_gt, masks_gt, name, path='training'):
         scores = np.squeeze(np.array(scores))
-        image_scores = metrics.compute_imagewise_retrieval_metrics(scores, labels_gt, path)
+        labels_gt_ = [1.0 if x == 'abnormal' else 0.0 for x in labels_gt]
+
+        image_scores = metrics.compute_imagewise_retrieval_metrics(scores, labels_gt_, path)
         image_auroc = image_scores["auroc"]
         image_ap = image_scores["ap"]
 

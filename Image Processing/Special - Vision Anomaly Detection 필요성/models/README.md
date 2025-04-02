@@ -19,6 +19,7 @@
 * 본 디렉토리 ```models``` 의 하위 디렉토리인 ```glass_anomaly_source``` 디렉토리를 다음과 같이 구성
   * [Kaggle Link](https://www.kaggle.com/datasets/jmexpert/describable-textures-dataset-dtd) 에서 이미지 다운로드
   * 위 링크의 ```dtd/images``` 경로 안에 있는 이미지를 다운로드 후, 아래와 같이 복사
+  * 다운로드 받은 경로 및 그 하위 경로에서 **이미지가 아닌 파일 1개 (glass_anomaly_source/waffled/.directory) 삭제 후 학습 실시**
 
 ```
 models
