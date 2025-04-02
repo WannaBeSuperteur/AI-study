@@ -97,14 +97,32 @@ def copy_images(image_paths_per_group, dir_names_to_copy):
 
 
 # 원본 데이터 기준으로, 해당 카테고리의 test data 중 abnormal image 가 가장 많은 class 인 LAC 찾기
-# Create Date : 2025.04.01
+# Create Date : 2025.04.02
 # Last Update Date : -
 
 # Arguments:
 # - category_list (list(str)) : 세부 카테고리 목록
 
 # Returns:
-# - lac_list (dict(str)) : 각 category 별 LAC 의 목록
+# - lac_dict (dict(str)) : 각 category 별 LAC 의 목록
 
 def get_lac(category_list):
-    return NotImplementedError
+    lac_dict = {}
+
+    for category in category_list:
+        test_dataset_dir_name = f'{PROJECT_DIR_PATH}/mvtec_dataset_512/{category}/test'
+        test_dataset_category_list = os.listdir(test_dataset_dir_name)
+        num_imgs = []
+
+        for test_dataset_category in test_dataset_category_list:
+            if test_dataset_category == 'good':
+                continue
+
+            test_img_paths = os.listdir(f'{test_dataset_dir_name}/{test_dataset_category}')
+            num_imgs.append([test_dataset_category, len(test_img_paths)])
+
+        num_imgs.sort(key=lambda x: x[1], reverse=True)
+        lac = num_imgs[0][0]
+        lac_dict[category] = lac
+
+    return lac_dict

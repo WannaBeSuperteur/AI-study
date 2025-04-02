@@ -115,11 +115,12 @@ def split_data_exp1_classify(category_list):
 
 # 새로운 Abnormal Class 탐지 성능 평가 - Vision Classification 의 Train/Valid/Test 데이터 구분
 # Create Date : 2025.04.01
-# Last Update Date : -
+# Last Update Date : 2025.04.02
+# - 변수명 수정 : lac_list -> lac_dict
 
 # Arguments:
 # - category_list (list(str)) : 세부 카테고리 목록
-# - lac_list      (dict(str)) : 각 category 별 LAC 의 목록
+# - lac_dict      (dict(str)) : 각 category 별 LAC 의 목록
 
 # Returns:
 # - mvtec_dataset_exp3_classify/{category_name} 디렉토리에,
@@ -130,7 +131,7 @@ def split_data_exp1_classify(category_list):
 #                                           Valid Data 의 Abnormal Sample (LAC 의 25%) +
 #                                           Test Data 의 Abnormal Sample (LAC 외의 모든 Class) 로 분리
 
-def split_data_exp3_classify(category_list, lac_list):
+def split_data_exp3_classify(category_list, lac_dict):
     image_path_train = split_dataset_into_groups(dataset_type='train',
                                                  dataset_class='normal',
                                                  category_list=category_list,
@@ -158,15 +159,16 @@ if __name__ == '__main__':
 
     # get category list
     category_list = get_category_list()
-    lac_list = get_lac(category_list)
+    lac_dict = get_lac(category_list)
 
     print(f'CATEGORY LIST:\n{category_list}')
-    print(f'LAC LIST:\n{lac_list}')
+    print(f'LAC DICT:\n{lac_dict}')
 
-    resize_all_images(img_dir='mvtec_dataset_512', dest_size=TINYVIT_IMG_SIZE)
-    resize_all_images(img_dir='mvtec_dataset_256', dest_size=GLASS_IMG_SIZE)
+    # execute ONLY AT FIRST TIME resizing image
+#    resize_all_images(img_dir='mvtec_dataset_512', dest_size=TINYVIT_IMG_SIZE)
+#    resize_all_images(img_dir='mvtec_dataset_256', dest_size=GLASS_IMG_SIZE)
 
     # experiment dataset setting
     split_data_exp1_anomaly(category_list)
     split_data_exp1_classify(category_list)
-    split_data_exp3_classify(category_list, lac_list)
+    split_data_exp3_classify(category_list, lac_dict)
