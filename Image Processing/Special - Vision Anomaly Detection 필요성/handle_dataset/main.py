@@ -1,4 +1,4 @@
-from tvt_split import resize_all_images, split_dataset_into_groups, copy_images, get_lac
+from tvt_split import resize_all_images, split_dataset_into_groups, split_dataset_into_groups_lac, copy_images, get_lac
 
 import os
 PROJECT_DIR_PATH = os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
@@ -161,15 +161,20 @@ def split_data_exp3_classify(category_list, lac_dict):
                                                        split_ratio=[1.0],
                                                        original_data_dir=original_data_dir)
 
-    image_path_test_abnormal = None  # TODO: implement
+    image_path_test_abnormal = split_dataset_into_groups_lac(dataset_type='test',
+                                                             category_list=category_list,
+                                                             lac_group_names=['train_abnormal', 'valid_abnormal'],
+                                                             lac_split_ratio=[0.75, 0.25],
+                                                             others_group_names=['test_abnormal'],
+                                                             others_split_ratio=[1.0],
+                                                             original_data_dir=original_data_dir,
+                                                             lac_dict=lac_dict)
 
     image_path_dicts = [image_path_train, image_path_test_normal, image_path_test_abnormal]
 
     for image_path_dict in image_path_dicts:
         copy_images(image_paths_per_group=image_path_dict,
                     dir_name_to_copy='mvtec_dataset_exp3_classify')
-
-    raise NotImplementedError
 
 
 if __name__ == '__main__':

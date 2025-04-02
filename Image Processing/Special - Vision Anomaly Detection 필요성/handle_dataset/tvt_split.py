@@ -114,6 +114,7 @@ def split_dataset_into_groups(dataset_type, dataset_class, category_list, group_
         # apply random shuffle
         shuffle(image_path_list[category])
 
+        # append to image path list dict, per group
         image_cnt = len(image_path_list[category])
         current_cum_ratio = 0.0
 
@@ -125,6 +126,90 @@ def split_dataset_into_groups(dataset_type, dataset_class, category_list, group_
             image_paths_per_group[group_name] += image_path_list_part
 
             current_cum_ratio += part_ratio
+
+    return image_paths_per_group
+
+
+# 원본 데이터셋의 Abnormal 데이터를 여러 그룹으로 분리하여 각 그룹에 해당하는 이미지 경로 반환 (LAC 을 고려)
+# Create Date : 2025.04.02
+# Last Update Date : -
+
+# Arguments:
+# - dataset_type       (str)         : 'train' or 'test'
+# - category_list      (list(str))   : 세부 카테고리 목록
+# - lac_group_names    (list(str))   : (LAC 이미지) 그룹 이름 목록
+# - lac_split_ratio    (list(float)) : (LAC 이미지) 각 그룹에 할당할 이미지의 비율
+# - others_group_names (list(str))   : (LAC 외의 모든 이미지) 그룹 이름 목록
+# - others_split_ratio (list(float)) : (LAC 외의 모든 이미지) 각 그룹에 할당할 이미지의 비율
+# - original_data_dir  (str)         : 원래 데이터셋 디렉토리 이름
+# - lac_dict           (dict(str))   : 각 category 별 LAC 의 목록
+
+# Returns:
+# - image_paths_per_group (dict(list)) : 각 그룹에 해당하는 이미지의 리스트를 저장한 dict
+
+def split_dataset_into_groups_lac(dataset_type, category_list,
+                                  lac_group_names, lac_split_ratio, others_group_names, others_split_ratio,
+                                  original_data_dir, lac_dict):
+
+    assert sum(lac_split_ratio) == 1.0, "SUM OF SPLIT RATIO MUST BE 1.0"
+    assert sum(others_split_ratio) == 1.0, "SUM OF SPLIT RATIO MUST BE 1.0"
+    assert len(lac_group_names) == len(lac_split_ratio), "LENGTH OF group_names AND split_ratio MUST BE SAME"
+    assert len(others_group_names) == len(others_split_ratio), "LENGTH OF group_names AND split_ratio MUST BE SAME"
+
+    image_path_list_lac = {}
+    image_path_list_others = {}
+    image_paths_per_group = {}
+
+    for group_name in lac_group_names:
+        image_paths_per_group[group_name] = []
+
+    for group_name in others_group_names:
+        image_paths_per_group[group_name] = []
+
+    for category in category_list:
+        image_path_list_lac[category] = []
+        image_path_list_others[category] = []
+
+        dataset_dir = f'{PROJECT_DIR_PATH}/{original_data_dir}/{category}/{dataset_type}'
+        lac_dir = lac_dict[category]
+
+        img_dirs_lac = [lac_dir]
+        img_dirs_others = list(filter(lambda x: x not in ['good', lac_dir], os.listdir(dataset_dir)))
+        img_paths_lac = []
+        img_paths_others = []
+
+        for img_dirs, img_paths in zip([img_dirs_lac, img_dirs_others], [img_paths_lac, img_paths_others]):
+            for img_dir in img_dirs:
+                img_dir_path = f'{dataset_dir}/{img_dir}'
+                img_path_list = os.listdir(img_dir_path)
+                img_path_list = [f'{img_dir_path}/{x}' for x in img_path_list]
+
+                img_paths += img_path_list
+
+        image_path_list_lac[category] += img_paths_lac
+        image_path_list_others[category] += img_paths_others
+
+        # apply random shuffle
+        shuffle(image_path_list_lac[category])
+        shuffle(image_path_list_others[category])
+
+        # append to image path list dict, per group
+        group_names_ = [lac_group_names, others_group_names]
+        split_ratio_ = [lac_split_ratio, others_split_ratio]
+        image_path_list_ = [image_path_list_lac, image_path_list_others]
+
+        for group_names, split_ratio, image_path_list in zip(group_names_, split_ratio_, image_path_list_):
+            image_cnt = len(image_path_list[category])
+            current_cum_ratio = 0.0
+
+            for group_name, part_ratio in zip(group_names, split_ratio):
+                part_start_idx = int(image_cnt * current_cum_ratio)
+                part_end_idx = int(image_cnt * (current_cum_ratio + part_ratio))
+
+                image_path_list_part = image_path_list[category][part_start_idx:part_end_idx]
+                image_paths_per_group[group_name] += image_path_list_part
+
+                current_cum_ratio += part_ratio
 
     return image_paths_per_group
 
