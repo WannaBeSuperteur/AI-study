@@ -1,20 +1,16 @@
 
 try:
-    from common import (get_glass_model, get_tinyvit_model,
-                        get_datasets,
-                        run_train_glass, run_train_tinyvit,
-                        run_test_glass, run_test_tinyvit)
+    from common import get_datasets, run_train_glass, run_train_tinyvit, run_test_glass, run_test_tinyvit
 except:
-    from run_experiment.common import (get_glass_model, get_tinyvit_model,
-                                       get_datasets,
-                                       run_train_glass, run_train_tinyvit,
-                                       run_test_glass, run_test_tinyvit)
+    from run_experiment.common import get_datasets, run_train_glass, run_train_tinyvit, run_test_glass, run_test_tinyvit
 
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 from handle_dataset.main import get_category_list
+from models.glass import get_model as get_glass_model
+from models.tinyvit import get_model as get_tinyvit_model
 
 
 if __name__ == '__main__':
@@ -23,6 +19,7 @@ if __name__ == '__main__':
     for category_name in category_list:
         glass_model = get_glass_model()
         tinyvit_model = get_tinyvit_model()
+        print('model load finished')
 
         train_dataset, valid_dataset, test_dataset = get_datasets(category_name)
 

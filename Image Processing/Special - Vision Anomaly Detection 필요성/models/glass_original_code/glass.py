@@ -9,12 +9,21 @@ try:
     import common
 
 except:
-    from glass_original_code.loss import FocalLoss
-    from glass_original_code.model import Discriminator, Projection, PatchMaker
+    try:
+        from glass_original_code.loss import FocalLoss
+        from glass_original_code.model import Discriminator, Projection, PatchMaker
 
-    import glass_original_code.metrics as metrics
-    import glass_original_code.utils as utils
-    import glass_original_code.common as common
+        import glass_original_code.metrics as metrics
+        import glass_original_code.utils as utils
+        import glass_original_code.common as common
+
+    except:
+        from models.glass_original_code.loss import FocalLoss
+        from models.glass_original_code.model import Discriminator, Projection, PatchMaker
+
+        import models.glass_original_code.metrics as metrics
+        import models.glass_original_code.utils as utils
+        import models.glass_original_code.common as common
 
 from collections import OrderedDict
 from torchvision import transforms

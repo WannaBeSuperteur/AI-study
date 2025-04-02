@@ -1,29 +1,6 @@
-# GLASS 모델 가져오기
-# Create Date : 2025.04.02
-# Last Update Date : -
-
-# Arguments:
-# - 없음
-
-# Returns:
-# - model (nn.Module) : 학습 및 성능 테스트에 사용할 GLASS 모델
-
-def get_glass_model():
-    raise NotImplementedError
-
-
-# TinyViT 모델 가져오기
-# Create Date : 2025.04.02
-# Last Update Date : -
-
-# Arguments:
-# - 없음
-
-# Returns:
-# - model (nn.Module) : 학습 및 성능 테스트에 사용할 TinyViT 모델
-
-def get_tinyvit_model():
-    raise NotImplementedError
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 
 # 학습, 검증 및 테스트 데이터셋 정의

@@ -1,6 +1,11 @@
-from common import save_model_graph_image
-import glass_original_code.utils as utils
-import glass_original_code.glass as glass
+try:
+    from common import save_model_graph_image
+    import glass_original_code.utils as utils
+    import glass_original_code.glass as glass
+except:
+    from models.common import save_model_graph_image
+    import models.glass_original_code.utils as utils
+    import models.glass_original_code.glass as glass
 
 from torchinfo import summary
 from torchvision import models
