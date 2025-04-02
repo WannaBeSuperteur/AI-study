@@ -51,6 +51,8 @@ LOGGER = logging.getLogger(__name__)
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD = [0.229, 0.224, 0.225]
 
+EARLY_STOPPING_COUNT = 20
+
 
 class TBWrapper:
     def __init__(self, log_dir):
@@ -337,6 +339,10 @@ class GLASS(torch.nn.Module):
                 pbar.set_description_str(pbar_str)
 
                 print('')
+
+                # early stopping
+                if i_epoch - best_record[-1] > EARLY_STOPPING_COUNT:
+                    break
 
         return best_record, entire_loss_list
 

@@ -41,7 +41,7 @@ def get_model():
         pretrain_embed_dimension=384,                    # originally 1536
         target_embed_dimension=384,                      # originally 1536
         patchsize=3,
-        meta_epochs=50,
+        meta_epochs=200,
         eval_epochs=1,
         dsc_layers=2,
         dsc_hidden=256,                                  # originally 1024
