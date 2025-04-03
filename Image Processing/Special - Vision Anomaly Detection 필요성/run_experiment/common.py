@@ -412,7 +412,7 @@ def run_train_tinyvit_(model, model_with_softmax, train_loader, valid_loader):
                                                 device=model_with_softmax.device,
                                                 loss_func=loss_func)
 
-        print(f'epoch : {current_epoch},'
+        print(f'epoch : {current_epoch}, '
               f'train_loss : {train_loss:.4f}, val_acc : {val_accuracy:.4f}, val_loss : {val_loss:.4f}')
 
         val_loss_cpu = float(val_loss.detach().cpu())
