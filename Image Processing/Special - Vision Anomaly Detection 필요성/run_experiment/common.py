@@ -11,21 +11,34 @@ import torchvision.transforms as transforms
 
 from models.glass_original_code.perlin import perlin_mask
 
+try:
+    from common_pytorch_training import run_train, run_validation
+except:
+    from run_experiment.common_pytorch_training import run_train, run_validation
+
 import pandas as pd
 import numpy as np
-import torch
 import PIL
 import cv2
 from enum import Enum
 
-TRAIN_BATCH_SIZE = 16
+import torch
+import torch.nn as nn
+
+TRAIN_BATCH_SIZE_GLASS = 16
+TRAIN_BATCH_SIZE_TINYVIT = 8  # to prevent CUDA OOM (with 12 GB GPU)
 VALID_BATCH_SIZE = 4
 TEST_BATCH_SIZE = 4
+TINYVIT_EARLY_STOPPING_ROUNDS = 7
 
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD = [0.229, 0.224, 0.225]
 
 anomaly_source_path = f'{PROJECT_DIR_PATH}/models/glass_anomaly_source'
+
+# check device
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+print(f'device for training : {device}')
 
 
 # ref : Original GLASS Implementation, from https://github.com/cqylunlun/GLASS/blob/main/datasets/mvtec.py
@@ -161,6 +174,21 @@ class CustomMVTecDataset(Dataset):
                     overlay_image_arr.tofile(f)
 
 
+class TinyViTWithSoftmax(nn.Module):
+    def __init__(self, tinyvit_model, num_classes):
+        super(TinyViTWithSoftmax, self).__init__()
+
+        self.tinyvit_model = tinyvit_model
+        self.num_classes = num_classes
+
+        self.final_softmax = nn.Softmax()
+
+    def forward(self, x):
+        x = self.tinyvit_model(x)
+        x = self.final_softmax(x)
+        return x
+
+
 # 학습, 검증 및 테스트 데이터셋 정의
 # Create Date : 2025.04.02
 # Last Update Date : 2025.04.03
@@ -250,6 +278,7 @@ def create_dataset_df(category_name, dataset_dir_name, dataset_type):
 # Create Date : 2025.04.02
 # Last Update Date : 2025.04.03
 # - category 별 checkpoint 구분을 위해 category name 인수 추가
+# - batch size 상수 수정
 
 # Arguments:
 # - model         (nn.Module) : 학습 및 성능 테스트에 사용할 GLASS 모델
@@ -261,8 +290,8 @@ def create_dataset_df(category_name, dataset_dir_name, dataset_type):
 # - entire_loss_list (list) : GLASS 모델의 Loss 기록
 
 def run_train_glass(model, train_dataset, valid_dataset, category):
-    train_loader = DataLoader(train_dataset, batch_size=TRAIN_BATCH_SIZE, shuffle=True)
-    valid_loader = DataLoader(valid_dataset, batch_size=TRAIN_BATCH_SIZE, shuffle=False)
+    train_loader = DataLoader(train_dataset, batch_size=TRAIN_BATCH_SIZE_GLASS, shuffle=True)
+    valid_loader = DataLoader(valid_dataset, batch_size=VALID_BATCH_SIZE, shuffle=False)
 
     glass_model_dir = f'{PROJECT_DIR_PATH}/run_experiment/exp1_glass_ckpt'
     model.set_model_dir(glass_model_dir, dataset_name=f"exp1_anomaly_detection_{category}")
@@ -272,7 +301,7 @@ def run_train_glass(model, train_dataset, valid_dataset, category):
 
 
 # TinyViT 모델 학습 실시
-# Create Date : 2025.04.02
+# Create Date : 2025.04.03
 # Last Update Date : -
 
 # Arguments:
@@ -284,7 +313,132 @@ def run_train_glass(model, train_dataset, valid_dataset, category):
 # - val_loss_list (list) : Valid Loss 기록
 
 def run_train_tinyvit(model, train_dataset, valid_dataset):
-    raise NotImplementedError
+    print(f'train dataset size : {len(train_dataset)}')
+    print(f'valid dataset size : {len(valid_dataset)}')
+
+    # define TinyViT
+    tinyvit_with_softmax = TinyViTWithSoftmax(model, num_classes=2)
+    tinyvit_with_softmax.optimizer = torch.optim.AdamW(tinyvit_with_softmax.parameters(), lr=0.001)
+    tinyvit_with_softmax.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer=tinyvit_with_softmax.optimizer,
+                                                                                T_max=10,
+                                                                                eta_min=0)
+    tinyvit_with_softmax.device = device
+
+    # map to CUDA GPU
+    model.to(device)
+    tinyvit_with_softmax.to(device)
+
+    # define DataLoader
+    train_loader = DataLoader(train_dataset, batch_size=TRAIN_BATCH_SIZE_TINYVIT, shuffle=True)
+    valid_loader = DataLoader(valid_dataset, batch_size=VALID_BATCH_SIZE, shuffle=False)
+
+    # train TinyViT
+    val_loss_list, best_epoch_model_with_softmax = run_train_tinyvit_(model=model,
+                                                                      model_with_softmax=tinyvit_with_softmax,
+                                                                      train_loader=train_loader,
+                                                                      valid_loader=valid_loader)
+
+    # save logs
+    save_tinyvit_train_logs(val_loss_list)
+
+    # save trained TinyViT model
+    model_path = f'{PROJECT_DIR_PATH}/run_experiment/exp1_tinyvit_ckpt'
+    os.makedirs(model_path, exist_ok=True)
+
+    model_save_path = f'{model_path}/tinyvit_trained_model.pt'
+    torch.save(best_epoch_model_with_softmax.state_dict(), model_save_path)
+
+    return val_loss_list
+
+
+# TinyViT 모델 학습 실시 (run_train_tinyvit 에서 호출)
+# Create Date : 2025.04.03
+# Last Update Date : -
+
+# Arguments:
+# - model              (nn.Module)  : 학습할 TinyViT 모델
+# - model_with_softmax (nn.Module)  : Softmax 가 추가된 TinyViT 모델
+# - train_loader       (DataLoader) : 학습 데이터셋 (카테고리 별) 의 DataLoader
+# - valid_loader       (DataLoader) : 검증 데이터셋 (카테고리 별) 의 DataLoader
+
+# Returns:
+# - val_loss_list                 (list)      : Valid Loss 기록
+# - best_epoch_model_with_softmax (nn.Module) : Softmax 가 추가된 TinyViT 모델 (at best epoch)
+
+def run_train_tinyvit_(model, model_with_softmax, train_loader, valid_loader):
+    current_epoch = 0
+    min_val_loss_epoch = -1  # Loss-based Early Stopping
+    min_val_loss = None
+    best_epoch_model_with_softmax = None
+
+    val_loss_list = []
+
+    # loss function
+    loss_func = nn.CrossEntropyLoss(reduction='sum')
+
+    while True:
+        train_loss = run_train(model=model_with_softmax,
+                               train_loader=train_loader,
+                               device=model_with_softmax.device,
+                               loss_func=loss_func)
+
+        val_accuracy, val_loss = run_validation(model=model_with_softmax,
+                                                valid_loader=valid_loader,
+                                                device=model_with_softmax.device,
+                                                loss_func=loss_func)
+
+        print(f'epoch : {current_epoch},'
+              f'train_loss : {train_loss:.4f}, val_acc : {val_accuracy:.4f}, val_loss : {val_loss:.4f}')
+
+        val_loss_cpu = float(val_loss.detach().cpu())
+        val_loss_list.append(val_loss_cpu)
+
+        model_with_softmax.scheduler.step()
+
+        if min_val_loss is None or val_loss < min_val_loss:
+            min_val_loss = val_loss
+            min_val_loss_epoch = current_epoch
+
+            best_epoch_model_with_softmax = TinyViTWithSoftmax(tinyvit_model=model,
+                                                               num_classes=2).to(model_with_softmax.device)
+            best_epoch_model_with_softmax.load_state_dict(model_with_softmax.state_dict())
+
+        if current_epoch - min_val_loss_epoch >= TINYVIT_EARLY_STOPPING_ROUNDS:
+            break
+
+        current_epoch += 1
+
+    return val_loss_list, best_epoch_model_with_softmax
+
+
+# TinyViT 모델 학습 결과 로그 저장
+# Create Date : 2025.04.03
+# Last Update Date : -
+
+# Arguments:
+# - val_loss_list (list) : Valid Loss 기록
+
+# Returns:
+# - log file 저장 (run_experiment/exp1_tinyvit_train_log/tinyvit_train_log.csv)
+
+def save_tinyvit_train_logs(val_loss_list):
+    tinyvit_train_log_path = f'{PROJECT_DIR_PATH}/run_experiment/exp1_tinyvit_train_log'
+
+    os.makedirs(tinyvit_train_log_path, exist_ok=True)
+    train_log = {'min_val_loss': [], 'total_epochs': [], 'best_epoch': [], 'val_loss_list': []}
+
+    min_val_loss = min(val_loss_list)
+    min_val_loss_ = round(min_val_loss, 4)
+    total_epochs = len(val_loss_list)
+    val_loss_list_ = list(map(lambda x: round(x, 4), val_loss_list))
+
+    train_log['min_val_loss'].append(min_val_loss_)
+    train_log['total_epochs'].append(total_epochs)
+    train_log['best_epoch'].append(np.argmin(val_loss_list_))
+    train_log['val_loss_list'].append(val_loss_list_)
+
+    train_log_path = f'{tinyvit_train_log_path}/tinyvit_train_log.csv'
+    pd.DataFrame(train_log).to_csv(train_log_path)
 
 
 # GLASS 모델 테스트 실시
@@ -309,7 +463,7 @@ def run_test_glass(model, test_dataset, category):
 
 
 # TinyViT 모델 테스트 실시
-# Create Date : 2025.04.02
+# Create Date : 2025.04.03
 # Last Update Date : -
 
 # Arguments:

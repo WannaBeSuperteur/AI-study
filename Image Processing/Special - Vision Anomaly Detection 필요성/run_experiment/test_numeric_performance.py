@@ -35,14 +35,18 @@ if __name__ == '__main__':
                          img_size=512,
                          model_name='TinyViT'))
 
-        entire_loss_list = run_train_glass(glass_model, train_dataset_glass, valid_dataset_glass, category_name)
-        run_train_tinyvit(tinyvit_model, train_dataset_tinyvit, valid_dataset_tinyvit)
+        loss_glass = run_train_glass(glass_model, train_dataset_glass, valid_dataset_glass, category_name)
+        loss_tinyvit = run_train_tinyvit(tinyvit_model, train_dataset_tinyvit, valid_dataset_tinyvit)
 
         test_result_glass, confusion_matrix_glass = run_test_glass(glass_model, test_dataset_glass, category_name)
         test_result_tinyvit, confusion_matrix_tinyvit = run_test_tinyvit(tinyvit_model, test_dataset_tinyvit)
 
         print(f'\n==== TRAIN RESULT ({category_name}) of GLASS ====')
-        for idx, loss in enumerate(entire_loss_list):
+        for idx, loss in enumerate(loss_glass):
+            print(f'epoch {idx + 1} : loss = {loss}')
+
+        print(f'\n==== TRAIN RESULT ({category_name}) of TinyViT ====')
+        for idx, loss in enumerate(loss_tinyvit):
             print(f'epoch {idx + 1} : loss = {loss}')
 
         print(f'\n==== TEST RESULT ({category_name}) of GLASS ====')
