@@ -36,26 +36,28 @@ class DatasetSplit(Enum):
 
 
 class CustomMVTecDataset(Dataset):
-    def __init__(self, dataset_df, transform, dataset_type, img_size):
+    def __init__(self, dataset_df, transform, dataset_type, img_size, model_name):
         self.img_paths = dataset_df['img_path'].tolist()
         self.labels = dataset_df['label'].tolist()
         self.transform = transform
         self.distribution = 2  # (for GLASS, Anomaly Detection) suppose MANIFOLD distribution for all sub-categories
         self.dataset_type = dataset_type
         self.img_size = img_size
+        self.model_name = model_name
 
         # for GLASS
-        self.mean = 0.5
-        self.std = 0.1
-        self.rand_aug = 1
-        self.downsampling = 8
+        if model_name == 'GLASS':
+            self.mean = 0.5
+            self.std = 0.1
+            self.rand_aug = 1
+            self.downsampling = 8
 
-        self.transform_img = [
-            transforms.ToTensor(),
-            transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
-        ]
-        self.transform_img = transforms.Compose(self.transform_img)
-        self.anomaly_source_paths = self.get_anomaly_source_paths()
+            self.transform_img = [
+                transforms.ToTensor(),
+                transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
+            ]
+            self.transform_img = transforms.Compose(self.transform_img)
+            self.anomaly_source_paths = self.get_anomaly_source_paths()
 
     def get_anomaly_source_paths(self):
         anomaly_source_dir = f'{PROJECT_DIR_PATH}/models/glass_anomaly_source'
@@ -128,7 +130,8 @@ class CustomMVTecDataset(Dataset):
         image = self.transform(image)
         label = self.labels[idx]
 
-        if self.dataset_type == 'train':
+        # for GLASS training
+        if self.model_name == 'GLASS' and self.dataset_type == 'train':
             aug_image, mask_s = self.get_aug_image_and_mask_s(img_path)
             self.save_original_and_aug_image(img_path, image, aug_image)
 
@@ -160,20 +163,22 @@ class CustomMVTecDataset(Dataset):
 
 # 학습, 검증 및 테스트 데이터셋 정의
 # Create Date : 2025.04.02
-# Last Update Date : 2025.04.02
+# Last Update Date : 2025.04.03
 # - img_size 변수 추가 (Dataset Class 에서 사용)
+# - model_name 변수 추가
 
 # Arguments:
 # - category_name    (str) : 카테고리 이름
 # - dataset_dir_name (str) : 데이터셋 디렉토리 이름
 # - img_size         (int) : 이미지 크기 (256 또는 512)
+# - model_name       (str) : 모델 이름 ('TinyViT' or 'GLASS')
 
 # Returns:
 # - train_dataset (Dataset) : 해당 카테고리의 학습 데이터셋
 # - valid_dataset (Dataset) : 해당 카테고리의 검증 데이터셋
 # - test_dataset  (Dataset) : 해당 카테고리의 테스트 데이터셋
 
-def get_datasets(category_name, dataset_dir_name, img_size):
+def get_datasets(category_name, dataset_dir_name, img_size, model_name):
     train_dataset_df = create_dataset_df(category_name, dataset_dir_name, dataset_type='train')
     valid_dataset_df = create_dataset_df(category_name, dataset_dir_name, dataset_type='valid')
     test_dataset_df = create_dataset_df(category_name, dataset_dir_name, dataset_type='test')
@@ -181,9 +186,23 @@ def get_datasets(category_name, dataset_dir_name, img_size):
     transform = transforms.Compose([transforms.ToPILImage(),
                                     transforms.ToTensor()])
 
-    train_dataset = CustomMVTecDataset(train_dataset_df, transform, dataset_type='train', img_size=img_size)
-    valid_dataset = CustomMVTecDataset(valid_dataset_df, transform, dataset_type='valid', img_size=img_size)
-    test_dataset = CustomMVTecDataset(test_dataset_df, transform, dataset_type='test', img_size=img_size)
+    train_dataset = CustomMVTecDataset(train_dataset_df,
+                                       transform,
+                                       dataset_type='train',
+                                       img_size=img_size,
+                                       model_name=model_name)
+
+    valid_dataset = CustomMVTecDataset(valid_dataset_df,
+                                       transform,
+                                       dataset_type='valid',
+                                       img_size=img_size,
+                                       model_name=model_name)
+
+    test_dataset = CustomMVTecDataset(test_dataset_df,
+                                      transform,
+                                      dataset_type='test',
+                                      img_size=img_size,
+                                      model_name=model_name)
 
     return train_dataset, valid_dataset, test_dataset
 
