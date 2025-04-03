@@ -209,10 +209,10 @@ IEEE Conference on Computer Vision and Pattern Recognition, 2019
 * Vision Classification 의 Train/Valid/Test 데이터 구분
   * **각 카테고리 별로** 다음과 같이 데이터를 랜덤하게 배분
 
-|                 | Train Data                                     | Valid Data                                     | Test Data                                      |
-|-----------------|------------------------------------------------|------------------------------------------------|------------------------------------------------|
-| Normal Sample   | 원본 데이터셋의 Train Data **전체**                     | 원본 데이터셋의 Test Data 중 Normal Sample 의 **50%**   | 원본 데이터셋의 Test Data 중 Normal Sample 의 **50%**   |
-| Abnormal Sample | 원본 데이터셋의 Test Data 중 Abnormal Sample 의 **50%** | 원본 데이터셋의 Test Data 중 Abnormal Sample 의 **25%** | 원본 데이터셋의 Test Data 중 Abnormal Sample 의 **25%** |
+|                 | Train Data                                                                                                                                        | Valid Data                                     | Test Data                                      |
+|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------|------------------------------------------------|
+| Normal Sample   | 원본 데이터셋의 Train Data **전체**                                                                                                                        | 원본 데이터셋의 Test Data 중 Normal Sample 의 **50%**   | 원본 데이터셋의 Test Data 중 Normal Sample 의 **50%**   |
+| Abnormal Sample | 원본 데이터셋의 Test Data 중 Abnormal Sample 의 **50%** x [**4배** (90,180,270도 회전 Augmentation)](Basics_Image_Augmentation_Methods.md#1-1-이미지-형태의-기하학적-변형) | 원본 데이터셋의 Test Data 중 Abnormal Sample 의 **25%** | 원본 데이터셋의 Test Data 중 Abnormal Sample 의 **25%** |
 
 **2. 설명 능력 평가**
 
@@ -245,10 +245,10 @@ IEEE Conference on Computer Vision and Pattern Recognition, 2019
   * 각 카테고리 별로 다음과 같이 데이터를 랜덤하게 배분
     * **LAC (Largest Abnormal Class)** : 원본 데이터를 기준으로, 해당 카테고리의 test data 중 abnormal image 가 가장 많이 있는 class 
 
-|                 | Train Data                                 | Valid Data                                 | Test Data                                             |
-|-----------------|--------------------------------------------|--------------------------------------------|-------------------------------------------------------|
-| Normal Sample   | 원본 데이터셋의 Train Data **전체**                 | 원본 데이터셋의 Test Data 중 Normal Sample **전체**  | -                                                     |
-| Abnormal Sample | 원본 데이터셋의 Test Data 중 LAC 에 있는 이미지의 **75%** | 원본 데이터셋의 Test Data 중 LAC 에 있는 이미지의 **25%** | 원본 데이터셋의 Test Data 중 LAC 를 제외한 Abnormal Sample **전체** |
+|                 | Train Data                                                                                                                                    | Valid Data                                 | Test Data                                             |
+|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|-------------------------------------------------------|
+| Normal Sample   | 원본 데이터셋의 Train Data **전체**                                                                                                                    | 원본 데이터셋의 Test Data 중 Normal Sample **전체**  | -                                                     |
+| Abnormal Sample | 원본 데이터셋의 Test Data 중 LAC 에 있는 이미지의 **75%** x [**4배** (90,180,270도 회전 Augmentation)](Basics_Image_Augmentation_Methods.md#1-1-이미지-형태의-기하학적-변형) | 원본 데이터셋의 Test Data 중 LAC 에 있는 이미지의 **25%** | 원본 데이터셋의 Test Data 중 LAC 를 제외한 Abnormal Sample **전체** |
 
 * 설명 능력 평가 - 모델 및 데이터셋
   * 위 **정량적 성능 평가 방법** 에서 학습한 모델 및 Test Dataset 을 대상으로 평가

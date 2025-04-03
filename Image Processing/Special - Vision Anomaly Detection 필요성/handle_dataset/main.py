@@ -177,6 +177,20 @@ def split_data_exp3_classify(category_list, lac_dict):
                     dir_name_to_copy='mvtec_dataset_exp3_classify')
 
 
+# 90,180,270도 회전 Data Augmentation 실시 (Training Abnormal Data / Classification task only)
+# Create Date : 2025.04.03
+# Last Update Date : -
+
+# Arguments:
+# - dir_name (str) : Augmentation 을 실시할 데이터셋 디렉토리 이름
+
+# Returns:
+# - 데이터셋 디렉토리의 모든 sub-dataset 에 대해 Train Abnormal Data 가 90,180,270도 회전 Augmentation 으로 4배 증대
+
+def do_augmentation(dir_name):
+    raise NotImplementedError
+
+
 if __name__ == '__main__':
 
     # get category list
@@ -191,6 +205,10 @@ if __name__ == '__main__':
 #    resize_all_images(img_dir='mvtec_dataset_256', dest_size=GLASS_IMG_SIZE)
 
     # experiment dataset setting
-    split_data_exp1_anomaly(category_list)
-    split_data_exp1_classify(category_list)
-    split_data_exp3_classify(category_list, lac_dict)
+#    split_data_exp1_anomaly(category_list)
+#    split_data_exp1_classify(category_list)
+#    split_data_exp3_classify(category_list, lac_dict)
+
+    # data augmentation for training abnormal data
+    do_augmentation('mvtec_dataset_exp1_classify')
+    do_augmentation('mvtec_dataset_exp3_classify')
