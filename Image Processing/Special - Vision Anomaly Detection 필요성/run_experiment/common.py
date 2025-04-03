@@ -549,6 +549,10 @@ def save_tinyvit_train_logs(val_accuracy_list, val_loss_list, experiment_no, cat
 #                                         {'accuracy': float, 'recall': float, 'precision': float, 'f1_score': float}
 # - confusion_matrix (Pandas DataFrame) : 테스트 성능 평가 시 생성된 Confusion Matrix
 
+# Materials to save:
+# - test_result_df (threshold 별 성능지표 DataFrame), test_result, confusion_matrix 를 실험 결과 디렉토리에 저장
+# - 각 sample 별 "경로, anomaly score, true label" 의 정보를 실험 결과 디렉토리에 저장
+
 def run_test_glass(test_dataset, category, experiment_no):
     test_loader = DataLoader(test_dataset, batch_size=TEST_BATCH_SIZE, shuffle=False)
     exp_name = f'exp{experiment_no}'
@@ -574,8 +578,111 @@ def run_test_glass(test_dataset, category, experiment_no):
 
     model.create_and_save_overlay_images(images, segmentations, img_paths, overlay_path)
 
-    # 성능지표 계산
-    # TODO implement
+    thresholds = np.linspace(min(scores), max(scores), 500)
+
+    # 각 sample 별 score 및 label 정보 저장
+    test_result_df_path = exp_path + '/test_result_df/' + exp_name + '_anomaly_detection_' + category
+    os.makedirs(test_result_df_path, exist_ok=True)
+
+    score_and_label_info_df = save_score_and_label_info(img_paths, scores, labels_gt)
+    score_and_label_info_df.to_csv(f'{test_result_df_path}/score_and_label.csv', index=False)
+
+    # 성능지표 계산 및 그 결과 저장
+    test_result, test_result_df, confusion_matrix = compute_metric_values(thresholds, scores, labels_gt)
+    test_result_df.to_csv(f'{test_result_df_path}/test_result_df.csv', index=False)
+
+    test_result_dict_df = pd.DataFrame({k: [v] for k, v in test_result.items()})
+    test_result_dict_df.to_csv(f'{test_result_df_path}/test_result.csv', index=False)
+
+    confusion_matrix.to_csv(f'{test_result_df_path}/confusion_matrix.csv', index=False)
+
+    return test_result, confusion_matrix
+
+
+# 모델 테스트 실시 - Metrics 값 계산
+# Create Date : 2025.04.03
+# Last Update Date : -
+
+# Arguments:
+# - thresholds (np.array) : threshold list (anomaly score 의 min ~ max 범위)
+# - scores     (list)     : anomaly score (또는 probability) 의 목록
+# - labels_gt  (list)     : 이미지의 ground truth label 목록
+
+# Returns:
+# - test_result      (dict)             : 테스트 성능 평가 결과
+#                                         {'accuracy': float, 'recall': float, 'precision': float, 'f1_score': float}
+# - test_result_df   (Pandas DataFrame) : 각 threshold 별 성능지표 값을 저장한 DataFrame
+# - confusion_matrix (Pandas DataFrame) : 테스트 성능 평가 시 생성된 Confusion Matrix
+
+def compute_metric_values(thresholds, scores, labels_gt):
+    thresholds_ = np.round(thresholds, 4)
+    test_result_dict = {'threshold': thresholds_, 'accuracy': [], 'recall': [], 'precision': [], 'f1_score': []}
+    best_f1_score = None
+
+    for threshold in thresholds:
+        tp, tn, fp, fn = 0, 0, 0, 0
+
+        for score, label in zip(scores, labels_gt):
+            if score >= threshold and label == 'abnormal':
+                tp += 1
+            elif score < threshold and label == 'normal':
+                tn += 1
+            elif score >= threshold and label == 'normal':
+                fp += 1
+            elif score < threshold and label == 'abnormal':
+                fn += 1
+
+        accuracy = (tp + tn) / (tp + tn + fp + fn)
+        recall = '-' if tp + fn == 0 else tp / (tp + fn)
+        precision = '-' if tp + fp == 0 else tp / (tp + fp)
+
+        f1_score_not_available = (recall == '-' or precision == '-' or recall + precision == 0)
+        f1_score = '-' if f1_score_not_available else 2 * recall * precision / (recall + precision)
+
+        test_result_dict['accuracy'].append(f'{accuracy:.4f}')
+        test_result_dict['recall'].append(f'{recall:.4f}')
+        test_result_dict['precision'].append(f'{precision:.4f}')
+        test_result_dict['f1_score'].append(f'{f1_score:.4f}')
+
+        # test result (tp,tn,fp,fn 개수 및 관련 성능지표 값들) 는 Best F1 Score 인 threshold 의 것을 이용
+        if best_f1_score is None or f1_score > best_f1_score:
+            best_f1_score = f1_score
+
+            test_result = {'accuracy': accuracy, 'recall': recall, 'precision': precision, 'f1_score': f1_score}
+
+            confusion_matrix = pd.DataFrame(
+                {'Pred \ True': ['Abnormal', 'Normal', 'Recall'],
+                 'Abnormal'   : [tp, fn, f'{recall:.4f}'],
+                 'Normal'     : [fp, tn, '-'],
+                 'Precision'  : [f'{precision:.4f}', '-', f'acc: {accuracy:.4f}']}
+            )
+
+    test_result_df = pd.DataFrame(test_result_dict)
+
+    return test_result, test_result_df, confusion_matrix
+
+
+# 모델 테스트 실시 - 각 샘플 별 score 및 label 정보 저장
+# Create Date : 2025.04.03
+# Last Update Date : -
+
+# Arguments:
+# - img_paths (list) : 이미지 전체 경로의 리스트
+# - scores    (list) : anomaly score (또는 probability) 의 목록
+# - labels_gt (list) : 이미지의 ground truth label 목록
+
+# Returns:
+# - score_and_label_info_df (Pandas DataFrame) : 각 sample 별 "경로, anomaly score, true label" 의 정보
+
+def save_score_and_label_info(img_paths, scores, labels_gt):
+    score_and_label_info_dict = {'img_path': [], 'score': [], 'label': []}
+
+    for img_path, score, label in zip(img_paths, scores, labels_gt):
+        score_and_label_info_dict['img_path'].append(img_path)
+        score_and_label_info_dict['score'].append(score)
+        score_and_label_info_dict['label'].append(label)
+
+    return pd.DataFrame(score_and_label_info_dict)
 
 
 # TinyViT 모델 테스트 실시
