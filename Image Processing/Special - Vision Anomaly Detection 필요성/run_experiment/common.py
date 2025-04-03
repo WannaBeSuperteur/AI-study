@@ -164,8 +164,7 @@ class CustomMVTecDataset(Dataset):
 # 학습, 검증 및 테스트 데이터셋 정의
 # Create Date : 2025.04.02
 # Last Update Date : 2025.04.03
-# - img_size 변수 추가 (Dataset Class 에서 사용)
-# - model_name 변수 추가
+# - 원본 이미지를 ImageNet Normalize 하는 부분의 누락 해결
 
 # Arguments:
 # - category_name    (str) : 카테고리 이름
@@ -184,7 +183,8 @@ def get_datasets(category_name, dataset_dir_name, img_size, model_name):
     test_dataset_df = create_dataset_df(category_name, dataset_dir_name, dataset_type='test')
 
     transform = transforms.Compose([transforms.ToPILImage(),
-                                    transforms.ToTensor()])
+                                    transforms.ToTensor(),
+                                    transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD)])
 
     train_dataset = CustomMVTecDataset(train_dataset_df,
                                        transform,

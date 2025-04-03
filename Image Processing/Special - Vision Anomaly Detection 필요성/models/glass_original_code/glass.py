@@ -315,6 +315,7 @@ class GLASS(torch.nn.Module):
                     heatmap = cv2.applyColorMap(resized_seg, cv2.COLORMAP_JET)
 
                     image_ = np.transpose(image, (1, 2, 0)) * 255
+                    image_ = image_ * IMAGENET_STD + IMAGENET_MEAN  # de-normalize
                     overlay_image = 0.65 * image_ + 0.35 * heatmap
 
                     # 이미지 저장 시 한글 경로 처리
