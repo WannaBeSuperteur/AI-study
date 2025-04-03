@@ -37,7 +37,6 @@ if __name__ == '__main__':
                          model_name='TinyViT',
                          experiment_no=1))
 
-        """
         loss_glass = run_train_glass(model=glass_model,
                                      train_dataset=train_dataset_glass,
                                      valid_dataset=valid_dataset_glass,
@@ -53,7 +52,6 @@ if __name__ == '__main__':
         test_result_glass, confusion_matrix_glass = run_test_glass(test_dataset=test_dataset_glass,
                                                                    category=category_name,
                                                                    experiment_no=1)
-        """
 
         test_result_tinyvit, confusion_matrix_tinyvit = run_test_tinyvit(test_dataset=test_dataset_tinyvit,
                                                                          category=category_name,

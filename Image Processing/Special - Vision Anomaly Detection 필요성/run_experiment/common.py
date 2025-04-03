@@ -541,7 +541,8 @@ def save_tinyvit_train_logs(val_accuracy_list, val_loss_list, experiment_no, cat
 
 # GLASS 모델 테스트 실시
 # Create Date : 2025.04.03
-# Last Update Date : -
+# Last Update Date : 2025.04.04
+# - score 및 label 정보 저장, 성능지표 계산 및 그 결과 저장을 별도 함수로 분리
 
 # Arguments:
 # - test_dataset  (Dataset)   : 테스트 데이터셋 (카테고리 별)
@@ -552,10 +553,6 @@ def save_tinyvit_train_logs(val_accuracy_list, val_loss_list, experiment_no, cat
 # - test_result      (dict)             : 테스트 성능 평가 결과
 #                                         {'accuracy': float, 'recall': float, 'precision': float, 'f1_score': float}
 # - confusion_matrix (Pandas DataFrame) : 테스트 성능 평가 시 생성된 Confusion Matrix
-
-# Materials to save:
-# - test_result_df (threshold 별 성능지표 DataFrame 및 그 그래프), test_result, confusion_matrix 를 실험 결과 디렉토리에 저장
-# - 각 sample 별 "경로, anomaly score, true label" 의 정보를 실험 결과 디렉토리에 저장
 
 def run_test_glass(test_dataset, category, experiment_no):
     test_loader = DataLoader(test_dataset, batch_size=TEST_BATCH_SIZE, shuffle=False)
@@ -582,31 +579,24 @@ def run_test_glass(test_dataset, category, experiment_no):
 
     model.create_and_save_overlay_images(images, segmentations, img_paths, overlay_path)
 
+    # score 및 label 정보 저장, 성능지표 계산 및 그 결과 저장
     thresholds = np.linspace(min(scores), max(scores), 500)
 
-    # 각 sample 별 score 및 label 정보 저장
-    test_result_df_path = exp_path + '/test_result_df/' + exp_name + '_anomaly_detection_' + category
-    os.makedirs(test_result_df_path, exist_ok=True)
-
-    score_and_label_info_df = save_score_and_label_info(img_paths, scores, labels_gt)
-    score_and_label_info_df.to_csv(f'{test_result_df_path}/score_and_label.csv', index=False)
-
-    # 성능지표 계산 및 그 결과 저장
-    test_result, test_result_df, confusion_matrix = compute_metric_values(thresholds, scores, labels_gt)
-    test_result_df.to_csv(f'{test_result_df_path}/test_result_df.csv', index=False)
-    save_test_result_df_as_chart(test_result_df, test_result_df_path)
-
-    test_result_dict_df = pd.DataFrame({k: [v] for k, v in test_result.items()})
-    test_result_dict_df.to_csv(f'{test_result_df_path}/test_result.csv', index=False)
-
-    confusion_matrix.to_csv(f'{test_result_df_path}/confusion_matrix.csv', index=False)
+    test_result, confusion_matrix = save_score_label_metric_info(model_name='glass',
+                                                                 exp_name=exp_name,
+                                                                 category=category,
+                                                                 thresholds=thresholds,
+                                                                 img_paths=img_paths,
+                                                                 scores=scores,
+                                                                 labels_gt=labels_gt)
 
     return test_result, confusion_matrix
 
 
 # TinyViT 모델 테스트 실시
 # Create Date : 2025.04.03
-# Last Update Date : -
+# Last Update Date : 2025.04.04
+# - score 및 label 정보 저장, 성능지표 계산 및 그 결과 저장을 별도 함수로 분리
 
 # Arguments:
 # - test_dataset  (Dataset) : 테스트 데이터셋 (카테고리 별)
@@ -654,17 +644,54 @@ def run_test_tinyvit(test_dataset, category, experiment_no):
             probs_batch = model_with_softmax(images_batch)
             probs += list(probs_batch[:, 1].cpu().numpy())
 
+    # score 및 label 정보 저장, 성능지표 계산 및 그 결과 저장
+    thresholds = np.linspace(0.0, 1.0, 501)
+
+    test_result, confusion_matrix = save_score_label_metric_info(model_name='tinyvit',
+                                                                 exp_name=exp_name,
+                                                                 category=category,
+                                                                 thresholds=thresholds,
+                                                                 img_paths=img_paths,
+                                                                 scores=probs,
+                                                                 labels_gt=labels_gt)
+
+    return test_result, confusion_matrix
+
+
+# 모델 테스트 실시 - score 및 label 정보 저장, 성능지표 계산 및 그 결과 저장
+# Create Date : 2025.04.04
+# Last Update Date : -
+
+# Arguments:
+# - model_name (str)      : 모델 이름 ('glass' 또는 'tinyvit')
+# - exp_name   (str)      : 진행할 실험 이름 ('exp1', 'exp2' 또는 'exp3')
+# - category   (str)      : MVTec AD 데이터셋의 세부 카테고리 이름
+# - thresholds (np.array) : threshold list (anomaly score 의 min ~ max 범위)
+# - img_paths  (list)     : 이미지 전체 경로의 리스트
+# - scores     (list)     : anomaly score (또는 probability) 의 목록
+# - labels_gt  (list)     : 이미지의 ground truth label 목록
+
+# Returns:
+# - test_result      (dict)             : 테스트 성능 평가 결과
+#                                         {'accuracy': float, 'recall': float, 'precision': float, 'f1_score': float}
+# - confusion_matrix (Pandas DataFrame) : 테스트 성능 평가 시 생성된 Confusion Matrix
+
+# Materials to save:
+# - test_result_df (threshold 별 성능지표 DataFrame 및 그 그래프), test_result, confusion_matrix 를 실험 결과 디렉토리에 저장
+# - 각 sample 별 "경로, anomaly score, true label" 의 정보를 실험 결과 디렉토리에 저장
+
+def save_score_label_metric_info(model_name, exp_name, category, thresholds, img_paths, scores, labels_gt):
+
     # 각 sample 별 score 및 label 정보 저장
-    exp_path = PROJECT_DIR_PATH + '/run_experiment/' + exp_name + '_tinyvit_results'
+    exp_path = PROJECT_DIR_PATH + '/run_experiment/' + exp_name + '_' + model_name + '_results'
     test_result_df_path = exp_path + '/test_result_df/' + exp_name + '_anomaly_detection_' + category
     os.makedirs(test_result_df_path, exist_ok=True)
 
-    score_and_label_info_df = save_score_and_label_info(img_paths, probs, labels_gt)
+    score_and_label_info_df = save_score_and_label_info(img_paths, scores, labels_gt)
     score_and_label_info_df.to_csv(f'{test_result_df_path}/score_and_label.csv', index=False)
 
     # 성능지표 계산 및 그 결과 저장
-    thresholds = np.linspace(0.0, 1.0, 501)
-    test_result, test_result_df, confusion_matrix = compute_metric_values(thresholds, probs, labels_gt)
+    test_result, test_result_df, confusion_matrix = compute_metric_values(thresholds, scores, labels_gt)
 
     test_result_df.to_csv(f'{test_result_df_path}/test_result_df.csv', index=False)
     save_test_result_df_as_chart(test_result_df, test_result_df_path)
