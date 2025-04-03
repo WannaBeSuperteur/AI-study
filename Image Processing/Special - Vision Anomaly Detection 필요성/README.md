@@ -37,16 +37,11 @@
 python handle_dataset/main.py
 ```
 
-**2. 학습 실시**
-
-```
-python train_model/train_model_common.py
-```
-
-**3. 실험 실시 (학습된 모델 기반)**
+**2. 실험 실시**
 
 * 정량적 성능 평가, 설명 능력 평가, 새로운 Abnormal Class 탐지 성능 평가 순
 * 아래에서 각 line 은 각각의 실험 코드를 실행함을 의미
+* 각 실험 코드 실행 시, **관련된 모델의 학습이 먼저 실시됨**
 
 ```
 python run_experiment/test_numeric_performance.py
