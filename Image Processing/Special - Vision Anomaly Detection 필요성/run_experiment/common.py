@@ -157,6 +157,13 @@ class CustomMVTecDataset(Dataset):
             self.save_original_and_aug_image(img_path, image, aug_image)
 
             return image, label, img_path, aug_image, mask_s
+
+        # for GLASS test
+        elif self.model_name == 'GLASS' and self.dataset_type == 'test':
+            self.save_original_test_image(img_path, image)
+
+            return image, label, img_path
+
         else:
             return image, label, img_path
 
@@ -187,6 +194,30 @@ class CustomMVTecDataset(Dataset):
             if result:
                 with open(save_path, mode='w+b') as f:
                     overlay_image_arr.tofile(f)
+
+    def save_original_test_image(self, img_path, image):
+        category = img_path.split('/')[-4]
+
+        if self.experiment_no == 1:
+            dataset_path = f'{EXP1_GLASS_RESULT_PATH}/dataset_test/{category}'
+        elif self.experiment_no == 2:
+            dataset_path = f'{EXP2_GLASS_RESULT_PATH}/dataset_test/{category}'
+        elif self.experiment_no == 3:
+            dataset_path = f'{EXP3_GLASS_RESULT_PATH}/dataset_test/{category}'
+
+        os.makedirs(dataset_path, exist_ok=True)
+        image_save_path = f'{dataset_path}/{img_path.split("/")[-1]}'
+
+        img_ = np.array(image)
+        img_ = np.transpose(img_, (1, 2, 0)) * 255
+
+        result, overlay_image_arr = cv2.imencode(ext='.png',
+                                                 img=img_,
+                                                 params=[cv2.IMWRITE_PNG_COMPRESSION, 0])
+
+        if result:
+            with open(image_save_path, mode='w+b') as f:
+                overlay_image_arr.tofile(f)
 
 
 class TinyViTWithSoftmax(nn.Module):
@@ -491,7 +522,10 @@ def run_test_glass(test_dataset, category, experiment_no):
     test_loader = DataLoader(test_dataset, batch_size=TEST_BATCH_SIZE, shuffle=False)
     exp_name = f'exp{experiment_no}'
 
+    # define model
     model = get_glass_model()
+
+    # load state dict
     model_dir = f'{PROJECT_DIR_PATH}/run_experiment/{exp_name}_glass_ckpt/exp1_anomaly_detection_{category}'
     model_file_name = list(filter(lambda x: x.endswith('.pth'), os.listdir(model_dir)))[0]
     model_path = f'{model_dir}/{model_file_name}'
@@ -504,6 +538,7 @@ def run_test_glass(test_dataset, category, experiment_no):
     else:
         model.load_state_dict(state_dict, strict=False)
 
+    # run inference
     images, scores, segmentations, labels_gt, _, img_paths = model.predict(test_loader)
 
     # Overlay 이미지 저장
