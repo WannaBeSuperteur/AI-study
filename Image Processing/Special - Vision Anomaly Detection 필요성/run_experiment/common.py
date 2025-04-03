@@ -327,17 +327,19 @@ def run_train_glass(model, train_dataset, valid_dataset, category, experiment_no
 # Create Date : 2025.04.03
 # Last Update Date : 2025.04.03
 # - experiment_no (실험의 번호) 인수 추가
+# - category (데이터셋 세부 카테고리 이름) 인수 추가
 
 # Arguments:
 # - model         (nn.Module) : 학습 및 성능 테스트에 사용할 TinyViT 모델
 # - train_dataset (Dataset)   : 학습 데이터셋 (카테고리 별)
 # - valid_dataset (Dataset)   : 검증 데이터셋 (카테고리 별)
+# - category      (str)       : MVTec AD 데이터셋의 세부 카테고리 이름
 # - experiment_no (int)       : 실시할 실험 번호 (1, 2 또는 3)
 
 # Returns:
 # - val_loss_list (list) : Valid Loss 기록
 
-def run_train_tinyvit(model, train_dataset, valid_dataset, experiment_no):
+def run_train_tinyvit(model, train_dataset, valid_dataset, category, experiment_no):
     print(f'train dataset size : {len(train_dataset)}')
     print(f'valid dataset size : {len(valid_dataset)}')
 
@@ -364,10 +366,10 @@ def run_train_tinyvit(model, train_dataset, valid_dataset, experiment_no):
                                                                       valid_loader=valid_loader)
 
     # save logs
-    save_tinyvit_train_logs(val_loss_list, experiment_no)
+    save_tinyvit_train_logs(val_loss_list, experiment_no, category)
 
     # save trained TinyViT model
-    model_path = f'{PROJECT_DIR_PATH}/run_experiment/exp{experiment_no}_tinyvit_ckpt'
+    model_path = f'{PROJECT_DIR_PATH}/run_experiment/exp{experiment_no}_tinyvit_ckpt/{category}'
     os.makedirs(model_path, exist_ok=True)
 
     model_save_path = f'{model_path}/tinyvit_trained_model.pt'
@@ -438,17 +440,19 @@ def run_train_tinyvit_(model, model_with_softmax, train_loader, valid_loader):
 
 # TinyViT 모델 학습 결과 로그 저장
 # Create Date : 2025.04.03
-# Last Update Date : -
+# Last Update Date : 2025.04.03
+# - category (데이터셋 세부 카테고리 이름) 인수 추가
 
 # Arguments:
 # - val_loss_list (list) : Valid Loss 기록
 # - experiment_no (int)  : 실시할 실험 번호 (1, 2 또는 3)
+# - category      (str)  : MVTec AD 데이터셋의 세부 카테고리 이름
 
 # Returns:
 # - log file 저장 (run_experiment/exp{1|2|3}_tinyvit_train_log/tinyvit_train_log.csv)
 
-def save_tinyvit_train_logs(val_loss_list, experiment_no):
-    tinyvit_train_log_path = f'{PROJECT_DIR_PATH}/run_experiment/exp{experiment_no}_tinyvit_train_log'
+def save_tinyvit_train_logs(val_loss_list, experiment_no, category):
+    tinyvit_train_log_path = f'{PROJECT_DIR_PATH}/run_experiment/exp{experiment_no}_tinyvit_train_log/{category}'
 
     os.makedirs(tinyvit_train_log_path, exist_ok=True)
     train_log = {'min_val_loss': [], 'total_epochs': [], 'best_epoch': [], 'val_loss_list': []}
