@@ -307,29 +307,8 @@ class GLASS(torch.nn.Module):
                 overlay_path = exp_path + '/overlay/' + name + '/' + str(i_epoch + 1)
                 os.makedirs(overlay_path, exist_ok=True)
 
-                seg_min = min(np.min(seg) for seg in segmentations)  # min anomaly score of ALL images
-                seg_max = max(np.max(seg) for seg in segmentations)  # max anomaly score of ALL images
-
-                for image, segmentation, img_path in zip(images, segmentations, img_paths):
-                    normalized_seg = ((segmentation - seg_min) / (seg_max - seg_min) * 255).astype(np.uint8)
-
-                    resized_seg = cv2.resize(normalized_seg, self.input_shape[1:], interpolation=cv2.INTER_NEAREST)
-                    heatmap = cv2.applyColorMap(resized_seg, cv2.COLORMAP_JET)
-
-                    image_ = np.transpose(image, (1, 2, 0)) * 255
-                    image_ = image_ * IMAGENET_STD + IMAGENET_MEAN  # de-normalize
-                    overlay_image = 0.65 * image_ + 0.35 * heatmap
-
-                    # 이미지 저장 시 한글 경로 처리
-                    overlay_save_path = overlay_path + '/overlay_' + img_path.split('/')[-1]
-
-                    result, overlay_image_arr = cv2.imencode(ext='.png',
-                                                             img=overlay_image,
-                                                             params=[cv2.IMWRITE_PNG_COMPRESSION, 0])
-
-                    if result:
-                        with open(overlay_save_path, mode='w+b') as f:
-                            overlay_image_arr.tofile(f)
+                # Overlay 이미지 저장 (추가 함수)
+                self.create_and_save_overlay_images(images, segmentations, img_paths, overlay_path)
 
                 self.logger.logger.add_scalar("i-auroc", image_auroc, i_epoch)
                 self.logger.logger.add_scalar("i-ap", image_ap, i_epoch)
@@ -674,3 +653,41 @@ class GLASS(torch.nn.Module):
             image_scores = image_scores.cpu().numpy()
 
         return image_scores, masks
+
+    # Overlay Image 저장을 위한 추가 함수
+    # Create Date : 2025.04.03
+    # Last Update Date : -
+
+    # Arguments:
+    # - images        (list) : list 형태로 된 원본 valid/test 이미지
+    # - segmentations (list) : 각 원본 이미지에 대한 Discriminator Segmentation 결과 (heatmap 생성용 원본 데이터)
+    # - img_paths     (list) : 이미지의 원본 데이터 경로
+    # - overlay_path  (str)  : overlay image 를 저장할 경로
+
+    # Returns:
+    # - valid/test 이미지 각각에 대한 overlay 이미지 저장
+
+    def create_and_save_overlay_images(self, images, segmentations, img_paths, overlay_path):
+        seg_min = min(np.min(seg) for seg in segmentations)  # min anomaly score of ALL images
+        seg_max = max(np.max(seg) for seg in segmentations)  # max anomaly score of ALL images
+
+        for image, segmentation, img_path in zip(images, segmentations, img_paths):
+            normalized_seg = ((segmentation - seg_min) / (seg_max - seg_min) * 255).astype(np.uint8)
+
+            resized_seg = cv2.resize(normalized_seg, self.input_shape[1:], interpolation=cv2.INTER_NEAREST)
+            heatmap = cv2.applyColorMap(resized_seg, cv2.COLORMAP_JET)
+
+            image_ = np.transpose(image, (1, 2, 0)) * 255
+            image_ = image_ * IMAGENET_STD + IMAGENET_MEAN  # de-normalize
+            overlay_image = 0.65 * image_ + 0.35 * heatmap
+
+            # 이미지 저장 시 한글 경로 처리
+            overlay_save_path = overlay_path + '/overlay_' + img_path.split('/')[-1]
+
+            result, overlay_image_arr = cv2.imencode(ext='.png',
+                                                     img=overlay_image,
+                                                     params=[cv2.IMWRITE_PNG_COMPRESSION, 0])
+
+            if result:
+                with open(overlay_save_path, mode='w+b') as f:
+                    overlay_image_arr.tofile(f)

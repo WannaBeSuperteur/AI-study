@@ -49,8 +49,13 @@ if __name__ == '__main__':
                                          category=category_name,
                                          experiment_no=1)
 
-        test_result_glass, confusion_matrix_glass = run_test_glass(glass_model, test_dataset_glass, category_name)
-        test_result_tinyvit, confusion_matrix_tinyvit = run_test_tinyvit(tinyvit_model, test_dataset_tinyvit)
+        test_result_glass, confusion_matrix_glass = run_test_glass(test_dataset=test_dataset_glass,
+                                                                   category=category_name,
+                                                                   experiment_no=1)
+
+        test_result_tinyvit, confusion_matrix_tinyvit = run_test_tinyvit(test_dataset=test_dataset_tinyvit,
+                                                                         category=category_name,
+                                                                         experiment_no=1)
 
         print(f'\n==== TRAIN RESULT ({category_name}) of GLASS ====')
         for idx, loss in enumerate(loss_glass):

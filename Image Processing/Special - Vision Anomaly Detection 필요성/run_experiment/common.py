@@ -13,6 +13,8 @@ from torchvision.io import read_image
 import torchvision.transforms as transforms
 
 from models.glass_original_code.perlin import perlin_mask
+from models.glass import get_model as get_glass_model
+from models.tinyvit import get_model as get_tinyvit_model
 
 try:
     from common_pytorch_training import run_train, run_validation
@@ -32,7 +34,7 @@ TRAIN_BATCH_SIZE_GLASS = 16
 TRAIN_BATCH_SIZE_TINYVIT = 8  # to prevent CUDA OOM (with 12 GB GPU)
 VALID_BATCH_SIZE = 4
 TEST_BATCH_SIZE = 4
-TINYVIT_EARLY_STOPPING_ROUNDS = 7
+TINYVIT_EARLY_STOPPING_ROUNDS = 10
 
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD = [0.229, 0.224, 0.225]
@@ -476,7 +478,6 @@ def save_tinyvit_train_logs(val_loss_list, experiment_no, category):
 # Last Update Date : -
 
 # Arguments:
-# - model         (nn.Module) : 학습 및 성능 테스트에 사용할 GLASS 모델
 # - test_dataset  (Dataset)   : 테스트 데이터셋 (카테고리 별)
 # - category      (str)       : MVTec AD 데이터셋의 세부 카테고리 이름
 # - experiment_no (int)       : 실시할 실험 번호 (1, 2 또는 3)
@@ -486,12 +487,34 @@ def save_tinyvit_train_logs(val_loss_list, experiment_no, category):
 #                                         {'accuracy': float, 'recall': float, 'precision': float, 'f1_score': float}
 # - confusion_matrix (Pandas DataFrame) : 테스트 성능 평가 시 생성된 Confusion Matrix
 
-def run_test_glass(model, test_dataset, category, experiment_no):
+def run_test_glass(test_dataset, category, experiment_no):
     test_loader = DataLoader(test_dataset, batch_size=TEST_BATCH_SIZE, shuffle=False)
-    _, _, _, _, _, _, anomaly_score_info = model.tester(test_loader,
-                                                        name=f"exp{experiment_no}_anomaly_detection_{category}")
+    exp_name = f'exp{experiment_no}'
 
-    raise NotImplementedError
+    model = get_glass_model()
+    model_dir = f'{PROJECT_DIR_PATH}/run_experiment/{exp_name}_glass_ckpt/exp1_anomaly_detection_{category}'
+    model_file_name = list(filter(lambda x: x.endswith('.pth'), os.listdir(model_dir)))[0]
+    model_path = f'{model_dir}/{model_file_name}'
+
+    state_dict = torch.load(model_path, map_location=device)
+    if 'discriminator' in state_dict:
+        model.discriminator.load_state_dict(state_dict['discriminator'])
+        if "pre_projection" in state_dict:
+            model.pre_projection.load_state_dict(state_dict["pre_projection"])
+    else:
+        model.load_state_dict(state_dict, strict=False)
+
+    images, scores, segmentations, labels_gt, _, img_paths = model.predict(test_loader)
+
+    # Overlay 이미지 저장
+    exp_path = PROJECT_DIR_PATH + '/run_experiment/' + exp_name + '_glass_results'
+    overlay_path = exp_path + '/overlay_test_data/' + exp_name + '_anomaly_detection_' + category
+    os.makedirs(overlay_path, exist_ok=True)
+
+    model.create_and_save_overlay_images(images, segmentations, img_paths, overlay_path)
+
+    # 성능지표 계산
+    # TODO implement
 
 
 # TinyViT 모델 테스트 실시
@@ -499,13 +522,14 @@ def run_test_glass(model, test_dataset, category, experiment_no):
 # Last Update Date : -
 
 # Arguments:
-# - model        (nn.Module) : 학습 및 성능 테스트에 사용할 TinyViT 모델
-# - test_dataset (Dataset)   : 테스트 데이터셋 (카테고리 별)
+# - test_dataset  (Dataset)   : 테스트 데이터셋 (카테고리 별)
+# - category      (str)       : MVTec AD 데이터셋의 세부 카테고리 이름
+# - experiment_no (int)       : 실시할 실험 번호 (1, 2 또는 3)
 
 # Returns:
 # - test_result      (dict)             : 테스트 성능 평가 결과
 #                                         {'accuracy': float, 'recall': float, 'precision': float, 'f1_score': float}
 # - confusion_matrix (Pandas DataFrame) : 테스트 성능 평가 시 생성된 Confusion Matrix
 
-def run_test_tinyvit(model, test_dataset):
+def run_test_tinyvit(test_dataset, category, experiment_no):
     raise NotImplementedError
