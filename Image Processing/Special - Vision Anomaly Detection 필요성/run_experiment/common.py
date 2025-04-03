@@ -372,8 +372,8 @@ def run_train_glass(model, train_dataset, valid_dataset, category, experiment_no
 # TinyViT 모델 학습 실시
 # Create Date : 2025.04.03
 # Last Update Date : 2025.04.03
-# - experiment_no (실험의 번호) 인수 추가
-# - category (데이터셋 세부 카테고리 이름) 인수 추가
+# - best epoch model 파일 이름에 best epoch No. 명시
+# - Early Stopping 기준이 Valid Accuracy 로 변경됨에 따라 Valid Accuracy 반환값 추가
 
 # Arguments:
 # - model         (nn.Module) : 학습 및 성능 테스트에 사용할 TinyViT 모델
@@ -383,7 +383,8 @@ def run_train_glass(model, train_dataset, valid_dataset, category, experiment_no
 # - experiment_no (int)       : 실시할 실험 번호 (1, 2 또는 3)
 
 # Returns:
-# - val_loss_list (list) : Valid Loss 기록
+# - val_accuracy_list (list) : Valid Accuracy 기록
+# - val_loss_list     (list) : Valid Loss 기록
 
 def run_train_tinyvit(model, train_dataset, valid_dataset, category, experiment_no):
     print(f'train dataset size : {len(train_dataset)}')
@@ -406,27 +407,31 @@ def run_train_tinyvit(model, train_dataset, valid_dataset, category, experiment_
     valid_loader = DataLoader(valid_dataset, batch_size=VALID_BATCH_SIZE, shuffle=False)
 
     # train TinyViT
-    val_loss_list, best_epoch_model_with_softmax = run_train_tinyvit_(model=model,
-                                                                      model_with_softmax=tinyvit_with_softmax,
-                                                                      train_loader=train_loader,
-                                                                      valid_loader=valid_loader)
+    val_accuracy_list, val_loss_list, best_epoch_model_with_softmax =(
+        run_train_tinyvit_(model=model,
+                           model_with_softmax=tinyvit_with_softmax,
+                           train_loader=train_loader,
+                           valid_loader=valid_loader))
 
     # save logs
-    save_tinyvit_train_logs(val_loss_list, experiment_no, category)
+    save_tinyvit_train_logs(val_accuracy_list, val_loss_list, experiment_no, category)
 
     # save trained TinyViT model
     model_path = f'{PROJECT_DIR_PATH}/run_experiment/exp{experiment_no}_tinyvit_ckpt/{category}'
     os.makedirs(model_path, exist_ok=True)
 
-    model_save_path = f'{model_path}/tinyvit_trained_model.pt'
+    best_epoch_no = np.argmax(val_accuracy_list)
+    model_save_path = f'{model_path}/tinyvit_best_model_at_epoch_{best_epoch_no}.pt'
     torch.save(best_epoch_model_with_softmax.state_dict(), model_save_path)
 
-    return val_loss_list
+    return val_accuracy_list, val_loss_list
 
 
 # TinyViT 모델 학습 실시 (run_train_tinyvit 에서 호출)
 # Create Date : 2025.04.03
-# Last Update Date : -
+# Last Update Date : 2025.04.03
+# - Early Stopping 을 Valid Accuracy 기준으로 수정
+# - 이에 따라 Valid Accuracy 반환값 추가
 
 # Arguments:
 # - model              (nn.Module)  : 학습할 TinyViT 모델
@@ -435,15 +440,17 @@ def run_train_tinyvit(model, train_dataset, valid_dataset, category, experiment_
 # - valid_loader       (DataLoader) : 검증 데이터셋 (카테고리 별) 의 DataLoader
 
 # Returns:
+# - val_accuracy_list             (list)      : valid accuracy 기록
 # - val_loss_list                 (list)      : Valid Loss 기록
 # - best_epoch_model_with_softmax (nn.Module) : Softmax 가 추가된 TinyViT 모델 (at best epoch)
 
 def run_train_tinyvit_(model, model_with_softmax, train_loader, valid_loader):
     current_epoch = 0
-    min_val_loss_epoch = -1  # Loss-based Early Stopping
-    min_val_loss = None
+    max_val_accuracy_epoch = -1  # Accuracy-based Early Stopping
+    max_val_accuracy = None
     best_epoch_model_with_softmax = None
 
+    val_accuracy_list = []
     val_loss_list = []
 
     # loss function
@@ -463,54 +470,65 @@ def run_train_tinyvit_(model, model_with_softmax, train_loader, valid_loader):
         print(f'epoch : {current_epoch}, '
               f'train_loss : {train_loss:.4f}, val_acc : {val_accuracy:.4f}, val_loss : {val_loss:.4f}')
 
+        val_accuracy_list.append(val_accuracy)
         val_loss_cpu = float(val_loss.detach().cpu())
         val_loss_list.append(val_loss_cpu)
 
         model_with_softmax.scheduler.step()
 
-        if min_val_loss is None or val_loss < min_val_loss:
-            min_val_loss = val_loss
-            min_val_loss_epoch = current_epoch
+        if max_val_accuracy is None or val_accuracy > max_val_accuracy:
+            max_val_accuracy = val_accuracy
+            max_val_accuracy_epoch = current_epoch
 
             best_epoch_model_with_softmax = TinyViTWithSoftmax(tinyvit_model=model,
                                                                num_classes=2).to(model_with_softmax.device)
             best_epoch_model_with_softmax.load_state_dict(model_with_softmax.state_dict())
 
-        if current_epoch - min_val_loss_epoch >= TINYVIT_EARLY_STOPPING_ROUNDS:
+        if current_epoch - max_val_accuracy_epoch >= TINYVIT_EARLY_STOPPING_ROUNDS:
             break
 
         current_epoch += 1
 
-    return val_loss_list, best_epoch_model_with_softmax
+    return val_accuracy_list, val_loss_list, best_epoch_model_with_softmax
 
 
 # TinyViT 모델 학습 결과 로그 저장
 # Create Date : 2025.04.03
 # Last Update Date : 2025.04.03
 # - category (데이터셋 세부 카테고리 이름) 인수 추가
+# - Early Stopping 기준이 Valid Accuracy 로 변경됨에 따라 Valid Accuracy 기록 추가
 
 # Arguments:
-# - val_loss_list (list) : Valid Loss 기록
-# - experiment_no (int)  : 실시할 실험 번호 (1, 2 또는 3)
-# - category      (str)  : MVTec AD 데이터셋의 세부 카테고리 이름
+# - val_accuracy_list (list) : valid accuracy 기록
+# - val_loss_list     (list) : Valid Loss 기록
+# - experiment_no     (int)  : 실시할 실험 번호 (1, 2 또는 3)
+# - category          (str)  : MVTec AD 데이터셋의 세부 카테고리 이름
 
 # Returns:
 # - log file 저장 (run_experiment/exp{1|2|3}_tinyvit_train_log/tinyvit_train_log.csv)
 
-def save_tinyvit_train_logs(val_loss_list, experiment_no, category):
+def save_tinyvit_train_logs(val_accuracy_list, val_loss_list, experiment_no, category):
     tinyvit_train_log_path = f'{PROJECT_DIR_PATH}/run_experiment/exp{experiment_no}_tinyvit_train_log/{category}'
 
     os.makedirs(tinyvit_train_log_path, exist_ok=True)
-    train_log = {'min_val_loss': [], 'total_epochs': [], 'best_epoch': [], 'val_loss_list': []}
+    train_log = {'max_val_acc': [], 'min_val_loss': [], 'total_epochs': [], 'best_epoch': [],
+                 'val_acc_list': [], 'val_loss_list': []}
 
+    max_val_acc = max(val_accuracy_list)
+    max_val_acc_ = round(max_val_acc, 4)
     min_val_loss = min(val_loss_list)
     min_val_loss_ = round(min_val_loss, 4)
+
     total_epochs = len(val_loss_list)
+    val_accuracy_list_ = list(map(lambda x: round(x, 4), val_accuracy_list))
     val_loss_list_ = list(map(lambda x: round(x, 4), val_loss_list))
 
+    train_log['max_val_acc'].append(max_val_acc_)
     train_log['min_val_loss'].append(min_val_loss_)
+
     train_log['total_epochs'].append(total_epochs)
-    train_log['best_epoch'].append(np.argmin(val_loss_list_))
+    train_log['best_epoch'].append(np.argmax(val_accuracy_list_))
+    train_log['val_acc_list'].append(val_accuracy_list_)
     train_log['val_loss_list'].append(val_loss_list_)
 
     train_log_path = f'{tinyvit_train_log_path}/tinyvit_train_log.csv'
