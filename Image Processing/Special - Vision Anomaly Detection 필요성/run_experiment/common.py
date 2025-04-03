@@ -31,6 +31,10 @@ import random
 import torch
 import torch.nn as nn
 
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+
 TRAIN_BATCH_SIZE_GLASS = 16
 TRAIN_BATCH_SIZE_TINYVIT = 8  # to prevent CUDA OOM (with 12 GB GPU)
 VALID_BATCH_SIZE = 4
@@ -550,7 +554,7 @@ def save_tinyvit_train_logs(val_accuracy_list, val_loss_list, experiment_no, cat
 # - confusion_matrix (Pandas DataFrame) : 테스트 성능 평가 시 생성된 Confusion Matrix
 
 # Materials to save:
-# - test_result_df (threshold 별 성능지표 DataFrame), test_result, confusion_matrix 를 실험 결과 디렉토리에 저장
+# - test_result_df (threshold 별 성능지표 DataFrame 및 그 그래프), test_result, confusion_matrix 를 실험 결과 디렉토리에 저장
 # - 각 sample 별 "경로, anomaly score, true label" 의 정보를 실험 결과 디렉토리에 저장
 
 def run_test_glass(test_dataset, category, experiment_no):
@@ -590,6 +594,7 @@ def run_test_glass(test_dataset, category, experiment_no):
     # 성능지표 계산 및 그 결과 저장
     test_result, test_result_df, confusion_matrix = compute_metric_values(thresholds, scores, labels_gt)
     test_result_df.to_csv(f'{test_result_df_path}/test_result_df.csv', index=False)
+    save_test_result_df_as_chart(test_result_df, test_result_df_path)
 
     test_result_dict_df = pd.DataFrame({k: [v] for k, v in test_result.items()})
     test_result_dict_df.to_csv(f'{test_result_df_path}/test_result.csv', index=False)
@@ -683,6 +688,42 @@ def save_score_and_label_info(img_paths, scores, labels_gt):
         score_and_label_info_dict['label'].append(label)
 
     return pd.DataFrame(score_and_label_info_dict)
+
+
+# 모델 테스트 실시 - threshold 별 성능 그래프를 실험 결과 디렉토리에 저장
+# Create Date : 2025.04.03
+# Last Update Date : -
+
+# Arguments:
+# - test_result_df      (Pandas DataFrame) : 각 threshold 별 성능지표 값을 저장한 DataFrame
+# - test_result_df_path (str)              : threshold 별 성능 그래프의 저장 경로
+
+# Returns:
+# - test_result_df 의 그래프를 실험 결과 디렉토리에 저장
+
+def save_test_result_df_as_chart(test_result_df, test_result_df_path):
+    fig = go.Figure()
+
+    thresholds = test_result_df['threshold'].astype(float).tolist()
+    accuracy = test_result_df['accuracy'].astype(float).tolist()
+    recall = test_result_df['recall'].astype(float).tolist()
+    precision = test_result_df['precision'].astype(float).tolist()
+    f1_score = test_result_df['f1_score'].astype(float).tolist()
+
+    metric_names = ['accuracy (%)', 'recall (%)', 'precision (%)', 'f1_score (%)']
+    metric_values = [accuracy, recall, precision, f1_score]
+
+    for metric_name, metric_value in zip(metric_names, metric_values):
+        fig.add_trace(go.Scatter(x=thresholds,
+                                 y=[100.0 * m for m in metric_value],
+                                 mode='lines',
+                                 name=metric_name))
+
+    fig.update_layout(xaxis_title='anomaly threshold',
+                      yaxis_title='metric value (%)')
+
+    fig_path = f'{test_result_df_path}/test_result.png'
+    fig.write_image(fig_path)  # need kaleido package (pip install kaleido)
 
 
 # TinyViT 모델 테스트 실시
