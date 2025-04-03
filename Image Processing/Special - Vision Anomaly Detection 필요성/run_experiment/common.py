@@ -46,9 +46,7 @@ anomaly_source_path = f'{PROJECT_DIR_PATH}/models/glass_anomaly_source'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f'device for training : {device}')
 
-# fix seeds (ref: https://github.com/cqylunlun/GLASS/blob/main/utils.py#L79) to FIX BACKBONE WEIGHTS
-# load_state_dict() DOES NOT INITIALIZE BACKBONE WEIGHTS,
-# so when the seed is not fixed, problems can occur on test time
+# fix seeds (ref: https://github.com/cqylunlun/GLASS/blob/main/utils.py#L79)
 
 seed = 2025
 
@@ -542,20 +540,11 @@ def run_test_glass(test_dataset, category, experiment_no):
 
     # load state dict
     model_dir = f'{PROJECT_DIR_PATH}/run_experiment/{exp_name}_glass_ckpt/exp1_anomaly_detection_{category}'
-    model_file_name = list(filter(lambda x: x.endswith('.pth'), os.listdir(model_dir)))[0]
+    model_file_name = list(filter(lambda x: x.endswith('_all.pth'), os.listdir(model_dir)))[0]
     model_path = f'{model_dir}/{model_file_name}'
 
     state_dict = torch.load(model_path, map_location=device)
-
-    if 'discriminator' in state_dict:
-        model.discriminator.load_state_dict(state_dict['discriminator'])
-
-        if "pre_projection" in state_dict:
-            model.pre_projection.load_state_dict(state_dict["pre_projection"])
-            print(f'discriminator and pre_projection state loaded, model_path = {model_path}')
-
-    else:
-        model.load_state_dict(state_dict, strict=False)
+    model.load_state_dict(state_dict, strict=True)
 
     # run inference
     images, scores, segmentations, labels_gt, _, img_paths = model.predict(test_loader)

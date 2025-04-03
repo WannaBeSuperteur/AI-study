@@ -304,7 +304,7 @@ class GLASS(torch.nn.Module):
 
                 exp_name = 'exp' + str(self.experiment_no)
                 exp_path = PROJECT_DIR_PATH + '/run_experiment/' + exp_name + '_glass_results'
-                overlay_path = exp_path + '/overlay/' + name + '/' + str(i_epoch + 1)
+                overlay_path = exp_path + '/overlay/' + name + '/' + str(i_epoch)
                 os.makedirs(overlay_path, exist_ok=True)
 
                 # Overlay 이미지 저장 (추가 함수)
@@ -324,16 +324,32 @@ class GLASS(torch.nn.Module):
 
                 if best_record is None:
                     best_record = [image_auroc, image_ap, pixel_auroc, pixel_ap, pixel_pro, i_epoch]
-                    ckpt_path_best = os.path.join(self.ckpt_dir, "ckpt_best_at_epoch_{}.pth".format(i_epoch))
+
+                    ckpt_path_best = os.path.join(self.ckpt_dir,
+                                                  "ckpt_best_at_epoch_{}.pth".format(i_epoch))
                     torch.save(state_dict, ckpt_path_best)
+
+                    all_states_ckpt_path_best = os.path.join(self.ckpt_dir,
+                                                             "ckpt_best_at_epoch_{}_all.pth".format(i_epoch))
+                    torch.save(self.state_dict(), all_states_ckpt_path_best)
+
                     shutil.rmtree(eval_path, ignore_errors=True)
                     shutil.copytree(train_path, eval_path)
 
                 elif image_auroc + pixel_auroc > best_record[0] + best_record[2]:
                     best_record = [image_auroc, image_ap, pixel_auroc, pixel_ap, pixel_pro, i_epoch]
+
                     os.remove(ckpt_path_best)
-                    ckpt_path_best = os.path.join(self.ckpt_dir, "ckpt_best_at_epoch_{}.pth".format(i_epoch))
+                    os.remove(all_states_ckpt_path_best)
+
+                    ckpt_path_best = os.path.join(self.ckpt_dir,
+                                                  "ckpt_best_at_epoch_{}.pth".format(i_epoch))
                     torch.save(state_dict, ckpt_path_best)
+
+                    all_states_ckpt_path_best = os.path.join(self.ckpt_dir,
+                                                             "ckpt_best_at_epoch_{}_all.pth".format(i_epoch))
+                    torch.save(self.state_dict(), all_states_ckpt_path_best)
+
                     shutil.rmtree(eval_path, ignore_errors=True)
                     shutil.copytree(train_path, eval_path)
 
