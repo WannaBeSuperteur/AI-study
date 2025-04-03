@@ -306,9 +306,10 @@ class GLASS(torch.nn.Module):
                 overlay_path = exp_path + '/overlay/' + name + '/' + str(i_epoch + 1)
                 os.makedirs(overlay_path, exist_ok=True)
 
+                seg_min = min(np.min(seg) for seg in segmentations)  # min anomaly score of ALL images
+                seg_max = max(np.max(seg) for seg in segmentations)  # max anomaly score of ALL images
+
                 for image, segmentation, img_path in zip(images, segmentations, img_paths):
-                    seg_min = np.min(segmentation)
-                    seg_max = np.max(segmentation)
                     normalized_seg = ((segmentation - seg_min) / (seg_max - seg_min) * 255).astype(np.uint8)
 
                     resized_seg = cv2.resize(normalized_seg, self.input_shape[1:], interpolation=cv2.INTER_NEAREST)
