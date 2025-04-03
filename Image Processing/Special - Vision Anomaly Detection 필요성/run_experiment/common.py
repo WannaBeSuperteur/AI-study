@@ -3,6 +3,7 @@ import sys
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 PROJECT_DIR_PATH = os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+EXP1_GLASS_RESULT_PATH = PROJECT_DIR_PATH + '/run_experiment/exp1_glass_results'
 
 from torch.utils.data import Dataset, DataLoader
 from torchvision.io import read_image
@@ -14,6 +15,7 @@ import pandas as pd
 import numpy as np
 import torch
 import PIL
+import cv2
 from enum import Enum
 
 TRAIN_BATCH_SIZE = 16
@@ -128,9 +130,32 @@ class CustomMVTecDataset(Dataset):
 
         if self.dataset_type == 'train':
             aug_image, mask_s = self.get_aug_image_and_mask_s(img_path)
+            self.save_original_and_aug_image(img_path, image, aug_image)
+
             return image, label, img_path, aug_image, mask_s
         else:
             return image, label, img_path
+
+    def save_original_and_aug_image(self, img_path, image, aug_image):
+        category = img_path.split('/')[-4]
+        dataset_path = f'{EXP1_GLASS_RESULT_PATH}/dataset/{category}'
+        os.makedirs(dataset_path, exist_ok=True)
+
+        image_save_path = f'{dataset_path}/{img_path.split("/")[-1]}'
+        aug_image_save_path = f'{dataset_path}/{img_path.split("/")[-1].split(".")[0]}_aug.png'
+
+        # 이미지 저장 시 한글 경로 처리
+        for img, save_path in zip([image, aug_image], [image_save_path, aug_image_save_path]):
+            img_ = np.array(img)
+            img_ = np.transpose(img_, (1, 2, 0)) * 255
+
+            result, overlay_image_arr = cv2.imencode(ext='.png',
+                                                     img=img_,
+                                                     params=[cv2.IMWRITE_PNG_COMPRESSION, 0])
+
+            if result:
+                with open(save_path, mode='w+b') as f:
+                    overlay_image_arr.tofile(f)
 
 
 # 학습, 검증 및 테스트 데이터셋 정의
