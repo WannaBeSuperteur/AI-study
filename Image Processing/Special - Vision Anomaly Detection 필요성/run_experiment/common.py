@@ -4,6 +4,9 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 PROJECT_DIR_PATH = os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 EXP1_GLASS_RESULT_PATH = PROJECT_DIR_PATH + '/run_experiment/exp1_glass_results'
+EXP2_GLASS_RESULT_PATH = PROJECT_DIR_PATH + '/run_experiment/exp2_glass_results'
+EXP3_GLASS_RESULT_PATH = PROJECT_DIR_PATH + '/run_experiment/exp3_glass_results'
+
 
 from torch.utils.data import Dataset, DataLoader
 from torchvision.io import read_image
@@ -49,7 +52,7 @@ class DatasetSplit(Enum):
 
 
 class CustomMVTecDataset(Dataset):
-    def __init__(self, dataset_df, transform, dataset_type, img_size, model_name):
+    def __init__(self, dataset_df, transform, dataset_type, img_size, model_name, experiment_no):
         self.img_paths = dataset_df['img_path'].tolist()
         self.labels = dataset_df['label'].tolist()
         self.transform = transform
@@ -57,6 +60,9 @@ class CustomMVTecDataset(Dataset):
         self.dataset_type = dataset_type
         self.img_size = img_size
         self.model_name = model_name
+        self.experiment_no = experiment_no  # 1, 2 or 3 (for exp1, exp2 and exp3, respectively)
+
+        assert experiment_no in [1, 2, 3], "EXPERIMENT NO MUST BE IN [1, 2, 3] for each experiment."
 
         # for GLASS
         if model_name == 'GLASS':
@@ -154,7 +160,14 @@ class CustomMVTecDataset(Dataset):
 
     def save_original_and_aug_image(self, img_path, image, aug_image):
         category = img_path.split('/')[-4]
-        dataset_path = f'{EXP1_GLASS_RESULT_PATH}/dataset/{category}'
+
+        if self.experiment_no == 1:
+            dataset_path = f'{EXP1_GLASS_RESULT_PATH}/dataset/{category}'
+        elif self.experiment_no == 2:
+            dataset_path = f'{EXP2_GLASS_RESULT_PATH}/dataset/{category}'
+        elif self.experiment_no == 3:
+            dataset_path = f'{EXP3_GLASS_RESULT_PATH}/dataset/{category}'
+
         os.makedirs(dataset_path, exist_ok=True)
 
         image_save_path = f'{dataset_path}/{img_path.split("/")[-1]}'
@@ -193,19 +206,21 @@ class TinyViTWithSoftmax(nn.Module):
 # Create Date : 2025.04.02
 # Last Update Date : 2025.04.03
 # - 원본 이미지를 ImageNet Normalize 하는 부분의 누락 해결
+# - experiment_no (실험의 번호) 인수 추가
 
 # Arguments:
 # - category_name    (str) : 카테고리 이름
 # - dataset_dir_name (str) : 데이터셋 디렉토리 이름
 # - img_size         (int) : 이미지 크기 (256 또는 512)
 # - model_name       (str) : 모델 이름 ('TinyViT' or 'GLASS')
+# - experiment_no    (int) : 실시할 실험 번호 (1, 2 또는 3)
 
 # Returns:
 # - train_dataset (Dataset) : 해당 카테고리의 학습 데이터셋
 # - valid_dataset (Dataset) : 해당 카테고리의 검증 데이터셋
 # - test_dataset  (Dataset) : 해당 카테고리의 테스트 데이터셋
 
-def get_datasets(category_name, dataset_dir_name, img_size, model_name):
+def get_datasets(category_name, dataset_dir_name, img_size, model_name, experiment_no):
     train_dataset_df = create_dataset_df(category_name, dataset_dir_name, dataset_type='train')
     valid_dataset_df = create_dataset_df(category_name, dataset_dir_name, dataset_type='valid')
     test_dataset_df = create_dataset_df(category_name, dataset_dir_name, dataset_type='test')
@@ -218,19 +233,22 @@ def get_datasets(category_name, dataset_dir_name, img_size, model_name):
                                        transform,
                                        dataset_type='train',
                                        img_size=img_size,
-                                       model_name=model_name)
+                                       model_name=model_name,
+                                       experiment_no=experiment_no)
 
     valid_dataset = CustomMVTecDataset(valid_dataset_df,
                                        transform,
                                        dataset_type='valid',
                                        img_size=img_size,
-                                       model_name=model_name)
+                                       model_name=model_name,
+                                       experiment_no=experiment_no)
 
     test_dataset = CustomMVTecDataset(test_dataset_df,
                                       transform,
                                       dataset_type='test',
                                       img_size=img_size,
-                                      model_name=model_name)
+                                      model_name=model_name,
+                                      experiment_no=experiment_no)
 
     return train_dataset, valid_dataset, test_dataset
 
@@ -279,40 +297,47 @@ def create_dataset_df(category_name, dataset_dir_name, dataset_type):
 # Last Update Date : 2025.04.03
 # - category 별 checkpoint 구분을 위해 category name 인수 추가
 # - batch size 상수 수정
+# - experiment_no (실험의 번호) 인수 추가
 
 # Arguments:
 # - model         (nn.Module) : 학습 및 성능 테스트에 사용할 GLASS 모델
 # - train_dataset (Dataset)   : 학습 데이터셋 (카테고리 별)
 # - valid_dataset (Dataset)   : 검증 데이터셋 (카테고리 별)
 # - category      (str)       : MVTec AD 데이터셋의 세부 카테고리 이름
+# - experiment_no (int)       : 실시할 실험 번호 (1, 2 또는 3)
 
 # Returns:
 # - entire_loss_list (list) : GLASS 모델의 Loss 기록
 
-def run_train_glass(model, train_dataset, valid_dataset, category):
+def run_train_glass(model, train_dataset, valid_dataset, category, experiment_no):
     train_loader = DataLoader(train_dataset, batch_size=TRAIN_BATCH_SIZE_GLASS, shuffle=True)
     valid_loader = DataLoader(valid_dataset, batch_size=VALID_BATCH_SIZE, shuffle=False)
 
-    glass_model_dir = f'{PROJECT_DIR_PATH}/run_experiment/exp1_glass_ckpt'
-    model.set_model_dir(glass_model_dir, dataset_name=f"exp1_anomaly_detection_{category}")
+    exp_name = f'exp{experiment_no}'
 
-    entire_loss_list = model.trainer(train_loader, valid_loader, name=f"exp1_anomaly_detection_{category}")
+    glass_model_dir = f'{PROJECT_DIR_PATH}/run_experiment/{exp_name}_glass_ckpt'
+    model.experiment_no = experiment_no
+    model.set_model_dir(glass_model_dir, dataset_name=f"{exp_name}_anomaly_detection_{category}")
+
+    entire_loss_list = model.trainer(train_loader, valid_loader, name=f"{exp_name}_anomaly_detection_{category}")
     return entire_loss_list
 
 
 # TinyViT 모델 학습 실시
 # Create Date : 2025.04.03
-# Last Update Date : -
+# Last Update Date : 2025.04.03
+# - experiment_no (실험의 번호) 인수 추가
 
 # Arguments:
 # - model         (nn.Module) : 학습 및 성능 테스트에 사용할 TinyViT 모델
 # - train_dataset (Dataset)   : 학습 데이터셋 (카테고리 별)
 # - valid_dataset (Dataset)   : 검증 데이터셋 (카테고리 별)
+# - experiment_no (int)       : 실시할 실험 번호 (1, 2 또는 3)
 
 # Returns:
 # - val_loss_list (list) : Valid Loss 기록
 
-def run_train_tinyvit(model, train_dataset, valid_dataset):
+def run_train_tinyvit(model, train_dataset, valid_dataset, experiment_no):
     print(f'train dataset size : {len(train_dataset)}')
     print(f'valid dataset size : {len(valid_dataset)}')
 
@@ -339,10 +364,10 @@ def run_train_tinyvit(model, train_dataset, valid_dataset):
                                                                       valid_loader=valid_loader)
 
     # save logs
-    save_tinyvit_train_logs(val_loss_list)
+    save_tinyvit_train_logs(val_loss_list, experiment_no)
 
     # save trained TinyViT model
-    model_path = f'{PROJECT_DIR_PATH}/run_experiment/exp1_tinyvit_ckpt'
+    model_path = f'{PROJECT_DIR_PATH}/run_experiment/exp{experiment_no}_tinyvit_ckpt'
     os.makedirs(model_path, exist_ok=True)
 
     model_save_path = f'{model_path}/tinyvit_trained_model.pt'
@@ -417,12 +442,13 @@ def run_train_tinyvit_(model, model_with_softmax, train_loader, valid_loader):
 
 # Arguments:
 # - val_loss_list (list) : Valid Loss 기록
+# - experiment_no (int)  : 실시할 실험 번호 (1, 2 또는 3)
 
 # Returns:
-# - log file 저장 (run_experiment/exp1_tinyvit_train_log/tinyvit_train_log.csv)
+# - log file 저장 (run_experiment/exp{1|2|3}_tinyvit_train_log/tinyvit_train_log.csv)
 
-def save_tinyvit_train_logs(val_loss_list):
-    tinyvit_train_log_path = f'{PROJECT_DIR_PATH}/run_experiment/exp1_tinyvit_train_log'
+def save_tinyvit_train_logs(val_loss_list, experiment_no):
+    tinyvit_train_log_path = f'{PROJECT_DIR_PATH}/run_experiment/exp{experiment_no}_tinyvit_train_log'
 
     os.makedirs(tinyvit_train_log_path, exist_ok=True)
     train_log = {'min_val_loss': [], 'total_epochs': [], 'best_epoch': [], 'val_loss_list': []}
@@ -446,18 +472,20 @@ def save_tinyvit_train_logs(val_loss_list):
 # Last Update Date : -
 
 # Arguments:
-# - model        (nn.Module) : 학습 및 성능 테스트에 사용할 GLASS 모델
-# - test_dataset (Dataset)   : 테스트 데이터셋 (카테고리 별)
-# - category     (str)       : MVTec AD 데이터셋의 세부 카테고리 이름
+# - model         (nn.Module) : 학습 및 성능 테스트에 사용할 GLASS 모델
+# - test_dataset  (Dataset)   : 테스트 데이터셋 (카테고리 별)
+# - category      (str)       : MVTec AD 데이터셋의 세부 카테고리 이름
+# - experiment_no (int)       : 실시할 실험 번호 (1, 2 또는 3)
 
 # Returns:
 # - test_result      (dict)             : 테스트 성능 평가 결과
 #                                         {'accuracy': float, 'recall': float, 'precision': float, 'f1_score': float}
 # - confusion_matrix (Pandas DataFrame) : 테스트 성능 평가 시 생성된 Confusion Matrix
 
-def run_test_glass(model, test_dataset, category):
+def run_test_glass(model, test_dataset, category, experiment_no):
     test_loader = DataLoader(test_dataset, batch_size=TEST_BATCH_SIZE, shuffle=False)
-    _, _, _, _, _, _, anomaly_score_info = model.tester(test_loader, name=f"exp1_anomaly_detection_{category}")
+    _, _, _, _, _, _, anomaly_score_info = model.tester(test_loader,
+                                                        name=f"exp{experiment_no}_anomaly_detection_{category}")
 
     raise NotImplementedError
 

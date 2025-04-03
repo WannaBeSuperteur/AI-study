@@ -302,7 +302,8 @@ class GLASS(torch.nn.Module):
                 image_auroc, image_ap, pixel_auroc, pixel_ap, pixel_pro = self._evaluate(images, scores, segmentations,
                                                                                          labels_gt, masks_gt, name)
 
-                exp_path = PROJECT_DIR_PATH + '/run_experiment/exp1_glass_results'
+                exp_name = 'exp' + str(self.experiment_no)
+                exp_path = PROJECT_DIR_PATH + '/run_experiment/' + exp_name + '_glass_results'
                 overlay_path = exp_path + '/overlay/' + name + '/' + str(i_epoch + 1)
                 os.makedirs(overlay_path, exist_ok=True)
 

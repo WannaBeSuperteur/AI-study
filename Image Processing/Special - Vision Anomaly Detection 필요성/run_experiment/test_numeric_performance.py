@@ -27,16 +27,26 @@ if __name__ == '__main__':
             get_datasets(category_name,
                          dataset_dir_name='mvtec_dataset_exp1_anomaly',
                          img_size=256,
-                         model_name='GLASS'))
+                         model_name='GLASS',
+                         experiment_no=1))
 
         train_dataset_tinyvit, valid_dataset_tinyvit, test_dataset_tinyvit = (
             get_datasets(category_name,
                          dataset_dir_name='mvtec_dataset_exp1_classify',
                          img_size=512,
-                         model_name='TinyViT'))
+                         model_name='TinyViT',
+                         experiment_no=1))
 
-        loss_glass = run_train_glass(glass_model, train_dataset_glass, valid_dataset_glass, category_name)
-        loss_tinyvit = run_train_tinyvit(tinyvit_model, train_dataset_tinyvit, valid_dataset_tinyvit)
+        loss_glass = run_train_glass(model=glass_model,
+                                     train_dataset=train_dataset_glass,
+                                     valid_dataset=valid_dataset_glass,
+                                     category=category_name,
+                                     experiment_no=1)
+
+        loss_tinyvit = run_train_tinyvit(model=tinyvit_model,
+                                         train_dataset=train_dataset_tinyvit,
+                                         valid_dataset=valid_dataset_tinyvit,
+                                         experiment_no=1)
 
         test_result_glass, confusion_matrix_glass = run_test_glass(glass_model, test_dataset_glass, category_name)
         test_result_tinyvit, confusion_matrix_tinyvit = run_test_tinyvit(tinyvit_model, test_dataset_tinyvit)
