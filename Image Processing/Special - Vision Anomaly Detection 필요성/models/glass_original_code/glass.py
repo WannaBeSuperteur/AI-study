@@ -298,9 +298,35 @@ class GLASS(torch.nn.Module):
             update_state_dict()
 
             if (i_epoch + 1) % self.eval_epochs == 0:
-                images, scores, segmentations, labels_gt, masks_gt = self.predict(val_data)
+                images, scores, segmentations, labels_gt, masks_gt, img_paths = self.predict(val_data)
                 image_auroc, image_ap, pixel_auroc, pixel_ap, pixel_pro = self._evaluate(images, scores, segmentations,
                                                                                          labels_gt, masks_gt, name)
+
+                exp_path = PROJECT_DIR_PATH + '/run_experiment/exp1_glass_results'
+                overlay_path = exp_path + '/overlay/' + name + '/' + str(i_epoch + 1)
+                os.makedirs(overlay_path, exist_ok=True)
+
+                for image, segmentation, img_path in zip(images, segmentations, img_paths):
+                    seg_min = np.min(segmentation)
+                    seg_max = np.max(segmentation)
+                    normalized_seg = ((segmentation - seg_min) / (seg_max - seg_min) * 255).astype(np.uint8)
+
+                    resized_seg = cv2.resize(normalized_seg, self.input_shape[1:], interpolation=cv2.INTER_NEAREST)
+                    heatmap = cv2.applyColorMap(resized_seg, cv2.COLORMAP_JET)
+
+                    image_ = np.transpose(image, (1, 2, 0)) * 255
+                    overlay_image = 0.65 * image_ + 0.35 * heatmap
+
+                    # 이미지 저장 시 한글 경로 처리
+                    overlay_save_path = overlay_path + '/overlay_' + img_path.split('/')[-1]
+
+                    result, overlay_image_arr = cv2.imencode(ext='.png',
+                                                             img=overlay_image,
+                                                             params=[cv2.IMWRITE_PNG_COMPRESSION, 0])
+
+                    if result:
+                        with open(overlay_save_path, mode='w+b') as f:
+                            overlay_image_arr.tofile(f)
 
                 self.logger.logger.add_scalar("i-auroc", image_auroc, i_epoch)
                 self.logger.logger.add_scalar("i-ap", image_ap, i_epoch)
@@ -308,8 +334,8 @@ class GLASS(torch.nn.Module):
                 self.logger.logger.add_scalar("p-ap", pixel_ap, i_epoch)
                 self.logger.logger.add_scalar("p-pro", pixel_pro, i_epoch)
 
-                eval_path = PROJECT_DIR_PATH + '/run_experiment/exp1_glass_results/eval/' + name + '/'
-                train_path = PROJECT_DIR_PATH + '/run_experiment/exp1_glass_results/training/' + name + '/'
+                eval_path = exp_path + '/eval/' + name + '/'
+                train_path = exp_path + '/training/' + name + '/'
 
                 os.makedirs(eval_path, exist_ok=True)
                 os.makedirs(train_path, exist_ok=True)
@@ -592,7 +618,7 @@ class GLASS(torch.nn.Module):
                     scores.append(score)
                     masks.append(mask)
 
-        return images, scores, masks, labels_gt, masks_gt
+        return images, scores, masks, labels_gt, masks_gt, img_paths
 
     def _predict(self, img):
         """Infer score and mask for a batch of images."""
