@@ -17,9 +17,9 @@ from models.glass import get_model as get_glass_model
 from models.tinyvit import get_model as get_tinyvit_model
 
 try:
-    from common_pytorch_training import run_train, run_validation
+    from common_pytorch_training import run_train, run_validation, convert_anomaly_labels
 except:
-    from run_experiment.common_pytorch_training import run_train, run_validation
+    from run_experiment.common_pytorch_training import run_train, run_validation, convert_anomaly_labels
 
 import pandas as pd
 import numpy as np
@@ -604,9 +604,83 @@ def run_test_glass(test_dataset, category, experiment_no):
     return test_result, confusion_matrix
 
 
-# 모델 테스트 실시 - Metrics 값 계산
+# TinyViT 모델 테스트 실시
 # Create Date : 2025.04.03
 # Last Update Date : -
+
+# Arguments:
+# - test_dataset  (Dataset) : 테스트 데이터셋 (카테고리 별)
+# - category      (str)     : MVTec AD 데이터셋의 세부 카테고리 이름
+# - experiment_no (int)     : 실시할 실험 번호 (1, 2 또는 3)
+
+# Returns:
+# - test_result      (dict)             : 테스트 성능 평가 결과
+#                                         {'accuracy': float, 'recall': float, 'precision': float, 'f1_score': float}
+# - confusion_matrix (Pandas DataFrame) : 테스트 성능 평가 시 생성된 Confusion Matrix
+
+def run_test_tinyvit(test_dataset, category, experiment_no):
+    test_loader = DataLoader(test_dataset, batch_size=TEST_BATCH_SIZE, shuffle=False)
+    exp_name = f'exp{experiment_no}'
+
+    # define model
+    model = get_tinyvit_model()
+    model_with_softmax = TinyViTWithSoftmax(model, num_classes=2)
+
+    model_with_softmax.device = device
+    model_with_softmax.to(device)
+
+    # load state dict
+    model_dir = f'{PROJECT_DIR_PATH}/run_experiment/{exp_name}_tinyvit_ckpt/{category}'
+    model_file_name = list(filter(lambda x: x.endswith('.pt'), os.listdir(model_dir)))[0]
+    model_path = f'{model_dir}/{model_file_name}'
+
+    state_dict = torch.load(model_path, map_location=device)
+    model_with_softmax.load_state_dict(state_dict, strict=True)
+
+    # save label, image path info and abnormal probability for test result files
+    labels_gt = []
+    img_paths = []
+    probs = []
+
+    for idx, (images_batch, labels_batch, img_paths_batch) in enumerate(test_loader):
+        labels_gt += list(labels_batch)
+        img_paths += list(img_paths_batch)
+
+        labels_batch = convert_anomaly_labels(labels_batch)
+
+        # run inference
+        with torch.no_grad():
+            images_batch, labels_batch = images_batch.to(device), labels_batch.to(device).to(torch.float32)
+            probs_batch = model_with_softmax(images_batch)
+            probs += list(probs_batch[:, 1].cpu().numpy())
+
+    # 각 sample 별 score 및 label 정보 저장
+    exp_path = PROJECT_DIR_PATH + '/run_experiment/' + exp_name + '_tinyvit_results'
+    test_result_df_path = exp_path + '/test_result_df/' + exp_name + '_anomaly_detection_' + category
+    os.makedirs(test_result_df_path, exist_ok=True)
+
+    score_and_label_info_df = save_score_and_label_info(img_paths, probs, labels_gt)
+    score_and_label_info_df.to_csv(f'{test_result_df_path}/score_and_label.csv', index=False)
+
+    # 성능지표 계산 및 그 결과 저장
+    thresholds = np.linspace(0.0, 1.0, 501)
+    test_result, test_result_df, confusion_matrix = compute_metric_values(thresholds, probs, labels_gt)
+
+    test_result_df.to_csv(f'{test_result_df_path}/test_result_df.csv', index=False)
+    save_test_result_df_as_chart(test_result_df, test_result_df_path)
+
+    test_result_dict_df = pd.DataFrame({k: [v] for k, v in test_result.items()})
+    test_result_dict_df.to_csv(f'{test_result_df_path}/test_result.csv', index=False)
+
+    confusion_matrix.to_csv(f'{test_result_df_path}/confusion_matrix.csv', index=False)
+
+    return test_result, confusion_matrix
+
+
+# 모델 테스트 실시 - Metrics 값 계산
+# Create Date : 2025.04.03
+# Last Update Date : 2025.04.03
+# - accuracy, recall 등 성능지표 값이 '-' 일 때 예외 처리 추가
 
 # Arguments:
 # - thresholds (np.array) : threshold list (anomaly score 의 min ~ max 범위)
@@ -644,13 +718,15 @@ def compute_metric_values(thresholds, scores, labels_gt):
         f1_score_not_available = (recall == '-' or precision == '-' or recall + precision == 0)
         f1_score = '-' if f1_score_not_available else 2 * recall * precision / (recall + precision)
 
-        test_result_dict['accuracy'].append(f'{accuracy:.4f}')
-        test_result_dict['recall'].append(f'{recall:.4f}')
-        test_result_dict['precision'].append(f'{precision:.4f}')
-        test_result_dict['f1_score'].append(f'{f1_score:.4f}')
+        test_result_dict['accuracy'].append('-' if accuracy == '-' else f'{accuracy:.4f}')
+        test_result_dict['recall'].append('-' if recall == '-' else f'{recall:.4f}')
+        test_result_dict['precision'].append('-' if precision == '-' else f'{precision:.4f}')
+        test_result_dict['f1_score'].append('-' if f1_score == '-' else f'{f1_score:.4f}')
 
         # test result (tp,tn,fp,fn 개수 및 관련 성능지표 값들) 는 Best F1 Score 인 threshold 의 것을 이용
-        if best_f1_score is None or f1_score > best_f1_score:
+        best_record_updated = (f1_score != '-' and best_f1_score not in ['-', None] and f1_score > best_f1_score)
+
+        if best_f1_score is None or (best_f1_score == '-' and f1_score != '-') or best_record_updated:
             best_f1_score = f1_score
 
             test_result = {'accuracy': accuracy, 'recall': recall, 'precision': precision, 'f1_score': f1_score}
@@ -692,7 +768,8 @@ def save_score_and_label_info(img_paths, scores, labels_gt):
 
 # 모델 테스트 실시 - threshold 별 성능 그래프를 실험 결과 디렉토리에 저장
 # Create Date : 2025.04.03
-# Last Update Date : -
+# Last Update Date : 2025.04.03
+# - accuracy, recall 등 성능지표 값이 '-' 일 때 예외 처리 추가
 
 # Arguments:
 # - test_result_df      (Pandas DataFrame) : 각 threshold 별 성능지표 값을 저장한 DataFrame
@@ -705,17 +782,17 @@ def save_test_result_df_as_chart(test_result_df, test_result_df_path):
     fig = go.Figure()
 
     thresholds = test_result_df['threshold'].astype(float).tolist()
-    accuracy = test_result_df['accuracy'].astype(float).tolist()
-    recall = test_result_df['recall'].astype(float).tolist()
-    precision = test_result_df['precision'].astype(float).tolist()
-    f1_score = test_result_df['f1_score'].astype(float).tolist()
+    accuracy = test_result_df['accuracy'].apply(lambda x: '-' if x == '-' else float(x)).tolist()
+    recall = test_result_df['recall'].apply(lambda x: '-' if x == '-' else float(x)).tolist()
+    precision = test_result_df['precision'].apply(lambda x: '-' if x == '-' else float(x)).tolist()
+    f1_score = test_result_df['f1_score'].apply(lambda x: '-' if x == '-' else float(x)).tolist()
 
     metric_names = ['accuracy (%)', 'recall (%)', 'precision (%)', 'f1_score (%)']
     metric_values = [accuracy, recall, precision, f1_score]
 
     for metric_name, metric_value in zip(metric_names, metric_values):
         fig.add_trace(go.Scatter(x=thresholds,
-                                 y=[100.0 * m for m in metric_value],
+                                 y=[('-' if m == '-' else 100.0 * m) for m in metric_value],
                                  mode='lines',
                                  name=metric_name))
 
@@ -725,20 +802,3 @@ def save_test_result_df_as_chart(test_result_df, test_result_df_path):
     fig_path = f'{test_result_df_path}/test_result.png'
     fig.write_image(fig_path)  # need kaleido package (pip install kaleido)
 
-
-# TinyViT 모델 테스트 실시
-# Create Date : 2025.04.03
-# Last Update Date : -
-
-# Arguments:
-# - test_dataset  (Dataset)   : 테스트 데이터셋 (카테고리 별)
-# - category      (str)       : MVTec AD 데이터셋의 세부 카테고리 이름
-# - experiment_no (int)       : 실시할 실험 번호 (1, 2 또는 3)
-
-# Returns:
-# - test_result      (dict)             : 테스트 성능 평가 결과
-#                                         {'accuracy': float, 'recall': float, 'precision': float, 'f1_score': float}
-# - confusion_matrix (Pandas DataFrame) : 테스트 성능 평가 시 생성된 Confusion Matrix
-
-def run_test_tinyvit(test_dataset, category, experiment_no):
-    raise NotImplementedError
