@@ -26,6 +26,7 @@ import numpy as np
 import PIL
 import cv2
 from enum import Enum
+import random
 
 import torch
 import torch.nn as nn
@@ -44,6 +45,20 @@ anomaly_source_path = f'{PROJECT_DIR_PATH}/models/glass_anomaly_source'
 # check device
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f'device for training : {device}')
+
+# fix seeds (ref: https://github.com/cqylunlun/GLASS/blob/main/utils.py#L79) to FIX BACKBONE WEIGHTS
+# load_state_dict() DOES NOT INITIALIZE BACKBONE WEIGHTS,
+# so when the seed is not fixed, problems can occur on test time
+
+seed = 2025
+
+random.seed(seed)
+np.random.seed(seed)
+
+torch.manual_seed(seed)
+torch.cuda.manual_seed(seed)
+torch.cuda.manual_seed_all(seed)
+torch.backends.cudnn.deterministic = True
 
 
 # ref : Original GLASS Implementation, from https://github.com/cqylunlun/GLASS/blob/main/datasets/mvtec.py
@@ -531,10 +546,14 @@ def run_test_glass(test_dataset, category, experiment_no):
     model_path = f'{model_dir}/{model_file_name}'
 
     state_dict = torch.load(model_path, map_location=device)
+
     if 'discriminator' in state_dict:
         model.discriminator.load_state_dict(state_dict['discriminator'])
+
         if "pre_projection" in state_dict:
             model.pre_projection.load_state_dict(state_dict["pre_projection"])
+            print(f'discriminator and pre_projection state loaded, model_path = {model_path}')
+
     else:
         model.load_state_dict(state_dict, strict=False)
 
