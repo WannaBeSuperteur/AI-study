@@ -1,7 +1,12 @@
+try:
+    from common import save_model_graph_image
+    from tinyvit import get_model as get_tinyvit_model
+    from gradcam_original_code.grad_cam import GradCAM
 
-from common import save_model_graph_image
-from tinyvit import get_model as get_tinyvit_model
-from gradcam_original_code.grad_cam import GradCAM
+except:
+    from models.common import save_model_graph_image
+    from models.tinyvit import get_model as get_tinyvit_model
+    from models.gradcam_original_code.grad_cam import GradCAM
 
 
 # XAI 모델인 pytorch-grad-cam 모델 가져오기

@@ -609,11 +609,41 @@ def run_test_glass(test_dataset, category, experiment_no):
     return test_result, confusion_matrix
 
 
+# TinyViT 학습된 모델 불러오기
+# Create Date : 2025.04.04
+# Last Update Date : -
+
+# Arguments:
+# - exp_name (str) : 실시할 실험 이름 ('exp1', 'exp2' 또는 'exp3')
+# - category (str) : MVTec AD 데이터셋의 세부 카테고리 이름
+
+# Returns:
+# - model_with_softmax (nn.Module) : 학습된 TinyViT 모델 (마지막에 Softmax 적용된)
+
+def load_tinyvit_trained_model(exp_name, category):
+
+    # define model
+    model = get_tinyvit_model()
+    model_with_softmax = TinyViTWithSoftmax(model, num_classes=2)
+
+    model_with_softmax.device = device
+    model_with_softmax.to(device)
+
+    # load state dict
+    model_dir = f'{PROJECT_DIR_PATH}/run_experiment/{exp_name}_tinyvit_ckpt/{category}'
+    model_file_name = list(filter(lambda x: x.endswith('.pt'), os.listdir(model_dir)))[0]
+    model_path = f'{model_dir}/{model_file_name}'
+
+    state_dict = torch.load(model_path, map_location=device)
+    model_with_softmax.load_state_dict(state_dict, strict=True)
+
+    return model_with_softmax
+
+
 # TinyViT 모델 테스트 실시
 # Create Date : 2025.04.03
 # Last Update Date : 2025.04.04
-# - score 및 label 정보 저장, 성능지표 계산 및 그 결과 저장을 별도 함수로 분리
-# - NumPy, PyTorch Seed Fix (for reproducibility) 추가
+# - TinyViT 학습된 모델을 불러오는 함수를 별도 함수로 분리
 
 # Arguments:
 # - test_dataset  (Dataset) : 테스트 데이터셋 (카테고리 별)
@@ -631,20 +661,8 @@ def run_test_tinyvit(test_dataset, category, experiment_no):
     test_loader = DataLoader(test_dataset, batch_size=TEST_BATCH_SIZE, shuffle=False)
     exp_name = f'exp{experiment_no}'
 
-    # define model
-    model = get_tinyvit_model()
-    model_with_softmax = TinyViTWithSoftmax(model, num_classes=2)
-
-    model_with_softmax.device = device
-    model_with_softmax.to(device)
-
-    # load state dict
-    model_dir = f'{PROJECT_DIR_PATH}/run_experiment/{exp_name}_tinyvit_ckpt/{category}'
-    model_file_name = list(filter(lambda x: x.endswith('.pt'), os.listdir(model_dir)))[0]
-    model_path = f'{model_dir}/{model_file_name}'
-
-    state_dict = torch.load(model_path, map_location=device)
-    model_with_softmax.load_state_dict(state_dict, strict=True)
+    # get trained TinyViT model
+    model_with_softmax = load_tinyvit_trained_model(exp_name, category)
 
     # save label, image path info and abnormal probability for test result files
     labels_gt = []

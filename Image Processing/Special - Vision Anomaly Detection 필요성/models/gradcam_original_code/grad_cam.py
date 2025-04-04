@@ -3,7 +3,10 @@
 
 import numpy as np
 
-from gradcam_original_code.base_cam import BaseCAM
+try:
+    from gradcam_original_code.base_cam import BaseCAM
+except:
+    from models.gradcam_original_code.base_cam import BaseCAM
 
 
 class GradCAM(BaseCAM):
