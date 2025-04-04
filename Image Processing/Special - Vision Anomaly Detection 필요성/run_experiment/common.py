@@ -15,6 +15,7 @@ import torchvision.transforms as transforms
 from models.glass_original_code.perlin import perlin_mask
 from models.glass import get_model as get_glass_model
 from models.tinyvit import get_model as get_tinyvit_model
+from models.gradcam_original_code.utils.image import show_cam_on_image
 
 try:
     from common_pytorch_training import run_train, run_validation, convert_anomaly_labels
@@ -866,3 +867,21 @@ def save_test_result_df_as_chart(test_result_df, test_result_df_path):
     fig_path = f'{test_result_df_path}/test_result.png'
     fig.write_image(fig_path)  # need kaleido package (pip install kaleido)
 
+
+# TinyViT 모델 설명 결과 출력 (ref: https://github.com/jacobgil/pytorch-grad-cam)
+# Create Date : 2025.04.04
+# Last Update Date : -
+
+# Arguments:
+# - xai_model   (nn.Module)  : TinyViT 모델을 설명할 PyTorch Grad-CAM 모델
+# - test_loader (DataLoader) : Test Data 에 대한 Data Loader
+
+# Returns:
+# - xai_output (PyTorch Tensor) : PyTorch Grad-CAM 모델의 출력
+
+def run_tinyvit_explanation(xai_model, test_loader):
+    for idx, (images, labels, img_paths) in enumerate(test_loader):
+        grayscale_cam = xai_model(input_tensor=images, targets=images)
+
+        xai_output = xai_model.outputs
+        return xai_output

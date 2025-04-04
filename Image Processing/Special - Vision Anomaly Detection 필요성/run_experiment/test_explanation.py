@@ -9,21 +9,25 @@ warnings.filterwarnings('ignore')
 try:
     from common import (get_datasets,
                         set_fixed_seed,
-                        load_tinyvit_trained_model)
+                        load_tinyvit_trained_model,
+                        run_tinyvit_explanation)
 except:
     from run_experiment.common import (get_datasets,
                                        set_fixed_seed,
-                                       load_tinyvit_trained_model)
+                                       load_tinyvit_trained_model,
+                                       run_tinyvit_explanation)
 
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 from models.pytorch_grad_cam import get_xai_model
-from models.tinyvit import get_model as get_tinyvit_model
 
 import torch
+from torch.utils.data import DataLoader
 
+
+TEST_BATCH_SIZE = 4
 
 # check device
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -50,3 +54,6 @@ if __name__ == '__main__':
 
         xai_model = get_xai_model(tinyvit_with_softmax, target_layers)
 
+        # run TinyViT explanation
+        test_loader = DataLoader(test_dataset_tinyvit, batch_size=TEST_BATCH_SIZE, shuffle=False)
+        run_tinyvit_explanation(xai_model, test_loader)
