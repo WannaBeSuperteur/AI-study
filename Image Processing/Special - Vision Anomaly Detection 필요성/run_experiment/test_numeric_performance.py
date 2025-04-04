@@ -1,8 +1,21 @@
 
+import warnings
+warnings.filterwarnings('ignore')
+
 try:
-    from common import get_datasets, run_train_glass, run_train_tinyvit, run_test_glass, run_test_tinyvit
+    from common import (get_datasets,
+                        run_train_glass,
+                        run_train_tinyvit,
+                        run_test_glass,
+                        run_test_tinyvit,
+                        set_fixed_seed)
 except:
-    from run_experiment.common import get_datasets, run_train_glass, run_train_tinyvit, run_test_glass, run_test_tinyvit
+    from run_experiment.common import (get_datasets,
+                                       run_train_glass,
+                                       run_train_tinyvit,
+                                       run_test_glass,
+                                       run_test_tinyvit,
+                                       set_fixed_seed)
 
 import os
 import sys
@@ -19,6 +32,8 @@ if __name__ == '__main__':
     category_list = ['bottle', 'hazelnut', 'carpet', 'grid']  # get_category_list()
 
     for category_name in category_list:
+        set_fixed_seed(2025)
+
         glass_model = get_glass_model()
         tinyvit_model = get_tinyvit_model()
         print('model load finished')

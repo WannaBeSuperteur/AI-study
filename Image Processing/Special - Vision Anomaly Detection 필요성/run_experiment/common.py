@@ -32,7 +32,6 @@ import torch
 import torch.nn as nn
 
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 
 
 TRAIN_BATCH_SIZE_GLASS = 8
@@ -61,6 +60,8 @@ def set_fixed_seed(seed=2025):
     torch.cuda.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.deterministic = True
+
+    print(f'seed fixed as {seed}')
 
 
 # ref : Original GLASS Implementation, from https://github.com/cqylunlun/GLASS/blob/main/datasets/mvtec.py
