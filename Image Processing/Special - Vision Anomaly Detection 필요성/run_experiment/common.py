@@ -422,7 +422,7 @@ def run_train_tinyvit(model, train_dataset, valid_dataset, category, experiment_
                            valid_loader=valid_loader))
 
     # save logs
-    save_tinyvit_train_logs(val_accuracy_list, val_loss_list, experiment_no, category)
+    save_tinyvit_train_logs(val_accuracy_list, val_loss_list, val_auroc_list, experiment_no, category)
 
     # save trained TinyViT model
     model_path = f'{PROJECT_DIR_PATH}/run_experiment/exp{experiment_no}_tinyvit_ckpt/{category}'
@@ -482,6 +482,7 @@ def run_train_tinyvit_(model, model_with_softmax, train_loader, valid_loader):
         val_accuracy_list.append(val_accuracy)
         val_loss_cpu = float(val_loss.detach().cpu())
         val_loss_list.append(val_loss_cpu)
+        val_auroc_list.append(val_auroc)
 
         model_with_softmax.scheduler.step()
 
@@ -538,7 +539,7 @@ def save_tinyvit_train_logs(val_accuracy_list, val_loss_list, val_auroc_list, ex
 
     train_log['max_val_acc'].append(max_val_acc_)
     train_log['min_val_loss'].append(min_val_loss_)
-    train_log['min_val_auroc'].append(max_val_auroc_)
+    train_log['max_val_auroc'].append(max_val_auroc_)
 
     train_log['total_epochs'].append(total_epochs)
     train_log['best_epoch'].append(np.argmax(val_accuracy_list_))
