@@ -52,15 +52,15 @@ print(f'device for training : {device}')
 
 # fix seeds (ref: https://github.com/cqylunlun/GLASS/blob/main/utils.py#L79)
 
-seed = 2025
 
-random.seed(seed)
-np.random.seed(seed)
+def set_fixed_seed(seed=2025):
+    random.seed(seed)
+    np.random.seed(seed)
 
-torch.manual_seed(seed)
-torch.cuda.manual_seed(seed)
-torch.cuda.manual_seed_all(seed)
-torch.backends.cudnn.deterministic = True
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
 
 
 # ref : Original GLASS Implementation, from https://github.com/cqylunlun/GLASS/blob/main/datasets/mvtec.py
@@ -344,10 +344,8 @@ def create_dataset_df(category_name, dataset_dir_name, dataset_type):
 
 # GLASS 모델 학습 실시
 # Create Date : 2025.04.02
-# Last Update Date : 2025.04.03
-# - category 별 checkpoint 구분을 위해 category name 인수 추가
-# - batch size 상수 수정
-# - experiment_no (실험의 번호) 인수 추가
+# Last Update Date : 2025.04.04
+# - NumPy, PyTorch Seed Fix (for reproducibility) 추가
 
 # Arguments:
 # - model         (nn.Module) : 학습 및 성능 테스트에 사용할 GLASS 모델
@@ -360,6 +358,8 @@ def create_dataset_df(category_name, dataset_dir_name, dataset_type):
 # - entire_loss_list (list) : GLASS 모델의 Loss 기록
 
 def run_train_glass(model, train_dataset, valid_dataset, category, experiment_no):
+    set_fixed_seed(2025)
+
     train_loader = DataLoader(train_dataset, batch_size=TRAIN_BATCH_SIZE_GLASS, shuffle=True)
     valid_loader = DataLoader(valid_dataset, batch_size=VALID_BATCH_SIZE, shuffle=False)
 
@@ -375,9 +375,8 @@ def run_train_glass(model, train_dataset, valid_dataset, category, experiment_no
 
 # TinyViT 모델 학습 실시
 # Create Date : 2025.04.03
-# Last Update Date : 2025.04.03
-# - best epoch model 파일 이름에 best epoch No. 명시
-# - Early Stopping 기준이 Valid Accuracy 로 변경됨에 따라 Valid Accuracy 반환값 추가
+# Last Update Date : 2025.04.04
+# - NumPy, PyTorch Seed Fix (for reproducibility) 추가
 
 # Arguments:
 # - model         (nn.Module) : 학습 및 성능 테스트에 사용할 TinyViT 모델
@@ -391,6 +390,8 @@ def run_train_glass(model, train_dataset, valid_dataset, category, experiment_no
 # - val_loss_list     (list) : Valid Loss 기록
 
 def run_train_tinyvit(model, train_dataset, valid_dataset, category, experiment_no):
+    set_fixed_seed(2025)
+
     print(f'train dataset size : {len(train_dataset)}')
     print(f'valid dataset size : {len(valid_dataset)}')
 
@@ -543,6 +544,7 @@ def save_tinyvit_train_logs(val_accuracy_list, val_loss_list, experiment_no, cat
 # Create Date : 2025.04.03
 # Last Update Date : 2025.04.04
 # - score 및 label 정보 저장, 성능지표 계산 및 그 결과 저장을 별도 함수로 분리
+# - NumPy, PyTorch Seed Fix (for reproducibility) 추가
 
 # Arguments:
 # - test_dataset  (Dataset)   : 테스트 데이터셋 (카테고리 별)
@@ -555,6 +557,8 @@ def save_tinyvit_train_logs(val_accuracy_list, val_loss_list, experiment_no, cat
 # - confusion_matrix (Pandas DataFrame) : 테스트 성능 평가 시 생성된 Confusion Matrix
 
 def run_test_glass(test_dataset, category, experiment_no):
+    set_fixed_seed(2025)
+
     test_loader = DataLoader(test_dataset, batch_size=TEST_BATCH_SIZE, shuffle=False)
     exp_name = f'exp{experiment_no}'
 
@@ -597,6 +601,7 @@ def run_test_glass(test_dataset, category, experiment_no):
 # Create Date : 2025.04.03
 # Last Update Date : 2025.04.04
 # - score 및 label 정보 저장, 성능지표 계산 및 그 결과 저장을 별도 함수로 분리
+# - NumPy, PyTorch Seed Fix (for reproducibility) 추가
 
 # Arguments:
 # - test_dataset  (Dataset) : 테스트 데이터셋 (카테고리 별)
@@ -609,6 +614,8 @@ def run_test_glass(test_dataset, category, experiment_no):
 # - confusion_matrix (Pandas DataFrame) : 테스트 성능 평가 시 생성된 Confusion Matrix
 
 def run_test_tinyvit(test_dataset, category, experiment_no):
+    set_fixed_seed(2025)
+
     test_loader = DataLoader(test_dataset, batch_size=TEST_BATCH_SIZE, shuffle=False)
     exp_name = f'exp{experiment_no}'
 
