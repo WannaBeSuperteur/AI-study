@@ -11,7 +11,7 @@
 
 ## 2. 실험 실시 계획
 
-* 전체 일정 : **2025.03.28 금 - 04.03 목 (7d)**
+* 전체 일정 : **2025.03.28 금 - 04.05 토 (9d)**
 * 상태 : ⬜ (TODO), 💨 (ING), ✅ (DONE), ❌ (FAILED)
 
 | 계획 내용                                                         | 일정                     | branch                                    | 상태 |
@@ -22,11 +22,12 @@
 | Vision Classification 모델 (TinyViT) 구현                         | 04.01 화 (1d)           | ```IP-special-visionad-001-TinyViT```     | ✅  |
 | Vision Anomaly Detection 모델 (GLASS) 구현                        | 04.01 화 (1d)           | ```IP-special-visionad-002-GLASS```       | ✅  |
 | 데이터셋 처리 코드 개발                                                 | 04.01 화 - 04.02 수 (2d) | ```IP-special-visionad-003-DataProcess``` | ✅  |
-| XAI 모델 (pytorch-grad-cam) 구현                                  | 04.02 수 (1d)           | ```IP-special-visionad-004-XAI```         | ✅  |
-| 실험 1 - 정량적 성능 평가                                              | 04.02 수 (1d)           | ```IP-special-visionad-005-exp1```        | 💨 |
-| 실험 2 - 설명 능력 평가                                               | 04.02 수 (1d)           | ```IP-special-visionad-006-exp2```        | ⬜  |
-| 실험 3 - 새로운 Abnormal Class 탐지 성능 평가                            | 04.03 목 (1d)           | ```IP-special-visionad-007-exp3```        | ⬜  |
-| 실험 결과 정리                                                      | 04.03 목 (1d)           |                                           | ⬜  |
+| XAI 모델 (pytorch-grad-cam) 구현                                  | 04.02 수 (1d)           | ```IP-special-visionad-004-XAI```         | 💨 |
+| 실험 1 - 정량적 성능 평가                                              | 04.02 수 - 04.04 금 (3d) | ```IP-special-visionad-005-exp1```        | ⬜  |
+| Abnormal Data Augmentation (Train Data Only)                  | 04.03 목 (1d)           | ```IP-special-visionad-008-augment```     | ✅  |
+| 실험 2 - 설명 능력 평가                                               | 04.04 금 (1d)           | ```IP-special-visionad-006-exp2```        | ⬜  |
+| 실험 3 - 새로운 Abnormal Class 탐지 성능 평가                            | 04.04 금 (1d)           | ```IP-special-visionad-007-exp3```        | ⬜  |
+| 실험 결과 정리                                                      | 04.05 토 (1d)           |                                           | ⬜  |
 
 ## 3. 코드 실행 순서
 
@@ -36,16 +37,11 @@
 python handle_dataset/main.py
 ```
 
-**2. 학습 실시**
-
-```
-python train_model/train_model_common.py
-```
-
-**3. 실험 실시 (학습된 모델 기반)**
+**2. 실험 실시**
 
 * 정량적 성능 평가, 설명 능력 평가, 새로운 Abnormal Class 탐지 성능 평가 순
 * 아래에서 각 line 은 각각의 실험 코드를 실행함을 의미
+* 각 실험 코드 실행 시, **관련된 모델의 학습이 먼저 실시됨**
 
 ```
 python run_experiment/test_numeric_performance.py

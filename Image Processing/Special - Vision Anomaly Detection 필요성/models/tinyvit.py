@@ -3,7 +3,11 @@
 
 
 import timm
-from common import save_model_graph_image
+
+try:
+    from common import save_model_graph_image
+except:
+    from models.common import save_model_graph_image
 
 
 # TinyViT-21M-512-distill 모델 가져오기

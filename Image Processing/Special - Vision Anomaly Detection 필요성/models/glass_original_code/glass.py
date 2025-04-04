@@ -1,5 +1,9 @@
 # Original GLASS Implementation, from https://github.com/cqylunlun/GLASS/blob/main/glass.py
 
+import os
+PROJECT_DIR_PATH = os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
+
+
 try:
     from loss import FocalLoss
     from model import Discriminator, Projection, PatchMaker
@@ -9,12 +13,21 @@ try:
     import common
 
 except:
-    from glass_original_code.loss import FocalLoss
-    from glass_original_code.model import Discriminator, Projection, PatchMaker
+    try:
+        from glass_original_code.loss import FocalLoss
+        from glass_original_code.model import Discriminator, Projection, PatchMaker
 
-    import glass_original_code.metrics as metrics
-    import glass_original_code.utils as utils
-    import glass_original_code.common as common
+        import glass_original_code.metrics as metrics
+        import glass_original_code.utils as utils
+        import glass_original_code.common as common
+
+    except:
+        from models.glass_original_code.loss import FocalLoss
+        from models.glass_original_code.model import Discriminator, Projection, PatchMaker
+
+        import models.glass_original_code.metrics as metrics
+        import models.glass_original_code.utils as utils
+        import models.glass_original_code.common as common
 
 from collections import OrderedDict
 from torchvision import transforms
@@ -37,6 +50,8 @@ import shutil
 LOGGER = logging.getLogger(__name__)
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD = [0.229, 0.224, 0.225]
+
+EARLY_STOPPING_COUNT = 30
 
 
 class TBWrapper:
@@ -129,7 +144,7 @@ class GLASS(torch.nn.Module):
         self.svd = svd
         self.step = step
         self.limit = limit
-        self.distribution = 0
+        self.distribution = 2  # suppose MANIFOLD distribution for all sub-categories
         self.focal_loss = FocalLoss()
 
         self.patch_maker = PatchMaker(patchsize, stride=patchstride)
@@ -201,6 +216,8 @@ class GLASS(torch.nn.Module):
 
     def trainer(self, training_data, val_data, name):
         state_dict = {}
+        entire_loss_list = []
+
         ckpt_path = glob.glob(self.ckpt_dir + '/ckpt_best*')
         ckpt_path_save = os.path.join(self.ckpt_dir, "ckpt.pth")
         if len(ckpt_path) != 0:
@@ -217,7 +234,6 @@ class GLASS(torch.nn.Module):
                     for k, v in self.pre_projection.state_dict().items()})
 
         self.distribution = training_data.dataset.distribution
-        xlsx_path = './datasets/excel/' + name.split('_')[0] + '_distribution.xlsx'
         try:
             if self.distribution == 1:  # rejudge by image-level spectrogram analysis
                 self.distribution = 1
@@ -228,14 +244,6 @@ class GLASS(torch.nn.Module):
             elif self.distribution == 3:  # hypersphere
                 self.distribution = 0
                 self.svd = 1
-            elif self.distribution == 4:  # opposite choose by file
-                self.distribution = 0
-                df = pd.read_excel(xlsx_path)
-                self.svd = 1 - df.loc[df['Class'] == name, 'Distribution'].values[0]
-            else:  # choose by file
-                self.distribution = 0
-                df = pd.read_excel(xlsx_path)
-                self.svd = df.loc[df['Class'] == name, 'Distribution'].values[0]
         except:
             self.distribution = 1
             self.svd = 1
@@ -245,7 +253,7 @@ class GLASS(torch.nn.Module):
             self.forward_modules.eval()
             with torch.no_grad():
                 for i, data in enumerate(training_data):
-                    img = data["image"]
+                    img = data[0]
                     img = img.to(torch.float).to(self.device)
                     batch_mean = torch.mean(img, dim=0)
                     if i == 0:
@@ -267,7 +275,7 @@ class GLASS(torch.nn.Module):
             self.forward_modules.eval()
             with torch.no_grad():  # compute center
                 for i, data in enumerate(training_data):
-                    img = data["image"]
+                    img = data[0]
                     img = img.to(torch.float).to(self.device)
                     if self.pre_proj > 0:
                         outputs = self.pre_projection(self._embed(img, evaluation=False)[0])
@@ -284,13 +292,23 @@ class GLASS(torch.nn.Module):
                         self.c += batch_mean
                 self.c /= len(training_data)
 
-            pbar_str, pt, pf = self._train_discriminator(training_data, i_epoch, pbar, pbar_str1)
+            pbar_str, pt, pf, entire_loss = self._train_discriminator(training_data, i_epoch, pbar, pbar_str1)
+            entire_loss_list.append(entire_loss)
+
             update_state_dict()
 
             if (i_epoch + 1) % self.eval_epochs == 0:
-                images, scores, segmentations, labels_gt, masks_gt = self.predict(val_data)
+                images, scores, segmentations, labels_gt, masks_gt, img_paths = self.predict(val_data)
                 image_auroc, image_ap, pixel_auroc, pixel_ap, pixel_pro = self._evaluate(images, scores, segmentations,
                                                                                          labels_gt, masks_gt, name)
+
+                exp_name = 'exp' + str(self.experiment_no)
+                exp_path = PROJECT_DIR_PATH + '/run_experiment/' + exp_name + '_glass_results'
+                overlay_path = exp_path + '/overlay/' + name + '/' + str(i_epoch)
+                os.makedirs(overlay_path, exist_ok=True)
+
+                # Overlay 이미지 저장 (추가 함수)
+                self.create_and_save_overlay_images(images, segmentations, img_paths, overlay_path)
 
                 self.logger.logger.add_scalar("i-auroc", image_auroc, i_epoch)
                 self.logger.logger.add_scalar("i-ap", image_ap, i_epoch)
@@ -298,20 +316,40 @@ class GLASS(torch.nn.Module):
                 self.logger.logger.add_scalar("p-ap", pixel_ap, i_epoch)
                 self.logger.logger.add_scalar("p-pro", pixel_pro, i_epoch)
 
-                eval_path = './results/eval/' + name + '/'
-                train_path = './results/training/' + name + '/'
+                eval_path = exp_path + '/eval/' + name + '/'
+                train_path = exp_path + '/training/' + name + '/'
+
+                os.makedirs(eval_path, exist_ok=True)
+                os.makedirs(train_path, exist_ok=True)
+
                 if best_record is None:
                     best_record = [image_auroc, image_ap, pixel_auroc, pixel_ap, pixel_pro, i_epoch]
-                    ckpt_path_best = os.path.join(self.ckpt_dir, "ckpt_best_{}.pth".format(i_epoch))
+
+                    ckpt_path_best = os.path.join(self.ckpt_dir,
+                                                  "ckpt_best_at_epoch_{}.pth".format(i_epoch))
                     torch.save(state_dict, ckpt_path_best)
+
+                    all_states_ckpt_path_best = os.path.join(self.ckpt_dir,
+                                                             "ckpt_best_at_epoch_{}_all.pth".format(i_epoch))
+                    torch.save(self.state_dict(), all_states_ckpt_path_best)
+
                     shutil.rmtree(eval_path, ignore_errors=True)
                     shutil.copytree(train_path, eval_path)
 
                 elif image_auroc + pixel_auroc > best_record[0] + best_record[2]:
                     best_record = [image_auroc, image_ap, pixel_auroc, pixel_ap, pixel_pro, i_epoch]
+
                     os.remove(ckpt_path_best)
-                    ckpt_path_best = os.path.join(self.ckpt_dir, "ckpt_best_{}.pth".format(i_epoch))
+                    os.remove(all_states_ckpt_path_best)
+
+                    ckpt_path_best = os.path.join(self.ckpt_dir,
+                                                  "ckpt_best_at_epoch_{}.pth".format(i_epoch))
                     torch.save(state_dict, ckpt_path_best)
+
+                    all_states_ckpt_path_best = os.path.join(self.ckpt_dir,
+                                                             "ckpt_best_at_epoch_{}_all.pth".format(i_epoch))
+                    torch.save(self.state_dict(), all_states_ckpt_path_best)
+
                     shutil.rmtree(eval_path, ignore_errors=True)
                     shutil.copytree(train_path, eval_path)
 
@@ -324,8 +362,13 @@ class GLASS(torch.nn.Module):
                 pbar_str += pbar_str1
                 pbar.set_description_str(pbar_str)
 
-            torch.save(state_dict, ckpt_path_save)
-        return best_record
+                print('')
+
+                # early stopping
+                if i_epoch - best_record[-1] > EARLY_STOPPING_COUNT:
+                    break
+
+        return best_record, entire_loss_list
 
     def _train_discriminator(self, input_data, cur_epoch, pbar, pbar_str1):
         self.forward_modules.eval()
@@ -340,9 +383,9 @@ class GLASS(torch.nn.Module):
             if self.pre_proj > 0:
                 self.proj_opt.zero_grad()
 
-            aug = data_item["aug"]
+            aug = data_item[3]
             aug = aug.to(torch.float).to(self.device)
-            img = data_item["image"]
+            img = data_item[0]
             img = img.to(torch.float).to(self.device)
             if self.pre_proj > 0:
                 fake_feats = self.pre_projection(self._embed(aug, evaluation=False)[0])
@@ -355,7 +398,7 @@ class GLASS(torch.nn.Module):
                 true_feats = self._embed(img, evaluation=False)[0]
                 true_feats.requires_grad = True
 
-            mask_s_gt = data_item["mask_s"].reshape(-1, 1).to(self.device)
+            mask_s_gt = data_item[4].reshape(-1, 1).to(self.device)
             noise = torch.normal(0, self.noise, true_feats.shape).to(self.device)
             gaus_feats = true_feats + noise
 
@@ -482,7 +525,7 @@ class GLASS(torch.nn.Module):
             if sample_num > self.limit:
                 break
 
-        return pbar_str2, all_p_true_, all_p_fake_
+        return pbar_str2, all_p_true_, all_p_fake_, all_loss_
 
     def tester(self, test_data, name):
         ckpt_path = glob.glob(self.ckpt_dir + '/ckpt_best*')
@@ -507,7 +550,9 @@ class GLASS(torch.nn.Module):
 
     def _evaluate(self, images, scores, segmentations, labels_gt, masks_gt, name, path='training'):
         scores = np.squeeze(np.array(scores))
-        image_scores = metrics.compute_imagewise_retrieval_metrics(scores, labels_gt, path)
+        labels_gt_ = [1.0 if x == 'abnormal' else 0.0 for x in labels_gt]
+
+        image_scores = metrics.compute_imagewise_retrieval_metrics(scores, labels_gt_, path)
         image_auroc = image_scores["auroc"]
         image_ap = image_scores["ap"]
 
@@ -561,19 +606,17 @@ class GLASS(torch.nn.Module):
 
         with tqdm.tqdm(test_dataloader, desc="Inferring...", leave=False, unit='batch') as data_iterator:
             for data in data_iterator:
-                if isinstance(data, dict):
-                    labels_gt.extend(data["is_anomaly"].numpy().tolist())
-                    if data.get("mask_gt", None) is not None:
-                        masks_gt.extend(data["mask_gt"].numpy().tolist())
-                    image = data["image"]
-                    images.extend(image.numpy().tolist())
-                    img_paths.extend(data["image_path"])
+                labels_gt += list(data[1])
+                image = data[0]
+                images.extend(image.numpy().tolist())
+                img_paths.extend(data[2])
+
                 _scores, _masks = self._predict(image)
                 for score, mask in zip(_scores, _masks):
                     scores.append(score)
                     masks.append(mask)
 
-        return images, scores, masks, labels_gt, masks_gt
+        return images, scores, masks, labels_gt, masks_gt, img_paths
 
     def _predict(self, img):
         """Infer score and mask for a batch of images."""
@@ -626,3 +669,41 @@ class GLASS(torch.nn.Module):
             image_scores = image_scores.cpu().numpy()
 
         return image_scores, masks
+
+    # Overlay Image 저장을 위한 추가 함수
+    # Create Date : 2025.04.03
+    # Last Update Date : -
+
+    # Arguments:
+    # - images        (list) : list 형태로 된 원본 valid/test 이미지
+    # - segmentations (list) : 각 원본 이미지에 대한 Discriminator Segmentation 결과 (heatmap 생성용 원본 데이터)
+    # - img_paths     (list) : 이미지의 원본 데이터 경로
+    # - overlay_path  (str)  : overlay image 를 저장할 경로
+
+    # Returns:
+    # - valid/test 이미지 각각에 대한 overlay 이미지 저장
+
+    def create_and_save_overlay_images(self, images, segmentations, img_paths, overlay_path):
+        seg_min = min(np.min(seg) for seg in segmentations)  # min anomaly score of ALL images
+        seg_max = max(np.max(seg) for seg in segmentations)  # max anomaly score of ALL images
+
+        for image, segmentation, img_path in zip(images, segmentations, img_paths):
+            normalized_seg = ((segmentation - seg_min) / (seg_max - seg_min) * 255).astype(np.uint8)
+
+            resized_seg = cv2.resize(normalized_seg, self.input_shape[1:], interpolation=cv2.INTER_NEAREST)
+            heatmap = cv2.applyColorMap(resized_seg, cv2.COLORMAP_JET)
+
+            image_ = np.transpose(image, (1, 2, 0)) * 255
+            image_ = image_ * IMAGENET_STD + IMAGENET_MEAN  # de-normalize
+            overlay_image = 0.65 * image_ + 0.35 * heatmap
+
+            # 이미지 저장 시 한글 경로 처리
+            overlay_save_path = overlay_path + '/overlay_' + img_path.split('/')[-1]
+
+            result, overlay_image_arr = cv2.imencode(ext='.png',
+                                                     img=overlay_image,
+                                                     params=[cv2.IMWRITE_PNG_COMPRESSION, 0])
+
+            if result:
+                with open(overlay_save_path, mode='w+b') as f:
+                    overlay_image_arr.tofile(f)
