@@ -51,7 +51,7 @@ LOGGER = logging.getLogger(__name__)
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD = [0.229, 0.224, 0.225]
 
-EARLY_STOPPING_COUNT = 20
+EARLY_STOPPING_COUNT = 30
 
 
 class TBWrapper:

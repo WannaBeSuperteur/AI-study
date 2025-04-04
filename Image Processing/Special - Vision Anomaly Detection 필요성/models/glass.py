@@ -38,13 +38,13 @@ def get_model():
         layers_to_extract_from=['layer2', 'layer3'],
         device=device,
         input_shape=(3, GLASS_IMG_SIZE, GLASS_IMG_SIZE),
-        pretrain_embed_dimension=384,                    # originally 1536
-        target_embed_dimension=384,                      # originally 1536
+        pretrain_embed_dimension=768,                    # originally 1536
+        target_embed_dimension=768,                      # originally 1536
         patchsize=3,
         meta_epochs=200,
         eval_epochs=1,
         dsc_layers=2,
-        dsc_hidden=256,                                  # originally 1024
+        dsc_hidden=512,                                  # originally 1024
         dsc_margin=0.5,
         train_backbone=False,
         pre_proj=1,
