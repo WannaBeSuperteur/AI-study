@@ -22,11 +22,11 @@
 | Vision Classification 모델 (TinyViT) 구현                         | 04.01 화 (1d)           | ```IP-special-visionad-001-TinyViT```     | ✅  |
 | Vision Anomaly Detection 모델 (GLASS) 구현                        | 04.01 화 (1d)           | ```IP-special-visionad-002-GLASS```       | ✅  |
 | 데이터셋 처리 코드 개발                                                 | 04.01 화 - 04.02 수 (2d) | ```IP-special-visionad-003-DataProcess``` | ✅  |
-| XAI 모델 (pytorch-grad-cam) 구현                                  | 04.02 수 (1d)           | ```IP-special-visionad-004-XAI```         | 💨 |
-| 실험 1 - 정량적 성능 평가                                              | 04.02 수 - 04.04 금 (3d) | ```IP-special-visionad-005-exp1```        | ⬜  |
+| XAI 모델 (pytorch-grad-cam) 구현                                  | 04.02 수 (1d)           | ```IP-special-visionad-004-XAI```         | ✅  |
+| 실험 1 - 정량적 성능 평가                                              | 04.02 수 - 04.04 금 (3d) | ```IP-special-visionad-005-exp1```        | ✅  |
 | Abnormal Data Augmentation (Train Data Only)                  | 04.03 목 (1d)           | ```IP-special-visionad-008-augment```     | ✅  |
-| 실험 2 - 설명 능력 평가                                               | 04.04 금 (1d)           | ```IP-special-visionad-006-exp2```        | ⬜  |
-| 실험 3 - 새로운 Abnormal Class 탐지 성능 평가                            | 04.04 금 (1d)           | ```IP-special-visionad-007-exp3```        | ⬜  |
+| 실험 2 - 설명 능력 평가                                               | 04.04 금 - 04.05 토 (1d) | ```IP-special-visionad-006-exp2```        | 💨 |
+| 실험 3 - 새로운 Abnormal Class 탐지 성능 평가                            | 04.05 토 (1d)           | ```IP-special-visionad-007-exp3```        | ⬜  |
 | 실험 결과 정리                                                      | 04.05 토 (1d)           |                                           | ⬜  |
 
 ## 3. 코드 실행 순서
