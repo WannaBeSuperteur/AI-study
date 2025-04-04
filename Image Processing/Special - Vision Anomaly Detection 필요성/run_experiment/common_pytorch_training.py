@@ -1,6 +1,7 @@
 import torch.nn as nn
 import torch
 import numpy as np  # for test code
+from sklearn import metrics
 
 is_test = False
 
@@ -68,7 +69,8 @@ def run_train(model, train_loader, device, loss_func=nn.CrossEntropyLoss(reducti
 
 # 모델 validation 실시
 # Create Date : 2025.04.03
-# Last Update Date : -
+# Last Update Date : 2025.04.04
+# - AUROC 성능지표 계산 및 반환값으로 추가
 
 # args :
 # - model        (nn.Module)  : validation 할 모델
@@ -79,11 +81,15 @@ def run_train(model, train_loader, device, loss_func=nn.CrossEntropyLoss(reducti
 # returns :
 # - val_accuracy (float) : 모델의 validation 정확도
 # - val_loss     (float) : 모델의 validation loss
+# - val_auroc    (float) : 모델의 validation AUROC 값
 
 def run_validation(model, valid_loader, device, loss_func=nn.CrossEntropyLoss(reduction='sum')):
     model.eval()
     correct, total = 0, 0
     val_loss_sum = 0
+
+    all_labels = []
+    all_outputs = []
 
     with torch.no_grad():
         for idx, (images, labels, img_paths) in enumerate(valid_loader):
@@ -93,6 +99,9 @@ def run_validation(model, valid_loader, device, loss_func=nn.CrossEntropyLoss(re
 
             val_loss_batch = loss_func(outputs[:, 1], labels)
             val_loss_sum += val_loss_batch
+
+            all_labels += list(labels.cpu().numpy())
+            all_outputs += list(outputs[:, 1].cpu().numpy())
 
             _, predicted = torch.max(outputs, 1)
             total += labels.size(0)
@@ -108,5 +117,7 @@ def run_validation(model, valid_loader, device, loss_func=nn.CrossEntropyLoss(re
         val_accuracy = correct / total
         val_loss = val_loss_sum / total
 
-    return val_accuracy, val_loss
+    val_auroc = metrics.roc_auc_score(all_labels, all_outputs)
+
+    return val_accuracy, val_loss, val_auroc
 
