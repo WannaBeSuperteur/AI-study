@@ -15,6 +15,8 @@ import torchvision.transforms as transforms
 from models.glass_original_code.perlin import perlin_mask
 from models.glass import get_model as get_glass_model
 from models.tinyvit import get_model as get_tinyvit_model
+from models.gradcam_original_code.utils.image import show_cam_on_image
+from models.gradcam_original_code.utils.model_targets import ClassifierOutputTarget
 
 try:
     from common_pytorch_training import run_train, run_validation, convert_anomaly_labels
@@ -609,11 +611,41 @@ def run_test_glass(test_dataset, category, experiment_no):
     return test_result, confusion_matrix
 
 
+# TinyViT 학습된 모델 불러오기
+# Create Date : 2025.04.04
+# Last Update Date : -
+
+# Arguments:
+# - exp_name (str) : 실시할 실험 이름 ('exp1', 'exp2' 또는 'exp3')
+# - category (str) : MVTec AD 데이터셋의 세부 카테고리 이름
+
+# Returns:
+# - model_with_softmax (nn.Module) : 학습된 TinyViT 모델 (마지막에 Softmax 적용된)
+
+def load_tinyvit_trained_model(exp_name, category):
+
+    # define model
+    model = get_tinyvit_model()
+    model_with_softmax = TinyViTWithSoftmax(model, num_classes=2)
+
+    model_with_softmax.device = device
+    model_with_softmax.to(device)
+
+    # load state dict
+    model_dir = f'{PROJECT_DIR_PATH}/run_experiment/{exp_name}_tinyvit_ckpt/{category}'
+    model_file_name = list(filter(lambda x: x.endswith('.pt'), os.listdir(model_dir)))[0]
+    model_path = f'{model_dir}/{model_file_name}'
+
+    state_dict = torch.load(model_path, map_location=device)
+    model_with_softmax.load_state_dict(state_dict, strict=True)
+
+    return model_with_softmax
+
+
 # TinyViT 모델 테스트 실시
 # Create Date : 2025.04.03
 # Last Update Date : 2025.04.04
-# - score 및 label 정보 저장, 성능지표 계산 및 그 결과 저장을 별도 함수로 분리
-# - NumPy, PyTorch Seed Fix (for reproducibility) 추가
+# - TinyViT 학습된 모델을 불러오는 함수를 별도 함수로 분리
 
 # Arguments:
 # - test_dataset  (Dataset) : 테스트 데이터셋 (카테고리 별)
@@ -631,20 +663,8 @@ def run_test_tinyvit(test_dataset, category, experiment_no):
     test_loader = DataLoader(test_dataset, batch_size=TEST_BATCH_SIZE, shuffle=False)
     exp_name = f'exp{experiment_no}'
 
-    # define model
-    model = get_tinyvit_model()
-    model_with_softmax = TinyViTWithSoftmax(model, num_classes=2)
-
-    model_with_softmax.device = device
-    model_with_softmax.to(device)
-
-    # load state dict
-    model_dir = f'{PROJECT_DIR_PATH}/run_experiment/{exp_name}_tinyvit_ckpt/{category}'
-    model_file_name = list(filter(lambda x: x.endswith('.pt'), os.listdir(model_dir)))[0]
-    model_path = f'{model_dir}/{model_file_name}'
-
-    state_dict = torch.load(model_path, map_location=device)
-    model_with_softmax.load_state_dict(state_dict, strict=True)
+    # get trained TinyViT model
+    model_with_softmax = load_tinyvit_trained_model(exp_name, category)
 
     # save label, image path info and abnormal probability for test result files
     labels_gt = []
@@ -848,3 +868,49 @@ def save_test_result_df_as_chart(test_result_df, test_result_df_path):
     fig_path = f'{test_result_df_path}/test_result.png'
     fig.write_image(fig_path)  # need kaleido package (pip install kaleido)
 
+
+# TinyViT 모델 설명 결과 출력 (ref: https://github.com/jacobgil/pytorch-grad-cam)
+# Create Date : 2025.04.07
+# Last Update Date : 2025.04.07
+# - 레이어 이름 (layer_name) 을 인수로 추가 - 여러 레이어에 대한 XAI 결과 도출 목적
+
+# Arguments:
+# - xai_model     (nn.Module)  : TinyViT 모델을 설명할 PyTorch Grad-CAM 모델
+# - test_loader   (DataLoader) : Test Data 에 대한 Data Loader
+# - category_name (str)        : 카테고리 이름
+# - layer_name    (str)        : XAI 결과를 도출할 레이어 이름 ('stage{M}_conv{N}' 형식)
+# - experiment_no (int)        : 실시할 실험 번호 (1, 2 또는 3)
+
+# Returns:
+# - xai_output (PyTorch Tensor) : PyTorch Grad-CAM 모델의 출력
+
+def run_tinyvit_explanation(xai_model, test_loader, category_name, layer_name, experiment_no):
+    targets = [ClassifierOutputTarget(1)]  # Abnormal Class No. = 1
+
+    for idx, (images, labels, img_paths) in enumerate(test_loader):
+
+        for image, img_path in zip(images, img_paths):
+            image_ = image.unsqueeze(dim=0)
+            grayscale_cam = xai_model(input_tensor=image_, targets=targets)[0]
+            grayscale_cam_ = np.multiply(grayscale_cam, 255.0).astype(np.uint8)
+            heatmap = cv2.applyColorMap(grayscale_cam_, cv2.COLORMAP_JET)
+
+            img = np.array(image_[0])
+            img = np.transpose(img, (1, 2, 0)) * 255
+
+            img = img * IMAGENET_STD + IMAGENET_MEAN  # de-normalize
+            overlay_image = 0.6 * img + 0.4 * heatmap
+
+            # 이미지 저장 시 한글 경로 처리
+            overlay_path = f'{PROJECT_DIR_PATH}/run_experiment/exp{experiment_no}_tinyvit_result/overlay/{layer_name}'
+            overlay_category_path = f'{overlay_path}/{category_name}'
+            overlay_save_path = f'{overlay_category_path}/{img_path.split("/")[-1]}'
+            os.makedirs(overlay_category_path, exist_ok=True)
+
+            result, overlay_image_arr = cv2.imencode(ext='.png',
+                                                     img=overlay_image,
+                                                     params=[cv2.IMWRITE_PNG_COMPRESSION, 0])
+
+            if result:
+                with open(overlay_save_path, mode='w+b') as f:
+                    overlay_image_arr.tofile(f)

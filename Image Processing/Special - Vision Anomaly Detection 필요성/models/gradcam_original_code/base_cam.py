@@ -7,10 +7,17 @@ import numpy as np
 import torch
 import ttach as tta
 
-from gradcam_original_code.activations_and_gradients import ActivationsAndGradients
-from gradcam_original_code.utils.image import scale_cam_image
-from gradcam_original_code.utils.model_targets import ClassifierOutputTarget
-from gradcam_original_code.utils.svd_on_activations import get_2d_projection
+try:
+    from gradcam_original_code.activations_and_gradients import ActivationsAndGradients
+    from gradcam_original_code.utils.image import scale_cam_image
+    from gradcam_original_code.utils.model_targets import ClassifierOutputTarget
+    from gradcam_original_code.utils.svd_on_activations import get_2d_projection
+
+except:
+    from models.gradcam_original_code.activations_and_gradients import ActivationsAndGradients
+    from models.gradcam_original_code.utils.image import scale_cam_image
+    from models.gradcam_original_code.utils.model_targets import ClassifierOutputTarget
+    from models.gradcam_original_code.utils.svd_on_activations import get_2d_projection
 
 
 class BaseCAM:
