@@ -871,18 +871,20 @@ def save_test_result_df_as_chart(test_result_df, test_result_df_path):
 
 # TinyViT 모델 설명 결과 출력 (ref: https://github.com/jacobgil/pytorch-grad-cam)
 # Create Date : 2025.04.07
-# Last Update Date : -
+# Last Update Date : 2025.04.07
+# - 레이어 이름 (layer_name) 을 인수로 추가 - 여러 레이어에 대한 XAI 결과 도출 목적
 
 # Arguments:
 # - xai_model     (nn.Module)  : TinyViT 모델을 설명할 PyTorch Grad-CAM 모델
 # - test_loader   (DataLoader) : Test Data 에 대한 Data Loader
 # - category_name (str)        : 카테고리 이름
+# - layer_name    (str)        : XAI 결과를 도출할 레이어 이름 ('stage{M}_conv{N}' 형식)
 # - experiment_no (int)        : 실시할 실험 번호 (1, 2 또는 3)
 
 # Returns:
 # - xai_output (PyTorch Tensor) : PyTorch Grad-CAM 모델의 출력
 
-def run_tinyvit_explanation(xai_model, test_loader, category_name, experiment_no):
+def run_tinyvit_explanation(xai_model, test_loader, category_name, layer_name, experiment_no):
     targets = [ClassifierOutputTarget(1)]  # Abnormal Class No. = 1
 
     for idx, (images, labels, img_paths) in enumerate(test_loader):
@@ -900,7 +902,7 @@ def run_tinyvit_explanation(xai_model, test_loader, category_name, experiment_no
             overlay_image = 0.6 * img + 0.4 * heatmap
 
             # 이미지 저장 시 한글 경로 처리
-            overlay_path = f'{PROJECT_DIR_PATH}/run_experiment/exp{experiment_no}_tinyvit_result/overlay'
+            overlay_path = f'{PROJECT_DIR_PATH}/run_experiment/exp{experiment_no}_tinyvit_result/overlay/{layer_name}'
             overlay_category_path = f'{overlay_path}/{category_name}'
             overlay_save_path = f'{overlay_category_path}/{img_path.split("/")[-1]}'
             os.makedirs(overlay_category_path, exist_ok=True)

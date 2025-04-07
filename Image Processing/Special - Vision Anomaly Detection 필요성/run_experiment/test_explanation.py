@@ -43,17 +43,31 @@ if __name__ == '__main__':
 
         # load trained TinyViT model
         tinyvit_with_softmax = load_tinyvit_trained_model('exp2', category_name)
-        target_layers = [tinyvit_with_softmax.tinyvit_model.stages[3].downsample.conv3.conv]
 
-        # load test dataset
-        _, _, test_dataset_tinyvit = get_datasets(category_name,
-                                                  dataset_dir_name='mvtec_dataset_exp1_classify',
-                                                  img_size=512,
-                                                  model_name='TinyViT',
-                                                  experiment_no=2)
+        layer_name_map = {
+            'stage2_conv1': tinyvit_with_softmax.tinyvit_model.stages[1].downsample.conv1.conv,
+            'stage2_conv2': tinyvit_with_softmax.tinyvit_model.stages[1].downsample.conv2.conv,
+            'stage2_conv3': tinyvit_with_softmax.tinyvit_model.stages[1].downsample.conv3.conv,
+            'stage3_conv1': tinyvit_with_softmax.tinyvit_model.stages[2].downsample.conv1.conv,
+            'stage3_conv2': tinyvit_with_softmax.tinyvit_model.stages[2].downsample.conv2.conv,
+            'stage3_conv3': tinyvit_with_softmax.tinyvit_model.stages[2].downsample.conv3.conv,
+            'stage4_conv1': tinyvit_with_softmax.tinyvit_model.stages[3].downsample.conv1.conv,
+            'stage4_conv2': tinyvit_with_softmax.tinyvit_model.stages[3].downsample.conv2.conv,
+            'stage4_conv3': tinyvit_with_softmax.tinyvit_model.stages[3].downsample.conv3.conv
+        }
 
-        xai_model = get_xai_model(tinyvit_with_softmax, target_layers)
+        for layer_name, target_layer in layer_name_map.items():
+            target_layers = [target_layer]
 
-        # run TinyViT explanation
-        test_loader = DataLoader(test_dataset_tinyvit, batch_size=TEST_BATCH_SIZE, shuffle=False)
-        run_tinyvit_explanation(xai_model, test_loader, category_name, experiment_no=2)
+            # load test dataset
+            _, _, test_dataset_tinyvit = get_datasets(category_name,
+                                                      dataset_dir_name='mvtec_dataset_exp1_classify',
+                                                      img_size=512,
+                                                      model_name='TinyViT',
+                                                      experiment_no=2)
+
+            xai_model = get_xai_model(tinyvit_with_softmax, target_layers)
+
+            # run TinyViT explanation
+            test_loader = DataLoader(test_dataset_tinyvit, batch_size=TEST_BATCH_SIZE, shuffle=False)
+            run_tinyvit_explanation(xai_model, test_loader, category_name, layer_name, experiment_no=2)
