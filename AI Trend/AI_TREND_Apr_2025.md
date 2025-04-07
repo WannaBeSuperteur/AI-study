@@ -1,3 +1,22 @@
+## 2025.04.07 (월)
+**[ChatGPT 킬러의 False Positive, False Negative](https://n.news.naver.com/mnews/article/001/0015314158?sid=102)** ```AI``` ```Large Language Model``` ```ChatGPT```
+
+* 2022년 11월 말 ChatGPT가 출시된 지 2년 반이 지난 지금, **ChatGPT의 도움을 받지 않고 글을 썼는데 ChatGPT를 사용했다고 하거나 [(False Positive)](../AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_Metrics.md#1-1-true-positive-true-negative-false-positive-false-negative) , 그 반대로 ChatGPT 킬러를 속이는 [(False Negative)](../AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_Metrics.md#1-1-true-positive-true-negative-false-positive-false-negative)** 경우가 등장하고 있다.
+  * 그 근본적인 원인은 **각 생성형 AI 서비스 및 그 버전에 따른 독특한 글쓰기 패턴** 에 따라, 이를 무력화시키려는 시도가 충분히 가능하기 때문이다.
+* 2023년 8월 조사 결과에 따르면, 널리 알려진 'ChatGPT 킬러' 서비스의 오판율은 다음과 같이 **상당히 높은 편** 이다.
+
+| GPT제로  | AI 텍스트 탐지기 (OpenAI) |
+|--------|---------------------|
+| 31.55% | 49.37%              |
+
+* 또한, 다음과 같이 **AI 작성 여부 탐지 시스템을 속이는** 방법들이 공유되고 있다.
+  * 자연스럽고 독창적으로 작성해 달라는 등으로 명령하는 일종의 [프롬프트 엔지니어링](../AI%20Basics/LLM%20Basics/LLM_기초_Prompt_Engineering.md) 방법
+  * 탐지기에서 AI 작성으로 판단될 시, 접속사, 부사 등을 수정해 나가는 방법
+  * 여러 AI의 질문을 취합하여 좋은 문장들만 모아서 재구성하는 방법
+* 해결 방법으로는 **AI 사용 여부를 판단하기보다는, 모두가 AI를 사용한다는 것을 인정** 하는 것이 제시되고 있다.
+  * 더 나아가 **반드시 AI가 아닌 "사람"이 글을 써야 하는지** 역시 고민해 볼 만하다.
+  * 이에 따라 기업과 학교에서의 자기소개서, 보고서 등의 평가 기준 역시 바뀌거나 대체되어야 한다는 의견도 있다.
+
 ## 2025.04.06 (일)
 **[메타, 최신 LLM 'LLaMA4' 공개](https://n.news.naver.com/mnews/article/009/0005471594?sid=105)** ```AI``` ```Meta AI``` ```Large Language Model```
 
