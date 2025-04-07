@@ -16,6 +16,7 @@ from models.glass_original_code.perlin import perlin_mask
 from models.glass import get_model as get_glass_model
 from models.tinyvit import get_model as get_tinyvit_model
 from models.gradcam_original_code.utils.image import show_cam_on_image
+from models.gradcam_original_code.utils.model_targets import ClassifierOutputTarget
 
 try:
     from common_pytorch_training import run_train, run_validation, convert_anomaly_labels
@@ -869,19 +870,45 @@ def save_test_result_df_as_chart(test_result_df, test_result_df_path):
 
 
 # TinyViT 모델 설명 결과 출력 (ref: https://github.com/jacobgil/pytorch-grad-cam)
-# Create Date : 2025.04.04
+# Create Date : 2025.04.07
 # Last Update Date : -
 
 # Arguments:
-# - xai_model   (nn.Module)  : TinyViT 모델을 설명할 PyTorch Grad-CAM 모델
-# - test_loader (DataLoader) : Test Data 에 대한 Data Loader
+# - xai_model     (nn.Module)  : TinyViT 모델을 설명할 PyTorch Grad-CAM 모델
+# - test_loader   (DataLoader) : Test Data 에 대한 Data Loader
+# - category_name (str)        : 카테고리 이름
+# - experiment_no (int)        : 실시할 실험 번호 (1, 2 또는 3)
 
 # Returns:
 # - xai_output (PyTorch Tensor) : PyTorch Grad-CAM 모델의 출력
 
-def run_tinyvit_explanation(xai_model, test_loader):
-    for idx, (images, labels, img_paths) in enumerate(test_loader):
-        grayscale_cam = xai_model(input_tensor=images, targets=images)
+def run_tinyvit_explanation(xai_model, test_loader, category_name, experiment_no):
+    targets = [ClassifierOutputTarget(1)]  # Abnormal Class No. = 1
 
-        xai_output = xai_model.outputs
-        return xai_output
+    for idx, (images, labels, img_paths) in enumerate(test_loader):
+
+        for image, img_path in zip(images, img_paths):
+            image_ = image.unsqueeze(dim=0)
+            grayscale_cam = xai_model(input_tensor=image_, targets=targets)[0]
+            grayscale_cam_ = np.multiply(grayscale_cam, 255.0).astype(np.uint8)
+            heatmap = cv2.applyColorMap(grayscale_cam_, cv2.COLORMAP_JET)
+
+            img = np.array(image_[0])
+            img = np.transpose(img, (1, 2, 0)) * 255
+
+            img = img * IMAGENET_STD + IMAGENET_MEAN  # de-normalize
+            overlay_image = 0.6 * img + 0.4 * heatmap
+
+            # 이미지 저장 시 한글 경로 처리
+            overlay_path = f'{PROJECT_DIR_PATH}/run_experiment/exp{experiment_no}_tinyvit_result/overlay'
+            overlay_category_path = f'{overlay_path}/{category_name}'
+            overlay_save_path = f'{overlay_category_path}/{img_path.split("/")[-1]}'
+            os.makedirs(overlay_category_path, exist_ok=True)
+
+            result, overlay_image_arr = cv2.imencode(ext='.png',
+                                                     img=overlay_image,
+                                                     params=[cv2.IMWRITE_PNG_COMPRESSION, 0])
+
+            if result:
+                with open(overlay_save_path, mode='w+b') as f:
+                    overlay_image_arr.tofile(f)

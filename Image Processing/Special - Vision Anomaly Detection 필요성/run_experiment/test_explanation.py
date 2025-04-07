@@ -56,4 +56,4 @@ if __name__ == '__main__':
 
         # run TinyViT explanation
         test_loader = DataLoader(test_dataset_tinyvit, batch_size=TEST_BATCH_SIZE, shuffle=False)
-        run_tinyvit_explanation(xai_model, test_loader)
+        run_tinyvit_explanation(xai_model, test_loader, category_name, experiment_no=2)
