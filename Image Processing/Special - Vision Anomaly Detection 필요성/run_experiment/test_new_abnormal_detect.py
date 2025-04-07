@@ -103,17 +103,33 @@ def run_xai_on_trained_tinyvit(category_name):
         target_layers = [target_layer]
 
         # load test dataset
-        _, _, test_dataset_tinyvit = get_datasets(category_name,
-                                                  dataset_dir_name='mvtec_dataset_exp3_classify',
-                                                  img_size=512,
-                                                  model_name='TinyViT',
-                                                  experiment_no=3)
+        _, valid_dataset_tinyvit, test_dataset_tinyvit = get_datasets(category_name,
+                                                                      dataset_dir_name='mvtec_dataset_exp3_classify',
+                                                                      img_size=512,
+                                                                      model_name='TinyViT',
+                                                                      experiment_no=3)
 
         xai_model = get_xai_model(tinyvit_with_softmax, target_layers)
 
-        # run TinyViT explanation
+        # run TinyViT explanation on VALID dataset
+        valid_loader = DataLoader(valid_dataset_tinyvit, batch_size=TEST_BATCH_SIZE, shuffle=False)
+
+        run_tinyvit_explanation(xai_model,
+                                valid_loader,
+                                category_name,
+                                layer_name,
+                                experiment_no=3,
+                                overlay_img_dir_name='overlay_valid')
+
+        # run TinyViT explanation on TEST dataset
         test_loader = DataLoader(test_dataset_tinyvit, batch_size=TEST_BATCH_SIZE, shuffle=False)
-        run_tinyvit_explanation(xai_model, test_loader, category_name, layer_name, experiment_no=3)
+
+        run_tinyvit_explanation(xai_model,
+                                test_loader,
+                                category_name,
+                                layer_name,
+                                experiment_no=3,
+                                overlay_img_dir_name='overlay_test')
 
 
 if __name__ == '__main__':
