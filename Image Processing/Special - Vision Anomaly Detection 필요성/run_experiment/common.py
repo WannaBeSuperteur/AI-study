@@ -906,7 +906,7 @@ def run_tinyvit_explanation(xai_model, test_loader, category_name, layer_name, e
             overlay_image = 0.6 * img + 0.4 * heatmap
 
             # 이미지 저장 (이때 한글 경로 처리)
-            overlay_path = f'{PROJECT_DIR_PATH}/run_experiment/exp{experiment_no}_tinyvit_result/{overlay_img_dir_name}'
+            overlay_path = f'{PROJECT_DIR_PATH}/run_experiment/exp{experiment_no}_tinyvit_results/{overlay_img_dir_name}'
             overlay_category_path = f'{overlay_path}/{layer_name}/{category_name}'
             overlay_save_path = f'{overlay_category_path}/{img_path.split("/")[-1]}'
             os.makedirs(overlay_category_path, exist_ok=True)
