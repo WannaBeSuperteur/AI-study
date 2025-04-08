@@ -6,6 +6,7 @@
   * [2-3. Mean-Absolute Error (MAE)](#2-3-mean-absolute-error-mae)
   * [2-4. Binary Cross Entropy Loss](#2-4-binary-cross-entropy-loss)
   * [2-5. Categorical Cross Entropy Loss](#2-5-categorical-cross-entropy-loss)
+  * [2-6. Focal Loss](#2-6-focal-loss)
 * [3. Loss Function과 성능 측정 지표](#3-loss-function과-성능-측정-지표)
 * [4. Loss Function을 잘못 사용하면?](#4-loss-function을-잘못-사용하면)
 * [5. Loss Function 의 값으로 정상적 학습 진행 여부 파악](#5-loss-function-의-값으로-정상적-학습-진행-여부-파악)
@@ -112,6 +113,18 @@ $$CCE = \sum_{i=1}^n -(y_i \times \log{\hat{y_i}})$$
 실제 값 $y_i$ (for class $i$) 에 따른 수식의 값은 다음과 같다.
 * $y_i = 1$ 이면 수식은 $- \log(\hat{y_i})$ 가 된다.
 * 이때, $\hat{y_i}$가 0에 가까워질수록 식의 값이 양의 무한대로 가까워지고, 1에 가까워질수록 식의 값이 0에 가까워진다.
+
+### 2-6. Focal Loss
+
+$$FL = \sum_{i=1}^n -(y_i \times (1 - \hat{y_i})^\gamma \times \log{\hat{y_i}})$$
+* $\gamma$ : focusing parameter
+  * 모델이 정상적으로 분류할 가능성이 높은 **easy example 에 대한 Loss 가중치를 낮추는** 역할 
+* 나머지 notation 은 [Categorical Cross Entropy Loss](#2-5-categorical-cross-entropy-loss) 와 동일
+
+핵심 아이디어
+* Categorical Cross Entropy 에서 **easy example 에 대한 Loss 를 낮추는** 메커니즘 추가
+* 이를 위해 $(1 - \hat{y_i})^\gamma$ 항을 추가
+* $\gamma$ 값이 클수록 easy example 에 대한 Loss 의 비중이 더욱 낮아짐
 
 ## 3. Loss Function과 성능 측정 지표
 
