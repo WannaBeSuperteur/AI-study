@@ -7,8 +7,9 @@
   * [1-3. 실험 대상 데이터셋](#1-3-실험-대상-데이터셋)
   * [1-4. 실험 대상 모델 선정 기준](#1-4-실험-대상-모델-선정-기준)
 * [2. 실험](#2-실험)
-  * [2-1. 실험 설계](#2-1-실험-설계) 
-  * [2-2. 실험 결과](#2-2-실험-결과)
+  * [2-1. 기본 실험 설계](#2-1-기본-실험-설계)
+  * [2-2. 모델 별 실험 설계](#2-2-모델-별-실험-설계)
+  * [2-3. 실험 결과](#2-3-실험-결과)
 * [3. 참고](#3-참고)
   * [3-1. Vision Anomaly Detection 에서 모델 규모 및 학습/추론 속도 기준의 불명확성](#3-1-vision-anomaly-detection-에서-모델-규모-및-학습추론-속도-기준의-불명확성)
 
@@ -179,7 +180,7 @@ IEEE Conference on Computer Vision and Pattern Recognition, 2019
 
 ## 2. 실험
 
-### 2-1. 실험 설계
+### 2-1. 기본 실험 설계
 
 **1. 정량적 성능 평가**
 
@@ -187,11 +188,9 @@ IEEE Conference on Computer Vision and Pattern Recognition, 2019
   * Vision Anomaly Detection vs. Classification Model 의 성능 비교 
 
 * Vision Classification & Anomaly Detection 공통
-  * 성능 평가 대상 데이터셋 단위
-    * MVTec AD 데이터셋 전체
-    * MVTec AD 데이터셋의 Texture 계열 전체 (5개 카테고리)
-    * MVTec AD 데이터셋의 Object 계열 전체 (10개 카테고리)
-    * MVTec AD 데이터셋의 각 세부 카테고리 (총 15개 카테고리)
+  * 성능 평가 대상 데이터셋
+    * MVTec AD 데이터셋의 Texture 계열 카테고리 중 Carpet, Grid
+    * MVTec AD 데이터셋의 Object 계열 카테고리 중 Bottle, Hazelnut
   * [성능 평가 Metric](../AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_Metrics.md)
     * [Accuracy, **Recall**, Precision](../AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_Metrics.md#1-2-accuracy-recall-precision) (Positive = **Abnormal**)
     * [F1 Score](../AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_Metrics.md#1-3-f1-score) (Positive = **Abnormal**)
@@ -264,7 +263,70 @@ PyTorch library for CAM methods, by Jacob Gildenblat and contributors (2021),
 Github URL : https://github.com/jacobgil/pytorch-grad-cam}
 ```
 
-### 2-2. 실험 결과
+### 2-2. 모델 별 실험 설계
+
+| 모델                        | [Early Stopping](../AI%20Basics/Deep%20Learning%20Basics/딥러닝_기초_Early_Stopping.md) 기준                      | 최대 Epochs  |
+|---------------------------|------------------------------------------------------------------------------------------------------------|------------|
+| GLASS (Anomaly Detection) | Image AUC 기준 30 epochs                                                                                     | 200 epochs |
+| TinyViT (Classification)  | [AUROC](../AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_Metrics.md#3-2-area-under-roc-curve-roc-auc) 기준 | 제한 없음      |
+
+* 추가 사항
+  * TinyViT 을 이용한 실험 시, Train Data 의 Abnormal Data 는 **90,180,270도 회전 [Image Augmentation](../Image%20Processing/Basics_Image_Augmentation.md) 을 적용하여 데이터 규모 4배 증대** 
+
+### 2-3. 실험 결과
+
+**0. 실험 결과 요약**
+
+**1. 정량적 성능 평가**
+
+* 결론
+  * Anomaly Detection (GLASS) 의 성능이 Image Classification (TinyViT) 의 성능보다 훨씬 좋음
+  * 이는 데이터셋 종류 (Object, Texture) 를 가리지 않고 동일
+
+* F1 Score 가 가장 높아지는 Anomaly Score Threshold 에서의 **Best F1 Score** 기준
+
+| 모델 \ 데이터셋 | Bottle  | Hazelnut | Carpet  | Grid    | 평균          |
+|-----------|---------|----------|---------|---------|-------------|
+| GLASS     | 93.75 % | 95.77 %  | 86.54 % | 87.88 % | **90.98 %** |
+| TinyViT   | 78.05 % | 64.29 %  | 76.67 % | 73.17 % | **73.04 %** |
+
+**2. 설명 능력 평가**
+
+* 결론
+  * Anomaly Detection (GLASS) 의 설명 능력이 Image Classification (TinyViT) 보다 훨씬 좋음
+  * 데이터셋 종류 (Object, Texture) 를 가리지 않고 동일
+
+* Anomaly Detection (GLASS) 모델
+  * 모델 자체적으로 산출되는 Anomaly Score 를 이용
+  * 실험 결과 요약
+    * **Object (Bottle, Hazelnut)** 은 Anomaly 를 정확히 찾음
+    * **Texture (Carpet, Grid)** 는 작은 Anomaly 를 탐지하지 못하거나 정상적인 부분을 Anomaly 로 탐지하는 경우도 있음
+
+| 데이터셋     | 실행 결과                                                                                                           |
+|----------|-----------------------------------------------------------------------------------------------------------------|
+| Bottle   | ![image](images/Special_Anomaly_Detection_Need_5.PNG)                                                           |
+| Hazelnut | ![image](images/Special_Anomaly_Detection_Need_6.PNG)<br>![image](images/Special_Anomaly_Detection_Need_7.PNG)  |
+| Carpet   | ![image](images/Special_Anomaly_Detection_Need_8.PNG)                                                           |
+| Grid     | ![image](images/Special_Anomaly_Detection_Need_9.PNG)<br>![image](images/Special_Anomaly_Detection_Need_10.PNG) |
+
+* Image Classification (TinyViT) 모델
+  * PyTorch Grad-CAM 을 이용하여 산출한, Abnormal Class 에 대한 Heatmap 을 이용
+  * 여기서는 **Stage 4 의 3 번째 Conv. Layer** 의 결과를 이용
+  * 실험 결과 요약
+    * Hazelnut 을 제외하고 **Anomaly 를 거의 찾아내지 못함**
+    * Hazelnut 의 경우 Anomaly 를 비교적 정확히 찾아내지만, ```print``` Class 의 경우 **Abnormal 영역을 오히려 Normal 로 찾아냄**
+
+| 데이터셋     | 실행 결과                                                                                                            |
+|----------|------------------------------------------------------------------------------------------------------------------|
+| Bottle   | ![image](images/Special_Anomaly_Detection_Need_11.PNG)                                                           |
+| Hazelnut | ![image](images/Special_Anomaly_Detection_Need_12.PNG)<br>![image](images/Special_Anomaly_Detection_Need_13.PNG) |
+| Carpet   | ![image](images/Special_Anomaly_Detection_Need_14.PNG)<br>![image](images/Special_Anomaly_Detection_Need_15.PNG) |
+| Grid     | ![image](images/Special_Anomaly_Detection_Need_16.PNG)<br>![image](images/Special_Anomaly_Detection_Need_17.PNG) |
+
+**3. 새로운 Abnormal Class 탐지 성능 평가**
+
+* 결론
+  *  
 
 ## 3. 참고
 
