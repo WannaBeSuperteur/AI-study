@@ -1,5 +1,6 @@
 ## 목차
 * [1. PCA (Principal Component Analysis, 주성분 분석)](#1-pca-principal-component-analysis-주성분-분석)
+  * [1-1. t-SNE 와의 비교](#1-1-t-sne-와의-비교) 
 * [2. PCA의 기본 원리](#2-pca의-기본-원리)
 * [3. PCA에서 분산이 최대인 축을 선택하는 이유](#3-pca에서-분산이-최대인-축을-선택하는-이유)
 * [4. PCA의 과정](#4-pca의-과정)
@@ -24,6 +25,10 @@
 * 의미가 없는 feature로 인한 다음과 같은 문제점 해결 가능
   * Overfitting
   * 그 외에도 학습이 원활히 진행되지 않는 현상
+
+### 1-1. t-SNE 와의 비교
+
+* [해당 문서](../Data%20Science%20Basics/데이터_사이언스_기초_PCA_vs_tSNE.md) 참고.
 
 ## 2. PCA의 기본 원리
 데이터셋의 feature 개수 (차원) 를 줄이면 기본적으로 정보가 일정 부분 손실될 수밖에 없다. 그러나 **좋은 feature의 조합으로 차원 축소** 를 하면, 정보 손실을 최소화할 수 있다.
