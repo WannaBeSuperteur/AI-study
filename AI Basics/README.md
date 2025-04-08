@@ -1,6 +1,17 @@
 # AI Basics
 
-"소프트웨어에 생명을 부여하기 위한 개발자로서 필수적인 AI 지식"
+* "소프트웨어에 생명을 부여하기 위한 개발자로서 필수적인 AI 지식"
+* AI의 계층 관계
+  * **Software (or Algorithm) > Artificial Intelligence (AI) > [Machine Learning](Machine%20Learning%20Models) > Neural Network > [Deep Learning](Deep%20Learning%20Basics) > Generative AI > [Large Language Model](LLM%20Basics)**
+
+## Categories
+
+* [📈 Data Science Basics](Data%20Science%20Basics)
+* [🧠 Deep Learning Basics](Deep%20Learning%20Basics)
+* [📃 LLM Basics](LLM%20Basics)
+* [🤖 Machine Learning Basics](Machine%20Learning%20Models)
+
+## Plan
 
 * **AI 분야 기초 지식 정리 (1차: ~ 2023.11.26)**
   * 머신러닝 모델 (Decision Tree 등)
