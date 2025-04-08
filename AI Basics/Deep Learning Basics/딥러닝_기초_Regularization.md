@@ -6,10 +6,11 @@
 * [4. Batch/Layer Normalization](#4-batchlayer-normalization)
   * [4-1. Batch Normalization](#4-1-batch-normalization) 
   * [4-2. Layer Normalization](#4-2-layer-normalization)
-* [5. 탐구: 어떤 정규화가 가장 좋을까?](#5-탐구-어떤-정규화가-가장-좋을까)
-  * [5-1. 실험 설계](#5-1-실험-설계) 
-  * [5-2. 실험 결과](#5-2-실험-결과)
-  * [5-3. 실험 결과에 대한 이유 분석](#5-3-실험-결과에-대한-이유-분석)
+* [5. Gradient Clipping](#5-gradient-clipping)
+* [6. 탐구: 어떤 정규화가 가장 좋을까?](#6-탐구-어떤-정규화가-가장-좋을까)
+  * [6-1. 실험 설계](#6-1-실험-설계) 
+  * [6-2. 실험 결과](#6-2-실험-결과)
+  * [6-3. 실험 결과에 대한 이유 분석](#6-3-실험-결과에-대한-이유-분석)
 
 ## 코드
 
@@ -114,13 +115,24 @@ Batch Normalization 과 비교한 Layer Normalization 의 장점은 다음과 �
 * batch size가 작을 때도 안정적인 결과가 나온다.
 * [Recurrent Neural Network (RNN)](../../Natural%20Language%20Processing/Basics_RNN과%20LSTM,%20GRU.md#rnn이란) 을 NLP 에 사용할 때, Normalization 대상 데이터 개수가 고정되어 있어서 더 효과적이다.
 
-## 5. 탐구: 어떤 정규화가 가장 좋을까?
+## 5. Gradient Clipping
+
+Gradient Clipping 은 **Gradient 의 크기가 threshold 를 초과** 하면, **그 threshold 만큼의 크기가 되도록 각 성분을 일정한 값으로 나누는** 것이다.
+
+* 이는 Gradient Vanishing 의 반대 현상인 **Gradient Exploding (Gradient 가 너무 커지는 현상)** 에 의해 학습이 안정적이지 못하게 되는 것을 방지한다.
+* 수식으로 나타내면 다음과 같다.
+  * $\displaystyle \frac{\delta \epsilon}{\delta \theta} = \frac{T}{size(g)} \times g$ if $size(g) > T$
+    * $T$ : threshold
+    * $\displaystyle g = \frac{\delta \epsilon}{\delta \theta}$
+    * $size(g)$ : $g$ 의 크기
+
+## 6. 탐구: 어떤 정규화가 가장 좋을까?
 
 **실험 목표**
 * L1, L2 Regularization, Batch/Layer Normalization 중 어떤 것의 효과가 가장 큰지 알아본다.
 * 적용할 Regularization의 종류 및 관련 상수, learning rate를 하이퍼파라미터로 하여, MNIST 데이터셋을 대상으로 하이퍼파라미터 최적화를 실험한다.
 
-### 5-1. 실험 설계
+### 6-1. 실험 설계
 
 **데이터셋**
 
@@ -191,7 +203,7 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
   * [하이퍼파라미터 최적화 라이브러리](../Machine%20Learning%20Models/머신러닝_방법론_HyperParam_Opt.md#4-하이퍼파라미터-최적화-라이브러리) 중 Optuna 를 사용
   * 하이퍼파라미터 탐색 200 회 반복 (= 200 Trials) 실시
 
-### 5-2. 실험 결과
+### 6-2. 실험 결과
 
 **1. 실험 결론**
 
@@ -246,7 +258,7 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 
 ![image](images/Regularization_11.PNG)
 
-### 5-3. 실험 결과에 대한 이유 분석
+### 6-3. 실험 결과에 대한 이유 분석
 
 **1. Batch Normalization > Layer Normalization > Normalization 미적용 순으로 성능이 좋다.**
 
