@@ -23,7 +23,7 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
     * **상세 사항은 영업비밀이므로 공개 불가**
 
 * 계획
-  * 전체 일정 : **2025.03.28 (금) ~ 04.03 (목), 7d**
+  * 전체 일정 : **2025.03.28 (금) ~ 04.08 (화), 12d**
 
 | 계획 내용                                                               | 일정                     |
 |---------------------------------------------------------------------|------------------------|
@@ -32,8 +32,8 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
 | 실험 대상 Vision Classification 모델 논문 탐독                                | 03.29 토 - 03.30 일 (2d) |
 | 실험 대상 Vision Anomaly Detection 모델 논문 탐독                             | 03.31 월 (1d)           |
 | 실험 설계                                                               | 03.31 월 (1d)           |
-| [실험 실시](Special%20-%20Vision%20Anomaly%20Detection%20필요성/README.md) | 04.01 화 - 04.03 목 (3d) |
-| 실험 결과 정리                                                            | 04.03 목 (1d)           |
+| [실험 실시](Special%20-%20Vision%20Anomaly%20Detection%20필요성/README.md) | 04.01 화 - 04.07 월 (7d) |
+| 실험 결과 정리                                                            | 04.08 화 (1d)           |
 
 * 실험 코드
   * [해당 문서](Special%20-%20Vision%20Anomaly%20Detection%20필요성/README.md) 참고. 
