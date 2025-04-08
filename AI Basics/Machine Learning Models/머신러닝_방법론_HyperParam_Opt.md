@@ -231,12 +231,12 @@ print(f'Best Parameters : {best_params_hyperopt}')
 
 ### 4-2. Optuna
 
-**핵심 개념**
+**1. 핵심 개념**
 
 * Study : Objective Function 의 값을 최적으로 만드는 하이퍼파라미터 조합을 찾는 일련의 과정
 * Trial : Study 안에서 특정 하이퍼파라미터 조합을 찾으려는 함수
 
-**코드**
+**2. 코드**
 
 * Objective Function 정의
   * maximize 하는 방향으로의 성능지표 값 (Accuracy) 도 설정 가능
@@ -291,6 +291,11 @@ study.optimize(objective_optuna, n_trials=100)
 best_params_optuna = study.best_params
 print(f'Best Parameters : {best_params_optuna}')
 ```
+
+**3. Optuna 관련 참고 사항**
+
+* Optuna 는 하이퍼파라미터 최적화 결과 시각화에 Plotly 를 사용하므로, 시각화가 깔끔함
+* 기본 설정값 기준, 일반적으로 수렴 속도가 HyperOpt 보다 빠름 (그러나 이로 인해 Exploration 빈도가 비교적 낮음)
 
 ### 4-3. HyperOpt vs. Optuna
 
