@@ -38,10 +38,48 @@ PCA 와 t-SNE 의 특징을 요약하면 다음과 같다.
   * [Gradient Descent](../Machine%20Learning%20Models/머신러닝_모델_Linear_Logistic_Regression.md#2-2-regression-최적화-과정) 를 이용한, 전체 data point 의 **KL Divergence (Kullback-Leibler Divergence)** 합을 최소화
 * KL Divergence
   * 두 확률분포 P, Q 가 **얼마나 차이가 있는지** 를 나타내는 값
-  * $\displaystyle D_{KL}(P || Q) = \Sigma_{x in X} P(x) log (\frac{P(x)}{Q(x)})$
+  * $\displaystyle D_{KL}(P || Q) = \Sigma_{x \in X} P(x) log (\frac{P(x)}{Q(x)})$
 
 ## 3. 실험 : PCA vs. t-SNE (데이터 시각화 관점)
 
 ### 3-1. 실험 설계
 
+* 실험 목표
+  * PCA 에 비해 **t-SNE 가 데이터 시각화 관점에서 더 우수함을 증명** 
+
+* 실험 데이터셋
+  * MNIST 숫자 데이터셋 (총 60,000 개 중 **랜덤하게 5,000 개** 선정)
+  * Cifar-10 이미지 데이터셋 (전체 중 **랜덤하게 5,000 개** 선정)
+
+* 실험 방법
+  * 각 데이터셋 별, 다음과 같이 PCA 및 t-SNE 를 적용하여, 그 결과를 비교 
+
+| 적용 방법 | 기본 설정       | 상세 하이퍼파라미터                                                                                                                                                                                                                           |
+|-------|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 공통    | -           | 이미지를 먼저 축소한 후 PCA, t-SNE 적용<br>- 원본 (28 x 28, 32 x 32)<br>- 1/2 로 축소 (14 x 14, 16 x 16)<br> - 1/4 로 축소 (7 x 7, 8 x 8)                                                                                                                |                                                                                                               |
+| PCA   | 2차원으로 차원 축소 | ```whiten``` : 분산에 대한 1 로의 정규화 여부<br>```svd_solver``` : SVD (Singular Value Decomposition) 설정값<br>- ```full``` : SVD 를 정확히 계산<br>- ```arpack``` : 희소 행렬에서 사용하는 SVD 알고리즘<br>- ```randomized``` : Random Projection 기반으로, 일부 정확도 손실 가능 |
+| t-SNE | 2차원으로 차원 축소 | ```perplexity``` : 값이 클수록 Cluster 간 데이터가 뭉쳐지고, Cluster 개수가 작아짐 (보통 5 ~ 50)<br>```learning_rate``` : [Learning Rate](../Deep%20Learning%20Basics/딥러닝_기초_Learning_Rate.md) 로 딥러닝의 학습률과 유사한 개념 (보통 10 ~ 1000)                           |
+
 ### 3-2. 실험 결과
+
+**1. 실험 결과 요약**
+
+**2. MNIST 숫자 데이터셋의 TOP 5 시각화 결과**
+
+|       | PCA | t-SNE |
+|-------|-----|-------|
+| TOP 1 |     |       |
+| TOP 2 |     |       |
+| TOP 3 |     |       |
+| TOP 4 |     |       |
+| TOP 5 |     |       |
+
+**3. Cifar-10 이미지 데이터셋의 TOP 5 시각화 결과**
+
+|       | PCA | t-SNE |
+|-------|-----|-------|
+| TOP 1 |     |       |
+| TOP 2 |     |       |
+| TOP 3 |     |       |
+| TOP 4 |     |       |
+| TOP 5 |     |       |
