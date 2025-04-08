@@ -26,7 +26,7 @@ PyTorch 에서 모델 구조를 시각화하기 위한 방법으로 널리 알�
 | ```print(model)``` 이용                           | 매우 낮음 | ❌ (텍스트) | 사용법이 가장 간단하지만, 알 수 있는 정보가 제한됨          | 없음                              |
 | ```torchinfo.summary()``` 이용                    | 낮음    | ❌ (텍스트) | ```print(model)``` 에 비해 더 많은 정보를 표시한다. | torchinfo                       |
 | graphviz + torchviz                             | 보통    | ✅ (이미지) | PyTorch의 autograd 로 추적한 계산 그래프를 시각화    | torchvision, torchviz, graphviz |
-| ```torchview.draw_graph()``` 이용<br>**(강력히 추천)** | 낮음    | ✅ (이미지) | 간단한 사용법 & 효과적인 시각화                     | torchview                       |
+| ```torchview.draw_graph()``` 이용<br>**(강력히 추천)** | 낮음    | ✅ (이미지) | 간단한 사용법 & 효과적인 시각화                     | torchview, graphviz             |
 
 * 복잡도 : 사용법의 복잡한 정도
 * 모델 도식화 : 모델 구조를 텍스트가 아닌 실제 그림으로 나타내어, **갈라지는 부분 (분기점) 및 합쳐지는 부분** 등을 파악 가능한지의 여부
@@ -179,7 +179,7 @@ dot.render("resnet18_graph", format="png", cleanup=True)
 
 ### 2-4. ```torchview.draw_graph()``` 이용
 
-이 방법은 ```torchview``` 라이브러리만 이용하는 비교적 간단하면서도, 효과적인 시각화가 가능하다. 따라서 **사용을 강력히 추천하는 방법** 이다.
+이 방법은 ```torchview``` 라이브러리만 이용하는 비교적 간단하면서도, 효과적인 시각화가 가능하다. 따라서 **사용을 강력히 추천하는 방법** 이다. (단, 해당 라이브러리를 사용하기 위해 ```graphviz``` 라이브러리를 추가 설치해야 한다.)
 
 * 핵심 아이디어
   * **간단한 사용법으로도 효과적으로 모델을 시각화**
