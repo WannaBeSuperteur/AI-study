@@ -8,6 +8,7 @@
   * [2-5. Categorical Cross Entropy Loss](#2-5-categorical-cross-entropy-loss)
 * [3. Loss Function과 성능 측정 지표](#3-loss-function과-성능-측정-지표)
 * [4. Loss Function을 잘못 사용하면?](#4-loss-function을-잘못-사용하면)
+* [5. Loss Function 의 값으로 정상적 학습 진행 여부 파악](#5-loss-function-의-값으로-정상적-학습-진행-여부-파악)
 
 ## 1. Loss Function 이란?
 
@@ -123,3 +124,22 @@ Accuracy, F1 Score와 같이 맞은 개수에 기반한 성능지표는 모델�
 **본인이 2024년 현업 실무에서 중대한 오류를 범한 부분이라 철저히 짚고 넘어가야 한다.**
 
 Loss Function 을 잘못 사용하면 모델 학습이 잘 이루어지지 않는 오류가 발생한다. 자세한 것은 [해당 문서](딥러닝_기초_Loss_Function_Misuse.md) 참고.
+
+## 5. Loss Function 의 값으로 정상적 학습 진행 여부 파악
+
+Loss Function 의 값을 이용하여 **모델이 정상적으로 학습 중인지** 를 파악할 수 있다. 그 방법은 **모델이 모든 출력값을 이론상의 평균값으로 예측했을 때의 값과 비교** 하는 것이다.
+
+예를 들어, 다음과 같은 학습 상황을 가정한다. (단, [해당 문서](딥러닝_기초_Loss_Function_Misuse.md) 의 관점에서 보면 이 상황에서 MSE Loss 는 Loss Function Misuse 이다.)
+
+* 이미지가 Dog 이면 1 로, Cat 이면 0 으로 예측해야 함
+* Valid Dataset 에 Dog 50 장, Cat 50 장이 있음
+
+이때는 각 Loss Function 별로, **모든 출력값을 이론상의 평균값인 0.5 로 예측** 했을 때의 값과 비교하여, 학습이 잘 진행되고 있는지를 다음과 같이 파악할 수 있다.
+
+* Valid Dataset 에서, **Sample 에 관계없이 모델의 출력값이 평균으로 수렴** 한다면 학습이 잘 안 되는 것으로 간주한다.
+
+| Loss Function              | 평균 Loss<br>(모든 출력값 0.5 예측 시) | 결론                                                             |
+|----------------------------|------------------------------|----------------------------------------------------------------|
+| Binary Cross Entropy (BCE) | 0.6931                       | 각 Valid data 에 대한 **평균 Loss 가 0.6931** 보다 떨어지지 않으면 학습이 안 되는 것임 |
+| Mean-Squared Loss (MSE)    | 0.2500                       | 각 Valid data 에 대한 **평균 Loss 가 0.2500** 보다 떨어지지 않으면 학습이 안 되는 것임 |
+

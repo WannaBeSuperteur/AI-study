@@ -17,6 +17,7 @@
   * [3-3. Binary Classification (2 outputs)](#3-3-binary-classification-2-outputs)
   * [3-4. Multi-Class Classification](#3-4-multi-class-classification)
   * [3-5. Multi-Label Classification](#3-5-multi-label-classification)
+* [4. 참고 (학습 정상적 진행 여부 판단 방법)](#4-참고-학습-정상적-진행-여부-판단-방법)
 
 ## 코드
 
@@ -285,3 +286,9 @@ print(summary(model, input_size=(BATCH_SIZE, 1, 28, 28)))
 | ❌ Mean-Squared Error<br>(with Softmax)        | **76.43%**           | **76.74%**       |
 | ❌ Mean-Squared Error<br>(with Sigmoid)        | 98.31%               | 98.49%           |
 | ❌ Categorical Cross-Entropy<br>(with Softmax) | **76.57%**           | **76.95%**       |
+
+## 4. 참고 (학습 정상적 진행 여부 판단 방법)
+
+Valid Dataset 에 대한 Loss Function 의 값 (Valid Loss) 으로부터 **학습이 잘 되는지 (평균으로 수렴하지는 않는지)** 파악할 수 있다.
+
+자세한 것은 [해당 문서](딥러닝_기초_Loss_function.md#5-loss-function-의-값으로-정상적-학습-진행-여부-파악) 참고.
