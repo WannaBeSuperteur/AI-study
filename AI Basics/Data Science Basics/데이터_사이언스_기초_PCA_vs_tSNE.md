@@ -68,22 +68,31 @@ PCA 와 t-SNE 의 특징을 요약하면 다음과 같다.
 
 **1. 실험 결과 요약**
 
+* PCA 결과의 경우, MNIST 와 Cifar-10 모두에서 서로 다른 각 class 의 데이터가 속한 부분들이 상당히 겹쳐 있다.
+* t-SNE 결과의 경우, **서로 다른 class 의 영역끼리 비교적 시각적으로 명확히 구분되는 편** 이다. (특히 MNIST 데이터셋에서)
+
 **2. MNIST 숫자 데이터셋의 TOP 5 시각화 결과**
 
-|       | PCA | t-SNE |
-|-------|-----|-------|
-| TOP 1 |     |       |
-| TOP 2 |     |       |
-| TOP 3 |     |       |
-| TOP 4 |     |       |
-| TOP 5 |     |       |
+* PCA 결과의 경우, 서로 다른 각 class 의 데이터가 속한 부분들이 상당히 겹쳐 있다.
+* t-SNE 결과의 경우, 이와 같이 겹치는 부분이 거의 없다.
+
+|       | PCA                                                             | t-SNE                                                                                                                |
+|-------|-----------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
+| TOP 1 | 이미지 크기 = **Original**<br><br>![image](images/PCA_vs_tSNE_4.png) | { img_size = **Quarter**, perplexity = **30**, learning_rate = **100** }<br><br>![image](images/PCA_vs_tSNE_7.png)   |
+| TOP 2 | 이미지 크기 = **Half**<br><br>![image](images/PCA_vs_tSNE_5.png)     | { img_size = **Quarter**, perplexity = **50**, learning_rate = **100** }<br><br>![image](images/PCA_vs_tSNE_8.png)   |
+| TOP 3 | 이미지 크기 = **Quarter**<br><br>![image](images/PCA_vs_tSNE_6.png)  | { img_size = **Half**, perplexity = **30**, learning_rate = **100** }<br><br>![image](images/PCA_vs_tSNE_9.png)      |
+| TOP 4 |                                                                 | { img_size = **Half**, perplexity = **50**, learning_rate = **100** }<br><br>![image](images/PCA_vs_tSNE_10.png)     |
+| TOP 5 |                                                                 | { img_size = **Original**, perplexity = **30**, learning_rate = **100** }<br><br>![image](images/PCA_vs_tSNE_11.png) |
 
 **3. Cifar-10 이미지 데이터셋의 TOP 5 시각화 결과**
 
-|       | PCA | t-SNE |
-|-------|-----|-------|
-| TOP 1 |     |       |
-| TOP 2 |     |       |
-| TOP 3 |     |       |
-| TOP 4 |     |       |
-| TOP 5 |     |       |
+* PCA 결과의 경우, 서로 다른 각 class 의 데이터가 속한 부분들이 상당히 겹쳐 있다.
+* t-SNE 결과의 경우, 서로 다른 각 class 의 데이터 간 겹치는 부분이 상당히 있지만 PCA 결과에 비해서는 덜 겹친다.
+
+|       | PCA                                                             | t-SNE                                                                                                               |
+|-------|-----------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
+| TOP 1 | 이미지 크기 = **Original**<br><br>![image](images/PCA_vs_tSNE_1.png) | { img_size = **Original**, perplexity = **5**, learning_rate = **25** }<br><br> ![image](images/PCA_vs_tSNE_12.png) |
+| TOP 2 | 이미지 크기 = **Half**<br><br>![image](images/PCA_vs_tSNE_2.png)     | { img_size = **Original**, perplexity = **5**, learning_rate = **100** }<br><br>![image](images/PCA_vs_tSNE_13.png) |
+| TOP 3 | 이미지 크기 = **Quarter**<br><br>![image](images/PCA_vs_tSNE_3.png)  | { img_size = **Original**, perplexity = **5**, learning_rate = **400** }<br><br>![image](images/PCA_vs_tSNE_14.png) |
+| TOP 4 |                                                                 | { img_size = **Half**, perplexity = **15**, learning_rate = **25** }<br><br>![image](images/PCA_vs_tSNE_15.png)     |
+| TOP 5 |                                                                 | { img_size = **Quarter**, perplexity = **5**, learning_rate = **25** }<br><br>![image](images/PCA_vs_tSNE_16.png)   |
