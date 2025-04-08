@@ -46,7 +46,8 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
   * 다양하고 새로운 abnormal data 의 존재 가능성
   * 기타 (라벨링 비용 및 환경 문제)
 * 실험을 통한 추가 발견 사항
-  * TBU 
+  * Anomaly Detection 모델은 Normal/Abnormal 을 **가리지 않고** 학습 데이터 규모가 작을 때도 Classification 모델에 비해 충분한 성능을 발휘할 가능성이 높음
+  * Anomaly 의 크기는 일반적으로 **매우 작은데, Classification 모델로는 이를 탐지하기 어려움**
 
 ### 1-2. 실험 대상 모델
 
@@ -277,6 +278,10 @@ Github URL : https://github.com/jacobgil/pytorch-grad-cam}
 
 **0. 실험 결과 요약**
 
+* 데이터셋 종류를 가리지 않고, **정량적 성능 및 XAI 모두** 에서 Anomaly Detection (GLASS) 의 성능이 Image Classification (TinyViT) 의 성능보다 훨씬 좋음
+  * 이는 Anomaly Detection 모델이 **200~400장 수준의 비교적 소규모의 데이터** 로도 **이상 탐지에서 충분한 성능을 발휘할 수 있음** 을 의미
+* 특정 Anomaly 종류를 학습한 Classification 모델은 **새로운 종류의 Anomaly 를 탐지하기 어려움**
+
 **1. 정량적 성능 평가**
 
 * 결론
@@ -326,7 +331,19 @@ Github URL : https://github.com/jacobgil/pytorch-grad-cam}
 **3. 새로운 Abnormal Class 탐지 성능 평가**
 
 * 결론
-  *  
+  * Image Classification (TinyViT) 모델은 기존에 학습한 Anomaly 외에 **새로운 Anomaly 를 거의 찾아내지 못함**
+
+* Image Classification (TinyViT) 모델
+  * 여기서는 **Stage 4 의 3 번째 Conv. Layer** 의 결과를 이용
+  * 실험 결과 요약
+    * Grid 를 제외하고 **Anomaly 를 거의 찾아내지 못함**
+
+| 데이터셋     | 학습한 Abnormal Class | 실행 결과 (나머지 Abnormal Class)                                                                                       |
+|----------|--------------------|------------------------------------------------------------------------------------------------------------------|
+| Bottle   | ```broken_small``` | ![image](images/Special_Anomaly_Detection_Need_18.PNG)                                                           |
+| Hazelnut | ```crack```        | ![image](images/Special_Anomaly_Detection_Need_19.PNG)                                                           |
+| Carpet   | ```color```        | ![image](images/Special_Anomaly_Detection_Need_20.PNG)<br>![image](images/Special_Anomaly_Detection_Need_21.PNG) |
+| Grid     | ```bent```         | ![image](images/Special_Anomaly_Detection_Need_22.PNG)<br>![image](images/Special_Anomaly_Detection_Need_23.PNG) |
 
 ## 3. 참고
 
