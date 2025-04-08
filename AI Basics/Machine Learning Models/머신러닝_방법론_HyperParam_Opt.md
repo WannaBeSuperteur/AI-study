@@ -154,13 +154,13 @@ Acquisition Function에는 대표적으로 **EI (Expected Improvement)** 와 **P
 
 ### 4-1. HyperOpt
 
-**핵심 개념**
+**1. 핵심 개념**
 
 * Domain Space : 하이퍼파라미터 조합의 탐색 범위
 * Optimization Algorithm : HyperOpt 의 하이퍼파라미터 최적화 알고리즘
 * Objective Function : 그 값을 최소화하는 하이퍼파라미터 조합을 찾으려는 함수
 
-**코드**
+**2. 코드**
 
 * Domain Space 정의
   * ```hp.loguniform``` : 범위 내에서 **로그 스케일로** 하이퍼파라미터 값 탐색
