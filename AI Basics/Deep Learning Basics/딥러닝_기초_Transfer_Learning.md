@@ -4,6 +4,7 @@
 * [3. Transfer Learning 의 과정](#3-transfer-learning-의-과정)
   * [3-1. 사전 학습 (Pre-training)](#3-1-사전-학습-pre-training)
   * [3-2. 미세 조정 (Fine-tuning)](#3-2-미세-조정-fine-tuning)
+* [4. Transfer Learning 의 사례](#4-transfer-learning-의-사례)
 
 ## 1. Transfer Learning (전이학습)
 
@@ -52,3 +53,14 @@ Transfer Learning 은 **사전 학습 (Pre-training)** 과 **미세 조정 (Fine
 * 미세 조정용 학습 데이터의 크기는 일반적으로 작다.
 * 사전 학습된 모델의 파라미터를 **미세하게 조정** 해야 하므로, **[Learning Rate](딥러닝_기초_Learning_Rate.md) 가 매우 작아야** 한다.
 
+## 4. Transfer Learning 의 사례
+
+전이학습의 대표적인 사례는 다음과 같다.
+
+* [거대 언어 모델 (LLM)](../LLM%20Basics/LLM_기초_LLM_basics.md) 의 [Fine Tuning](../LLM%20Basics/LLM_기초_Fine_Tuning.md)
+  * [SFT (Supervised Fine-Tuning)](../LLM%20Basics/LLM_기초_Fine_Tuning_SFT.md)
+  * [PEFT (Parameter-Efficient Fine-Tuning)](../LLM%20Basics/LLM_기초_Fine_Tuning_PEFT.md)
+  * 기타 등등
+* Pre-trained Vision Model 을 Fine-Tuning 하여 이미지 분류 등의 문제를 보다 빠르게 해결
+  * [Programmers 2021년 ML 개발자 Dev-Matching](https://prgms.tistory.com/68)
+* 이 외에도 다양한 Pre-trained Model 을 Fine-Tuning 하여 사용하는 것이 **2020년대 현재의 ML 개발 트렌드**
