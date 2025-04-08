@@ -3,6 +3,7 @@
   * [1-1. 비유적 설명](#1-1-비유적-설명)
 * [2. Train, Valid, Test 데이터셋 분리 비율](#2-train-valid-test-데이터셋-분리-비율)
 * [3. Overfitting 과 Early Stopping](#3-overfitting-과-early-stopping)
+* [4. Train Dataset 을 Shuffle 하는 이유](#4-train-dataset-을-shuffle-하는-이유)
 
 ## 1. Train, Valid, Test 데이터셋
 
@@ -51,3 +52,20 @@ Train, Valid, Test 데이터를 분리하는 전략은 다음과 같다.
   * 따라서, **최고 성능의 모델은 학습 중단 시점이 아닌, 그보다 N epochs 만큼 전의 모델** 이다.
 
 ![images](images/Train_Valid_Test_1.PNG)
+
+## 4. Train Dataset 을 Shuffle 하는 이유
+
+머신러닝 학습 코드를 보면, 다음과 같이 Valid, Test 데이터셋이 아닌 **Train Dataset 에서만큼은 데이터 순서를 섞는 Shuffle 을 적용** 한다. 그 이유는 다음과 같다.
+
+```python
+train_loader = DataLoader(train_dataset, batch_size=TRAIN_BATCH_SIZE_GLASS, shuffle=True)
+valid_loader = DataLoader(valid_dataset, batch_size=VALID_BATCH_SIZE, shuffle=False)
+test_loader = DataLoader(test_dataset, batch_size=TEST_BATCH_SIZE, shuffle=False)
+```
+
+* **학습하는 각 batch** 가 전체 데이터를 대표할 수 있는 **대표성** 을 갖게 하기 위함 
+  * 이를 통해 [Overfitting](../Deep%20Learning%20Basics/딥러닝_기초_Overfitting_Dropout.md#2-딥러닝에서의-오버피팅-overfitting) 등을 방지
+* 데이터 순서로 인해 학습에 지장이 생길 수 있음
+  * 예를 들어, 한 epoch 에서 Class 가 dog 인 데이터가 계속 나온 다음에 cat 인 데이터가 계속 나오면, **cat 을 학습할 때 Loss가 급격히 증가하는 등의 현상** 이 발생할 수 있는데, 이는 학습에 지장을 주는 것임 
+* 모델이 **데이터의 순서마저 학습하는 것을 방지** (추정)
+  * 예를 들어, Class 가 dog 인 데이터만 계속 나온다면 dog 의 다음 학습 데이터는 dog 일 확률이 매우 높다고 판단할 수 있음
