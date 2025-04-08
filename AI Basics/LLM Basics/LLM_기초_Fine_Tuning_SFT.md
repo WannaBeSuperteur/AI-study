@@ -13,7 +13,7 @@
 
 * 즉, 모델의 입력에 대해 특정한 정답이 제공되고, 이 정답과의 Loss 를 최소화하는 것이 목표이다.
 * 학습을 위한 Loss Function 은 **생성된 문장 간 비교** 해야 하므로, Next token prediction 과 관련된 조건부 확률의 곱 또는 로그 합을 이용하는 방법 등을 사용할 수 있다.
-  * 자세한 것은 [Prefix Tuning 의 Loss Function](LLM_기초_Fine_Tuning_PEFT.md#2-3-prefix-tuning) 참고.
+  * 자세한 것은 [해당 문서](LLM_기초_Fine_Tuning.md#5-llm-fine-tuning-의-loss-function) 참고.
 
 SFT 의 목적은 다음과 같다.
 

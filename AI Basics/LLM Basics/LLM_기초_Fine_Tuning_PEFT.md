@@ -71,21 +71,6 @@ PEFT 의 방법론은 세부적으로 다음과 같이 분류할 수 있다.
 
 ![image](images/Fine_Tuning_PEFT_3.PNG)
 
-**[ Prefix Tuning 의 Loss-Function ]**
-
-* 핵심 아이디어
-  * 모델이 **예측한 next token 이 실제 next token 과 일치할 확률을 최대화** 하는, **조건부 확률** 에 기반한 log-likelihood
-  * 실제 수식에서는 이 확률에 로그를 씌우므로, **log (확률) 의 합** 을 최대화하는 것이 된다. 
-* 수식
-  * $\max_\pi \log p_{\pi;\theta} (y|x)$
-  * = $\Sigma_{i \in Y_{idx}} log p_{\pi;\theta} (z_i | h_{<i})$ 
-* 수식 설명
-  * $p_{\pi;\theta}$ : 거대 언어 모델의 확률분포 (학습 가능)
-    * $\pi$ : 모델의 pre-trained parameters
-    * $\theta$ : 모델의 학습 가능한 파라미터
-  * $z$ : 입력 토큰 리스트 $x$ 와 출력 토큰 리스트 $y$ 의 concatenation
-  * $h_i = LM_\pi (z_i, h_{<i})$ : $i$ 번째 token $z_i$ 생성을 위한, LLM 의 모든 activation layer 의 결합 
-
 ### 2-4. Prompt Tuning
 
 [(논문) The Power of Scale for Parameter-Efficient Prompt Tuning](https://arxiv.org/pdf/2104.08691)
@@ -104,10 +89,8 @@ PEFT 의 방법론은 세부적으로 다음과 같이 분류할 수 있다.
 
 * [(출처)](https://arxiv.org/pdf/2104.08691) : The Power of Scale for Parameter-Efficient Prompt Tuning, 2021
 
-**[ Prompt Tuning 의 Loss Function ]**
-
 * 핵심 아이디어
-  * Prefix Tuning 의 Loss Function 과 동일하게 **next token 의 조건부 확률의 곱 또는 로그 합**을 이용
+  * LLM Fine-Tuning 의 일반적인 [Next-token Prediction Likelihood 기반 Loss Function](LLM_기초_Fine_Tuning.md#5-llm-fine-tuning-의-loss-function) 과 동일하게 **next token 의 조건부 확률의 곱 또는 로그 합**을 이용
 * $\max_\pi \log p_{\theta;\theta_P} (y|[P;x])$
   * $\theta$ : pre-trained model parameters
   * $\theta_P$ : 학습 가능한 Prompt Vector 의 하이퍼파라미터
@@ -129,7 +112,3 @@ Adapter Layer 를 추가하여 LLM 에 적용하는 방법은 다음과 같다. 
 ![image](images/Fine_Tuning_PEFT_5.PNG)
 
 * [(출처)](https://arxiv.org/pdf/1902.00751) : Parameter-Efficient Transfer Learning for NLP, 2019
-
-**[ Adapter Layer 추가 시의 Loss Function ]**
-
-* Prefix Tuning 및 Prompt Tuning 의 Loss Function 과 동일한 손실 함수를 이용할 수 있다. 즉 **next token 의 조건부 확률의 곱 또는 로그 합**을 이용한다.

@@ -55,7 +55,7 @@ LoRA 의 학습 프로세스는 다음과 같다. 이때, Layer $L1$, $L2$ 사�
 
 ### 2-2. LoRA 의 Loss Function
 
-LoRA 의 Loss Function 역시 **next token 예측에 대한 조건부 확률의 곱 (또는 로그 합)** 을 이용할 수 있다. 자세한 것은 [Prefix Tuning 의 Loss Function](LLM_기초_Fine_Tuning_PEFT.md#2-3-prefix-tuning) 부분을 참고.
+LoRA 의 Loss Function 역시 **next token 예측에 대한 조건부 확률의 곱 (또는 로그 합)** 을 이용할 수 있다. 자세한 것은 [해당 문서](LLM_기초_Fine_Tuning.md#5-llm-fine-tuning-의-loss-function) 참고.
 
 ### 2-3. LoRA 의 메모리 사용량 절약 효과
 

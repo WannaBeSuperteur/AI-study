@@ -9,6 +9,7 @@
   * [2-4. ORPO (Odds Ratio Preference Optimization)](#2-4-orpo-odds-ratio-preference-optimization)
 * [3. Fine-Tuning 의 과정](#3-fine-tuning-의-과정)
 * [4. 적합한 Fine-Tuning 방법 선택](#4-적합한-fine-tuning-방법-선택)
+* [5. LLM Fine-Tuning 의 Loss Function](#5-llm-fine-tuning-의-loss-function)
 
 ## 1. LLM 의 Fine-Tuning
 
@@ -97,3 +98,20 @@ LLM Fine-tuning 의 일반적인 과정은 다음과 같다.
 * 자원 제약 (컴퓨팅 파워, 메모리, 시간 등)
 * 현재 가지고 있는, Fine-tuning 을 위해 domain 에 특화된 데이터셋 규모
 * 거대 언어 모델의 규모 (자원 제약을 고려한 Fine-tuning 범위 결정에 필요)
+
+## 5. LLM Fine-Tuning 의 Loss Function
+
+LLM 의 Fine-Tuning 에서는 일반적으로 다음과 같이 **Next token prediction 의 likelihood** 기반 Loss Function 을 사용한다.
+
+* 핵심 아이디어
+  * 모델이 **예측한 next token 이 실제 next token 과 일치할 확률을 최대화** 하는, **조건부 확률** 에 기반한 log-likelihood
+  * 실제 수식에서는 이 확률에 로그를 씌우므로, **log (확률) 의 합** 을 최대화하는 것이 된다. 
+* 수식
+  * $\max_\pi \log p_{\pi;\theta} (y|x)$
+  * = $\Sigma_{i \in Y_{idx}} log p_{\pi;\theta} (z_i | h_{<i})$ 
+* 수식 설명
+  * $p_{\pi;\theta}$ : 거대 언어 모델의 확률분포 (학습 가능)
+    * $\pi$ : 모델의 pre-trained parameters
+    * $\theta$ : 모델의 학습 가능한 파라미터
+  * $z$ : 입력 토큰 리스트 $x$ 와 출력 토큰 리스트 $y$ 의 concatenation
+  * $h_i = LM_\pi (z_i, h_{<i})$ : $i$ 번째 token $z_i$ 생성을 위한, LLM 의 모든 activation layer 의 결합 
