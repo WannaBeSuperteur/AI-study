@@ -74,3 +74,5 @@ Image Processing/Special - Vision Anomaly Detection 필요성/run_experiment/exp
 *.pyc
 __pycache__/
 .idea/*
+venv
+venv/*
