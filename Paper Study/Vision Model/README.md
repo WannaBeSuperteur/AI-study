@@ -1,6 +1,6 @@
 ## Vision Model
 
-* **Total 3 Papers** (2025.04.09)
+* **Total 3 Papers | 3 Documents** (2025.04.09)
   * Including 1 Generative AI Paper
 
 | Study Date<br>(Study Doc. Link)                                                                                                                                                                         | Paper                                                                                                                                             | Published | 비고                                                                                                                   |
