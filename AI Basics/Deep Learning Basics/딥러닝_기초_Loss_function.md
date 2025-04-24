@@ -156,3 +156,4 @@ Loss Function 의 값을 이용하여 **모델이 정상적으로 학습 중인�
 | Binary Cross Entropy (BCE) | 0.6931                       | 각 Valid data 에 대한 **평균 Loss 가 0.6931** 보다 떨어지지 않으면 학습이 안 되는 것임 |
 | Mean-Squared Loss (MSE)    | 0.2500                       | 각 Valid data 에 대한 **평균 Loss 가 0.2500** 보다 떨어지지 않으면 학습이 안 되는 것임 |
 
+* Loss Function 의 값이 위 **평균 Loss** 로 수렴하여 학습이 잘 되지 않을 때, **valid / test dataset 의 모든 데이터에 대해 거의 동일한 출력값** 을 나타내는 경우가 많다. 
