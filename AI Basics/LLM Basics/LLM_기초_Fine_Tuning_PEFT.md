@@ -20,6 +20,7 @@ PEFT 의 장단점은 다음과 같다.
   * 거대 언어 모델의 수많은 파라미터 중 제한된 양의 파라미터 학습을 통한 **학습 시간 및 메모리 절약** 
   * 일반적으로, 각 task 별로 서로 다른 모듈을 Fine-tuning 할 수 있어서 **다수의 task 에 유연하게 적용 가능**
   * 대부분의 매개변수를 Freeze 시킨 채로 학습하기 때문에, **모델이 가지고 있는 일반 상식 등 기존 지식은 유지**
+    * 즉, LLM 이 Fine-Tuning 되어 기존 지식마저 잊는 **재앙적 망각 (catastrophic forgetting)** 을 방지
   * [Overfitting](../Deep%20Learning%20Basics/딥러닝_기초_Overfitting_Dropout.md#2-딥러닝에서의-오버피팅-overfitting) 의 위험이 적다.
 * 단점
   * 파라미터를 미세 조정할 범위에 따라 성능이 제한될 수 있음
