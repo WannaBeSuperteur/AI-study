@@ -26,7 +26,7 @@ GMM에서 데이터 값 x가 나타날 확률은 다음과 같이 **가우시안
 * **[수식]** $p(x) = \Sigma_{k=1}^K \pi_k N(x; \mu_k, \Sigma_k)$
   * $p(x)$ : 데이터 값 $x$ 의 확률
   * $K$ : Gaussian Distribution 의 개수
-  * $pi_k$ : 각각의 Gaussian Distribution 의 반영 비율을 나타내는 **mixing coefficient**
+  * $\pi_k$ : 각각의 Gaussian Distribution 의 반영 비율을 나타내는 **mixing coefficient**
   * $\mu_k$ : 해당 Gaussian Distribution 의 평균
   * $\Sigma_k$ : 해당 Gaussian Distribution 의 Covariance Matrix (표준편차 역할)
 
