@@ -2,7 +2,7 @@
 
 * "소프트웨어에 생명을 부여하기 위한 개발자로서 필수적인 AI 지식"
 * AI의 계층 관계
-  * **Software (or Algorithm) > Artificial Intelligence (AI) > [Machine Learning](Machine%20Learning%20Models) > Neural Network > [Deep Learning](Deep%20Learning%20Basics) > Generative AI > [Large Language Model](LLM%20Basics)**
+  * **Software (or Algorithm) > Artificial Intelligence (AI) > [Machine Learning](Machine%20Learning%20Models) > [Neural Network](Deep%20Learning%20Basics/딥러닝_기초_인공신경망.md) > [Deep Learning](Deep%20Learning%20Basics) > [Generative AI](../Generative%20AI) > [Large Language Model](LLM%20Basics)**
 
 ## Categories
 
