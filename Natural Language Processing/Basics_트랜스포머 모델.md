@@ -10,11 +10,17 @@
   * [3-3. Encoder-Decoder Attention](#3-3-encoder-decoder-attention)
 * [4. Position-wise Feed Forward](#4-position-wise-feed-forward)
 * [5. GPT (Generative Pre-trained Transformer)](#5-gpt-generative-pre-trained-transformer)
-* [6. Vision 에의 응용 : Vision Transformer (ViT)](#6-vision-에의-응용--vision-transformer-vit)
+* [6. 탐구 : Transformer 의 Attention 구조에 대한 이유](#6-탐구--transformer-의-attention-구조에-대한-이유)
+  * [6-1. Single Head 가 아닌 Multi-Head 인 이유](#6-1-single-head-가-아닌-multi-head-인-이유) 
+  * [6-2. Attention Score 계산 시 sqrt(hidden-dims) 로 나누는 이유](#6-2-attention-score-계산-시-sqrthidden-dims-로-나누는-이유) 
+  * [6-3. Query, Key, Value 를 각각 사용하는 이유](#6-3-query-key-value-를-각각-사용하는-이유) 
+* [7. Vision 에의 응용 : Vision Transformer (ViT)](#6-vision-에의-응용--vision-transformer-vit)
 
 ## 1. 트랜스포머 모델
 
 **트랜스포머 (Transformer)** 는 인코더에서 단어 시퀀스를 입력받고, 디코더에서 출력 단어 시퀀스를 출력하는 형태의 Encoder-Decoder 구조를 유지하면서, **N개의 Encoder와 M개의 Decoder** 를 이용하는 형태의 모델이다.
+
+* 논문 : [Attention is All You Need (2017.06.)](https://arxiv.org/pdf/1706.03762)
 
 ![트랜스포머 모델 기본 구조](./images/Transformer_1.PNG)
 
@@ -81,6 +87,7 @@ Self-Attention 의 효과는 다음과 같다.
 
 * **입력 문장 내의 각 token 간 관계** 에 대한 분석
 * 이를 통해, 지시대명사가 가리키는 것 등을 AI 모델이 파악할 수 있음
+  * 예: ```The animal didn't cross the street because it was too tired.``` 라는 문장에서 ```it``` 이 ```street``` 이 아닌 ```animal``` 을 가리킴을 파악 가능
 
 Encoder Self-Attention 을 수식으로 나타내면 다음과 같다.
 
@@ -148,6 +155,70 @@ GPT의 역사는 다음과 같다.
 
 2022년 11월 30일, GPT의 응용으로 전 세계 AI의 역사에 한 획을 그은 **ChatGPT** 가 등장했으며, 2023년 3월 GPT-4가 적용되었다. (GPT-4 API는 2023년 7월부터 일반인이 사용 가능하다.)
 
-## 6. Vision 에의 응용 : Vision Transformer (ViT)
+## 6. 탐구 : Transformer 의 Attention 구조에 대한 이유
+
+여기서는 [Transformer 의 Attention 메커니즘 구조](#3-트랜스포머에서의-어텐션-메커니즘) 에 대해, 다음과 같이 **그 구조에 대한 이유** 를 탐구한다.
+
+* Single Head 가 아닌 **Multi-Head** 를 사용하는 이유
+* Attention Score 계산 시, **$Softmax(QK^T)$ 값을 hidden dimension 인 $\sqrt{d_k}$ 로 나누는** 이유
+* **Query, Key, Value 를 각각** 사용하는 이유
+  * QKV 가 아닌 Query-Query-Query (QQQ), Value-Value-Value (VVV) 가 아닌 이유
+
+### 6-1. Single Head 가 아닌 Multi-Head 인 이유
+
+```
+3.2.2 Multi-Head Attention
+
+Instead of performing a single attention function with dmodel-dimensional keys, values and queries,
+we found it beneficial to linearly project the queries, keys and values h times with different,
+learned linear projections to dk, dk and dv dimensions, respectively.
+
+...
+
+Multi-head attention allows the model to jointly attend to information from different representation
+subspaces at different positions. With a single attention head, averaging inhibits this.
+```
+
+[(출처)](https://arxiv.org/pdf/1706.03762) : Ashish Vaswani and Noam Shazeer et al., "Attention Is All You Need" (2017)
+
+* 즉, LLM 이 문장에 나타난 정보들을 **서로 다른 위치의 서로 다른 표현 공간에서 해석** 할 수 있게 한다.
+  * 이는 **여러 부분에서 문장을 해석하여, 그 정보들을 상호 보완적으로 이용** 하기 때문이다. 
+* 이를 통해 성능을 향상시킨다.
+
+### 6-2. Attention Score 계산 시 sqrt(hidden-dims) 로 나누는 이유
+
+```
+3.2.1 Scaled Dot-Product Attention
+
+While for small values of dk the two mechanisms perform similarly, additive attention outperforms
+dot product attention without scaling for larger values of dk. We suspect that for large values of dk,
+the dot products grow large in magnitude, pushing the softmax function into regions where it has
+extremely small gradients. To counteract this effect, we scale the dot products by √1/dk.
+```
+
+[(출처)](https://arxiv.org/pdf/1706.03762) : Ashish Vaswani and Noam Shazeer et al., "Attention Is All You Need" (2017)
+
+* hidden dimension (차원 개수) 인 $d_k$ 값이 매우 크면 dot product 값인 **$QK^T$ 가 매우 커진다.**
+* 이로 인해, [Softmax 함수](../AI%20Basics/Deep%20Learning%20Basics/딥러닝_기초_활성화_함수.md#2-5-softmax-함수) 의 특성상 **$Softmax(QK^T)$ 의 gradient 가 매우 작아진다.**
+* 이를 방지하기 위해 $QK^T$ 를 $\sqrt{d_k}$ 으로 나누어 주는 것이다.
+
+### 6-3. Query, Key, Value 를 각각 사용하는 이유
+
+* Query, Key, Value 가 각각 존재하는 이유
+  * 다음과 같이 **(Decoder 를 통한 token 생성 시, 입력 token 중에서) 특정 단어에 '집중'하기 위한 [Attention 메커니즘](Basics_어텐션%20(Attention).md)** 특성상 서로 다른 3가지 역할을 하는 벡터가 필요하기 때문이다.
+
+| 요소    | 역할 (Decoder 에서의 생성 시 기준)                                        |
+|-------|-----------------------------------------------------------------|
+| Query | Decoder 를 통해 생성할 token 을 나타내는 벡터                                |
+| Key   | Encoder 에 있는 각 token 을 나타내는 벡터 (이들 token 중 가장 관련성이 높은 것을 찾아야 함) |
+| Value | 각 token 에 대해, 해당 token 의 **다른 모든 token 들과의 관련성** 을 나타내는 벡터      |
+
+* Query-Key-Value 가 아닌 Query-Query-Query (QQQ) 또는 Value-Value-Value (VVV) 는 사용 가능한가?
+  * Encoder Self-Attention 에서는 **Query = Key = Value** 이므로 실제로 그렇게 사용하는 셈이다.
+    * 이때, Self Attention Matrix (dim: $N \times N$) 에서 주대각선 성분이 가장 크고, **주대각선 이외의 성분 중 큰 값** 을 나타내는 것이 Encoder 의 **각 token 간의 관계 파악** 에 있어서 중요하다.
+    * 이때도 학습을 통해서 결국 Query, Key, Value 의 값은 서로 달라진다.
+  * 그러나 Encoder-Decoder Attention 에서는 **Query 는 생성할 문장, Key, Value 는 입력 문장** 으로부터 얻으므로 이러한 구조 자체가 불가능하다.
+
+## 7. Vision 에의 응용 : Vision Transformer (ViT)
 
 Transformer 의 구조를 Vision 분야에 응용한 모델로 **Vision Transformer (ViT)** 가 있다. 자세한 것은 [해당 문서](../Image%20Processing/Basics_Vision_Transformer_ViT.md) 참고.
