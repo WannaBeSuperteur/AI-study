@@ -14,7 +14,7 @@
   * [6-1. Single Head 가 아닌 Multi-Head 인 이유](#6-1-single-head-가-아닌-multi-head-인-이유) 
   * [6-2. Attention Score 계산 시 sqrt(hidden-dims) 로 나누는 이유](#6-2-attention-score-계산-시-sqrthidden-dims-로-나누는-이유) 
   * [6-3. Query, Key, Value 를 각각 사용하는 이유](#6-3-query-key-value-를-각각-사용하는-이유) 
-* [7. Vision 에의 응용 : Vision Transformer (ViT)](#6-vision-에의-응용--vision-transformer-vit)
+* [7. Vision 에의 응용 : Vision Transformer (ViT)](#7-vision-에의-응용--vision-transformer-vit)
 
 ## 1. 트랜스포머 모델
 
