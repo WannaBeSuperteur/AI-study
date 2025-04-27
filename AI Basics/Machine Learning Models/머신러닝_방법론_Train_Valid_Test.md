@@ -47,7 +47,7 @@ Train, Valid, Test 데이터를 분리하는 전략은 다음과 같다.
 
 ## 3. Overfitting 과 Early Stopping
 
-* Training Data 로만 학습을 계속하다 보면 Overfitting 이 발생할 수 있는데, 이를 방지하기 위해 Early Stopping 을 사용한다.
+* Training Data 로만 학습을 계속하다 보면 Overfitting 이 발생할 수 있는데, 이를 방지하기 위해 [Early Stopping](../Deep%20Learning%20Basics/딥러닝_기초_Early_Stopping.md) 을 사용한다.
 * **Early Stopping 시점 결정에 Valid dataset 이 사용** 된다.
   * 최고의 성능지표를 기록한 후 N epoch (N은 일정한 값) 동안 성능 신기록이 없으면 학습을 종료한다.
   * 따라서, **최고 성능의 모델은 학습 중단 시점이 아닌, 그보다 N epochs 만큼 전의 모델** 이다.

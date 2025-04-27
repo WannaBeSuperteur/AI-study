@@ -17,6 +17,9 @@
 
 **Early Stopping** 은 딥러닝 학습 중 [overfitting](딥러닝_기초_Overfitting_Dropout.md#2-딥러닝에서의-오버피팅-overfitting) 을 방지하기 위한 방법 중 하나로, **valid dataset 의 성능지표의 최고/최저 기록이 일정 epoch 횟수 동안 갱신되지 않으면 학습을 조기 종료** 하는 것이다.
 
+* 이때, best model 은 **Early Stopping 되는 순간까지 학습된 모델** 이 아닌, 그 이전의 **Highest Performance Metric 또는 Lowest Loss** 를 기록한 모델이다.
+* 자세한 것은 [Overfitting 과 Early Stopping](../Machine%20Learning%20Models/머신러닝_방법론_Train_Valid_Test.md#3-overfitting-과-early-stopping) 참고.
+
 예를 들어 다음과 같다.
 
 * **[A]** Valid set Accuracy (정확도) 의 **최고 기록**이 5 회 이상 갱신되지 않으면 학습을 조기 종료하는 경우
@@ -31,7 +34,7 @@ Early Stopping 의 기준으로 다음을 생각해 볼 수 있다.
 * Valid data 에 대한 [Metric (Accuracy, Recall, F1 Score 등)](../Data%20Science%20Basics/데이터_사이언스_기초_Metrics.md)
 * Valid data [Loss](딥러닝_기초_Loss_function.md)
 
-각 기준의 특징은 다음과 같다. 일반적으로는 **Accuracy나 F1 Score 등 성능지표보다는 미세한 변화를 포착할 수 있는 Loss 를 사용하는 것이 비교적 권장** 되고 있다.
+각 기준의 특징은 다음과 같다. 일반적으로는 **Accuracy나 F1 Score 등 모델 성능 평가 지표보다는 미세한 변화를 포착할 수 있는 Loss 를 사용하는 것이 비교적 권장** 되고 있다.
 
 | 기준             | Accuracy, F1 Score 등                                   | Loss                                                  |
 |----------------|--------------------------------------------------------|-------------------------------------------------------|
