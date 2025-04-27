@@ -12,7 +12,8 @@
 * Training Dataset
   * 모델의 실제 학습에 사용되는 데이터셋
 * Valid Dataset
-  * 모델의 학습 도중의 성능 평가에 사용되는 데이터셋
+  * 모델의 학습 도중의 성능 평가 및 모델 개선을 위한 하이퍼파라미터 조정에 사용되는 데이터셋
+  * Valid Dataset 없이 Test Dataset 의 결과를 이용하여 하이퍼파라미터를 조정해 나가면, **Test Dataset 성능은 좋지만 Test Dataset 과 별개의 새로운 데이터셋에서의 성능이 좋지 않을 수 있다. ([Overfitting](../Deep%20Learning%20Basics/딥러닝_기초_Overfitting_Dropout.md#2-딥러닝에서의-오버피팅-overfitting))**
 * Test Dataset
   * 모델의 성능을 실제 측정하기 위한 데이터셋
 
