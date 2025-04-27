@@ -38,7 +38,7 @@ Likelihood (가능도) 의 수식 표현은 $L(\theta|X)$ 이고, 또한 $L(\the
 
 이 수식을 풀어 쓰면 다음과 같이 **각 데이터 값 $x_1, x_2, ..., x_n$ 에 대한 확률의 곱** 과 같다.
 
-* $L(\theta|X) = Prob(X|\theta) = Prob(x_1|\theta) \times Prob(x_2|\theta) \times ... \times Prob(x_n|theta)$
+* $L(\theta|X) = Prob(X|\theta) = Prob(x_1|\theta) \times Prob(x_2|\theta) \times ... \times Prob(x_n|\theta)$
 
 ### 3-1. Log Likelihood (로그 가능도, 로그 우도)
 
@@ -49,8 +49,8 @@ Likelihood (가능도) 의 수식 표현은 $L(\theta|X)$ 이고, 또한 $L(\the
 
 로그의 성질에 의해, **로그 가능도는 각 데이터 값 $x_1, x_2, ..., x_n$ 에 대한 로그 확률의 합** 이 된다.
 
-* $L(\theta|X) = Prob(X|\theta) = Prob(x_1|\theta) \times Prob(x_2|\theta) \times ... \times Prob(x_n|theta)$
-* $log(L(\theta|X)) = log(Prob(X|\theta)) = log(Prob(x_1|\theta) \times Prob(x_2|\theta) \times ... \times Prob(x_n|theta))$
+* $L(\theta|X) = Prob(X|\theta) = Prob(x_1|\theta) \times Prob(x_2|\theta) \times ... \times Prob(x_n|\theta)$
+* $log(L(\theta|X)) = log(Prob(X|\theta)) = log(Prob(x_1|\theta) \times Prob(x_2|\theta) \times ... \times Prob(x_n|\theta))$
   * $= log(Prob(x_1|\theta)) + log(Prob(x_2|\theta)) + ... + log(Prob(x_n|\theta))$
 
 ### 3-2. Maximum Likelihood Estimation
