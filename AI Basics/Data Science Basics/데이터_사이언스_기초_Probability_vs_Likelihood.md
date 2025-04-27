@@ -26,15 +26,19 @@
 
 ## 3. Likelihood (가능도, 우도)
 
-Likelihood (가능도) 의 수식 표현은 $L(\theta) = p(X|\theta)$ 이다.
-
-* $X$ : 데이터 값
-* $\theta$ : $\theta = (\mu, \sigma)$ 로 구성되는 확률분포 (특히 정규분포) 의 파라미터
-
 **가능도, 우도 (Likelihood)** 의 예시는 다음과 같다.
 
 * **0.3521** 이라는 어떤 관측값이 주어졌을 때, 해당 관측값이 추출된 확률분포가 $N(0, 1^2)$ 일 가능성은 **Likelihood (가능도, 우도)** 이다.
 * **7번** 이라는 횟수가 주어졌을 때, 해당 횟수가 **주사위를 50번 던져서 1의 눈이 나온 횟수** 일 가능성 역시 Likelihood 이다.
+
+Likelihood (가능도) 의 수식 표현은 $L(\theta|X)$ 이고, 또한 $L(\theta|X) = Prob(X|\theta)$ 이다. 즉, **확률분포 파라미터 $\theta$ 로부터 데이터 값의 집합 $X$ 가 나타날 확률** 과 같다.
+
+* $X$ : 데이터 값의 집합
+* $\theta$ : $\theta = (\mu, \sigma)$ 로 구성되는 확률분포 (특히 정규분포) 의 파라미터
+
+이 수식을 풀어 쓰면 다음과 같이 **각 데이터 값 $x_1, x_2, ..., x_n$ 에 대한 확률의 곱** 과 같다.
+
+* $L(\theta|X) = Prob(X|\theta) = Prob(x_1|\theta) \times Prob(x_2|\theta) \times ... \times Prob(x_n|theta)$
 
 ### 3-1. Log Likelihood (로그 가능도, 로그 우도)
 
@@ -42,6 +46,12 @@ Likelihood (가능도) 의 수식 표현은 $L(\theta) = p(X|\theta)$ 이다.
 
 * 로그 가능도는 다음과 같은 곳에서 쓰인다.
   * 머신러닝의 [Gaussian Mixture Model (가우시안 혼합 모델)](../Machine%20Learning%20Models/머신러닝_모델_Gaussian_Mixture.md)
+
+로그의 성질에 의해, **로그 가능도는 각 데이터 값 $x_1, x_2, ..., x_n$ 에 대한 로그 확률의 합** 이 된다.
+
+* $L(\theta|X) = Prob(X|\theta) = Prob(x_1|\theta) \times Prob(x_2|\theta) \times ... \times Prob(x_n|theta)$
+* $log(L(\theta|X)) = log(Prob(X|\theta)) = log(Prob(x_1|\theta) \times Prob(x_2|\theta) \times ... \times Prob(x_n|theta))$
+  * $= log(Prob(x_1|\theta)) + log(Prob(x_2|\theta)) + ... + log(Prob(x_n|\theta))$
 
 ### 3-2. Maximum Likelihood Estimation
 
