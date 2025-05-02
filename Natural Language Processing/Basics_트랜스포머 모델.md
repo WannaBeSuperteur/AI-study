@@ -13,7 +13,8 @@
 * [6. 탐구 : Transformer 의 Attention 구조에 대한 이유](#6-탐구--transformer-의-attention-구조에-대한-이유)
   * [6-1. Single Head 가 아닌 Multi-Head 인 이유](#6-1-single-head-가-아닌-multi-head-인-이유) 
   * [6-2. Attention Score 계산 시 sqrt(hidden-dims) 로 나누는 이유](#6-2-attention-score-계산-시-sqrthidden-dims-로-나누는-이유) 
-  * [6-3. Query, Key, Value 를 각각 사용하는 이유](#6-3-query-key-value-를-각각-사용하는-이유) 
+  * [6-3. Query, Key, Value 를 각각 사용하는 이유](#6-3-query-key-value-를-각각-사용하는-이유)
+  * [6-4. Transformer 구조에서 Batch 보다는 Layer Norm 사용 이유](#6-4-transformer-구조에서-batch-normalization-보다-layer-normalization-을-사용하는-이유)
 * [7. Vision 에의 응용 : Vision Transformer (ViT)](#7-vision-에의-응용--vision-transformer-vit)
 
 ## 1. 트랜스포머 모델
@@ -218,6 +219,17 @@ extremely small gradients. To counteract this effect, we scale the dot products 
     * 이때, Self Attention Matrix (dim: $N \times N$) 에서 주대각선 성분이 가장 크고, **주대각선 이외의 성분 중 큰 값** 을 나타내는 것이 Encoder 의 **각 token 간의 관계 파악** 에 있어서 중요하다.
     * 이때도 학습을 통해서 결국 Query, Key, Value 의 값은 서로 달라진다.
   * 그러나 Encoder-Decoder Attention 에서는 **Query 는 생성할 문장, Key, Value 는 입력 문장** 으로부터 얻으므로 이러한 구조 자체가 불가능하다.
+
+### 6-4. Transformer 구조에서 Batch Normalization 보다 Layer Normalization 을 사용하는 이유
+
+* 트랜스포머 구조에서는 아래 그림과 같이 [Batch Normalization](../AI%20Basics/Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#4-1-batch-normalization) 보다는 **[Layer Normalization](../AI%20Basics/Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#4-2-layer-normalization) 을 사용** 한다. 그 이유는 다음과 같다.
+
+![image](../AI%20Basics/LLM%20Basics/images/Fine_Tuning_PEFT_5.PNG)
+
+(참고 : [PEFT (Parameter-Efficient Fine-Tuning) of LLM](../AI%20Basics/LLM%20Basics/LLM_기초_Fine_Tuning_PEFT.md))
+
+* Transformer 의 학습 데이터의 길이 (sequence length, token count) 는 **가변적** 인데, 이를 **sequence 길이에 상관없이 평균 및 표준편차를 일관되게 계산하여 정규화** 하기 위해서이다.
+* Batch Normalization 의 경우, sequence 의 길이 (token 개수) 에 따라 **평균 및 표준편차의 계산이 일관적이지 않을** 수 있다.
 
 ## 7. Vision 에의 응용 : Vision Transformer (ViT)
 
