@@ -88,7 +88,7 @@ PEFT 의 방법론은 세부적으로 다음과 같이 분류할 수 있다.
 
 ![image](images/Fine_Tuning_PEFT_4.PNG)
 
-* [(출처)](https://arxiv.org/pdf/2104.08691) : The Power of Scale for Parameter-Efficient Prompt Tuning, 2021
+[(출처)](https://arxiv.org/pdf/2104.08691) : The Power of Scale for Parameter-Efficient Prompt Tuning, 2021
 
 * 핵심 아이디어
   * LLM Fine-Tuning 의 일반적인 [Next-token Prediction Likelihood 기반 Loss Function](LLM_기초_Fine_Tuning.md#5-llm-fine-tuning-의-loss-function) 과 동일하게 **next token 의 조건부 확률의 곱 또는 로그 합**을 이용
@@ -96,6 +96,14 @@ PEFT 의 방법론은 세부적으로 다음과 같이 분류할 수 있다.
   * $\theta$ : pre-trained model parameters
   * $\theta_P$ : 학습 가능한 Prompt Vector 의 하이퍼파라미터
   * $P$ : 모델에 새로 추가된 Prompt Vector
+
+**[참고] Prefix Tuning 과의 차이**
+
+| 구분              | Prefix Tuning                                            | Prompt Tuning                                               |
+|-----------------|----------------------------------------------------------|-------------------------------------------------------------|
+| 학습 가능한 벡터 추가 위치 | - Transformer 의 **모든 레이어**<br>- **Encoder 와 Decoder** 모두 | - Transformer 의 **입력 레이어**<br>- **Encoder 에만** 학습 가능한 벡터 추가 |
+| 학습 파라미터 개수      | 비교적 **많음**                                               | 비교적 **적음**                                                  |
+| 참고              | - 구현 복잡도 비교적 **높음**<br>- 성능 비교적 **높음**                   | - 구현 복잡도 비교적 **낮음**<br>- 성능 비교적 **낮음**                      |
 
 ### 2-5. Adapter Layer 추가
 
