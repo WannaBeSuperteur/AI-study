@@ -2,12 +2,12 @@ Paper Study (2025.03.12 -)
 
 ## Overview
 
-* **Total 10 Papers | 12 Documents** (2025.04.27)
+* **Total 11 Papers | 13 Documents** (2025.05.03)
 
 | Field                                            | Paper Count       | Paper Count<br>(Generative AI) |
 |--------------------------------------------------|-------------------|--------------------------------|
 | [Large Language Model](Large%20Language%20Model) | 7 Papers (9 Docs) | 7 Papers                       |
-| [Vision Model](Vision%20Model)                   | 3 Papers (3 Docs) | 1 Paper                        |
+| [Vision Model](Vision%20Model)                   | 4 Papers (4 Docs) | 2 Papers                       |
 
 ## Large Language Model
 
@@ -28,11 +28,12 @@ Paper Study (2025.03.12 -)
 
 ## Vision Model
 
-* **Total 3 Papers | 3 Documents** (2025.04.09)
-  * Including 1 Generative AI Paper 
+* **Total 4 Papers | 4 Documents** (2025.05.03)
+  * Including 2 Generative AI Papers
 
-| Study Date<br>(Study Doc. Link)                                                                                                                                                                      | Paper                                                                                                                                             | Published | 비고                                                                                                  |
-|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|-----------|-----------------------------------------------------------------------------------------------------|
-| 2025.03.29 - 03.30 [(Study Doc)](Vision%20Model/%5B2025.03.29%5D%20TinyViT%20-%20Fast%20Pretraining%20Distillation%20for%20Small%20Vision%20Transformers.md)                                         | [TinyViT - Fast Pretraining Distillation for Small Vision Transformers.md](https://arxiv.org/pdf/2207.10666v1)                                    | 2022.07   | [Vision Anomaly Detection 필요성 탐구](../Image%20Processing/Special_Vision_Anomaly_Detection_필요성.md) 관련 |
-| 2025.03.31 [(Study Doc)](Vision%20Model/%5B2025.03.31%5D%20A%20Unified%20Anomaly%20Synthesis%20Strategy%20with%20Gradient%20Ascent%20for%20Industrial%20Anomaly%20Detection%20and%20Localization.md) | [A Unified Anomaly Synthesis Strategy with Gradient Ascent for Industrial Anomaly Detection and Localization](https://arxiv.org/pdf/2407.09359v1) | 2024.07   | Vision Anomaly Detection 필요성 탐구 관련                                                                  |
-| 2025.04.09 [(Study Doc)](Vision%20Model/%5B2025.04.09%5D%20A%20Style-Based%20Generator%20Architecture%20for%20Generative%20Adversarial%20Networks.md)                                                | [A Style-Based Generator Architecture for Generative Adversarial Networks](https://arxiv.org/pdf/1812.04948)                                      | 2018.12   | 가상 인간 생성 프로젝트 (2025.04.08 - 04.25) 관련                                                               |
+| Study Date<br>(Study Doc. Link)                                                                                                                                                                      | Paper                                                                                                                                             | Published | 비고                                                                                                                   |
+|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|-----------|----------------------------------------------------------------------------------------------------------------------|
+| 2025.03.29 - 03.30 [(Study Doc)](Vision%20Model/%5B2025.03.29%5D%20TinyViT%20-%20Fast%20Pretraining%20Distillation%20for%20Small%20Vision%20Transformers.md)                                         | [TinyViT - Fast Pretraining Distillation for Small Vision Transformers.md](https://arxiv.org/pdf/2207.10666v1)                                    | 2022.07   | [Vision Anomaly Detection 필요성 탐구](../Image%20Processing/Special_Vision_Anomaly_Detection_필요성.md) 관련                  |
+| 2025.03.31 [(Study Doc)](Vision%20Model/%5B2025.03.31%5D%20A%20Unified%20Anomaly%20Synthesis%20Strategy%20with%20Gradient%20Ascent%20for%20Industrial%20Anomaly%20Detection%20and%20Localization.md) | [A Unified Anomaly Synthesis Strategy with Gradient Ascent for Industrial Anomaly Detection and Localization](https://arxiv.org/pdf/2407.09359v1) | 2024.07   | Vision Anomaly Detection 필요성 탐구 관련                                                                                   |
+| 2025.04.09 [(Study Doc)](Vision%20Model/%5B2025.04.09%5D%20A%20Style-Based%20Generator%20Architecture%20for%20Generative%20Adversarial%20Networks.md)                                                | [A Style-Based Generator Architecture for Generative Adversarial Networks](https://arxiv.org/pdf/1812.04948)                                      | 2018.12   | 가상 인간 생성 프로젝트 (2025.04.08 - 04.25) 관련                                                                                |
+| 2025.05.03 [(Study Doc)](Vision%20Model/%5B2025.05.03%5D%20Art%20Creation%20with%20Multi-Conditional%20StyleGANs.md)                                                                                 | [Art Creation with Multi-Conditional StyleGANs](https://arxiv.org/pdf/2202.11777)                                                                 | 2022.02   | [Oh-LoRA v2 (2025.05.02 - 05.16)](https://github.com/WannaBeSuperteur/AI_Projects/tree/main/2025_05_02_OhLoRA_v2) 관련 |
