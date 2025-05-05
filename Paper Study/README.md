@@ -2,17 +2,17 @@ Paper Study (2025.03.12 -)
 
 ## Overview
 
-* **Total 12 Papers | 14 Documents** (2025.05.05)
+* **Total 13 Papers | 15 Documents** (2025.05.05)
 
-| Field                                            | Paper Count       | Paper Count<br>(Generative AI) |
-|--------------------------------------------------|-------------------|--------------------------------|
-| [Large Language Model](Large%20Language%20Model) | 7 Papers (9 Docs) | 7 Papers                       |
-| [Vision Model](Vision%20Model)                   | 5 Papers (5 Docs) | 3 Papers                       |
+| Field                                            | Paper Count        | Paper Count<br>(Generative AI) |
+|--------------------------------------------------|--------------------|--------------------------------|
+| [Large Language Model](Large%20Language%20Model) | 8 Papers (10 Docs) | 8 Papers                       |
+| [Vision Model](Vision%20Model)                   | 5 Papers (5 Docs)  | 3 Papers                       |
 
 ## Large Language Model
 
-* **Total 7 Papers | 9 Documents** (2025.04.27)
-  * Including 7 Generative AI Papers
+* **Total 8 Papers | 10 Documents** (2025.05.05)
+  * Including 8 Generative AI Papers
 
 | Study Date<br>(Study Doc. Link)                                                                                                                                                                               | Paper                                                                                                                                          | Published | 비고                                                                                                                                      |
 |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|-----------|-----------------------------------------------------------------------------------------------------------------------------------------|
@@ -25,6 +25,7 @@ Paper Study (2025.03.12 -)
 | 2025.04.16 - 04.19 [(Study Doc)](Large%20Language%20Model/%5B2025.04.16%5D%20A%20Survey%20on%20Large%20Language%20Models%20with%20some%20Insights%20on%20their%20Capabilities%20and%20Limitations%20(3.5).md) | [A Survey on Large Language Models with some Insights on their Capabilities and Limitations](https://arxiv.org/pdf/2501.04040) - Part 3.5      | 2025.01   |                                                                                                                                         |
 | 2025.04.22 - 04.26 [(Study Doc)](Large%20Language%20Model/%5B2025.04.22%5D%20A%20Survey%20on%20Large%20Language%20Models%20with%20some%20Insights%20on%20their%20Capabilities%20and%20Limitations%20(3.6).md) | [A Survey on Large Language Models with some Insights on their Capabilities and Limitations](https://arxiv.org/pdf/2501.04040) - Part 3.6      | 2025.01   |                                                                                                                                         |
 | 2025.04.27 + 2025.05.02 [(Study Doc)](Large%20Language%20Model/%5B2025.04.27%5D%20Train%20Small,%20Infer%20Large%20-%20Memory-Efficient%20LoRA%20Training%20for%20Large%20Language%20Models.md)               | [Train Small, Infer Large - Memory-Efficient LoRA Training for Large Language Models](https://arxiv.org/pdf/2502.13533)                        | 2025.02   |                                                                                                                                         |
+| 2025.05.05 - 05.06 [(Study Doc)](Large%20Language%20Model/%5B2025.05.05%5D%20A%20Survey%20on%20Large%20Language%20Model%20Hallucination%20via%20a%20Creativity%20Perspective.md)                              | [A Survey on Large Language Model Hallucination via a Creativity Perspective](https://arxiv.org/pdf/2402.06647)                                | 2024.02   |                                                                                                                                         |
 
 ## Vision Model
 
