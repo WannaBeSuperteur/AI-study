@@ -1,3 +1,15 @@
+## 2025.05.07 (수)
+**[알리바바 클라우드, Qwen-3 시리즈 모델 오픈소스로 공개](https://n.news.naver.com/mnews/article/421/0008234401?sid=105)** ```AI``` ```Large Language Model```
+
+* 2025.05.07일 알리바바 클라우드가 **최신 LLM (거대 언어 모델) 인 Qwen-3 시리즈** 를 공개했다.
+  * [HuggingFace (link)](https://huggingface.co/collections/Qwen/qwen3-67dd247413f0e2e4f653967f), [GitHub (link)](https://github.com/QwenLM/Qwen3) 등을 통해 오픈소스로 공개되어 무료로 사용할 수 있다.
+* Qwen-3 시리즈의 핵심 기술은 다음과 같다.
+  * Dense 모델 6개 & **전문가 혼합 (Mixture-of-Experts, MOE → 입력 데이터에 따라 적절한 전문가 모델 활성화를 통해 비용 절감)** 모델 2개로 구성
+  * 수학, 코딩 등 추론이 필요한 질문을 위한 **사고 모드** & 일반 질문을 위한 **비사고 모드**
+* Qwen-3 시리즈의 성능 수준은 다음과 같다.
+  * 수학, 코딩, 도구 호출 성능 평가에서 **기존 모델보다 우수**
+  * **함수 호출** 의 경우, 그 성능이 현재 공개된 오픈소스 모델 중 **최상위권** 에 해당
+
 ## 2025.05.06 (화)
 **[OpenAI, 영리 법인 전환 계획 사실상 철회](https://n.news.naver.com/mnews/article/001/0015370650?sid=104)** ```AI``` ```OpenAI```
 
