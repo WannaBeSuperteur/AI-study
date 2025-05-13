@@ -121,3 +121,28 @@ Adapter Layer 를 추가하여 LLM 에 적용하는 방법은 다음과 같다. 
 ![image](images/Fine_Tuning_PEFT_5.PNG)
 
 * [(출처)](https://arxiv.org/pdf/1902.00751) : Parameter-Efficient Transfer Learning for NLP, 2019
+
+**1. Adapter Layer 의 Normalization (Batch, Layer 등) 방법은?**
+
+* Adapter Layer 에 [Batch](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#4-1-batch-normalization) / [Layer Normalization](../Deep%20Learning%20Basics/딥러닝_기초_Regularization.md#4-2-layer-normalization) 을 적용하든 무엇을 하든 **성능이 크게 향상되지 않음**
+* 따라서, 모델 구조의 단순성 및 높은 성능을 위해, **변형하지 않은 원래 구조를 사용** 할 것을 추천
+* [Code Implementation of Adapter Layer architecture](https://github.com/cs-mshah/Adapter-Bert/tree/main)
+
+```
+Finally, we tried a number of extensions to the adapter’s architecture that did not
+yield a significant boost in performance. We document them here for completeness.
+
+We experimented with
+ - (i) adding a batch/layer normalization to the adapter,
+ - (ii) increasing the number of layers per adapter,
+ - (iii) different activation functions, such as tanh,
+ - (iv) inserting adapters only inside the attention layer,
+ - (v) adding adapters in parallel to the main layers, and possibly with a multi-
+       plicative interaction.
+       
+In all cases we observed the resulting performance to be similar to the bottleneck
+proposed in Section 2.1. Therefore, due to its simplicity and strong performance,
+we recommend the original adapter architecture.
+```
+
+* [(출처)](https://arxiv.org/pdf/1902.00751) : Parameter-Efficient Transfer Learning for NLP, 2019
