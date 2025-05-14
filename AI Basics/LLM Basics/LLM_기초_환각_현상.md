@@ -6,6 +6,7 @@
   * [3-1. 내재적 환각](#3-1-내재적-환각)
   * [3-2. 외재적 환각](#3-2-외재적-환각)
 * [4. 환각 현상의 해결 방법](#4-환각-현상의-해결-방법)
+* [5. 환각 현상은 LLM 의 창의성을 드러낸다?](#5-환각-현상은-llm-의-창의성을-드러낸다)
 
 ## 1. 환각 현상 (Hallucination)
 
@@ -62,3 +63,7 @@ LLM 이 허위 정보를 생성할 수 있는 가능성이라는 점에서 LLM �
 | 공통     | - [검색 증강 생성 (RAG)](LLM_기초_RAG.md)<br>- 적절한 [프롬프트 엔지니어링](LLM_기초_Prompt_Engineering.md) ([CoT](LLM_기초_Chain_of_Thought.md) 유도 등) |
 | 내재적 환각 | - 믿을 수 있는 고품질의 충분한 크기의 학습 데이터 구축                                                                                               |
 | 외재적 환각 | - AI가 생성한 데이터에 대한 사람의 검토                                                                                                       |
+
+## 5. 환각 현상은 LLM 의 창의성을 드러낸다?
+
+* [해당 논문](https://arxiv.org/pdf/2402.06647) 및 [스터디 자료](../../Paper%20Study/Large%20Language%20Model/%5B2025.05.05%5D%20A%20Survey%20on%20Large%20Language%20Model%20Hallucination%20via%20a%20Creativity%20Perspective.md) 참고.
