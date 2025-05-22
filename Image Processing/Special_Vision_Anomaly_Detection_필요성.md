@@ -238,18 +238,6 @@ IEEE Conference on Computer Vision and Pattern Recognition, 2019
 * 목표
   * Vision Classification 모델이 Normal image 들과 1 가지 유형의 Abnormal image 들을 학습했을 때, **다른 유형의 Abnormal 이미지들도 Abnormal image 로 분류하는지에 대한 성능** 을 평가한다.
 
-* 정량적 성능 평가 방법
-  * **Vision Classification 모델 (TinyViT-21M-512-distill)** 만을 대상으로 함
-  * 성능 평가 대상 데이터셋 단위는 **1. 정량적 성능 평가** 와 동일
-  * 성능 평가 Metric 은 **Accuracy 만 사용**
-  * 각 카테고리 별로 다음과 같이 데이터를 랜덤하게 배분
-    * **LAC (Largest Abnormal Class)** : 원본 데이터를 기준으로, 해당 카테고리의 test data 중 abnormal image 가 가장 많이 있는 class 
-
-|                 | Train Data                                                                                                                                    | Valid Data                                 | Test Data                                             |
-|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|-------------------------------------------------------|
-| Normal Sample   | 원본 데이터셋의 Train Data **전체**                                                                                                                    | 원본 데이터셋의 Test Data 중 Normal Sample **전체**  | -                                                     |
-| Abnormal Sample | 원본 데이터셋의 Test Data 중 LAC 에 있는 이미지의 **75%** x [**4배** (90,180,270도 회전 Augmentation)](Basics_Image_Augmentation_Methods.md#1-1-이미지-형태의-기하학적-변형) | 원본 데이터셋의 Test Data 중 LAC 에 있는 이미지의 **25%** | 원본 데이터셋의 Test Data 중 LAC 를 제외한 Abnormal Sample **전체** |
-
 * 설명 능력 평가 - 모델 및 데이터셋
   * 위 **정량적 성능 평가 방법** 에서 학습한 모델 및 Test Dataset 을 대상으로 평가
   * 해당 모델 및 데이터셋에 대해, [pytorch-grad-cam (by jacobgil)](https://github.com/jacobgil/pytorch-grad-cam/tree/master) 를 이용한 Abnormal Region 설명 능력 평가
@@ -344,6 +332,9 @@ Github URL : https://github.com/jacobgil/pytorch-grad-cam}
 | Hazelnut | ```crack```        | ![image](images/Special_Anomaly_Detection_Need_19.PNG)                                                           |
 | Carpet   | ```color```        | ![image](images/Special_Anomaly_Detection_Need_20.PNG)<br>![image](images/Special_Anomaly_Detection_Need_21.PNG) |
 | Grid     | ```bent```         | ![image](images/Special_Anomaly_Detection_Need_22.PNG)<br>![image](images/Special_Anomaly_Detection_Need_23.PNG) |
+
+* 참고
+  * 정량적 성능 평가 없이 **설명 능력 평가** 만 진행 
 
 ## 3. 참고
 
