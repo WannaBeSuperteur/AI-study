@@ -31,7 +31,7 @@
 
 **논리적으로 부적절한 Loss Function 을 사용하는 경우, 당장 지금 있는 데이터셋에서는 성능이 잘 나오지만, 새로운 데이터셋에서는 적절한 Loss Function 을 적용했을 때보다 성능이 현저히 안 나올 수 있다.**
 
-| Task                              | Task 설명                                                                  | Loss Function                                                                                 |
+| Task                              | Task 설명                                                                  | 적절한 Loss Function                                                                             |
 |-----------------------------------|--------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
 | Regression                        |                                                                          | - MSE (Mean Squared Error)<br>- RMSE (Root Mean Squared Error)<br>- MAE (Mean Absolute Error) |
 | Probability Prediction<br>(0 ~ 1) | 단일 output, 0 ~ 1 사이의 확률                                                  | - Binary Cross-Entropy                                                                        |
@@ -91,7 +91,7 @@ PyTorch 에서는 Binary Cross Entropy 함수로 **nn.BCELoss** 와 **nn.BCEWith
 
 * 다음과 같이 **부적절한 Loss Function** 을 사용했을 때, 학습 과정에서 어떤 문제가 발생하는지 알아본다.
 
-| Task                              | Loss Function                                                                                             |
+| Task                              | 부적절한 Loss Function                                                                                        |
 |-----------------------------------|-----------------------------------------------------------------------------------------------------------|
 | Regression                        | - Binary Cross-Entropy                                                                                    |
 | Probability Prediction<br>(0 ~ 1) | - Mean-Squared Error<br>- Mean-Absolute Error<br>- Root Mean-Squared Error<br>- Categorical Cross-Entropy |
