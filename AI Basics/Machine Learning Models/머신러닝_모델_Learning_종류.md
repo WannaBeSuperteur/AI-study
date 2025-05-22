@@ -7,10 +7,13 @@
 
 ## 1. 머신러닝 모델의 학습 방식에 따른 분류
 머신러닝 모델은 그 학습 방식에 따라 다음과 같이 분류한다.
-* Supervised Learning (지도학습)
-* Unsupervised Learning (비지도학습)
-* Semi-supervised Learning (반지도학습)
-* Reinforcement Learning (강화학습)
+
+| 학습 방식                            | 사용 데이터<br>(각 학습 데이터 item 별)                                          |
+|----------------------------------|----------------------------------------------------------------------|
+| Supervised Learning (지도학습)       | 입력값 & 출력값                                                            |
+| Unsupervised Learning (비지도학습)    | 데이터의 값                                                               |
+| Semi-supervised Learning (반지도학습) |                                                                      |
+| Reinforcement Learning (강화학습)    | 에이전트가 환경 내에서 직접 움직이면서, (state, action, reward) 데이터를 스스로 생성(?) 하면서 학습 |
 
 ## 2. Supervised Learning (지도학습)
 **Supervised Learning (지도학습)** 이란, **입력값과 출력값이 주어진** 학습 데이터를 이용해서 학습한 후, 새로운 입력값이 있는 데이터에 대해 그 출력값을 예측하는 형태의 머신러닝 모델이다.
