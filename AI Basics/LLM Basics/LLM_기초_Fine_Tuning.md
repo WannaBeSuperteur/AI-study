@@ -10,6 +10,7 @@
 * [3. Fine-Tuning 의 과정](#3-fine-tuning-의-과정)
 * [4. 적합한 Fine-Tuning 방법 선택](#4-적합한-fine-tuning-방법-선택)
 * [5. LLM Fine-Tuning 의 Loss Function](#5-llm-fine-tuning-의-loss-function)
+* [6. LLM Fine-Tuning 시 Reinforcement Learning 을 하는 이유](#6-llm-fine-tuning-시-reinforcement-learning-을-하는-이유)
 
 ## 1. LLM 의 Fine-Tuning
 
@@ -115,3 +116,11 @@ LLM 의 Fine-Tuning 에서는 일반적으로 다음과 같이 **Next token pred
     * $\theta$ : 모델의 학습 가능한 파라미터
   * $z$ : 입력 토큰 리스트 $x$ 와 출력 토큰 리스트 $y$ 의 concatenation
   * $h_i = LM_\pi (z_i, h_{<i})$ : $i$ 번째 token $z_i$ 생성을 위한, LLM 의 모든 activation layer 의 결합 
+
+## 6. LLM Fine-Tuning 시 Reinforcement Learning 을 하는 이유
+
+[참고: Reasoning and Reinforcement Learning for LLM, 김재희 (서울대학교 산업공학과 Data Science & Business Analytics Lab), 2025.04.02](https://dsba.snu.ac.kr/seminar/?mod=document&uid=3101)
+
+* Reinforcement Learning 의 [Supervised Fine-Tuning (SFT)](LLM_기초_Fine_Tuning_SFT.md) 대비 장점
+  * [Overfitting](../Deep%20Learning%20Basics/딥러닝_기초_Overfitting_Dropout.md#2-딥러닝에서의-오버피팅-overfitting) 가능성 감소
+  * 일반화 성능 (일반적인 경우에서의 적용 가능성) 향상
