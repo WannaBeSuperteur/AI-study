@@ -7,6 +7,7 @@
   * [2-4. Binary Cross Entropy Loss](#2-4-binary-cross-entropy-loss)
   * [2-5. Categorical Cross Entropy Loss](#2-5-categorical-cross-entropy-loss)
   * [2-6. Focal Loss](#2-6-focal-loss)
+  * [2-7. Dice Loss](#2-7-dice-loss)
 * [3. Loss Function과 성능 측정 지표](#3-loss-function과-성능-측정-지표)
 * [4. Loss Function을 잘못 사용하면?](#4-loss-function을-잘못-사용하면)
 * [5. Loss Function 의 값으로 정상적 학습 진행 여부 파악](#5-loss-function-의-값으로-정상적-학습-진행-여부-파악)
@@ -125,6 +126,19 @@ $$FL = \sum_{i=1}^n -(y_i \times (1 - \hat{y_i})^\gamma \times \log{\hat{y_i}})$
 * Categorical Cross Entropy 에서 **easy example 에 대한 Loss 를 낮추는** 메커니즘 추가
 * 이를 위해 $(1 - \hat{y_i})^\gamma$ 항을 추가
 * $\gamma$ 값이 클수록 easy example 에 대한 Loss 의 비중이 더욱 낮아짐
+
+### 2-7. Dice Loss
+
+$$\displaystyle L_{DICE} = 1 - \frac{2 \times \Sigma p_{true} p_{pred}}{\Sigma p_{true}^2 + \Sigma p_{pred}^2}$$
+* $p_{true}$ : 실제 값 (0 또는 1)
+* $p_{pred}$ : 예측 확률 값 (0 ~ 1 범위)
+
+핵심 아이디어
+* **DICE = 2 * (교집합의 넓이) / (각 집합의 넓이의 합)** 이라는 수식에 대해, **1 - (DICE)** 의 값을 Loss 로 이용하는 아이디어
+
+용도
+* **Image Segmentation** 에서 많이 사용
+* Segmentation 하고자 하는 영역의 크기가 전체 이미지에서 차지하는 비중이 **매우 작은** [데이터 불균형](../Data%20Science%20Basics/데이터_사이언스_기초_데이터_불균형.md) 인 경우에 효과적
 
 ## 3. Loss Function과 성능 측정 지표
 
