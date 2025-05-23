@@ -1,3 +1,22 @@
+## 2025.05.23 (금)
+**[카카오, 카나나 LLM 4종 오픈소스로 공개](https://n.news.naver.com/mnews/article/092/0002375470?sid=105)** ```AI``` ```Kakao AI``` ```Large Language Model```
+
+* 2025.05.23일 카카오가 **자사 LLM 카나나 (Kanana) 모델** 중 4개를 허깅페이스에 오픈소스로 공개했다.
+  * 라이선스는 **Apache-2.0** 으로, 상업적 사용을 포함한 자유로운 이용이 가능하다.
+* 모델 목록은 다음과 같다.
+  * Kanana-1.5-8b-base
+  * Kanana-1.5-8b-instruct
+  * Kanana-1.5-2.1b-base
+  * Kanana-1.5-2.1b-instruct
+* 카나나 1.5의 특징은 다음과 같다.
+  * 뛰어난 **한국어 성능**
+  * 수학 및 코딩, 함수 호출 등 **이과적 사고가 필요한 영역** 에서 1.5배 정도의 성능 향상
+  * 긴 문맥 이해
+  * 간결한 답변
+* 외부 링크
+  * [Kanana 1.5 HuggingFace](https://huggingface.co/collections/kakaocorp/kanana-15-682d75c83b5f51f4219a17fb)
+  * [기술 블로그 포스팅 : Kanana LLM 1.5 개발기](https://tech.kakao.com/posts/707)
+
 ## 2025.05.22 (목)
 **[OpenAI, AI 전용 기기 개발 진출한다](https://n.news.naver.com/mnews/article/009/0005497125?sid=105)** ```AI``` ```OpenAI```
 
