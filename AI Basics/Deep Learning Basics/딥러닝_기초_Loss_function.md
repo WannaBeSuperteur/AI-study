@@ -140,6 +140,20 @@ $$\displaystyle L_{DICE} = 1 - \frac{2 \times \Sigma p_{true} p_{pred}}{\Sigma p
 * **Image Segmentation** 에서 많이 사용
 * Segmentation 하고자 하는 영역의 크기가 전체 이미지에서 차지하는 비중이 **매우 작은** [데이터 불균형](../Data%20Science%20Basics/데이터_사이언스_기초_데이터_불균형.md) 인 경우에 효과적
 
+참고
+* 다음과 같이 ```monai``` 라이브러리의 ```monai.losses.dice``` 를 이용하여 Dice Loss 를 계산하는 경우 다음과 같다.
+
+```python
+import monai
+import torch
+from monai.losses.dice import DiceLoss
+```
+
+| case                                 | Dice Loss 수식                                                                                     |
+|--------------------------------------|--------------------------------------------------------------------------------------------------|
+| ```squared_pred = False``` (default) | $L_{DICE} = 1 - \frac{2 \times \Sigma p_{true} p_{pred}}{\Sigma p_{true} + \Sigma p_{pred}}$     |
+| ```squared_pred = True```            | $L_{DICE} = 1 - \frac{2 \times \Sigma p_{true} p_{pred}}{\Sigma p_{true}^2 + \Sigma p_{pred}^2}$ |
+
 ## 3. Loss Function과 성능 측정 지표
 
 딥 러닝에서는 Loss Function 자체를 [성능 측정 지표](../Data%20Science%20Basics/데이터_사이언스_기초_Metrics.md) 로 사용할 수 있지만, Loss Function과는 다른 accuracy, F1 Score와 같은 다른 성능지표를 사용하기도 한다.
