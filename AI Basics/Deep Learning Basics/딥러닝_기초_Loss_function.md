@@ -154,6 +154,24 @@ from monai.losses.dice import DiceLoss
 | ```squared_pred = False``` (default) | $L_{DICE} = 1 - \frac{2 \times \Sigma p_{true} p_{pred}}{\Sigma p_{true} + \Sigma p_{pred}}$     |
 | ```squared_pred = True```            | $L_{DICE} = 1 - \frac{2 \times \Sigma p_{true} p_{pred}}{\Sigma p_{true}^2 + \Sigma p_{pred}^2}$ |
 
+**[ True = 0, True = 1 일 때의 Dice Loss ]**
+
+<details><summary>Dice Loss 그래프 [ 펼치기 / 접기 ]</summary>
+
+* ```squared_pred = False``` 일 때의 True = 0, True = 1 각각에 대한 Dice Loss
+
+![image](images/Loss_Function_6.PNG)
+
+* ```squared_pred = True``` 일 때의 True = 0, True = 1 각각에 대한 Dice Loss
+
+![image](images/Loss_Function_5.PNG)
+
+* True = 1 일 때의 ```squared_pred = True```, ```False``` 각각에 대한 Dice Loss
+
+![image](images/Loss_Function_7.PNG)
+
+</details>
+
 ## 3. Loss Function과 성능 측정 지표
 
 딥 러닝에서는 Loss Function 자체를 [성능 측정 지표](../Data%20Science%20Basics/데이터_사이언스_기초_Metrics.md) 로 사용할 수 있지만, Loss Function과는 다른 accuracy, F1 Score와 같은 다른 성능지표를 사용하기도 한다.
