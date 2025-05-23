@@ -26,7 +26,7 @@
 
 ### 1-1. 중요 개념: weight decay
 **weight decay (가중치 감쇠)** 는 Gradient Descent 에서 가중치를 업데이트할 때 **이전 weight의 크기를 일정 비율만큼 감소** 시키는 것이다.
-* 이를 통해 **overfitting을 방지** 할 수 있다.
+* 이를 통해 **[overfitting](딥러닝_기초_Overfitting_Dropout.md#2-딥러닝에서의-오버피팅-overfitting)을 방지** 할 수 있다.
 
 수식 비교
 
