@@ -46,7 +46,7 @@ Vision 분야에서의 이상 탐지를 위해, **Normal / Abnormal 의 Classifi
   * 다양하고 새로운 abnormal data 의 존재 가능성
   * 기타 (라벨링 비용 및 환경 문제)
 * 실험을 통한 추가 발견 사항
-  * Anomaly Detection 모델은 Normal/Abnormal 을 **가리지 않고** 학습 데이터 규모가 작을 때도 Classification 모델에 비해 충분한 성능을 발휘할 가능성이 높음
+  * Anomaly Detection 모델은 **학습 데이터 규모가 작을 때도** Classification 모델에 비해 충분한 성능을 발휘할 가능성이 높음
   * Anomaly 의 크기는 일반적으로 **매우 작은데, Classification 모델로는 이를 탐지하기 어려움**
 
 ### 1-2. 실험 대상 모델
@@ -218,6 +218,7 @@ IEEE Conference on Computer Vision and Pattern Recognition, 2019
 
 * 목표
   * Vision Anomaly Detection 의 Anomaly Score vs. Classification Model 의 XAI 모델 (Grad-CAM 등) 간 Abnormal Region 설명 능력 비교 
+  * 즉, **Anomaly 에 해당하는 영역을 정확히 파악하는 능력** 을 비교
 
 * 모델 및 데이터셋
   * **1. 정량적 성능 평가** 실험 과정에서 학습된 모델 대상 실험
@@ -273,8 +274,8 @@ Github URL : https://github.com/jacobgil/pytorch-grad-cam}
 **1. 정량적 성능 평가**
 
 * 결론
-  * Anomaly Detection (GLASS) 의 성능이 Image Classification (TinyViT) 의 성능보다 훨씬 좋음
-  * 이는 데이터셋 종류 (Object, Texture) 를 가리지 않고 동일
+  * Anomaly Detection (GLASS) 의 **정량적 성능** 이 Image Classification (TinyViT) 의 성능보다 훨씬 좋음
+  * 이는 데이터셋 종류 (Object - "Bottle, Hazelnut" / Texture - "Carpet, Grid") 를 가리지 않고 동일
 
 * F1 Score 가 가장 높아지는 Anomaly Score Threshold 에서의 **Best F1 Score** 기준
 
@@ -286,10 +287,10 @@ Github URL : https://github.com/jacobgil/pytorch-grad-cam}
 **2. 설명 능력 평가**
 
 * 결론
-  * Anomaly Detection (GLASS) 의 설명 능력이 Image Classification (TinyViT) 보다 훨씬 좋음
+  * Anomaly Detection (GLASS) 의 **설명 능력 (Anomaly 에 해당하는 영역을 정확히 표시하는 능력)** 이 Image Classification (TinyViT) 보다 훨씬 좋음
   * 데이터셋 종류 (Object, Texture) 를 가리지 않고 동일
 
-* Anomaly Detection (GLASS) 모델
+* **Anomaly Detection (GLASS)** 모델
   * 모델 자체적으로 산출되는 Anomaly Score 를 이용
   * 실험 결과 요약
     * **Object (Bottle, Hazelnut)** 은 Anomaly 를 정확히 찾음
@@ -302,7 +303,7 @@ Github URL : https://github.com/jacobgil/pytorch-grad-cam}
 | Carpet   | ![image](images/Special_Anomaly_Detection_Need_8.PNG)                                                           |
 | Grid     | ![image](images/Special_Anomaly_Detection_Need_9.PNG)<br>![image](images/Special_Anomaly_Detection_Need_10.PNG) |
 
-* Image Classification (TinyViT) 모델
+* **Image Classification (TinyViT)** 모델
   * PyTorch Grad-CAM 을 이용하여 산출한, Abnormal Class 에 대한 Heatmap 을 이용
   * 여기서는 **Stage 4 의 3 번째 Conv. Layer** 의 결과를 이용
   * 실험 결과 요약
@@ -321,7 +322,7 @@ Github URL : https://github.com/jacobgil/pytorch-grad-cam}
 * 결론
   * Image Classification (TinyViT) 모델은 기존에 학습한 Anomaly 외에 **새로운 Anomaly 를 거의 찾아내지 못함**
 
-* Image Classification (TinyViT) 모델
+* **Image Classification (TinyViT)** 모델
   * 여기서는 **Stage 4 의 3 번째 Conv. Layer** 의 결과를 이용
   * 실험 결과 요약
     * Grid 를 제외하고 **Anomaly 를 거의 찾아내지 못함**
