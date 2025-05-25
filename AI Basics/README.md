@@ -7,9 +7,9 @@
 ## Categories
 
 * [📈 Data Science Basics](Data%20Science%20Basics)
+* [🤖 Machine Learning Basics](Machine%20Learning%20Models)
 * [🧠 Deep Learning Basics](Deep%20Learning%20Basics)
 * [📃 LLM Basics](LLM%20Basics)
-* [🤖 Machine Learning Basics](Machine%20Learning%20Models)
 
 ## Plan
 
