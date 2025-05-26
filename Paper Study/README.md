@@ -2,17 +2,17 @@ Paper Study (2025.03.12 -)
 
 ## Overview
 
-* **Total 16 Papers | 18 Documents** (2025.05.22)
+* **Total 17 Papers | 19 Documents** (2025.05.26)
 
 | Field                                            | Paper Count         | Paper Count<br>(Generative AI) |
 |--------------------------------------------------|---------------------|--------------------------------|
-| [Large Language Model](Large%20Language%20Model) | 10 Papers (12 Docs) | 10 Papers                      |
+| [Large Language Model](Large%20Language%20Model) | 11 Papers (13 Docs) | 11 Papers                      |
 | [Vision Model](Vision%20Model)                   | 6 Papers (6 Docs)   | 3 Papers                       |
 
 ## Large Language Model
 
-* **Total 10 Papers | 12 Documents** (2025.05.18)
-  * Including 10 Generative AI Papers
+* **Total 11 Papers | 13 Documents** (2025.05.26)
+  * Including 11 Generative AI Papers
 
 | Study Date<br>(Study Doc. Link)                                                                                                                                                                               | Paper                                                                                                                                          | Published | 비고                                                                                                                                      |
 |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|-----------|-----------------------------------------------------------------------------------------------------------------------------------------|
@@ -28,6 +28,7 @@ Paper Study (2025.03.12 -)
 | 2025.05.05 - 05.08 [(Study Doc)](Large%20Language%20Model/%5B2025.05.05%5D%20A%20Survey%20on%20Large%20Language%20Model%20Hallucination%20via%20a%20Creativity%20Perspective.md)                              | [A Survey on Large Language Model Hallucination via a Creativity Perspective](https://arxiv.org/pdf/2402.06647)                                | 2024.02   |                                                                                                                                         |
 | 2025.05.14 - 05.16 [(Study Doc)](Large%20Language%20Model/%5B2025.05.14%5D%20A%20Tutorial%20on%20LLM%20Reasoning%20-%20Relevant%20Methods%20behind%20ChatGPT%20o1.md)                                         | [A Tutorial on LLM Reasoning: Relevant Methods behind ChatGPT o1](https://arxiv.org/pdf/2502.10867)                                            | 2025.02   |                                                                                                                                         |
 | 2025.05.18 - 05.22 [(Study Doc)](Large%20Language%20Model/%5B2025.05.18%5D%20Can%201B%20LLM%20Surpass%20405B%20LLM%20-%20Rethinking%20Compute-Optimal%20Test-Time%20Scaling.md)                               | [Can 1B LLM Surpass 405B LLM? Rethinking Compute-Optimal Test-Time Scaling](https://arxiv.org/pdf/2502.06703)                                  | 2025.02   |                                                                                                                                         |
+| 2025.05.26 - 05.28 [(Study Doc)](Large%20Language%20Model/%5B2025.05.26%5D%20CodeCoR%20-%20An%20LLM-Based%20Self-Reflective%20Multi-Agent%20Framework%20for%20Code%20Generation.md)                           | [CodeCoR: An LLM-Based Self-Reflective Multi-Agent Framework for Code Generation](https://arxiv.org/pdf/2501.07811)                            | 2025.01   |                                                                                                                                         |
 
 ## Vision Model
 
