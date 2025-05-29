@@ -13,6 +13,8 @@
 | 코딩 (프로그래밍) | 코드 변환 (버전 호환성), 코드 생성 (기존 코드 맥락 고려), 코드 추천, 코드 검사 (버그, 보안성 등) |
 | 품질 평가      | 고객 요구사항 반영 여부 및 누락, 보안성, 버그 등 확인                              |
 
+* [참고 : CodeCoR (Code Collaboration and Repair)](../Paper%20Study/Large%20Language%20Model/%5B2025.05.26%5D%20CodeCoR%20-%20An%20LLM-Based%20Self-Reflective%20Multi-Agent%20Framework%20for%20Code%20Generation.md) (유사한 측면 있음)
+
 ## 2025.05.27 (화)
 **[AI, 스스로 코드까지 조작하며 인간 명령 거부](https://n.news.naver.com/mnews/article/374/0000442630?sid=104)** ```AI``` ```OpenAI```
 
