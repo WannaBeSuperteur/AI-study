@@ -1,3 +1,16 @@
+## 2025.05.31 (토)
+**[딥시크, 추론 모델 R1 업그레이드 버전 공개](https://n.news.naver.com/mnews/article/003/0013277391?sid=104)** ```AI``` ```DeepSeek``` ```Large Language Model```
+
+* DeepSeek가 2025년 1월 말 전 세계에 **"저비용 고성능" 거대 언어 모델 & 추론형 AI 돌풍** 을 일으켰던 자사 LLM DeepSeek-R1 의 업그레이드 버전을 공개했다.
+  * 이 버전의 이름은 ```R1-0528``` [(HuggingFace)](https://huggingface.co/deepseek-ai/DeepSeek-R1-0528) 이다.
+* ```R1-0528``` 의 특징은 다음과 같다.
+  * 2024년 12월 출시한 ```DeepSeek-V3-Base``` [(HuggingFace)](https://huggingface.co/deepseek-ai/DeepSeek-V3-Base) 모델 기반 
+* ```R1-0528``` 의 성능 수준은 다음과 같다.
+  * AIME 2025 (미국 수학경시대회) 정확도 **70% → 87.5% (▲ 17.5%p)**
+  * OpenAI의 o4-mini, o3 수준의 성능
+  * **수학, 코딩 및 추론 성능** 향상
+  * **환각 현상** 개선
+
 ## 2025.05.30 (금)
 **[서울대학교, 말버릇/추임새 따라하는 AI 개발](https://n.news.naver.com/mnews/article/366/0001081511?sid=105)** ```AI``` ```Large Language Model```
 
