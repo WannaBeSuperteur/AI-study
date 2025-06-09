@@ -6,6 +6,7 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader, random_split
 from torchinfo import summary
 
@@ -18,6 +19,26 @@ TEST_BATCH_SIZE = 4
 
 EARLY_STOPPING_ROUNDS = 10
 MAX_EPOCHS = 500
+
+input_data_list = [[0.0, 0.1, 0.1, 0.0, 0.0, 0.0],
+                   [0.0, 0.2, 0.1, 0.0, 0.0, 0.0],
+                   [0.0, 0.4, 0.1, 0.0, 0.0, 0.0],
+                   [0.0, 0.7, 0.1, 0.0, 0.0, 0.0],
+                   [0.0, 1.0, 0.1, 0.0, 0.0, 0.0],
+                   [0.0, 0.1, 0.2, 0.0, 0.0, 0.0],
+                   [0.0, 0.1, 0.4, 0.0, 0.0, 0.0],
+                   [0.0, 0.1, 0.7, 0.0, 0.0, 0.0],
+                   [0.0, 0.1, 1.0, 0.0, 0.0, 0.0],
+                   [0.0, 0.0, 0.0, 0.1, 0.1, 0.1],
+                   [0.0, 0.0, 0.0, 0.1, 0.2, 0.2],
+                   [0.0, 0.0, 0.0, 0.1, 0.4, 0.4],
+                   [0.0, 0.0, 0.0, 0.1, 0.7, 0.7],
+                   [0.0, 0.0, 0.0, 0.1, 1.0, 1.0],
+                   [0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
+                   [0.2, 0.2, 0.2, 0.2, 0.2, 0.2],
+                   [0.4, 0.4, 0.4, 0.4, 0.4, 0.4],
+                   [0.7, 0.7, 0.7, 0.7, 0.7, 0.7],
+                   [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]]
 
 
 class ExampleNN(nn.Module):
@@ -182,6 +203,74 @@ def run_test_process(model, test_dataloader):
     return performance_scores
 
 
+# Modification of original ChatGPT implementation (LRP : Layer-wise Relevance Propagation)
+class LRP:
+    def __init__(self, nn):
+        self.nn = nn
+        self.nn.eval()
+        self.activations = {}
+        self.relevances = {}
+
+    def forward(self, x):
+        self.activations['input'] = x.clone().detach().requires_grad_(True)
+        x = x.unsqueeze(0)
+
+        x1 = F.tanh(self.nn.fc1(x))
+        self.activations['fc1'] = x1
+        x2 = F.tanh(self.nn.fc2(x1))
+        self.activations['fc2'] = x2
+        x3 = self.nn.fc_final(x2)
+        self.activations['fc_final'] = x3
+
+        return x3
+
+    def relevance_prop(self, R_final):
+
+        # fc_final
+        a2 = self.activations['fc2']
+        w3 = self.nn.fc_final.weight
+        b3 = self.nn.fc_final.bias
+
+        z3 = a2 @ w3.T + b3
+        s3 = R_final / (z3 + 1e-6)
+        c3 = s3 @ w3
+        R2 = a2 * c3
+
+        # fc2
+        a1 = self.activations['fc1'].view(a2.size(0), -1)
+        w2 = self.nn.fc2[0].weight
+        b2 = self.nn.fc2[0].bias
+
+        z2 = a1 @ w2.T + b2
+        s2 = R2 / (z2 + 1e-6)
+        c2 = s2 @ w2
+        R1 = a1 * c2
+
+        # fc1
+        a0 = self.activations['input'].view(a1.size(0), -1)
+        w1 = self.nn.fc1[0].weight
+        b1 = self.nn.fc1[0].bias
+
+        z1 = a0 @ w1.T + b1
+        s1 = R1 / (z1 + 1e-6)
+        c1 = s1 @ w1
+        R0 = a0 * c1
+
+        return R0.view(self.activations['input'].size())
+
+
+def run_lrp(nn):
+    lrp = LRP(nn)
+
+    for input_data in input_data_list:
+        output = lrp.forward(torch.tensor(input_data))
+        relevance = lrp.relevance_prop(output)
+
+        print(f'input: {input_data}, '
+              f'output: {np.round(output.detach().cpu().numpy(), 4)}, '
+              f'relevance: {np.round(relevance.detach().cpu().numpy(), 4)}')
+
+
 if __name__ == '__main__':
     example_nn = define_nn_model()
 
@@ -193,3 +282,6 @@ if __name__ == '__main__':
     performance_scores = run_test_process(example_nn, test_loader)
 
     print(performance_scores)
+
+    # run LRP (Layer-wise Relevance Propagation)
+    run_lrp(best_epoch_model)
