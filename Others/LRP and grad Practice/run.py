@@ -10,6 +10,9 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader, random_split
 from torchinfo import summary
 
+torch.set_printoptions(sci_mode=False)
+np.set_printoptions(suppress=True, linewidth=160)
+
 
 INPUT_DIM = 6
 
@@ -20,24 +23,45 @@ TEST_BATCH_SIZE = 4
 EARLY_STOPPING_ROUNDS = 10
 MAX_EPOCHS = 500
 
-input_data_list = [[0.0, 0.1, 0.1, 0.0, 0.0, 0.0],
+input_data_list = [[0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                   [0.0, 0.1, 0.1, 0.0, 0.0, 0.0],
                    [0.0, 0.2, 0.1, 0.0, 0.0, 0.0],
+                   [0.0, 0.3, 0.1, 0.0, 0.0, 0.0],
                    [0.0, 0.4, 0.1, 0.0, 0.0, 0.0],
+                   [0.0, 0.5, 0.1, 0.0, 0.0, 0.0],
+                   [0.0, 0.6, 0.1, 0.0, 0.0, 0.0],
                    [0.0, 0.7, 0.1, 0.0, 0.0, 0.0],
+                   [0.0, 0.8, 0.1, 0.0, 0.0, 0.0],
+                   [0.0, 0.9, 0.1, 0.0, 0.0, 0.0],
                    [0.0, 1.0, 0.1, 0.0, 0.0, 0.0],
                    [0.0, 0.1, 0.2, 0.0, 0.0, 0.0],
+                   [0.0, 0.1, 0.3, 0.0, 0.0, 0.0],
                    [0.0, 0.1, 0.4, 0.0, 0.0, 0.0],
+                   [0.0, 0.1, 0.5, 0.0, 0.0, 0.0],
+                   [0.0, 0.1, 0.6, 0.0, 0.0, 0.0],
                    [0.0, 0.1, 0.7, 0.0, 0.0, 0.0],
+                   [0.0, 0.1, 0.8, 0.0, 0.0, 0.0],
+                   [0.0, 0.1, 0.9, 0.0, 0.0, 0.0],
                    [0.0, 0.1, 1.0, 0.0, 0.0, 0.0],
                    [0.0, 0.0, 0.0, 0.1, 0.1, 0.1],
                    [0.0, 0.0, 0.0, 0.1, 0.2, 0.2],
+                   [0.0, 0.0, 0.0, 0.1, 0.3, 0.3],
                    [0.0, 0.0, 0.0, 0.1, 0.4, 0.4],
+                   [0.0, 0.0, 0.0, 0.1, 0.5, 0.5],
+                   [0.0, 0.0, 0.0, 0.1, 0.6, 0.6],
                    [0.0, 0.0, 0.0, 0.1, 0.7, 0.7],
+                   [0.0, 0.0, 0.0, 0.1, 0.8, 0.8],
+                   [0.0, 0.0, 0.0, 0.1, 0.9, 0.9],
                    [0.0, 0.0, 0.0, 0.1, 1.0, 1.0],
                    [0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
                    [0.2, 0.2, 0.2, 0.2, 0.2, 0.2],
+                   [0.3, 0.3, 0.3, 0.3, 0.3, 0.3],
                    [0.4, 0.4, 0.4, 0.4, 0.4, 0.4],
+                   [0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
+                   [0.6, 0.6, 0.6, 0.6, 0.6, 0.6],
                    [0.7, 0.7, 0.7, 0.7, 0.7, 0.7],
+                   [0.8, 0.8, 0.8, 0.8, 0.8, 0.8],
+                   [0.9, 0.9, 0.9, 0.9, 0.9, 0.9],
                    [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]]
 
 
@@ -261,6 +285,7 @@ class LRP:
 
 def run_lrp(nn):
     lrp = LRP(nn)
+    print('\n ==== 1. Layer-wise Relevance Propagation (LRP) ====')
 
     for input_data in input_data_list:
         output = lrp.forward(torch.tensor(input_data))
@@ -269,6 +294,23 @@ def run_lrp(nn):
         print(f'input: {input_data}, '
               f'output: {np.round(output.detach().cpu().numpy(), 4)}, '
               f'relevance: {np.round(relevance.detach().cpu().numpy(), 4)}')
+
+
+def run_grad(nn):
+    print('\n ==== 2. Computing Gradient ====')
+
+    for input_data in input_data_list:
+        input_data_torch = torch.tensor(input_data).unsqueeze(0)
+        input_data_torch.requires_grad_()
+
+        output = nn(input_data_torch)
+        output.backward()
+
+        gradient = input_data_torch.grad
+
+        print(f'input: {input_data}, '
+              f'output: {str(np.round(output.detach().cpu().numpy(), 4)):11s}, '
+              f'gradient: {np.round(gradient.detach().cpu().numpy(), 4)}')
 
 
 if __name__ == '__main__':
@@ -285,3 +327,6 @@ if __name__ == '__main__':
 
     # run LRP (Layer-wise Relevance Propagation)
     run_lrp(best_epoch_model)
+
+    # run Gradient Compute
+    run_grad(best_epoch_model)
