@@ -1,3 +1,13 @@
+## 2025.06.17 (화)
+**[이스트소프트, 자체 LLM '앨런 LLM' 출시](https://n.news.naver.com/mnews/article/001/0015454739?sid=105)** ```AI``` ```Large Language Model```
+
+* 2025.06.17일 이스트소프트가 자체 개발 LLM인 **앨런 LLM (Alan LLM)** 을 출시했다.
+  * Alan LLM 은 **RAG (Retrieval-Augmented Generation)** 을 기반으로 한 **추론 및 보고서 생성** 에 특화되어 있다.
+* Alan LLM 의 특징은 다음과 같다.
+  * **팩트 체크, 검색 결과 필터링** 등에서 우수한 성능 
+  * 모델 구성
+    * **초거대 모델** (데이터센터용) & **경량 모델** (온디바이스용) 
+
 ## 2025.06.16 (월)
 **[크래프톤, 게임 AI 에이전트 벤치마크 '오락' 공개](https://n.news.naver.com/mnews/article/001/0015450766?sid=105)** ```AI``` ```Large Language Model``` ```AI Agent```
 
