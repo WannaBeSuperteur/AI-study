@@ -1,3 +1,15 @@
+## 2025.06.19 (목)
+**[생성형 AI 추가 학습 없이 창의성 높이는 기술 개발](https://n.news.naver.com/mnews/article/001/0015458149?sid=105)** ```AI``` ```Generative AI``` ```Naver AI```
+
+* **KAIST와 NAVER AI Lab의 공동 연구** 를 통해 **생성형 AI 모델의 창의성을 강화하는 기술** 이 등장했다.
+  * 기존 생성형 AI 모델인 Stable Diffusion 을 **추가 학습 없이 feature map 증폭을 통해** 창의성을 강화했다.
+  * 이는 기존 Stable Diffusion 이 '창의적인'이라는 단어를 사용해도 그리 독창적인 이미지가 생성되지 않는 문제를 해결한 것이다.
+* 사용된 기술은 다음과 같다.
+  * feature map 을 고속 푸리에 변환 및 주파수 마스크를 이용하여 **주파수 영역으로 변환**
+  * 이 영역 중 **저주파 영역을 증폭**
+  * 모델 내부의 각 block (layer) 별 **증폭 값 자동 최적화 알고리즘** 도 개발
+* 해당 연구 성과는 2025.06.15일 **IEEE Conference on Computer Vision and Pattern Recognition (국제 컴퓨터 비전 & 패턴 인식 학술 대회)** 에 발표되었다.
+
 ## 2025.06.18 (수)
 **[아마존 CEO, 향후 수년 동안 사무직 감소 예상](https://n.news.naver.com/mnews/article/001/0015455379?sid=104)** ```AI``` ```Generative AI```
 
