@@ -72,6 +72,15 @@ Diffusion Model 의 구성을 그림으로 나타내면 다음과 같다.
 
 ### 3-2. Reverse Diffusion Process
 
+**Reverse Diffusion Process** 는 [Forward Diffusion Process](#3-1-forward-diffusion-process) 에 의해 생성된 Noise 추가 이미지로부터 **원래 이미지를 복원** 하는 과정이다.
+
+* Forward Diffusion Process 인 $q(x_t|x_{t-1})$ 에 대해, Reverse Diffusion Process 는 $q(x_{t-1}|x_t)$ 로 나타낼 수 있다.
+* 다음과 같은 특징을 갖는다.
+  * $q(x_t|x_{t-1})$ 와 달리 **직접 계산할 수 없다.**
+  * 따라서 이를 학습하기 위한 **딥러닝 모델** 을 필요로 한다. (보통 [U-Net](../Image%20Processing/Model_U-Net.md) 사용)
+
+![image](images/Diffusion_3.PNG)
+
 ### 3-3. Sampling Process
 
 ## 4. Diffusion Model 의 Loss Function
