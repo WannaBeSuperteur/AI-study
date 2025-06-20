@@ -58,7 +58,7 @@
 
 ----
 
-* **2025.04.08 ~ 2025.07.06 (예정) : 본격 프로젝트**
+* **2025.04.08 ~ 2025.07.17 (예정) : 본격 프로젝트**
   * [AI Trend](https://github.com/WannaBeSuperteur/AI-study/tree/main/AI%20Trend) 를 참고하여 주제 선정 
   * 2024년 한 해 동안 AI 연구원으로 재직하면서 얻은 교훈을 반영
     * 공개된 모델 구현 시, 코드가 오류 없이 돌아간다고 모델이 정상 작동하는 것을 보장할 수 없음
@@ -71,4 +71,5 @@
 | 프로젝트 3 | [Project Link](https://github.com/WannaBeSuperteur/AI_Projects/tree/main/2025_05_22_Improve_EffiSegNet) | 의료 이미지 (위장관 용종 이미지) Segmentation<br>- **기존 모델 (EffiSegNet) 개선**                                                                                                                                                                           | 2025.05.22 - 05.26 (5d)  |
 | 프로젝트 4 | [Project Link](https://github.com/WannaBeSuperteur/AI_Projects/tree/main/2025_05_26_OhLoRA_v3)          | **Oh-LoRA v3**<br>AI 가상 인간 **Oh-LoRA 👱‍♀️ (오로라)** 생성 고도화<br>- Oh-LoRA 의 얼굴 이미지 생성 고도화<br>- LLM 을 이용한 사용자 대화 구현 고도화                                                                                                                       | 2025.05.26 - 06.05 (11d) |
 | 프로젝트 5 | [Project Link](https://github.com/WannaBeSuperteur/AI_Projects/tree/main/2025_06_07_OhLoRA_v3_1)        | **Oh-LoRA v3.1**<br>AI 가상 인간 **Oh-LoRA 👱‍♀️ (오로라)** 얼굴 이미지 생성 고도화                                                                                                                                                                        | 2025.06.07 - 06.13 (7d)  |
-| 프로젝트 6 |                                                                                                         | **Oh-LoRA AI Teacher**<br>AI를 이용한 머신러닝 학습 기능 (예정)<br>- 머신러닝에 대한 Q&A 기능 (AI 지식, AI 트렌드 / [RAG](AI%20Basics/LLM%20Basics/LLM_기초_RAG.md) 이용)<br>- 머신러닝 퀴즈 출제 및 채점<br>- 실시간 코딩 도우미 (AI 에이전트 컨셉)<br>- Vision 딥러닝 모델 설계 능력을 AI와 대결 (최적 하이퍼파라미터) | 2025.06.19 - 07.06 (18d) |
+| 프로젝트 6 |                                                                                                         | **Oh-LoRA v4**<br>AI 가상 인간 **Oh-LoRA 👱‍♀️ (오로라)** LLM 의 AI 윤리 메커니즘 개선                                                                                                                                                                    | 2025.06.22 - 06.28 (7d)  |
+| 프로젝트 7 |                                                                                                         | **Oh-LoRA AI Teacher**<br>AI를 이용한 머신러닝 학습 기능 (예정)<br>- 머신러닝에 대한 Q&A 기능 (AI 지식, AI 트렌드 / [RAG](AI%20Basics/LLM%20Basics/LLM_기초_RAG.md) 이용)<br>- 머신러닝 퀴즈 출제 및 채점<br>- 실시간 코딩 도우미 (AI 에이전트 컨셉)<br>- Vision 딥러닝 모델 설계 능력을 AI와 대결 (최적 하이퍼파라미터) | 2025.06.29 - 07.17 (19d) |
