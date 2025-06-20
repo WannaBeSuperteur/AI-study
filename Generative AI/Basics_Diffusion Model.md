@@ -66,6 +66,8 @@ Diffusion Model 의 구성을 그림으로 나타내면 다음과 같다.
 |---------------------------------------------------------------------------|------------------------------------------------------|
 | $\beta_t$ 를 ```t=0``` 일 때 ```1e-4``` → ```t=T``` 일 때 ```0.02``` 까지 점진적 증가 | ```t=0``` 과 ```t=T``` 근처에서는 변화가 거의 없고, 중간에서 변화가 가장 큼 |
 
+* image below: **Linear** scheduler (**top**), **Cosine** scheduler (**bottom**)
+
 ![image](images/Diffusion_2.PNG)
 
 [(출처)](https://arxiv.org/pdf/2102.09672) : Alex Nichol and Prafulla Dhariwal, "Improved Denoising Diffusion Probabilistic Models", 2021
