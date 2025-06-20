@@ -83,6 +83,16 @@ Diffusion Model 의 구성을 그림으로 나타내면 다음과 같다.
 
 ![image](images/Diffusion_3.PNG)
 
+* 학습 데이터 및 학습 프로세스
+
+| 입력 데이터                                                 | 출력 데이터                |
+|--------------------------------------------------------|-----------------------|
+| - $x_t$ (timestep $t$ 에서의 이미지)<br>- **time embedding** | - predicted **noise** |
+
+![image](images/Diffusion_4.PNG)
+
+[(출처)](https://blog.marvik.ai/2023/11/28/an-introduction-to-diffusion-models-and-stable-diffusion/) : Marvik, "An Introduction to Diffusion Models and Stable Diffusion"
+
 ### 3-3. Sampling Process
 
 ## 4. Diffusion Model 의 Loss Function
