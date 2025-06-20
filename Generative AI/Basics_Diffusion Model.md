@@ -111,3 +111,10 @@ Diffusion Model 의 구성을 그림으로 나타내면 다음과 같다.
 [(출처)](https://blog.marvik.ai/2023/11/28/an-introduction-to-diffusion-models-and-stable-diffusion/) : Marvik, "An Introduction to Diffusion Models and Stable Diffusion"
 
 ## 4. Diffusion Model 의 Loss Function
+
+![image](images/Diffusion_6.PNG)
+
+[(출처)](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/#:~:text=Diffusion%20models%20are%20inspired%20by,data%20samples%20from%20the%20noise.) : Lilian Weng, "What are Diffusion Models?", 2021.07.11
+
+* 위와 같은 [Cross-Entropy Loss](../AI%20Basics/Deep%20Learning%20Basics/딥러닝_기초_Loss_function.md#2-5-categorical-cross-entropy-loss), 즉 negative [log likelihood](../AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_Probability_vs_Likelihood.md#3-1-log-likelihood-로그-가능도-로그-우도) 가 Diffusion Model 의 Loss Function 이다.
+* 위 Loss Function 을 최소화해야 한다.
