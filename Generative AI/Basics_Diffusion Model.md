@@ -95,4 +95,19 @@ Diffusion Model 의 구성을 그림으로 나타내면 다음과 같다.
 
 ### 3-3. Sampling Process
 
+**Sampling Process** 는 학습된 Diffusion Model 을 이용하여 실제로 이미지를 생성하는 과정이다.
+
+* Sampling Process 의 순서
+  * **1. 데이터 준비**
+    * Random Noise 생성: total timestep 횟수 $T$ 를 이용 
+    * 입력 데이터: (Random noise) & (time embedding 과 동일한 shape 의 데이터)
+    * 출력 데이터: (Noise prediction)
+  * **2. previous timestep $t-1$ 의 이미지 계산**
+    * (timestep $t-1$ 의 이미지) = (timestep $t$ 의 이미지) - (Noise prediction) 
+    * 이 과정을 $t = 0$ 이 될 때까지 계속 반복하면 noise 가 제거된 이미지가 생성됨
+
+![image](images/Diffusion_5.PNG)
+
+[(출처)](https://blog.marvik.ai/2023/11/28/an-introduction-to-diffusion-models-and-stable-diffusion/) : Marvik, "An Introduction to Diffusion Models and Stable Diffusion"
+
 ## 4. Diffusion Model 의 Loss Function
