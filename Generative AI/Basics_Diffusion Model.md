@@ -57,6 +57,19 @@ Diffusion Model 의 구성을 그림으로 나타내면 다음과 같다.
 | $\alpha_t$            | $\alpha_t = 1 - \beta_t$                             |
 | $\overline{\alpha_t}$ | 최초 timestep 부터 현재 timestep 까지의 **모든 $\alpha_t$ 의 곱** |
 
+* Scheduler
+  * Scheduler 는 **매 timestep 마다 얼마나 많은 Noise 를 추가할지를 나타내는 것** 이다.
+  * [Learning Rate Scheduler](../AI%20Basics/Deep%20Learning%20Basics/딥러닝_기초_Learning_Rate_Scheduler.md) 와 일정 부분 유사한 개념이다.
+  * 대표적으로 사용되는 Scheduler 는 다음과 같다.
+
+| Linear Scheduler                                                          | Cosine Scheduler                                     |
+|---------------------------------------------------------------------------|------------------------------------------------------|
+| $\beta_t$ 를 ```t=0``` 일 때 ```1e-4``` → ```t=T``` 일 때 ```0.02``` 까지 점진적 증가 | ```t=0``` 과 ```t=T``` 근처에서는 변화가 거의 없고, 중간에서 변화가 가장 큼 |
+
+![image](images/Diffusion_2.PNG)
+
+[(출처)](https://arxiv.org/pdf/2102.09672) : Alex Nichol and Prafulla Dhariwal, "Improved Denoising Diffusion Probabilistic Models", 2021
+
 ### 3-2. Reverse Diffusion Process
 
 ### 3-3. Sampling Process
