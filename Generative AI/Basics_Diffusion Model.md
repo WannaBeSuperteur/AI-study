@@ -22,7 +22,20 @@ Diffusion Model 은 다른 이미지 생성형 AI와 마찬가지로, **학습 �
 
 ## 2. Diffusion Model 의 핵심 아이디어
 
+Diffusion Model 의 핵심 아이디어는 다음과 같다.
+
+| 과정                                                          | 설명                                                                                          |
+|-------------------------------------------------------------|---------------------------------------------------------------------------------------------|
+| [Forward Diffusion Process](#3-1-forward-diffusion-process) | 학습 데이터에 **단계적으로 Gaussian Noise** 를 추가                                                       |
+| [Reverse Diffusion Process](#3-2-reverse-diffusion-process) | Noise가 추가된 데이터로부터 **원본 데이터를 복원하는 방법** 을 학습<br>- **단계적으로** 진행되는 **Noising Process 를 역으로 학습** |
+
 ## 3. Diffusion Model 의 구성
+
+Diffusion Model 의 구성을 그림으로 나타내면 다음과 같다.
+
+* Reverse Diffusion Process 에서는 이미지 복원 모델로 [U-Net](../Image%20Processing/Model_U-Net.md) 을 많이 사용한다.
+
+![image](images/Diffusion_0.PNG)
 
 ### 3-1. Forward Diffusion Process
 
