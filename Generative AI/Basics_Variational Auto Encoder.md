@@ -1,5 +1,14 @@
 # Variational Auto Encoder (VAE)
-## Variational Auto Encoder (VAE) 란?
+
+## 목차
+
+* [1. Variational Auto Encoder (VAE) 란?](#1-variational-auto-encoder-vae-란)
+* [2. Variational Auto Encoder의 작동 원리](#2-variational-auto-encoder의-작동-원리)
+* [3. Variational Auto Encoder의 활용 사례](#3-variational-auto-encoder의-활용-사례)
+* [4. AE와 VAE의 비교](#4-ae와-vae의-비교)
+
+## 1. Variational Auto Encoder (VAE) 란?
+
 **Variational Auto Encoder (VAE)** 는 기존의 Auto-Encoder와는 다르지만 그 구조가 비슷한 형태의 비지도학습 알고리즘이다.
 
 주로 이미지를 생성하기 위한 생성형 AI에 사용되며, 기본적인 구조는 다음과 같다.
@@ -10,7 +19,7 @@
 * latent vector z를 다시 Decoder에 입력하여, **기존 입력 이미지와 비슷하면서도 새로운 이미지를 생성** 한다.
 * 이때 입력 이미지의 다양한 특징들을 각각의 확률변수로 하는 확률분포를 생성하며, 이 확률분포에서 확률 값이 높은 부분을 이용하여 새로운 이미지를 생성한다.
 
-## Variational Auto Encoder의 작동 원리
+## 2. Variational Auto Encoder의 작동 원리
 
 ![VAE의 구조](./images/VAE_0.PNG)
 
@@ -30,12 +39,14 @@ VAE의 학습을 위한 입력 데이터 및 출력 데이터는 다음과 같�
 * 출력 데이터 : 입력 데이터와 같은 이미지
 * reconstruction loss : 입력 데이터와 출력 데이터의 차이를 나타내는 loss 값으로, **VAE 의 loss 값** 에 해당한다.
 
-## Variational Auto Encoder의 활용 사례
+## 3. Variational Auto Encoder의 활용 사례
+
 * 이미지 생성 인공지능 (생성형 AI)
 * 이상 탐지
 * 이미지 복원 기법을 적용한 사실적인 이미지 생성
 
-## AE와 VAE의 비교
+## 4. AE와 VAE의 비교
+
 AE (AutoEncoder) 와 VAE의 특징의 공통점과 차이점은 다음과 같다.
 
 * 공통점

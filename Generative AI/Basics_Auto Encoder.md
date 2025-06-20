@@ -1,6 +1,16 @@
 # Auto Encoder
 
-## Auto Encoder (AE) 란?
+## 목차
+
+* [1. Auto Encoder (AE) 란?](#1-auto-encoder-ae-란)
+* [2. Auto Encoder의 작동 원리](#2-auto-encoder의-작동-원리)
+  * [2-1. Stacked Auto-Encoder](#2-1-stacked-auto-encoder)
+* [3. Denoising Auto-Encoder (DAE)](#3-denoising-auto-encoder-dae)
+* [4. Convolutional Auto-Encoder](#4-convolutional-auto-encoder)
+* [5. Variational Auto Encoder (VAE)](#5-variational-auto-encoder-vae)
+
+## 1. Auto Encoder (AE) 란?
+
 **AutoEncoder (AE, 오토인코더)** 는 비지도 학습 (unsupervised learning) AI의 일종으로, 입력 데이터에 대한 출력값이 없는 데이터에 대해 그 특징을 추출하거나 생성형 AI를 만들기 위해 사용하는 신경망이다.
 
 AutoEncoder의 구조는 **서로 동일한 입력과 출력** 을 가지며, 가운데의 latent vector 를 중심으로 좌우 대칭을 이룬다.
@@ -11,7 +21,7 @@ AutoEncoder의 구조는 **서로 동일한 입력과 출력** 을 가지며, �
 
 데이터 특징 분석, 생성형 AI 이외에도 anomaly detection 목적으로 Auto-Encoder를 학습시킬 수 있다.
 
-## Auto Encoder의 작동 원리
+## 2. Auto Encoder의 작동 원리
 
 ![Auto Encoder의 구조](./images/AutoEncoder_0.PNG)
 
@@ -22,7 +32,7 @@ AutoEncoder의 구조는 **서로 동일한 입력과 출력** 을 가지며, �
 * 여기서 $||A||^2$ 는 2d norm 을 의미한다.
 * 일반적인 딥러닝에서 사용하는 loss function과 큰 차이가 없는 것을 알 수 있다.
 
-### Stacked Auto-Encoder
+### 2-1. Stacked Auto-Encoder
 
 ![Stacked Auto Encoder의 구조](./images/AutoEncoder_1.PNG)
 
@@ -31,7 +41,7 @@ AutoEncoder의 구조는 **서로 동일한 입력과 출력** 을 가지며, �
 * **Encoding** : 입력으로 들어온 고차원의 데이터가 hidden layer를 포함한 encoder를 거쳐 저차원의 latent vector로 변환된다.
 * **Decoding** : 저차원의 latent vector가 hidden layer를 포함한 decoder를 거쳐 고차원의 데이터로 복원된다.
 
-## Denoising Auto-Encoder (DAE)
+## 3. Denoising Auto-Encoder (DAE)
 
 ![Denoising Auto Encoder의 구조](./images/AutoEncoder_2.PNG)
 
@@ -40,10 +50,12 @@ AutoEncoder의 구조는 **서로 동일한 입력과 출력** 을 가지며, �
 * Denoising Auto-Encoder가 노이즈가 있는 입력으로부터 노이즈가 없는 출력값을 학습할 때의 loss를 **reconstruction error** 라고 한다.
 * 입력에 noise를 추가함으로써 **Auto-Encoder가 의미 있는 feature를 학습** 하게 할 수 있다.
 
-## Convolutional Auto-Encoder
+## 4. Convolutional Auto-Encoder
+
 Convolutional Neural Network (CNN) 과 Auto-Encoder의 결합 형태로, Auto-Encoder의 Encoder 및 Decoder가 CNN 형태로 구성되어 있는 것을 말한다. 따라서 latent vector로부터 **이미지를 생성** 할 수 있으므로, 이미지를 생성하는 생성형 AI에 활용할 수 있다.
 
-## Variational Auto Encoder (VAE)
+## 5. Variational Auto Encoder (VAE)
+
 **Variational Auto Encoder (VAE)** 는 기존 Auto-Encoder에서의 latent vector를 구성하는 각 feature의 평균 및 분산을 이용하여 해당 feature들에 대한 확률 분포를 만들고, 이를 이용하여 새로운 데이터를 생성한다.
 
 기존의 Auto-Encoder와는 약간 다르지만 구조적으로 유사하다. 즉 **Auto-Encoder와는 다르다.**
