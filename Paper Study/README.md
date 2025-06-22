@@ -2,12 +2,12 @@ Paper Study (2025.03.12 -)
 
 ## Overview
 
-* **Total 21 Papers | 23 Documents** (2025.06.20)
+* **Total 22 Papers | 24 Documents** (2025.06.22)
 
 | Field                                            | Paper Count         | Paper Count<br>(Generative AI) |
 |--------------------------------------------------|---------------------|--------------------------------|
 | [Large Language Model](Large%20Language%20Model) | 14 Papers (16 Docs) | 14 Papers                      |
-| [Vision Model](Vision%20Model)                   | 7 Papers (7 Docs)   | 4 Papers                       |
+| [Vision Model](Vision%20Model)                   | 8 Papers (8 Docs)   | 5 Papers                       |
 
 ## Large Language Model
 
@@ -36,8 +36,8 @@ Paper Study (2025.03.12 -)
 
 ## Vision Model
 
-* **Total 7 Papers | 7 Documents** (2025.06.20)
-  * Including 4 Generative AI Papers
+* **Total 8 Papers | 8 Documents** (2025.06.22)
+  * Including 5 Generative AI Papers
 
 | Study Date<br>(Study Doc. Link)                                                                                                                                                                                      | Paper                                                                                                                                                            | Published | 비고                                                                                                                                                 |
 |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|----------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -48,3 +48,4 @@ Paper Study (2025.03.12 -)
 | 2025.05.05 [(Study Doc)](Vision%20Model/%5B2025.05.05%5D%20Semantic%20Hierarchy%20Emerges%20in%20Deep%20Generative%20Representations%20for%20Scene%20Synthesis.md)                                                   | [Semantic Hierarchy Emerges in Deep Generative Representations for Scene Synthesis](https://arxiv.org/pdf/1911.09267)                                            | 2019.11   | Oh-LoRA v2 (2025.05.02 - 05.21) 관련                                                                                                                 |
 | 2025.05.22 [(Study Doc)](Vision%20Model/%5B2025.05.22%5D%20EffiSegNet%20-%20Gastrointestinal%20Polyp%20Segmentation%20through%20a%20Pre-Trained%20EfficientNet-based%20Network%20with%20a%20Simplified%20Decoder.md) | [EffiSegNet: Gastrointestinal Polyp Segmentation through a Pre-Trained EfficientNet-based Network with a Simplified Decoder](https://arxiv.org/pdf/2407.16298v1) | 2024.07   | [Medical Segmentation 모델 개선 프로젝트 (2025.05.22 - 05.26)](https://github.com/WannaBeSuperteur/AI_Projects/tree/main/2025_05_22_Improve_EffiSegNet) 관련 | 
 | 2025.06.20 - 06.22 [(Study Doc)](Vision%20Model/%5B2025.06.20%5D%20StyleCLIP%20-%20Text-Driven%20Manipulation%20of%20StyleGAN%20Imagery.md)                                                                          | [StyleCLIP: Text-Driven Manipulation of StyleGAN Imagery](https://arxiv.org/pdf/2103.17249)                                                                      | 2021.03   |                                                                                                                                                    |
+| 2025.06.22 - 06.23 [(Study Doc)](Vision%20Model/%5B2025.06.22%5D%20Scaling%20up%20GANs%20for%20Text-to-Image%20Synthesis.md)                                                                                         | [Scaling up GANs for Text-to-Image Synthesis](https://arxiv.org/pdf/2303.05511)                                                                                  | 2023.03   |                                                                                                                                                    |
