@@ -8,6 +8,7 @@
   * [2-5. Categorical Cross Entropy Loss](#2-5-categorical-cross-entropy-loss)
   * [2-6. Focal Loss](#2-6-focal-loss)
   * [2-7. Dice Loss](#2-7-dice-loss)
+  * [2-8. Cosine Similarity Loss](#2-8-cosine-similarity-loss)
 * [3. Loss Function과 성능 측정 지표](#3-loss-function과-성능-측정-지표)
 * [4. Loss Function을 잘못 사용하면?](#4-loss-function을-잘못-사용하면)
 * [5. Loss Function 의 값으로 정상적 학습 진행 여부 파악](#5-loss-function-의-값으로-정상적-학습-진행-여부-파악)
@@ -171,6 +172,13 @@ from monai.losses.dice import DiceLoss
 ![image](images/Loss_Function_7.PNG)
 
 </details>
+
+### 2-8. Cosine Similarity Loss
+
+* [Cosine Similarity](../Data%20Science%20Basics/데이터_사이언스_기초_Cosine_similarity.md) 를 이용한 Loss 이다.
+* 두 벡터에 대해 **(1 - (cosine similarity))** 의 값을 Loss 로 적용한다.
+  * Loss 값을 줄이는 것이 딥러닝의 학습 목표이므로, **cosine similarity 가 증가하는 방향으로 학습** 된다.  
+* **두 대상을 임베딩** 시킨 후, **임베딩된 2개의 벡터가 최대한 유사해지도록** 학습할 때 사용할 수 있다.
 
 ## 3. Loss Function과 성능 측정 지표
 
