@@ -13,6 +13,7 @@
 **Decoding (디코딩)** 은 언어 모델이 Next Token Prediction 결과의 확률분포로 나온 **Next Token 들 중 어느 것을 선택할지 결정하는 것** 을 말한다.
 
 * GPT 계열 Causal LLM 의 핵심 작동 원리인 [Transformer 모델](../../Natural%20Language%20Processing/Basics_트랜스포머%20모델.md) 의 'Decoder'에서 따온 것으로 추정된다.
+* **LLM 생성 결과물의 품질이 좋지 않을 때**, Decoding 전략만 조정하면 경우에 따라 **추가적인 [Fine-Tuning](LLM_기초_Fine_Tuning.md) 없이도 이를 해결/개선** 할 수 있다.
 
 ## 2. 다양한 Decoding 전략
 
