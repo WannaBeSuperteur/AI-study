@@ -5,6 +5,7 @@
   * [3-1. 사전 학습 (Pre-training)](#3-1-사전-학습-pre-training)
   * [3-2. 미세 조정 (Fine-tuning)](#3-2-미세-조정-fine-tuning)
 * [4. Transfer Learning 의 사례](#4-transfer-learning-의-사례)
+* [5. PyTorch 작업 시 참고하면 좋은 문서](#5-pytorch-작업-시-참고하면-좋은-문서)
 
 ## 1. Transfer Learning (전이학습)
 
@@ -64,3 +65,7 @@ Transfer Learning 은 **사전 학습 (Pre-training)** 과 **미세 조정 (Fine
 * Pre-trained Vision Model 을 Fine-Tuning 하여 이미지 분류 등의 문제를 보다 빠르게 해결
   * [Programmers 2021년 ML 개발자 Dev-Matching](https://prgms.tistory.com/68)
 * 이 외에도 다양한 Pre-trained Model 을 Fine-Tuning 하여 사용하는 것이 **2020년대 현재의 ML 개발 트렌드**
+
+## 5. PyTorch 작업 시 참고하면 좋은 문서
+
+* [PyTorch 의 state_dict 사용법](딥러닝_실무_PyTorch_state_dict_사용법.md)

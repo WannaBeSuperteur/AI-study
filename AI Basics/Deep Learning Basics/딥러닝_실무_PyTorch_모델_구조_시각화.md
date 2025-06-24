@@ -5,6 +5,7 @@
   * [2-2. ```torchinfo.summary()``` 이용](#2-2-torchinfosummary-이용)
   * [2-3. graphviz + torchviz](#2-3-graphviz--torchviz)
   * [2-4. ```torchview.draw_graph()``` 이용](#2-4-torchviewdrawgraph-이용)
+* [3. 참고하면 좋은 문서](#3-참고하면-좋은-문서)
 
 ## 1. 모델 구조 시각화의 중요성
 
@@ -207,3 +208,7 @@ model_graph.visual_graph
 |-------|----------------------------------------------|----------------------------------------------|----------------------------------------------|
 | 입력 부분 | ![image](images/PyTorch_Visualization_3.PNG) | ![image](images/PyTorch_Visualization_5.PNG) | ![image](images/PyTorch_Visualization_7.PNG) |
 | 출력 부분 | ![image](images/PyTorch_Visualization_4.PNG) | ![image](images/PyTorch_Visualization_6.PNG) | ![image](images/PyTorch_Visualization_8.PNG) |
+
+## 3. 참고하면 좋은 문서
+
+* [PyTorch 의 state_dict 사용법](딥러닝_실무_PyTorch_state_dict_사용법.md)
