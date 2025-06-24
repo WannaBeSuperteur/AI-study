@@ -1,6 +1,6 @@
 ## 목차
 * [1. Knowledge Distillation](#1-knowledge-distillation)
-  * [1-1. Knowledge Distillation 은 비지도 학습임](#1-1-knowledge-distillation-은-비지도-학습임)
+  * [1-1. Knowledge Distillation 은 기본적으로 비지도 학습임](#1-1-knowledge-distillation-은-기본적으로-비지도-학습임)
   * [1-2. Transfer Learning 과의 비교](#1-2-transfer-learning-과의-비교) 
 * [2. Knowledge Distillation 학습 프로세스의 분류](#2-knowledge-distillation-학습-프로세스의-분류)
   * [2-1. Offline Distillation](#2-1-offline-distillation)
@@ -29,9 +29,9 @@ Knowledge Distillation 의 필요성은 다음과 같이 사용자 요구에 따
 * 거대한 모델을 실제 제품에 적용하면, 실제 사용자 입력 데이터를 모델에 입력했을 때 모델의 출력값을 받기까지 걸리는 '추론 시간'이 길어질 수 있음
 * 용량 부족으로 인해 거대한 모델 자체를 제품에 적용할 수 없고, 경량화를 시켜야 함
 
-### 1-1. Knowledge Distillation 은 비지도 학습임
+### 1-1. Knowledge Distillation 은 기본적으로 비지도 학습임
 
-Knowledge Distillation은 **Student 모델과 Teacher 모델의 출력 분포를 유사하게 만드는** 것이 목표인 **비지도학습** 이다.
+Knowledge Distillation은 기본적으로 **Student 모델과 Teacher 모델의 출력 분포를 유사하게 만드는** 것이 목표인 **비지도학습** 이다.
 
 * 양쪽 모델의 출력 분포를 유사하게 만드는 데에는 **Label 이 불필요** 하다.
 * 따라서, Teacher 모델의 학습 데이터를 사용할 필요가 없다.
@@ -164,6 +164,8 @@ Knowledge Distillation 과정은 다음과 같은 특징을 갖는다.
 
 **Soft Label** 은 **(Classification task 모델의 output value 등에서) 각 Class 에 속할 확률을 벡터로** 나타내는 것이다.
 * 이는 Class 를 [One-hot 벡터](../Machine%20Learning%20Models/머신러닝_방법론_One_Hot.md) 로 나타내는 **Hard Label** 과 구분된다.
+* **Hard Level** 을 이용하여 [Response-Based Knowledge Distillation](#3-1-response-based-knowledge-distillation) 처럼 학습하는 것은 **Knowledge Distillation 이 아니다. (pseudo-labeling)**
+  * 이때 Knowledge Distillation 이 되려면 반드시 **Soft Label** 을 학습하도록 해야 한다.
 
 | Label      | 예시                                                 | 설명                                              |
 |------------|----------------------------------------------------|-------------------------------------------------|
