@@ -9,6 +9,7 @@
   * [2-6. Focal Loss](#2-6-focal-loss)
   * [2-7. Dice Loss](#2-7-dice-loss)
   * [2-8. Cosine Similarity Loss](#2-8-cosine-similarity-loss)
+  * [2-9. Soft BCE Loss & KL Divergence Loss](#2-9-soft-bce-loss--kl-divergence-loss)
 * [3. Loss Function과 성능 측정 지표](#3-loss-function과-성능-측정-지표)
 * [4. Loss Function을 잘못 사용하면?](#4-loss-function을-잘못-사용하면)
 * [5. Loss Function 의 값으로 정상적 학습 진행 여부 파악](#5-loss-function-의-값으로-정상적-학습-진행-여부-파악)
@@ -179,6 +180,52 @@ from monai.losses.dice import DiceLoss
 * 두 벡터에 대해 **(1 - (cosine similarity))** 의 값을 Loss 로 적용한다.
   * Loss 값을 줄이는 것이 딥러닝의 학습 목표이므로, **cosine similarity 가 증가하는 방향으로 학습** 된다.  
 * **두 대상을 임베딩** 시킨 후, **임베딩된 2개의 벡터가 최대한 유사해지도록** 학습할 때 사용할 수 있다.
+
+### 2-9. Soft BCE Loss & KL Divergence Loss
+
+아래 2가지 Loss Function 은 **예측과 실제 값이 모두 0 ~ 1 사이의 확률 값** 일 때 사용한다.
+
+* 여기서 예측값은 $p$, 실제 값은 $t$ 로 가정한다.
+* Soft BCE, KL Divergence 모두 **교환법칙이 성립하지 않는다. (pred, true 순서에 주의)**
+
+| Loss Function | 핵심 아이디어                                                                                                                                           | 수식                                                              |
+|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
+| Soft BCE      | **(hard 가 아닌) soft** label 에 [BCE](#2-4-binary-cross-entropy-loss) 적용                                                                             | $-[t \times ln p + (1 - t) \times ln (1 - p)]$                  |
+| KL Divergence | $p$ 와 $t$ 간의 **분포 간 거리 측정**<br>(이미지 생성 AI인 [VAE (Variational Auto-Encoder)](../../Generative%20AI/Basics_Variational%20Auto%20Encoder.md) 등에서 사용) | $\displaystyle D_{KL}(P \parallel Q) = t \times ln \frac{t}{p}$ |
+
+**1. 실제 계산 예시**
+
+* ```pred = 0.1``` ($p = 0.1$) 과 ```true = 0.2``` ($t = 0.2$) 간의 Soft BCE & KL Divergence 계산
+
+| Loss Function | 계산식                                                    | 계산 결과  |
+|---------------|--------------------------------------------------------|--------|
+| Soft BCE      | $-[0.2 \times ln 0.1 + (1 - 0.2) \times ln (1 - 0.1)]$ | 0.5448 |
+| KL Divergence | $\displaystyle 0.2 \times ln \frac{0.2}{0.1}$          | 0.1386 |
+
+**2. PyTorch 함수**
+
+| Loss Function | PyTorch 함수 및 사용법                                                                                   |
+|---------------|----------------------------------------------------------------------------------------------------|
+| Soft BCE      | ```torch.nn.BCELoss()(torch.tensor(pred), torch.tensor(true))```                                   |
+| KL Divergence | ```torch.nn.KLDivLoss(reduction='batchmean')(torch.log(torch.tensor(pred)), torch.tensor(true))``` |
+
+**3. Soft BCE 와 KL Divergence 의 관계**
+
+* (KL Divergence)
+  * = $\displaystyle D_{KL}(P \parallel Q) = t \times ln \frac{t}{p}$
+  * = $t \times (ln t - ln p)$
+  * = $t \times ln t - t \times ln p$
+* (Soft BCE 의 왼쪽 성분)
+  * = $-[t \times ln p]$
+  * = $-t \times ln p$
+
+따라서 **(KL Divergence) - (Soft BCE 의 왼쪽 성분)** 의 계산은 다음과 같다.
+
+* (KL Divergence) - (Soft BCE 의 왼쪽 성분)
+  * = $[t \times ln t - t \times ln p] - [-t \times ln p]$
+  * = $t \times ln t - t \times ln p + t \times ln p$
+  * = $t \times ln t$
+* 즉, **(KL Divergence) = (Soft BCE 의 왼쪽 성분) + $t \times ln t$ 가 성립** 한다.
 
 ## 3. Loss Function과 성능 측정 지표
 
