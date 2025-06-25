@@ -188,19 +188,19 @@ from monai.losses.dice import DiceLoss
 * 여기서 예측값은 $p$, 실제 값은 $t$ 로 가정한다.
 * Soft BCE, KL Divergence 모두 **교환법칙이 성립하지 않는다. (pred, true 순서에 주의)**
 
-| Loss Function | 핵심 아이디어                                                                                                                                           | 수식                                                              |
-|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
-| Soft BCE      | **(hard 가 아닌) soft** label 에 [BCE](#2-4-binary-cross-entropy-loss) 적용                                                                             | $-[t \times ln p + (1 - t) \times ln (1 - p)]$                  |
-| KL Divergence | $p$ 와 $t$ 간의 **분포 간 거리 측정**<br>(이미지 생성 AI인 [VAE (Variational Auto-Encoder)](../../Generative%20AI/Basics_Variational%20Auto%20Encoder.md) 등에서 사용) | $\displaystyle D_{KL}(P \parallel Q) = t \times ln \frac{t}{p}$ |
+| Loss Function                               | 핵심 아이디어                                                                                                                                           | 수식                                                               |
+|---------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------|
+| Soft BCE                                    | **(hard 가 아닌) soft** label 에 [BCE](#2-4-binary-cross-entropy-loss) 적용                                                                             | $-[t \times \ln{p + (1 - t)} \times \ln{(1 - p)}]$               |
+| KL Divergence (Kullback-Leibler Divergence) | $p$ 와 $t$ 간의 **분포 간 거리 측정**<br>(이미지 생성 AI인 [VAE (Variational Auto-Encoder)](../../Generative%20AI/Basics_Variational%20Auto%20Encoder.md) 등에서 사용) | $\displaystyle D_{KL}(t \parallel p) = t \times \ln \frac{t}{p}$ |
 
 **1. 실제 계산 예시**
 
 * ```pred = 0.1``` ($p = 0.1$) 과 ```true = 0.2``` ($t = 0.2$) 간의 Soft BCE & KL Divergence 계산
 
-| Loss Function | 계산식                                                    | 계산 결과  |
-|---------------|--------------------------------------------------------|--------|
-| Soft BCE      | $-[0.2 \times ln 0.1 + (1 - 0.2) \times ln (1 - 0.1)]$ | 0.5448 |
-| KL Divergence | $\displaystyle 0.2 \times ln \frac{0.2}{0.1}$          | 0.1386 |
+| Loss Function | 계산식                                                        | 계산 결과  |
+|---------------|------------------------------------------------------------|--------|
+| Soft BCE      | $-[0.2 \times \ln{0.1} + (1 - 0.2) \times \ln{(1 - 0.1)}]$ | 0.5448 |
+| KL Divergence | $\displaystyle 0.2 \times \ln \frac{0.2}{0.1}$             | 0.1386 |
 
 **2. PyTorch 함수**
 
@@ -212,20 +212,20 @@ from monai.losses.dice import DiceLoss
 **3. Soft BCE 와 KL Divergence 의 관계**
 
 * (KL Divergence)
-  * = $\displaystyle D_{KL}(P \parallel Q) = t \times ln \frac{t}{p}$
-  * = $t \times (ln t - ln p)$
-  * = $t \times ln t - t \times ln p$
+  * = $\displaystyle D_{KL}(P \parallel Q) = t \times \ln \frac{t}{p}$
+  * = $t \times (\ln{t} - \ln{p})$
+  * = $t \times \ln{t} - t \times \ln{p}$
 * (Soft BCE 의 왼쪽 성분)
-  * = $-[t \times ln p]$
-  * = $-t \times ln p$
+  * = $-[t \times \ln{p}]$
+  * = $-t \times \ln{p}$
 
 따라서 **(KL Divergence) - (Soft BCE 의 왼쪽 성분)** 의 계산은 다음과 같다.
 
 * (KL Divergence) - (Soft BCE 의 왼쪽 성분)
-  * = $[t \times ln t - t \times ln p] - [-t \times ln p]$
-  * = $t \times ln t - t \times ln p + t \times ln p$
-  * = $t \times ln t$
-* 즉, **(KL Divergence) = (Soft BCE 의 왼쪽 성분) + $t \times ln t$ 가 성립** 한다.
+  * = $[t \times \ln{t} - t \times \ln{p}] - [-t \times \ln{p}]$
+  * = $t \times \ln{t} - t \times \ln{p} + t \times \ln{p}$
+  * = $t \times \ln{t}$
+* 즉, **(KL Divergence) = (Soft BCE 의 왼쪽 성분) + $t \times \ln{t}$ 가 성립** 한다.
 
 ## 3. Loss Function과 성능 측정 지표
 
