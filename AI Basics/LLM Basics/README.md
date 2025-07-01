@@ -28,5 +28,5 @@
 * 🌐 **LLM 관련 웹사이트**
   * [HuggingFace 소개](LLM_기초_HuggingFace.md)
 
-* ⚠ **LLM 의 이슈**
+* 🚨 **LLM 의 이슈**
   * [환각 현상 (Hallucination)](LLM_기초_환각_현상.md)

@@ -20,13 +20,13 @@
   * [활성화 함수 (Activation Function)](딥러닝_기초_활성화_함수.md)
     * [활성화 함수를 잘못 사용하면?](딥러닝_기초_활성화_함수_Misuse.md)
 
-* ⚠ **딥러닝 학습 시 이슈**
+* 🚨 **딥러닝 학습 시 이슈**
   * [Overfitting (+ 해결 방법: Dropout)](딥러닝_기초_Overfitting_Dropout.md)
 
 * 💻 **딥러닝 라이브러리**
   * [TensorFlow vs. PyTorch](딥러닝_기초_TensorFlow_vs_PyTorch.md)
 
-* ➡ **다른 모델을 이용한 학습**
+* 📥 **다른 모델을 이용한 학습**
   * [Transfer Learning (전이학습)](딥러닝_기초_Transfer_Learning.md)
   * [Knowledge Distillation](딥러닝_기초_Knowledge_Distillation.md)
 
