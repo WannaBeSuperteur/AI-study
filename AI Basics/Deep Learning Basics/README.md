@@ -1,4 +1,6 @@
 
+## Deep Learning (DL) Basics
+
 * 🌱 **기본 개념**
   * [AI, ML (머신러닝), DL (딥러닝)](딥러닝_기초_AI_ML_DL.md)
   * [인공신경망 (ANN)](딥러닝_기초_인공신경망.md)

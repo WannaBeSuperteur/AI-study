@@ -1,4 +1,6 @@
 
+## Data Science (DS) Basics
+
 * 🌱 **기본 개념**
   * [KDE (Kernel Density Estimation)](데이터_사이언스_기초_KDE.md)
   * [Probability vs. Likelihood](데이터_사이언스_기초_Probability_vs_Likelihood.md)
