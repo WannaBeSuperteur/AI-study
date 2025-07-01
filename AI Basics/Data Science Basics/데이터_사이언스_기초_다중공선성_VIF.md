@@ -25,15 +25,15 @@
 분산팽창지수를 계산하기 위해서는 먼저 **결정계수**라고도 하는 **R-squared 값**에 대해 알아야 한다. R-squared 값은 다음과 같이 계산한다.
 * (R-squared 값) = (SSE) / (SST) = **1 - (SSR) / (SST)**
 
-여기서 SSE, SSR, SST 값은 각각 다음과 같이 계산한다.
+여기서 SSE, SSR, SST 값의 의미는 다음과 같다.
+* SSE (Explained Sum of Squares) : **(추정값) - (평균값)** 의 제곱의 합
+* SST (Total Sum of Squares) : **(실제 값) - (평균값)** 의 제곱의 합
+* SSR (Residual Sum of Squares) : **(실제 값) - (추정값)** 의 제곱의 합
+
+SSE, SSR, SST 값은 각각 다음과 같이 계산한다.
 * $$(SSE) = \sum_{i=1}^n (\hat{Y}_i - Y_m)^2$$
 * $$(SSR) = \sum_{i=1}^n (Y_i - \hat{Y}_i)^2$$
 * $$(SST) = \sum_{i=1}^n (Y_i - Y_m)^2$$
-
-즉, 다음과 같다.
-* SSE = **(추정값) - (평균값)** 의 제곱의 합
-* SST = **(실제 값) - (평균값)** 의 제곱의 합
-* SSR = **(실제 값) - (추정값)** 의 제곱의 합
 
 ![SSE, SST, SSR을 나타낸 그림](./images/다중공선성_2.PNG)
 
