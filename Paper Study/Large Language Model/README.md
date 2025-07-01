@@ -1,7 +1,7 @@
 ## Large Language Model
 
-* **Total 15 Papers | 17 Documents** (2025.06.23)
-  * Including 15 Generative AI Papers
+* **Total 16 Papers | 18 Documents** (2025.07.01)
+  * Including 16 Generative AI Papers
   * 💻 (Single LLM Product / Model), 🤖 (LLM Agent), 🧪 (LLM Methodology), ⚖ (LLM Ethics), 🧠 [(LLM Reasoning)](../../AI%20Basics/LLM%20Basics/LLM_기초_추론형_모델.md), 💬 (others)
 
 | Study Date<br>(Study Doc. Link)                                                                                                                                                      | Paper                                                                                                                                             | Published | 비고                                                                                                                                      |
@@ -23,3 +23,4 @@
 | 2025.06.09 - 06.10 [(Study Doc)](%5B2025.06.09%5D%20LLM%20Agents%20for%20Education%20-%20Advances%20and%20Applications.md)                                                           | 🤖 [LLM Agents for Education: Advances and Applications](https://arxiv.org/pdf/2503.11733)                                                        | 2025.03   |                                                                                                                                         |
 | 2025.06.19 - 06.20 [(Study Doc)](%5B2025.06.19%5D%20A%20Survey%20on%20Trustworthy%20LLM%20Agents%20-%20Threats%20and%20Countermeasures.md)                                           | ⚖ [A Survey on Trustworthy LLM Agents: Threats and Countermeasures](https://arxiv.org/pdf/2503.09648)                                             | 2025.03   | Oh-LoRA v4 (TBU) 개발 시 참고 논문                                                                                                             |
 | 2025.06.23 [(Study Doc)](%5B2025.06.23%5D%20LLM%20Agents%20Making%20Agent%20Tools.md)                                                                                                | 🤖 [LLM Agents Making Agent Tools](https://arxiv.org/pdf/2502.11705?)                                                                             | 2025.02   |                                                                                                                                         |
+| 2025.07.01 [(Study Doc)](%5B2025.07.01%5D%20Large%20Language%20Diffusion%20Models.md)                                                                                                | 🧪 [Large Language Diffusion Models](https://arxiv.org/pdf/2502.09992)                                                                            | 2025.02   |                                                                                                                                         |
