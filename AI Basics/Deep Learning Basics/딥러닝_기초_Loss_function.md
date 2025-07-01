@@ -1,5 +1,6 @@
 ## 목차
 * [1. Loss Function 이란?](#1-loss-function-이란)
+  * [1-1. Loss Function 과 Cost Function, Objective Function](#1-1-loss-function-과-cost-function-objective-function) 
 * [2. 다양한 Loss Function](#2-다양한-loss-function)
   * [2-1. Mean-Squared Error (MSE)](#2-1-mean-squared-error-mse)
   * [2-2. Root Mean-Squared Error (RMSE)](#2-2-root-mean-squared-error-rmse)
@@ -28,6 +29,18 @@
   * 예측하려는 값이 이산적이다.
   * 따라서 이를 **연속적인 숫자 값 또는 그 집합으로 먼저 바꾼 후,** 실제 값과의 **오차가 클수록 커지는 연속함수** 를 이용해야 한다.
     * 대표적으로, (분류가 N개일 때) [One-hot encoding](../Machine%20Learning%20Models/머신러닝_방법론_One_Hot.md) 을 통해 특정 class에 해당하는 값만 1 이고 나머지는 0 인 크기 N인 one-hot vector로 변환하는 방법이 있다.
+
+### 1-1. Loss Function 과 Cost Function, Objective Function
+
+**Loss Function** 과 **Cost Function**, 그리고 **Objective Function** 은 **딥러닝의 학습 방향을 "해당 함수를 최소화하는 방향으로" 결정하기 위한 함수** 라는 공통점은 있지만, 다음과 같은 중요한 차이점이 있다.
+
+* 결론적으로 범위는 **Objective Function ⊃ Cost Function ⊃ Loss Function** 이다.
+
+| 용어                 | 설명                                                                                                                                                                                                                                                     |
+|--------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Loss Function      | **각 data point** 관점에서 딥러닝을 통해 최소화하려는 함수                                                                                                                                                                                                                |
+| Cost Function      | **전체 데이터 (entire data)** 관점에서 딥러닝을 통해 최소화하려는 함수                                                                                                                                                                                                        |
+| Objective Function | - 딥러닝을 통해 **최소화 or 최대화** 하려는 함수<br>- Loss, Cost Function 등 **최소화하려는 함수** 뿐만 아니라, [Maximum Likelihood Estimation (MLE)](../Data%20Science%20Basics/데이터_사이언스_기초_Probability_vs_Likelihood.md#3-2-maximum-likelihood-estimation) 과 같이 **최대화하려는 함수** 역시 포함 |
 
 ## 2. 다양한 Loss Function
 
@@ -229,7 +242,7 @@ from monai.losses.dice import DiceLoss
 
 ## 3. Loss Function과 성능 측정 지표
 
-딥 러닝에서는 Loss Function 자체를 [성능 측정 지표](../Data%20Science%20Basics/데이터_사이언스_기초_Metrics.md) 로 사용할 수 있지만, Loss Function과는 다른 accuracy, F1 Score와 같은 다른 성능지표를 사용하기도 한다.
+딥 러닝에서는 Loss Function 자체를 [성능 측정 지표](../Data%20Science%20Basics/데이터_사이언스_기초_Metrics.md) 를 위한 함수로 사용할 수 있지만, Loss Function과는 다른 accuracy, F1 Score와 같은 다른 성능지표를 사용하기도 한다.
 
 Accuracy, F1 Score와 같이 맞은 개수에 기반한 성능지표는 모델에서의 역전파를 하기 위한 미분이 불가능하기 때문에, Loss Function으로 사용할 수 없다. 하지만 Loss Function의 값을 줄여 나가면서 **모델의 예측값과 실제 값의 차이가 줄어들고**, 이를 통해 Accuracy와 F1 Score의 값도 증가하는 것이다.
 
