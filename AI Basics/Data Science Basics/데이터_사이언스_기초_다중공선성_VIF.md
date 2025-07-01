@@ -26,9 +26,9 @@
 * (R-squared 값) = (SSE) / (SST) = **1 - (SSR) / (SST)**
 
 여기서 SSE, SSR, SST 값의 의미는 다음과 같다.
-* SSE (Explained Sum of Squares) : **(추정값) - (평균값)** 의 제곱의 합
-* SST (Total Sum of Squares) : **(실제 값) - (평균값)** 의 제곱의 합
-* SSR (Residual Sum of Squares) : **(실제 값) - (추정값)** 의 제곱의 합
+* **SSE** (**E**xplained **S**um of **S**quares) : **(추정값) - (평균값)** 의 제곱의 합
+* **SST** (**T**otal **S**um of **S**quares) : **(실제 값) - (평균값)** 의 제곱의 합
+* **SSR** (**R**esidual **S**um of **S**quares) : **(실제 값) - (추정값)** 의 제곱의 합
 
 SSE, SSR, SST 값은 각각 다음과 같이 계산한다.
 * $$(SSE) = \sum_{i=1}^n (\hat{Y}_i - Y_m)^2$$
