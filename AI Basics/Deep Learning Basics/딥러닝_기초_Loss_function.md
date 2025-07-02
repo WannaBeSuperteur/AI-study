@@ -203,7 +203,7 @@ from monai.losses.dice import DiceLoss
 
 | Loss Function                               | 핵심 아이디어                                                                                                                                           | 수식                                                               |
 |---------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------|
-| Soft BCE                                    | **(hard 가 아닌) soft** label 에 [BCE](#2-4-binary-cross-entropy-loss) 적용                                                                             | $-[t \times \ln{p + (1 - t)} \times \ln{(1 - p)}]$               |
+| Soft BCE                                    | **(hard 가 아닌) soft** label 에 [BCE](#2-4-binary-cross-entropy-loss) 적용                                                                             | $-[t \times \ln{p} + (1 - t) \times \ln{(1 - p)}]$               |
 | KL Divergence (Kullback-Leibler Divergence) | $p$ 와 $t$ 간의 **분포 간 거리 측정**<br>(이미지 생성 AI인 [VAE (Variational Auto-Encoder)](../../Generative%20AI/Basics_Variational%20Auto%20Encoder.md) 등에서 사용) | $\displaystyle D_{KL}(t \parallel p) = t \times \ln \frac{t}{p}$ |
 
 **1. 실제 계산 예시**
