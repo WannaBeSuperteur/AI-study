@@ -239,6 +239,8 @@ from monai.losses.dice import DiceLoss
   * = $t \times \ln{t} - t \times \ln{p} + t \times \ln{p}$
   * = $t \times \ln{t}$
 * 즉, **(KL Divergence) = (Soft BCE 의 왼쪽 성분) + $t \times \ln{t}$ 가 성립** 한다.
+  * $t \times \ln{t}$ 는 고정되어 있으므로, **KL Divergence 최소화는 곧 Soft BCE 를 최소화하는 것과 같음** 을 의미한다.
+  * 이는 KL Divergence Loss Term 을 사용하는 [VAE (Variational Auto-Encoder)](../../Generative%20AI/Basics_Variational%20Auto%20Encoder.md) 의 Loss 분석 등에서 **중요한 의미** 를 갖는다.
 
 ## 3. Loss Function과 성능 측정 지표
 
