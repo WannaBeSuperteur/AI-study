@@ -1,6 +1,13 @@
 # 자연어 처리 (NLP) 기초 - BERT, SBERT (Sentence BERT) 모델
 
-## BERT 모델이란?
+## 목차
+
+* [1. BERT 모델이란?](#1-bert-모델이란)
+  * [1-1. BERT와 OpenAI의 GPT의 차이](#1-1-bert와-openai의-gpt의-차이)
+* [2. SBERT 모델](#2-sbert-모델)
+
+## 1. BERT 모델이란?
+
 [BERT 논문](https://arxiv.org/pdf/1810.04805.pdf)
 
 **BERT (Bidirectional Encoder Representations from Transformers)** 는 Google AI의 언어 모델 연구진이 개발하여 2018년에 공개한 NLP 모델이다.
@@ -31,7 +38,8 @@ BERT 모델의 학습은 Pre-training과 Fine-tuning의 2가지 단계이다.
 * $BERT_{BASE}$ (L=12, H=768, A=12, params=110M)
 * $BERT_{LARGE}$ (L=24, H=1024, A=16, params=340M)
 
-### BERT와 OpenAI의 GPT의 차이
+### 1-1. BERT와 OpenAI의 GPT의 차이
+
 ![BERT 모델과 GPT의 차이](./images/BERT_3.PNG)
 
 (출처: Jacob Devlin, Ming-Wei Chang et al, BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding)
@@ -41,7 +49,12 @@ BERT와 OpenAI의 GPT, 그리고 ELMo의 주요한 차이점은 다음과 같다
 * **GPT** : 단방향 (left-to-right) transformer를 사용한다.
 * **ELMo** : 각각 개별적으로 학습된 left-to-right LSTM과 right-to-left LSTM을 이용한다.
 
-## SBERT 모델
+## 2. SBERT 모델
+
+![image](images/SBERT_1.PNG)
+
+[(출처)](https://arxiv.org/pdf/1908.10084) : Nils Reimers and Iryna Gurevych, "Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks"
+
 BERT도 문장을 임베딩을 할 수 있지만, **S-BERT (Sentence-BERT)** 는 BERT의 이 문장 임베딩 성능을 개선한 것이다.
 * BERT의 문장 임베딩을 응용하여 BERT를 fine tuning한다.
 
