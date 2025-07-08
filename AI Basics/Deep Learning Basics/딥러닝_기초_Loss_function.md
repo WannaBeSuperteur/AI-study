@@ -32,7 +32,7 @@
 
 ### 1-1. Loss Function 과 Cost Function, Objective Function
 
-**Loss Function** 과 **Cost Function**, 그리고 **Objective Function** 은 **딥러닝의 학습 방향을 "해당 함수를 최소화하는 방향으로" 결정하기 위한 함수** 라는 공통점은 있지만, 다음과 같은 중요한 차이점이 있다.
+**Loss Function** 과 **Cost Function**, 그리고 **Objective Function** 은 **딥러닝의 학습 방향을 "해당 함수를 최소화 or 최대화하는 방향으로" 결정하기 위한 함수** 라는 공통점은 있지만, 다음과 같은 중요한 차이점이 있다.
 
 * 결론적으로 범위는 **Objective Function ⊃ Cost Function ⊃ Loss Function** 이다.
 
