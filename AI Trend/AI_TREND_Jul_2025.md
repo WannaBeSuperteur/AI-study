@@ -1,3 +1,15 @@
+## 2025.07.09 (수)
+**[BC카드, 거대 언어 모델 18종 HuggingFace 공개](https://n.news.naver.com/mnews/article/029/0002967014?sid=101)** ```AI``` ```Large Language Model```
+
+* 2025.07.09일 BC카드가 국내 금융사 중에서는 최초로 **양자화 (Quantization) 가 적용된 거대 언어 모델 (LLM) 18종** 을 HuggingFace 에 공개했다고 밝혔다.
+  * 이 LLM들은 **고성능 GPU 없이도 활용 가능** 하도록 **동적 양자화** 가 적용되었다.
+* 동적 양자화는 다음과 같은 기술이다.
+  * AI 모델이 가지고 있는 가중치 등 내부적인 수치들을 [압축 (양자화)](../AI%20Basics/LLM%20Basics/LLM_기초_Quantization.md) 하여 모델 배포
+  * 실제 활용 시점에서는 압축된 수치들을 복원
+  * **BC카드 자체 기술** 로 **수치의 손상이 없는 '손실률 0%' 양자화** 구현
+* 외부 링크
+  * [BC카드 공식 HuggingFace](https://huggingface.co/BCCard/models)
+
 ## 2025.07.08 (화)
 **[메타, 애플 AI 핵심 임원 영입](https://n.news.naver.com/mnews/article/003/0013350684?sid=105)** ```AI``` ```Meta AI```
 
