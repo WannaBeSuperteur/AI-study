@@ -1,3 +1,13 @@
+## 2025.07.11 (금)
+**[SKT, 거대 언어 모델 'A.X 3.1 라이트' 공개](https://n.news.naver.com/mnews/article/056/0011987533?sid=105)** ```AI``` ```Large Language Model```
+
+* 2025.07.11일 SK텔레콤이 **자체 거대 언어 모델 (LLM) 인 'A.X 3.1 라이트'** 를 공개했다.
+  * 이 모델은 [HuggingFace](https://huggingface.co/skt/A.X-3.1-Light) 에서 다운받아서 사용할 수 있으며, **Apache 2.0 라이선스로 상업적 사용이 가능** 하다.
+* A.X 3.1 라이트 모델의 특징은 다음과 같다.
+  * **From Scratch** 방식으로 개발
+  * 파라미터 **70억 개** (비교적 경량 모델)
+  * 'A.X 4.0 라이트'와 비슷한 수준으로 **한국어 능력 우수**
+
 ## 2025.07.10 (목)
 **[LG CNS, 23개 언어 지원하는 추론형 LLM 개발](https://n.news.naver.com/mnews/article/215/0001215730?sid=101)** ```AI``` ```Large Language Model```
 
