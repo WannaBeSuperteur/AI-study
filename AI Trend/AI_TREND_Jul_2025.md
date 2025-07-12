@@ -1,3 +1,13 @@
+## 2025.07.12 (토)
+**[OpenAI, 코딩 업체 '윈드서프' 인수 무산](https://n.news.naver.com/mnews/article/215/0001215984?sid=004)** ```AI``` ```OpenAI```
+
+* 2025.07.11일 (현지시각) ChatGPT 개발사 OpenAI가 **코딩 관련 스타트업인 윈드서프 (Windsurf)** 의 인수에 실패했다고 보도되었다.
+  * 이는 **구글이 윈드서프 인력을 영입** 했기 때문이다.
+  * 윈드서프는 **AI를 이용한 코딩 어시스턴트를 개발하는 회사** 이다.
+* 한편, 구글은 **윈드서프 팀의 AI 인재들을 Google DeepMind 에 합류시켜서 매우 기쁘다** 고 했다.
+* 윈드서프가 개발한 대표적인 제품은 [Windsurf Editor](https://windsurf.com/editor) 이다.
+  * 해당 페이지에서는 이 제품을 ```최초의 에이전트 IDE``` 로 소개하고 있다.
+
 ## 2025.07.11 (금)
 **[SKT, 거대 언어 모델 'A.X 3.1 라이트' 공개](https://n.news.naver.com/mnews/article/056/0011987533?sid=105)** ```AI``` ```Large Language Model```
 
