@@ -1,3 +1,28 @@
+## 2025.07.16 (수)
+**[NC AI, 멀티모달 모델 '바르코-비전 2.0' 등 공개](https://n.news.naver.com/mnews/article/008/0005222288?sid=105)** ```AI``` ```Large Language Model```
+
+* NCSOFT 산하 AI 기업인 NC AI에서 **멀티모달 모델 VARCO-VISION 2.0** 을 공개할 예정이다.
+  * 해당 모델은 **이미지 및 텍스트를 함께 이해** 할 수 있기 때문에 문서 처리 등의 작업에서 우수하다.
+  * 이 모델은 **From-Scratch 부터 학습** 되어 **NC AI의 자체 기술력을 입증** 할 수 있는 수단이 된다.
+* VARCO-VISION 2.0 의 성능은 다음과 같다.
+
+| 벤치마크 데이터셋     | 모델 성능          |
+|---------------|----------------|
+| SEEDBench_IMG | 78.3 **(최우수)** |
+| K-LLaVABench  | 95.1 **(최우수)** |
+| MT-Bench      | 8.88           |
+| CORD          | 93.3 **(최우수)** |
+| ICDAR2015     | 82.7 **(최우수)** |
+
+* VARCO-VISION-Embedding (임베딩) 모델의 성능은 다음과 같다.
+  * 벤치마크 데이터셋은 **MultiVENT2.0** 이다.
+  * nDCG 는 **Normalized Discounted Cumulative Gain** 으로, 추천 시스템 중 랭킹 쪽에서 많이 쓰이는 성능 지표이다.
+
+| 성능지표      | 모델 성능 |
+|-----------|-------|
+| nDCG@10   | 0.614 |
+| Recall@10 | 0.676 |
+
 ## 2025.07.15 (화)
 **[AI 캐릭터 채팅 서비스 '제타', 사용 시간 ChatGPT보다 길다](https://n.news.naver.com/mnews/article/015/0005157947?sid=105)** ```AI``` ```Large Language Model```
 
