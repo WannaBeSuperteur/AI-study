@@ -9,7 +9,7 @@
 * ⚡ **학습 프로세스 기본 설정**
   * [Early Stopping](딥러닝_기초_Early_Stopping.md)
   * [Learning Rate](딥러닝_기초_Learning_Rate.md)
-  * [Learning Rate Scheduler](딥러닝_기초_Learning_Rate_Scheduler.md)
+    * [Learning Rate Scheduler](딥러닝_기초_Learning_Rate_Scheduler.md)
   * [Optimizer](딥러닝_기초_Optimizer.md)
   * [Regularization](딥러닝_기초_Regularization.md)
   * [Weight Initialization](딥러닝_기초_Weight_initialization.md)
