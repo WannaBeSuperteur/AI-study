@@ -40,6 +40,8 @@ MCP의 구성 요소는 다음과 같다.
 | [MCP Client (클라이언트)](#2-2-mcp-client-클라이언트) | 각 **MCP Server 와 독립적으로 연결** 된 클라이언트    |
 | [MCP Server (서버)](#2-3-mcp-server-서버)       | 데이터가 저장된 **DB**, 각종 **도구, 프롬프트** 등을 제공 |
 
+![image](images/MCP_3.PNG)
+
 ### 2-1. Host (호스트)
 
 **Host (호스트)** 는 여러 개의 **MCP Client 를 관리** 하는 역할을 하며, **LLM 을 사용한 애플리케이션 그 자체** 라고 할 수 있다.
@@ -64,8 +66,6 @@ MCP의 구성 요소는 다음과 같다.
 
 * MCP Server 가 제공하는 도구는 **LLM이 직접 호출할 수 있다.**
 * Client 로부터의 요청을 처리하여 그 응답을 반환한다.
-
-![image](images/MCP_3.PNG)
 
 ## 3. MCP의 작동 방법
 
