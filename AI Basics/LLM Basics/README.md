@@ -24,6 +24,7 @@
   * [Quantization](LLM_기초_Quantization.md)
   * [RAG (Retrieval-Augmented Generation)](LLM_기초_RAG.md)
   * [Chain of Thought (CoT)](LLM_기초_Chain_of_Thought.md)
+  * [MCP (Model Context Protocol)](LLM_기초_MCP_Model_Context_Protocol.md)
 
 * 🌐 **LLM 관련 웹사이트**
   * [HuggingFace 소개](LLM_기초_HuggingFace.md)
