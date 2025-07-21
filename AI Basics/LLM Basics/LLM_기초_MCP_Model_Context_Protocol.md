@@ -68,3 +68,17 @@ MCP의 구성 요소는 다음과 같다.
 ![image](images/MCP_3.PNG)
 
 ## 3. MCP의 작동 방법
+
+MCP 프로토콜의 작동 방법은 다음과 같다.
+
+* **실선** 은 필수 과정, **점선** 은 도구 호출 시에만 사용하는 선택적 과정이다.
+
+![image](images/MCP_4.PNG)
+
+* 사용자 → MCP Client (또는 Tool)
+  * 사용자가 **요청을 Host 에 전달** 하고, Host 는 **그 요청을 LLM 에게 전달** 한다.
+  * LLM 은 그 요청을 **분석 (Reasoning)** 한 후, 그 출력값을 MCP Client 에 전달한다.
+  * MCP Client 는 그것을 필요에 따라 변환 후 **MCP Server 에 전달** 한다.
+  * (선택) MCP Server 는 **Tool 을 호출** 하고 Tool 로부터 결과를 받아온다.
+* MCP Client (또는 Tool) 의 결과물을 지금까지 경로의 역순을 따라 사용자에게 다시 전달
+  * 이때 **LLM은 Client 로부터 반환된 결과를 변환** 하는 역할을 한다. 
