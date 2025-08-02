@@ -1,3 +1,15 @@
+## 2025.08.02 (토)
+**[GPT-5 출시 임박?](https://n.news.naver.com/mnews/article/006/0000131138?sid=105)** ```AI``` ```OpenAI``` ```Large Language Model```
+
+* 이르면 2025년 8월 중 OpenAI에서 **GPT-5를 출시** 할 예정이다.
+  * GPT-5는 **범용 인공지능 (AGI, Artificial General Intelligence)** 수준일 수도 있다는 전망이 있다. 
+* GPT-5가 AGI의 시작일 수 있다고 예측하는 근거는 다음과 같다.
+  * 샘 올트먼은 GPT-5가 '기존 기술을 통합한 시스템'이라고 했는데, 이는 **AGI로의 전진에 대한 선언** 일 수 있다. 
+* 한편, GPT-5 출시가 AI 업계에서 중요한 이유는 다음과 같다.
+  * GPT-5를 **무료 이용자도 무제한 사용할 수 있도록** 할 예정이라고 OpenAI가 밝힘
+  * MS 코파일럿 (Copilot) 에도 GPT-5 적용 가능성 있음
+  * OpenAI의 AI 및 LLM 경쟁력 확보
+
 ## 2025.08.01 (금)
 **[네이버, 이미지 검색 '스마트렌즈'에 AI 브리핑 적용](https://n.news.naver.com/mnews/article/003/0013397982?sid=105)** ```AI``` ```Naver AI```
 
