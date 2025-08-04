@@ -1,7 +1,7 @@
 ## Large Language Model
 
-* **Total 19 Papers | 21 Documents** (2025.07.26)
-  * Including 19 Generative AI Papers
+* **Total 20 Papers | 22 Documents** (2025.08.04)
+  * Including 20 Generative AI Papers
   * 💻 (Single LLM Product / Model), 🤖 (LLM Agent), 🧪 (LLM Methodology), ⚖ (LLM Ethics), 🧠 [(LLM Reasoning)](../../AI%20Basics/LLM%20Basics/LLM_기초_추론형_모델.md), 🎭 (multi-modal), 💬 (others)
 
 | Study Date<br>(Study Doc. Link)                                                                                                                                                      | Paper                                                                                                                                                                 | Published | 비고                                                                                                                                      |
@@ -27,3 +27,4 @@
 | 2025.07.11 [(Study Doc)](%5B2025.07.11%5D%20LLM-Based%20Multi-Agent%20Systems%20for%20Software%20Engineering%20-%20Literature%20Review,%20Vision%20and%20the%20Road%20Ahead.md)      | 🤖 [LLM-Based Multi-Agent Systems for Software Engineering: Literature Review, Vision and the Road Ahead](https://arxiv.org/pdf/2404.04834)                           | 2024.04   |                                                                                                                                         |
 | 2025.07.19 - 07.20 [(Study Doc)](%5B2025.07.19%5D%20Why%20Do%20Multi-Agent%20LLM%20Systems%20Fail.md)                                                                                | 🤖 [Why Do Multi-Agent LLM Systems Fail?](https://arxiv.org/pdf/2503.13657)                                                                                           | 2025.03   |                                                                                                                                         |
 | 2025.07.26 [(Study Doc)](%5B2025.07.26%5D%20Revisiting%20Multi-Modal%20LLM%20Evaluation.md)                                                                                          | 🎭 [Revisiting Multi-Modal LLM Evaluation](https://openaccess.thecvf.com/content/CVPR2025W/BEAM/papers/Lu_Revisiting_Multi-Modal_LLM_Evaluation_CVPRW_2025_paper.pdf) | 2025      |                                                                                                                                         |
+| 2025.08.04 [(Study Doc)](%5B2025.08.04%5D%20Agent%20Laboratory%20-%20Using%20LLM%20Agents%20as%20Research%20Assistants.md)                                                           | 🎭 [Agent Laboratory: Using LLM Agents as Research Assistants](https://arxiv.org/pdf/2501.04227)                                                                      | 2025.01   |                                                                                                                                         |
