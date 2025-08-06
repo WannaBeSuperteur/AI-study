@@ -1,3 +1,14 @@
+## 2025.08.06 (수)
+**[OpenAI, 첫 공개형 AI 모델 출시](https://n.news.naver.com/mnews/article/003/0013405823?sid=104)** ```AI``` ```OpenAI```
+
+* OpenAI가 ChatGPT 출시 이후 최초로 **Open-weight 방식의 공개 모델 2종을 출시** 했다.
+  * 이 모델은 2025년 1월 DeepSeek의 오픈소스 LLM 출시 이후 약 6개월 만에 출시한 것이다.
+* 이 모델에 대한 정보는 다음과 같다.
+  * 이름: **gpt-oss**
+  * 성능 수준: **ChatGPT의 소형 모델** 수준
+  * 오픈소스 여부: **Open-weight 방식** (가중치만 공개, 학습 데이터셋 및 코드 등은 비공개. 완전한 오픈소스는 아님)
+  * **추론에 사용할 연산 자원의 양 조절 가능**
+
 ## 2025.08.05 (화)
 **[ChatGPT WAU (주간 활성 사용자) 7억 명 돌파 전망](https://n.news.naver.com/mnews/article/015/0005166793?sid=105)** ```AI``` ```OpenAI``` ```ChatGPT```
 
