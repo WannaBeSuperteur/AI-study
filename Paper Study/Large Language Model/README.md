@@ -1,7 +1,7 @@
 ## Large Language Model
 
-* **Total 20 Papers | 22 Documents** (2025.08.04)
-  * Including 20 Generative AI Papers
+* **Total 21 Papers | 23 Documents** (2025.08.10)
+  * Including 21 Generative AI Papers
   * 💻 (Single LLM Product / Model), 🤖 (LLM Agent), 🧪 (LLM Methodology), ⚖ (LLM Ethics), 🧠 [(LLM Reasoning)](../../AI%20Basics/LLM%20Basics/LLM_기초_추론형_모델.md), 🎭 (multi-modal), 💬 (others)
 
 | Study Date<br>(Study Doc. Link)                                                                                                                                                      | Paper                                                                                                                                                                 | Published | 비고                                                                                                                                      |
@@ -28,3 +28,4 @@
 | 2025.07.19 - 07.20 [(Study Doc)](%5B2025.07.19%5D%20Why%20Do%20Multi-Agent%20LLM%20Systems%20Fail.md)                                                                                | 🤖 [Why Do Multi-Agent LLM Systems Fail?](https://arxiv.org/pdf/2503.13657)                                                                                           | 2025.03   |                                                                                                                                         |
 | 2025.07.26 [(Study Doc)](%5B2025.07.26%5D%20Revisiting%20Multi-Modal%20LLM%20Evaluation.md)                                                                                          | 🎭 [Revisiting Multi-Modal LLM Evaluation](https://openaccess.thecvf.com/content/CVPR2025W/BEAM/papers/Lu_Revisiting_Multi-Modal_LLM_Evaluation_CVPRW_2025_paper.pdf) | 2025      |                                                                                                                                         |
 | 2025.08.04 [(Study Doc)](%5B2025.08.04%5D%20Agent%20Laboratory%20-%20Using%20LLM%20Agents%20as%20Research%20Assistants.md)                                                           | 🤖 [Agent Laboratory: Using LLM Agents as Research Assistants](https://arxiv.org/pdf/2501.04227)                                                                      | 2025.01   |                                                                                                                                         |
+| 2025.08.10 [(Study Doc)](%5B2025.08.10%5D%20Orak%20-%20A%20Foundational%20Benchmark%20for%20Training%20and%20Evaluating%20LLM%20Agents%20on%20Diverse%20Video%20Games.md)            | 💬 [Orak: A Foundational Benchmark for Training and Evaluating LLM Agents on Diverse Video Games](https://arxiv.org/pdf/2506.03610)                                   | 2025.06   | [AI Trend (2025.06.16)](../../AI%20Trend/AI_TREND_Jun_2025.md#20250616-월)                                                               |
