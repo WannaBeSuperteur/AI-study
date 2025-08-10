@@ -211,6 +211,7 @@
   * **MCP (Model Context Protocol)** 
     * 변환 1: 게임 정보 → LLM이 처리 가능한 텍스트
     * 변환 2: LLM의 응답 → 실제 게임에서의 action 으로 변환
+* [Orak 논문 스터디 자료 (2025.08.10)](../Paper%20Study/Large%20Language%20Model/%5B2025.08.10%5D%20Orak%20-%20A%20Foundational%20Benchmark%20for%20Training%20and%20Evaluating%20LLM%20Agents%20on%20Diverse%20Video%20Games.md)
 
 ## 2025.06.15 (일)
 **[LG AI연구원, 생성형 AI로 다큐 제작해서 텔리 어워즈 2관왕](https://n.news.naver.com/mnews/article/001/0015449682?sid=105)** ```AI``` ```Generative AI```
