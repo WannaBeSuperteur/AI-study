@@ -2,18 +2,18 @@ Paper Study (2025.03.12 -)
 
 ## Overview
 
-* **Total 29 Papers | 31 Documents** (2025.08.10)
+* **Total 30 Papers | 32 Documents** (2025.08.17)
 
 | Field                                            | Paper Count         | Paper Count<br>(Generative AI) |
 |--------------------------------------------------|---------------------|--------------------------------|
-| [Large Language Model](Large%20Language%20Model) | 21 Papers (23 Docs) | 21 Papers                      |
+| [Large Language Model](Large%20Language%20Model) | 22 Papers (24 Docs) | 22 Papers                      |
 | [Vision Model](Vision%20Model)                   | 8 Papers (8 Docs)   | 5 Papers                       |
 
 ## Large Language Model
 
-* **Total 21 Papers | 29 Documents** (2025.08.10)
-  * Including 21 Generative AI Papers
-  * 💻 (Single LLM Product / Model), 🤖 (LLM Agent), 🧪 (LLM Methodology), ⚖ (LLM Ethics), 🧠 [(LLM Reasoning)](../../AI%20Basics/LLM%20Basics/LLM_기초_추론형_모델.md), 🎭 (multi-modal), 💬 (others)
+* **Total 22 Papers | 24 Documents** (2025.08.17)
+  * Including 22 Generative AI Papers
+  * 💻 (Single LLM Product / Model), 🤖 (LLM Agent), 🧪 (LLM Methodology), ⚖ (LLM Ethics), 🧠 [(LLM Reasoning)](../AI%20Basics/LLM%20Basics/LLM_기초_추론형_모델.md), 🎭 (multi-modal), 💬 (others)
 
 | Study Date<br>(Study Doc. Link)                                                                                                                                                                               | Paper                                                                                                                                                                 | Published | 비고                                                                                                                                      |
 |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|-----------------------------------------------------------------------------------------------------------------------------------------|
@@ -40,6 +40,7 @@ Paper Study (2025.03.12 -)
 | 2025.07.26 [(Study Doc)](Large%20Language%20Model/%5B2025.07.26%5D%20Revisiting%20Multi-Modal%20LLM%20Evaluation.md)                                                                                          | 🎭 [Revisiting Multi-Modal LLM Evaluation](https://openaccess.thecvf.com/content/CVPR2025W/BEAM/papers/Lu_Revisiting_Multi-Modal_LLM_Evaluation_CVPRW_2025_paper.pdf) | 2025      |                                                                                                                                         |
 | 2025.08.04 [(Study Doc)](Large%20Language%20Model/%5B2025.08.04%5D%20Agent%20Laboratory%20-%20Using%20LLM%20Agents%20as%20Research%20Assistants.md)                                                           | 🤖 [Agent Laboratory: Using LLM Agents as Research Assistants](https://arxiv.org/pdf/2501.04227)                                                                      | 2025.01   |                                                                                                                                         |
 | 2025.08.10 [(Study Doc)](Large%20Language%20Model/%5B2025.08.10%5D%20Orak%20-%20A%20Foundational%20Benchmark%20for%20Training%20and%20Evaluating%20LLM%20Agents%20on%20Diverse%20Video%20Games.md)            | 💬 [Orak: A Foundational Benchmark for Training and Evaluating LLM Agents on Diverse Video Games](https://arxiv.org/pdf/2506.03610)                                   | 2025.06   | [AI Trend (2025.06.16)](../AI%20Trend/AI_TREND_Jun_2025.md#20250616-월)                                                                  |
+| 2025.08.17 - 08.18 [(Study Doc)](Large%20Language%20Model/%5B2025.08.17%5D%20Context-Independent%20OCR%20with%20Multimodal%20LLMs%20-%20Effects%20of%20Image%20Resolution%20and%20Visual%20Complexity.md)     | 🎭 [Context-Independent OCR with Multimodal LLMs: Effects of Image Resolution and Visual Complexity](https://arxiv.org/pdf/2503.23667)                                | 2025.03   |                                                                                                                                         |
 
 ## Vision Model
 
