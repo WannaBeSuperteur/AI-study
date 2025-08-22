@@ -7,7 +7,7 @@
   * [2-3. 문자 세분화 및 텍스트 인식](#2-3-문자-세분화-및-텍스트-인식)
   * [2-4. 후처리](#2-4-후처리)
 * [3. OCR의 활용 사례](#3-ocr의-활용-사례)
-* [4. 최신 OCR 관련 논문](#4-최신-ocr-관련-논문)
+* [4. OCR 관련 최신 논문](#4-ocr-관련-최신-논문)
 
 ## 참고 자료
 
@@ -81,4 +81,20 @@ OCR의 기본적인 방법론은 다음과 같다.
 
 ## 3. OCR의 활용 사례
 
-## 4. 최신 OCR 관련 논문
+OCR의 활용 사례는 다음과 같다.
+
+| 분류     | 활용 사례                           |
+|--------|---------------------------------|
+| 디지털화   | 종이책 디지털화, PDF 문서 디지털화 등         |
+| 문서 처리  | 주민등록등본 처리, 상품 라벨 처리, 송장 정보 처리 등 |
+| 각종 자동화 | 데이터 입력 자동화, 검색 엔진에 필요한 문서 인덱싱 등 |
+
+## 4. OCR 관련 최신 논문
+
+OCR 관련 최신 논문은 다음과 같다.
+
+| 논문                                                                                                                                                      | 핵심 내용                                                                                      | 스터디 자료                                                                                                                                                                                             |
+|---------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Context-Independent OCR with Multimodal LLMs: Effects of Image Resolution and Visual Complexity (2025) / [arXiv Link](https://arxiv.org/pdf/2503.23667) | Multi-Modal LLM 과 기존 OCR 방법 중 **Context-independent OCR task** 에 적합한 것은 **기존 OCR 방법** 이다.  | [스터디 자료](../Paper%20Study/Large%20Language%20Model/%5B2025.08.17%5D%20Context-Independent%20OCR%20with%20Multimodal%20LLMs%20-%20Effects%20of%20Image%20Resolution%20and%20Visual%20Complexity.md) |
+| Ocean-OCR: Towards General OCR Application via a Vision-Language Model (2025) / [Arxiv Link](https://arxiv.org/pdf/2501.15558)                          | 다양한 해상도의 시각적 입력을 OCR 처리할 수 있는, **OCR 전문 모델을 능가하는 성능** 의 Multi-Modal LLM                    |                                                                                                                                                                                                    |                                                                                                                                                                                                    |
+| General OCR Theory: Towards OCR-2.0 via a Unified End-to-end Model (2024) / [Arxiv Link](https://arxiv.org/pdf/2409.01704)                              | **다양한 OCR task** 에 적용 가능한 **OCR-2.0** 모델<br>- Vision Encoder, Linear Layer 등을 포함한 모델 구조 적용 |                                                                                                                                                                                                    |
