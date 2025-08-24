@@ -19,6 +19,7 @@
 |-------------------------|--------------------------------|
 | 이미지 획득 (흑백 변환)          | ```run_acquire_image.py```     |
 | 이미지 회전 각도 파악 모델 학습 및 저장 | ```run_train_angle_model.py``` |
+| 이미지 회전                  | ```run_rotate_image.py```      |
 
 ## 2. 디렉토리 구성
 
@@ -110,7 +111,7 @@
 | 데이터셋 변형                 | 08.24 일 (1d) | ```IP-special-ocr-experiment-001-transform-dataset```     | ✅  |
 | 이미지 획득 (색 변환)           | 08.24 일 (1d) |                                                           | ✅  |
 | 이미지 회전 각도 파악 모델 학습      | 08.24 일 (1d) | ```IP-special-ocr-experiment-002-angle-model```           | ✅  |
-| 이미지 회전 처리               | 08.24 일 (1d) |                                                           | ⬜  |
+| 이미지 회전 처리               | 08.24 일 (1d) |                                                           | ✅  |
 | 전처리된 이미지에서 각 글자 영역 도출   | 08.25 월 (1d) | ```IP-special-ocr-experiment-003-extract-letter```        | ⬜  |
 | 각 글자 영역에 있는 글자 분류 모델 학습 | 08.25 월 (1d) | ```IP-special-ocr-experiment-004-letter-classify-model``` | ⬜  |
 | 최종 결과 도출                | 08.25 월 (1d) | ```IP-special-ocr-experiment-005-final-result```          | ⬜  |

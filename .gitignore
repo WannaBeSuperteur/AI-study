@@ -76,6 +76,8 @@ Image Processing/Special - OCR Experiment/scanned_images_dataset/*
 Image Processing/Special - OCR Experiment/standard_ocr_dataset
 Image Processing/Special - OCR Experiment/standard_ocr_dataset/*
 Image Processing/Special - OCR Experiment/test_black_white.png
+Image Processing/Special - OCR Experiment/test_rotate_minus_5_deg.png
+Image Processing/Special - OCR Experiment/test_rotate_plus_25_deg.png
 Image Processing/Special - OCR Experiment/models
 Image Processing/Special - OCR Experiment/models/*.pth
 *.pyc
