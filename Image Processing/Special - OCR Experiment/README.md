@@ -25,7 +25,7 @@
 | 계획 내용                   | branch                                                    | 상태 |
 |-------------------------|-----------------------------------------------------------|----|
 | 데이터셋 선택                 |                                                           | ✅  |
-| 데이터셋 변형                 | ```IP-special-ocr-experiment-001-transform-dataset```     | ⬜  |
+| 데이터셋 변형                 | ```IP-special-ocr-experiment-001-transform-dataset```     | 💨 |
 | 이미지 획득 (색 변환)           | ```IP-special-ocr-experiment-002-change-color```          | ⬜  |
 | 이미지 회전 각도 파악 모델 학습      | ```IP-special-ocr-experiment-003-angle-model```           | ⬜  |
 | 이미지 회전 처리               | ```IP-special-ocr-experiment-004-rotate```                | ⬜  |
