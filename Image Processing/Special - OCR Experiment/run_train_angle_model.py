@@ -28,6 +28,8 @@ image_transform = transforms.Compose([
     transforms.Normalize(mean=0.5, std=0.5)  # -1.0 ~ +1.0 min-max normalization
 ])
 
+loss_func = nn.BCELoss(reduction='sum')
+
 
 class AngleModelDataset(Dataset):
     def __init__(self, dataset_df, transform):
@@ -108,12 +110,12 @@ def run_train(model, train_loader, device):
 
     for idx, (images, labels) in enumerate(train_loader):
         images, labels = images['image'].to(device), labels.to(device).to(torch.float32)
+        labels_ = labels.reshape(-1, 1)
 
         # train 실시
         model.optimizer.zero_grad()
         outputs = model(images).to(torch.float32)
-
-        loss = nn.BCELoss(outputs, labels)
+        loss = loss_func(outputs, labels_)
         loss.backward()
         model.optimizer.step()
 
@@ -145,10 +147,11 @@ def run_valid_or_test(model, valid_or_test_loader, device):
     with torch.no_grad():
         for idx, (images, labels) in enumerate(valid_or_test_loader):
             images, labels = images['image'].to(device), labels.to(device).to(torch.float32)
+            labels_ = labels.reshape(-1, 1)
             outputs = model(images).to(torch.float32)
 
-            loss_batch = nn.BCELoss(outputs, labels)
-            mse_error_batch = nn.MSELoss(outputs, labels)
+            loss_batch = loss_func(outputs, labels_)
+            mse_error_batch = nn.MSELoss()(outputs, labels_)
             loss_sum += loss_batch
             mse_error_sum += mse_error_batch
             total_images += labels.size(0)
