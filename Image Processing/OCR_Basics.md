@@ -8,6 +8,7 @@
   * [2-4. 후처리](#2-4-후처리)
 * [3. OCR의 활용 사례](#3-ocr의-활용-사례)
 * [4. OCR 관련 최신 논문](#4-ocr-관련-최신-논문)
+* [5. OCR 실험](#5-ocr-실험)
 
 ## 참고 자료
 
@@ -98,3 +99,9 @@ OCR 관련 최신 논문은 다음과 같다.
 | Context-Independent OCR with Multimodal LLMs: Effects of Image Resolution and Visual Complexity (2025) / [arXiv Link](https://arxiv.org/pdf/2503.23667) | Multi-Modal LLM 과 기존 OCR 방법 중 **Context-independent OCR task** 에 적합한 것은 **기존 OCR 방법** 이다.  | [스터디 자료](../Paper%20Study/Large%20Language%20Model/%5B2025.08.17%5D%20Context-Independent%20OCR%20with%20Multimodal%20LLMs%20-%20Effects%20of%20Image%20Resolution%20and%20Visual%20Complexity.md) |
 | Ocean-OCR: Towards General OCR Application via a Vision-Language Model (2025) / [arXiv Link](https://arxiv.org/pdf/2501.15558)                          | 다양한 해상도의 시각적 입력을 OCR 처리할 수 있는, **OCR 전문 모델을 능가하는 성능** 의 Multi-Modal LLM                    |                                                                                                                                                                                                    |                                                                                                                                                                                                    |
 | General OCR Theory: Towards OCR-2.0 via a Unified End-to-end Model (2024) / [arXiv Link](https://arxiv.org/pdf/2409.01704)                              | **다양한 OCR task** 에 적용 가능한 **OCR-2.0** 모델<br>- Vision Encoder, Linear Layer 등을 포함한 모델 구조 적용 | [스터디 자료](../Paper%20Study/Vision%20Model/%5B2025.08.22%5D%20General%20OCR%20Theory%20-%20Towards%20OCR-2.0%20via%20a%20Unified%20End-to-end%20Model.md)                                            |
+
+## 5. OCR 실험
+
+* [OCR의 기본 프로세스](#2-ocr의-동작-원리) 에 따른 간단한 OCR 모델을 만들어서 테스트한다.
+* **OCR 실무 경험 이전** 의 실험으로, 향후 **OCR 실무 경험 이후** 에 본 문서의 내용보다 OCR에 대한 이해가 얼마나 향상되었는지 평가한다.
+* [OCR 실험 문서 링크](OCR_Experiment.md)
