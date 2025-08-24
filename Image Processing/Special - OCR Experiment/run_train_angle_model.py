@@ -1,17 +1,55 @@
 
 import torch.nn as nn
 import torch
+import torchvision.models as models
+import torchvision.transforms as transforms
+
+from torch.utils.data import Dataset, random_split, DataLoader
+from torchvision.io import read_image
+
 import numpy as np
+import pandas as pd
 import os
 
-import torchvision.models as models
+
+EARLY_STOPPING_ROUNDS = 10
+TRAIN_BATCH_SIZE = 16
+VALID_BATCH_SIZE = 4
+TEST_BATCH_SIZE = 4
 
 
 torch.set_printoptions(linewidth=160, sci_mode=False)
 np.set_printoptions(suppress=True)
 
+image_transform = transforms.Compose([
+    transforms.ToPILImage(),
+    transforms.ToTensor(),
+    transforms.Resize((256, 256)),
+    transforms.Normalize(mean=0.5, std=0.5)  # -1.0 ~ +1.0 min-max normalization
+])
 
-EARLY_STOPPING_ROUNDS = 10
+
+class AngleModelDataset(Dataset):
+    def __init__(self, dataset_df, transform):
+        img_paths = dataset_df['img_path'].tolist()
+        angle_labels = dataset_df['angle_0to1'].tolist()
+
+        self.img_paths = img_paths
+        self.angle_labels = angle_labels
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.img_paths)
+
+    def __getitem__(self, idx):
+        img_path = self.img_paths[idx]
+        angle_label = self.angle_labels[idx]
+
+        image = read_image(img_path)
+        image = self.transform(image)  # normalize
+
+        image_info = {'image': image, 'img_path': img_path}
+        return image_info, angle_label
 
 
 class ResNetAngleModel(nn.Module):
@@ -228,9 +266,28 @@ def run_model_pipeline(train_loader, valid_loader, test_loader):
 
 def create_dataloader():
 
-    # TODO: dataset info dataframe
-    # TODO: dataframe to dataset
-    # TODO: dataset to dataloader
+    # load DataFrame
+    df_path = 'scanned_images_dataset/angle_label.csv'
+    angle_label_df = pd.read_csv(df_path, index_col=0)
+    angle_label_df['angle_0to1'] = angle_label_df['angle'].apply(lambda x: (x + 15.0) / 30.0)
+
+    angle_label_df_train = angle_label_df[angle_label_df['img_path'].str.contains('train_rotated')]
+    angle_label_df_test = angle_label_df[angle_label_df['img_path'].str.contains('test_rotated')]
+
+    # DataFrame to dataset
+    train_dataset = AngleModelDataset(dataset_df=angle_label_df_train, transform=image_transform)
+    test_dataset = AngleModelDataset(dataset_df=angle_label_df_test, transform=image_transform)
+
+    # Dataset to DataLoader
+    train_size = int(len(train_dataset) * 0.8)
+    valid_size = len(train_dataset) - train_size
+
+    train_dataset_final, valid_dataset_final = random_split(train_dataset, [train_size, valid_size])
+    test_dataset_final = test_dataset
+
+    train_loader = DataLoader(train_dataset_final, batch_size=TRAIN_BATCH_SIZE, shuffle=True)
+    valid_loader = DataLoader(valid_dataset_final, batch_size=VALID_BATCH_SIZE, shuffle=False)
+    test_loader = DataLoader(test_dataset_final, batch_size=TEST_BATCH_SIZE, shuffle=False)
 
     return train_loader, valid_loader, test_loader
 
