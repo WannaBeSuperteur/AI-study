@@ -30,6 +30,10 @@
 
 ```
 - Special - OCR Experiment/scanned_images_dataset
+  - dataset (original dataset, 100%)
+    - Letter
+    - Memo
+    - Report
   - train (80%)
     - Letter
     - Memo
@@ -38,11 +42,20 @@
     - Letter
     - Memo
     - Report
+  - train_rotated (80%, random angle rotated images)
+    - Letter
+    - Memo
+    - Report
+  - test_rotated (20%, random angle rotated images)
+    - Letter
+    - Memo
+    - Report
 ```
 
 * 참고 사항
-  * 정방향 (회전되지 않은) 이 아닌 이미지는 AI 모델 없이 수작업으로 삭제 처리
+  * 정방향 (회전되지 않은) 이 아닌 이미지, 저화질 이미지 등은 AI 모델 없이 수작업으로 삭제 처리
   * 남아 있는 정방향 이미지만을 학습/테스트 데이터로 사용
+  * 데이터셋 train/test 분리 & 회전 처리 : ```split_and_rotate_dataset.py```
 
 ### 3-2. Standard OCR Dataset
 

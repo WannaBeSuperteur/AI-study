@@ -71,10 +71,10 @@ Image Processing/Special - Vision Anomaly Detection 필요성/models/glass_anoma
 Image Processing/Special - Vision Anomaly Detection 필요성/run_experiment/exp1_*
 Image Processing/Special - Vision Anomaly Detection 필요성/run_experiment/exp2_*
 Image Processing/Special - Vision Anomaly Detection 필요성/run_experiment/exp3_*
-Image Processing/Special - OCR Experiment/archive/scanned_images_dataset
-Image Processing/Special - OCR Experiment/archive/scanned_images_dataset/*
-Image Processing/Special - OCR Experiment/archive/standard_ocr_dataset
-Image Processing/Special - OCR Experiment/archive/standard_ocr_dataset/*
+Image Processing/Special - OCR Experiment/scanned_images_dataset
+Image Processing/Special - OCR Experiment/scanned_images_dataset/*
+Image Processing/Special - OCR Experiment/standard_ocr_dataset
+Image Processing/Special - OCR Experiment/standard_ocr_dataset/*
 *.pyc
 __pycache__/
 .idea/*
