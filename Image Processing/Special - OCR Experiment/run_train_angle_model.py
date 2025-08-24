@@ -152,8 +152,8 @@ def run_valid_or_test(model, valid_or_test_loader, device):
 
             loss_batch = loss_func(outputs, labels_)
             mae_error_batch = nn.L1Loss(reduction='sum')(outputs, labels_)
-            loss_sum += loss_batch
-            mae_error_sum += mae_error_batch
+            loss_sum += float(loss_batch.detach().cpu())
+            mae_error_sum += float(mae_error_batch.detach().cpu())
             total_images += labels.size(0)
 
         # Loss 및 MAE Error 계산
