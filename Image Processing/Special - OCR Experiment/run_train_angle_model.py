@@ -57,7 +57,7 @@ class ResNetAngleModel(nn.Module):
         super(ResNetAngleModel, self).__init__()
         self.resnet_model = resnet_model
         self.final_linear = nn.Linear(1000, 1)
-        self.final_sigmoid = nn.Sigmoid(dim=1)
+        self.final_sigmoid = nn.Sigmoid()
 
     def forward(self, x):
         x = self.resnet_model(x)
@@ -81,9 +81,9 @@ def load_pretrained_model():
     angle_model = ResNetAngleModel(resnet_model=pretrained_model)
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    pretrained_model.to(device)
-    pretrained_model.device = device
-    pretrained_model.optimizer = torch.optim.AdamW(pretrained_model.parameters(), lr=0.0001)
+    angle_model.to(device)
+    angle_model.device = device
+    angle_model.optimizer = torch.optim.AdamW(angle_model.parameters(), lr=0.0001)
 
     return angle_model
 
