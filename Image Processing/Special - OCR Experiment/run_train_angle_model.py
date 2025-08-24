@@ -78,6 +78,7 @@ class ResNetAngleModel(nn.Module):
 
 def load_pretrained_model():
     pretrained_model = models.resnet18(pretrained=True)
+    pretrained_model.conv1 = torch.nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
     angle_model = ResNetAngleModel(resnet_model=pretrained_model)
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
