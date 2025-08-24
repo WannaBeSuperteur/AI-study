@@ -156,7 +156,7 @@ def run_valid_or_test(model, valid_or_test_loader, device):
             mae_error_sum += mae_error_batch
             total_images += labels.size(0)
 
-        # Loss 및 MSE Error 계산
+        # Loss 및 MAE Error 계산
         loss = loss_sum / total_images
         mae_error = mae_error_sum / total_images
 
@@ -194,15 +194,18 @@ def run_train_process(model, train_loader, valid_loader):
                                          valid_or_test_loader=valid_loader,
                                          device=model.device)
 
-        valid_mse_error, valid_loss = valid_result["mse_error"], valid_result["loss"]
-        print(f'epoch : {current_epoch}, valid MSE error : {valid_mse_error:.6f}, valid loss : {valid_loss:.6f}')
+        valid_mae_error, valid_loss = valid_result["mae_error"], valid_result["loss"]
+        print(f'epoch : {current_epoch}, valid MAE error : {valid_mae_error:.6f}, valid loss : {valid_loss:.6f}')
         val_loss_list.append(valid_loss)
 
         if min_valid_loss is None or valid_loss < min_valid_loss:
             min_valid_loss = valid_loss
             min_valid_loss_epoch = current_epoch
 
-            initial_angle_model = ResNetAngleModel(models.resnet18(pretrained=True))
+            pretrained_model = models.resnet18(pretrained=True)
+            pretrained_model.conv1 = torch.nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+            initial_angle_model = ResNetAngleModel(pretrained_model)
+
             best_epoch_model = initial_angle_model.to(model.device)
             best_epoch_model.load_state_dict(model.state_dict())
 
