@@ -34,10 +34,10 @@
 
 * 데이터셋 변형
 
-| 데이터셋                                                                                                                                                        | 변형 방법                |
-|-------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------|
-| [Scanned Images Dataset for OCR and VLM finetuning (from Kaggle)](https://www.kaggle.com/datasets/suvroo/scanned-images-dataset-for-ocr-and-vlm-finetuning) | 랜덤 각도 회전 (회전 각도 라벨링) |
-| [Standard OCR Dataset (from Kaggle)](https://www.kaggle.com/datasets/preatcher/standard-ocr-dataset)                                                        | 배경 흰색 & 글자 검은색으로 변환  |
+| 데이터셋                                                                                                                                                        | 변형 방법                  |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------|
+| [Scanned Images Dataset for OCR and VLM finetuning (from Kaggle)](https://www.kaggle.com/datasets/suvroo/scanned-images-dataset-for-ocr-and-vlm-finetuning) | 랜덤 각도 회전 (회전 각도 라벨링)   |
+| [Standard OCR Dataset (from Kaggle)](https://www.kaggle.com/datasets/preatcher/standard-ocr-dataset)                                                        | 배경 흰색 & 글자 검은색에 가깝게 변환 |
 
 ### 2-1. 이미지 회전 각도 판단
 

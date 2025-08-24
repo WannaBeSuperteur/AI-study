@@ -30,26 +30,26 @@
 
 ```
 - Special - OCR Experiment/scanned_images_dataset
-  - dataset (original dataset, 100%)
-    - Letter
-    - Memo
-    - Report
-  - train (80%)
-    - Letter
-    - Memo
-    - Report
-  - test (20%)
-    - Letter
-    - Memo
-    - Report
-  - train_rotated (80%, random angle rotated images)
-    - Letter
-    - Memo
-    - Report
-  - test_rotated (20%, random angle rotated images)
-    - Letter
-    - Memo
-    - Report
+  - dataset        (original dataset, 100%)
+    - Letter       (543 images)
+    - Memo         (599 images)
+    - Report       (252 images)
+  - train          (80%)
+    - Letter       (435 images)
+    - Memo         (480 images)
+    - Report       (202 images)
+  - test           (20%)
+    - Letter       (108 images)
+    - Memo         (119 images)
+    - Report       (50 images)
+  - train_rotated  (80%, random angle rotated images)
+    - Letter       (435 images)
+    - Memo         (480 images)
+    - Report       (202 images)
+  - test_rotated   (20%, random angle rotated images)
+    - Letter       (108 images)
+    - Memo         (119 images)
+    - Report       (50 images)
 ```
 
 * 참고 사항
@@ -67,16 +67,29 @@
 - Special - OCR Experiment/standard_ocr_dataset
   - data
     - training_data
-      - 0
-      - 1
-      - 2
+      - 0            (573 images)
+      - 1            (573 images)
+      - 2            (573 images)
       - ...
     - testing_data
-      - 0
-      - 1
-      - 2
+      - 0            (28 images)
+      - 1            (28 images)
+      - 2            (28 images)
+      - ...
+    - training_data_modified
+      - 0            (573 images)
+      - 1            (573 images)
+      - 2            (573 images)
+      - ...
+    - testing_data_modified
+      - 0            (28 images)
+      - 1            (28 images)
+      - 2            (28 images)
       - ...
 ```
+
+* 참고 사항
+  * 이미지의 전체 색을 검은색 & 흰색에 가깝게 변환 : ```convert_standard_ocr_dataset.py```
 
 ## 4. branch 정보
 
