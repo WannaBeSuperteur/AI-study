@@ -87,6 +87,8 @@ def load_pretrained_model():
     angle_model.to(device)
     angle_model.device = device
     angle_model.optimizer = torch.optim.AdamW(angle_model.parameters(), lr=0.0001)
+    angle_model.scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=angle_model.optimizer,
+                                                                   gamma=0.95)
 
     return angle_model
 
@@ -186,6 +188,8 @@ def run_train_process(model, train_loader, valid_loader):
     val_loss_list = []
 
     while True:
+
+        # run train & validation
         run_train(model=model,
                   train_loader=train_loader,
                   device=model.device)
@@ -198,6 +202,10 @@ def run_train_process(model, train_loader, valid_loader):
         print(f'epoch : {current_epoch}, valid MAE error : {valid_mae_error:.6f}, valid loss : {valid_loss:.6f}')
         val_loss_list.append(valid_loss)
 
+        # update scheduler
+        model.scheduler.step()
+
+        # handle early stopping
         if min_valid_loss is None or valid_loss < min_valid_loss:
             min_valid_loss = valid_loss
             min_valid_loss_epoch = current_epoch
