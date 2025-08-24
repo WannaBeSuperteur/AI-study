@@ -7,7 +7,7 @@ import cv2
 # Last Update Date : -
 
 # Arguments:
-# - img_path  (str) : 획득 (흑백 변환) 대상 이미지
+# - img_path  (str) : 획득 (흑백 변환) 대상 이미지 경로
 # - save_path (str) : 흑백 변환 이미지 저장 경로
 
 # Output:
