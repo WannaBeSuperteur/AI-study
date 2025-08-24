@@ -28,7 +28,7 @@ image_transform = transforms.Compose([
     transforms.Normalize(mean=0.5, std=0.5)  # -1.0 ~ +1.0 min-max normalization
 ])
 
-loss_func = nn.BCELoss(reduction='sum')
+loss_func = nn.MSELoss(reduction='sum')
 
 
 class AngleModelDataset(Dataset):
@@ -136,13 +136,13 @@ def run_train(model, train_loader, device):
 # - device               (Device)     : CUDA or CPU device
 
 # returns :
-# - result (dict) : validation/test result (MSE error 및 Loss)
+# - result (dict) : validation/test result (MAE error 및 Loss)
 
 def run_valid_or_test(model, valid_or_test_loader, device):
     model.eval()
 
     total_images = 0
-    mse_error_sum, loss_sum = 0.0, 0.0
+    mae_error_sum, loss_sum = 0.0, 0.0
 
     with torch.no_grad():
         for idx, (images, labels) in enumerate(valid_or_test_loader):
@@ -151,16 +151,16 @@ def run_valid_or_test(model, valid_or_test_loader, device):
             outputs = model(images).to(torch.float32)
 
             loss_batch = loss_func(outputs, labels_)
-            mse_error_batch = nn.MSELoss()(outputs, labels_)
+            mae_error_batch = nn.L1Loss(reduction='sum')(outputs, labels_)
             loss_sum += loss_batch
-            mse_error_sum += mse_error_batch
+            mae_error_sum += mae_error_batch
             total_images += labels.size(0)
 
         # Loss 및 MSE Error 계산
         loss = loss_sum / total_images
-        mse_error = mse_error_sum / total_images
+        mae_error = mae_error_sum / total_images
 
-    result = {'mse_error': mse_error, 'loss': loss}
+    result = {'mae_error': mae_error, 'loss': loss}
     return result
 
 
