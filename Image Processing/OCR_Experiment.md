@@ -32,6 +32,13 @@
   * 자유 사용 가능 라이선스
   * 회전 각도가 labeling 되어 있거나, 이미지의 대부분이 정방향인 문서 촬영 사진 데이터셋
 
+* 데이터셋 변형
+
+| 데이터셋                                                                                                                                                        | 변형 방법                             |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------|
+| [Scanned Images Dataset for OCR and VLM finetuning (from Kaggle)](https://www.kaggle.com/datasets/suvroo/scanned-images-dataset-for-ocr-and-vlm-finetuning) | 랜덤 각도 회전 (회전 각도 라벨링) & 흑백 이미지로 변환 |
+| [Standard OCR Dataset (from Kaggle)](https://www.kaggle.com/datasets/preatcher/standard-ocr-dataset)                                                        | 흑백 이미지로 변환                        |
+
 ### 2-1. 이미지 회전 각도 판단
 
 ### 2-2. 글자 직사각형 영역 탐지
