@@ -113,7 +113,7 @@
 | 이미지 회전 각도 파악 모델 학습                       | 08.24 일 (1d)           | ```IP-special-ocr-experiment-002-angle-model```           | ✅  |
 | 이미지 회전 처리                                | 08.24 일 (1d)           |                                                           | ✅  |
 | 전처리된 이미지에서 각 글자 영역 도출                    | 08.24 일 - 08.26 화 (3d) | ```IP-special-ocr-experiment-003-extract-letter```        | ✅  |
-| Standard OCR Dataset 변형 로직 수정 (완전 흑백 처리) | 08.26 화 (1d)           |                                                           | ⬜  |
+| Standard OCR Dataset 변형 로직 수정 (완전 흑백 처리) | 08.26 화 (1d)           |                                                           | ✅  |
 | 각 글자 영역에 있는 글자 분류 모델 학습                  | 08.26 화 (1d)           | ```IP-special-ocr-experiment-004-letter-classify-model``` | ⬜  |
 | 최종 결과 도출                                 | 08.26 화 (1d)           | ```IP-special-ocr-experiment-005-final-result```          | ⬜  |
 | 실험 결과 정리                                 | 08.26 화 (1d)           |                                                           | ⬜  |
