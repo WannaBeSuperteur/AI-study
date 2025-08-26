@@ -80,6 +80,8 @@ Image Processing/Special - OCR Experiment/test_rotate_minus_5_deg.png
 Image Processing/Special - OCR Experiment/test_rotate_plus_25_deg.png
 Image Processing/Special - OCR Experiment/models
 Image Processing/Special - OCR Experiment/models/*.pth
+Image Processing/Special - OCR Experiment/test_extract_letter
+Image Processing/Special - OCR Experiment/test_extract_letter/*
 *.pyc
 __pycache__/
 .idea/*

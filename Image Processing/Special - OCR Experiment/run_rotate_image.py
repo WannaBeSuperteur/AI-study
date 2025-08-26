@@ -8,7 +8,7 @@ import os
 # Last Update Date : -
 
 # Arguments:
-# - img_path  (str)   : 회전 대상 이미지
+# - img_path  (str)   : 회전 대상 이미지 경로
 # - angle     (float) : 회전 각도 (도 단위)
 # - save_path (str)   : 회전된 이미지 저장 경로
 
