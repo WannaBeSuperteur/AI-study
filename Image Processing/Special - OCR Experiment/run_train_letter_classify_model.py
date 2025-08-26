@@ -174,8 +174,10 @@ def run_valid_or_test(model, valid_or_test_loader, device):
         # Loss 계산
         loss = loss_sum / total_images
 
-    valid_accuracy = correct_images / total_images
-    result = {'valid_accuracy': valid_accuracy, 'valid_loss': loss}
+    accuracy = correct_images / total_images
+    result = {'accuracy': accuracy, 'loss': loss}
+    print(f'valid/test result : {result}')
+
     return result
 
 
@@ -211,7 +213,7 @@ def run_train_process(model, train_loader, valid_loader):
                                          valid_or_test_loader=valid_loader,
                                          device=model.device)
 
-        valid_accuracy, valid_loss = valid_result["valid_accuracy"], valid_result["valid_loss"]
+        valid_accuracy, valid_loss = valid_result["accuracy"], valid_result["loss"]
         print(f'epoch : {current_epoch}, valid accuracy : {valid_accuracy:.6f}, valid loss : {valid_loss:.6f}')
         val_loss_list.append(valid_loss)
 
