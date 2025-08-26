@@ -294,8 +294,8 @@ def add_image_path_and_label_info(data_dir: str, letter, dataset_info_dict):
     data_names = os.listdir(data_dir_letter)
     data_paths = [os.path.join(data_dir_letter, name) for name in data_names]
 
-    dataset_info_dict['img_path'].append(data_paths)
-    dataset_info_dict['letter_label'].append([letter] * len(data_names))
+    dataset_info_dict['img_path'] += data_paths
+    dataset_info_dict['letter_label'] += [letter] * len(data_names)
 
 
 # 글자 예측 모델에 대한 DataLoader 생성
