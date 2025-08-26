@@ -81,7 +81,7 @@ def extract_letters(img_path):
     for y in range(height):
         for x in range(width):
             if img[y][x] == 0 and not visited[y][x]:
-                print(y, x)
+                print(f'extracting : y={y}, x={x}')
                 loc = compute_boundary_of_letter(img, y, x, visited)
 
                 letter_height = loc['bottom'] - loc['top'] + 1
@@ -110,5 +110,5 @@ if __name__ == '__main__':
 
     os.makedirs('test_extract_letter', exist_ok=True)
     for idx, letter in enumerate(extracted_letters):
-        print(idx, letter)
-        cv2.imwrite(f'test_extract_letter/letter_{idx:6d}', letter)
+        letter_uint8 = letter.astype(np.uint8)
+        cv2.imwrite(f'test_extract_letter/letter_{idx:04d}.png', letter_uint8)
