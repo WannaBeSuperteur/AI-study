@@ -144,7 +144,7 @@ def run_train(model, train_loader, device):
 # - device               (Device)     : CUDA or CPU device
 
 # returns :
-# - result (dict) : validation/test result (MAE error 및 Loss)
+# - result (dict) : validation/test result (accuracy 및 Loss)
 
 def run_valid_or_test(model, valid_or_test_loader, device):
     model.eval()
@@ -171,7 +171,7 @@ def run_valid_or_test(model, valid_or_test_loader, device):
 
             total_images += labels.size(0)
 
-        # Loss 및 MAE Error 계산
+        # Loss 계산
         loss = loss_sum / total_images
 
     valid_accuracy = correct_images / total_images
@@ -212,7 +212,7 @@ def run_train_process(model, train_loader, valid_loader):
                                          device=model.device)
 
         valid_accuracy, valid_loss = valid_result["valid_accuracy"], valid_result["valid_loss"]
-        print(f'epoch : {current_epoch}, valid MAE error : {valid_accuracy:.6f}, valid loss : {valid_loss:.6f}')
+        print(f'epoch : {current_epoch}, valid accuracy : {valid_accuracy:.6f}, valid loss : {valid_loss:.6f}')
         val_loss_list.append(valid_loss)
 
         # update scheduler
