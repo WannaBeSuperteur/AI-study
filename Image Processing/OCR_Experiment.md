@@ -63,4 +63,6 @@
 |------------------------|--------------------|
 | 2.6608                 | 0.9702 (= 97.02 %) |
 
+* [Confusion Matrxix](Special%20-%20OCR%20Experiment/cf_matrix_letter_classify_model.csv)
+
 ## 3. 실험 결과
