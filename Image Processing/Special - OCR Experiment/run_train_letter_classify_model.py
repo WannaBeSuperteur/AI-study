@@ -242,7 +242,8 @@ def run_train_process(model, train_loader, valid_loader):
 
 # 글자 분류 모델 전체 학습 실시
 # Create Date : 2025.08.26
-# Last Update Date : -
+# Last Update Date : 2025.08.27
+# - 이미 존재하는 모델이 있을 경우 그 모델을 로딩
 
 # Arguments:
 # - train_loader (DataLoader) : Training Data Loader
@@ -257,26 +258,42 @@ def run_train_process(model, train_loader, valid_loader):
 
 def run_model_pipeline(train_loader, valid_loader, test_loader):
 
-    # train model
-    initial_letter_classify_model = load_pretrained_model()
+    # check test model exists
+    model_path = 'models/letter_classify_model.pth'
+    is_model_exist = os.path.exists(model_path)
 
-    _, best_epoch_model = run_train_process(model=initial_letter_classify_model,
-                                            train_loader=train_loader,
-                                            valid_loader=valid_loader)
+    if is_model_exist:
+        print('loading existing model ...')
+
+        model_to_test = load_pretrained_model()
+        state_dict = torch.load(model_path, map_location=model_to_test.device)
+        model_to_test.load_state_dict(state_dict, strict=True)
+
+    else:
+        print('model not exists, training ...')
+
+        # train model
+        initial_letter_classify_model = load_pretrained_model()
+
+        _, best_epoch_model = run_train_process(model=initial_letter_classify_model,
+                                                train_loader=train_loader,
+                                                valid_loader=valid_loader)
+        model_to_test = best_epoch_model
 
     # test model
+    print('testing model ...')
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    best_epoch_model.to(device)
-    best_epoch_model.device = device
+    model_to_test.to(device)
+    model_to_test.device = device
 
-    test_result = run_valid_or_test(model=best_epoch_model,
+    test_result = run_valid_or_test(model=model_to_test,
                                     valid_or_test_loader=test_loader,
                                     device=device)
 
     # save model
-    model_path = 'models/letter_classify_model.pth'
-    os.makedirs('models', exist_ok=True)
-    torch.save(best_epoch_model.state_dict(), model_path)
+    if not is_model_exist:
+        os.makedirs('models', exist_ok=True)
+        torch.save(model_to_test.state_dict(), model_path)
 
     print(f'test_result: {test_result}')
     return test_result
