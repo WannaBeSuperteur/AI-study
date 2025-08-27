@@ -54,4 +54,15 @@
 
 ### 2-3. 텍스트 인식 (글자 분류)
 
+* 모델 정보
+  * 텍스트를 ```0``` ```1``` ```2``` ... ```Z``` 의 36가지 중 하나로 분류
+  * **Pre-trained ResNet18** 기반
+* 모델 성능
+
+| MSE Loss (= MSE Error) | Accuracy           |
+|------------------------|--------------------|
+| 2.6608                 | 0.9702 (= 97.02 %) |
+
+* [Confusion Matrxix](Special%20-%20OCR%20Experiment/cf_matrix_letter_classify_model.csv)
+
 ## 3. 실험 결과
