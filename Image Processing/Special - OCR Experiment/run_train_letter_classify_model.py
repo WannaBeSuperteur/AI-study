@@ -136,7 +136,8 @@ def run_train(model, train_loader, device):
 
 # 모델 validation / test 실시
 # Create Date : 2025.08.26
-# Last Update Date : -
+# Last Update Date : 2025.08.27
+# - Confusion Matrix 추가
 
 # args :
 # - model                (nn.Module)  : validation / test 할 모델
@@ -149,6 +150,14 @@ def run_train(model, train_loader, device):
 def run_valid_or_test(model, valid_or_test_loader, device):
     model.eval()
 
+    # initialize confusion matrix
+    confusion_matrix_dict = {
+        '': LETTERS
+    }
+    for letter in LETTERS:
+        confusion_matrix_dict[letter] = [0 for _ in range(len(LETTERS))]
+
+    # run test
     total_images, correct_images = 0, 0
     loss_sum = 0.0
 
@@ -166,7 +175,11 @@ def run_valid_or_test(model, valid_or_test_loader, device):
             labels_cpu = list(np.array(labels.detach().cpu()))
 
             for pred, label in zip(preds_cpu, labels_cpu):
-                if np.argmax(pred) == np.argmax(label):
+                pred_max_idx = np.argmax(pred)
+                label_idx = np.argmax(label)
+                confusion_matrix_dict[LETTERS[label_idx]][pred_max_idx] += 1
+
+                if pred_max_idx == label_idx:
                     correct_images += 1
 
             total_images += labels.size(0)
@@ -177,6 +190,10 @@ def run_valid_or_test(model, valid_or_test_loader, device):
     accuracy = correct_images / total_images
     result = {'accuracy': accuracy, 'loss': loss}
     print(f'valid/test result : {result}')
+
+    # save confusion matrix
+    confusion_matrix_df = pd.DataFrame(confusion_matrix_dict)
+    confusion_matrix_df.to_csv('cf_matrix_letter_classify_model.csv', index=False)
 
     return result
 
