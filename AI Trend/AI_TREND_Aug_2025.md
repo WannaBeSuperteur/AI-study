@@ -1,3 +1,14 @@
+## 2025.08.28 (목)
+**[이미지 생성 AI '나노바나나', 정체는 Gemini 2.5](https://n.news.naver.com/mnews/article/020/0003657090?sid=101)** ```AI``` ```Gemini``` ```Generative AI```
+
+* 그동안 그 정체가 공개되지 않았던 이미지 생성 AI 모델 '나노바나나' 의 정체가 **Gemini 2.5 Flash Image** 로 밝혀졌다.
+  * 구글 측은 **나노바나나 모델이 제미나이 앱에 통합** 되었다고 밝혔다.
+* Gemini 2.5 Flash Image 모델의 특징은 다음과 같다.
+  * AI 생성 이미지의 한계점이었던 **디테일한 신체 표현** 까지 자연스럽게 생성
+  * 여러 번 편집 시 왜곡되는 등 **일관성 보존 문제** 해결
+  * 인물 사진 입력 시 **해당 인물의 피규어 생성**
+    * 이는 ChatGPT-4o Image Generation 모델의 밈과 관련 있다.
+
 ## 2025.08.27 (수)
 **[SKT, K-AI는 수조 개 파라미터 거대 모델이 목표](https://n.news.naver.com/mnews/article/003/0013445871?sid=101)** ```AI``` ```Large Language Model``` ```Multi-modal Model``` ```AI Agent```
 
