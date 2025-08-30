@@ -1,7 +1,7 @@
 ## Large Language Model
 
-* **Total 23 Papers | 25 Documents** (2025.08.21)
-  * Including 23 Generative AI Papers
+* **Total 24 Papers | 26 Documents** (2025.08.30)
+  * Including 24 Generative AI Papers
   * 💻 (Single LLM Product / Model), 🤖 (LLM Agent), 🧪 (LLM Methodology), ⚖ (LLM Ethics), 🧠 [(LLM Reasoning)](../../AI%20Basics/LLM%20Basics/LLM_기초_추론형_모델.md), 🎭 (multi-modal), 💬 (others)
 
 | Study Date<br>(Study Doc. Link)                                                                                                                                                      | Paper                                                                                                                                                                 | Published | 비고                                                                                                                                      |
@@ -31,3 +31,4 @@
 | 2025.08.10 [(Study Doc)](%5B2025.08.10%5D%20Orak%20-%20A%20Foundational%20Benchmark%20for%20Training%20and%20Evaluating%20LLM%20Agents%20on%20Diverse%20Video%20Games.md)            | 💬 [Orak: A Foundational Benchmark for Training and Evaluating LLM Agents on Diverse Video Games](https://arxiv.org/pdf/2506.03610)                                   | 2025.06   | [AI Trend (2025.06.16)](../../AI%20Trend/AI_TREND_Jun_2025.md#20250616-월)                                                               |
 | 2025.08.17 - 08.18 [(Study Doc)](%5B2025.08.17%5D%20Context-Independent%20OCR%20with%20Multimodal%20LLMs%20-%20Effects%20of%20Image%20Resolution%20and%20Visual%20Complexity.md)     | 🎭 [Context-Independent OCR with Multimodal LLMs: Effects of Image Resolution and Visual Complexity](https://arxiv.org/pdf/2503.23667)                                | 2025.03   |                                                                                                                                         |
 | 2025.08.21 - 08.22 [(Study Doc)](%5B2025.08.21%5D%20Thinkless%20-%20LLM%20Learns%20When%20to%20Think.md)                                                                             | 🧪 [Thinkless: LLM Learns When to Think](https://arxiv.org/pdf/2505.13379)                                                                                            | 2025.05   |                                                                                                                                         |
+| 2025.08.30 [(Study Doc)](%5B2025.08.30%5D%20A%20Minimalist%20Approach%20to%20LLM%20Reasoning%20-%20from%20Rejection%20Sampling%20to%20Reinforce.md)                                  | 🧠 [A Minimalist Approach to LLM Reasoning: from Rejection Sampling to Reinforce](https://arxiv.org/pdf/2504.11343)                                                   | 2025.04   |                                                                                                                                         |
