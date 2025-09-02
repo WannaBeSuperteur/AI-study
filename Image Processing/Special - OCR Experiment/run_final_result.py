@@ -2,12 +2,18 @@
 from run_extract_letters import extract_letters
 from run_train_letter_classify_model import image_transform, load_pretrained_model, LETTERS
 
+import torch
 import numpy as np
 
 
 if __name__ == '__main__':
-    extracted_letters = extract_letters('test_black_white.png')
+    pretrained_model_path = 'models/letter_classify_model.pth'
+
     pretrained_model = load_pretrained_model()
+    state_dict = torch.load(pretrained_model_path, map_location=pretrained_model.device)
+    pretrained_model.load_state_dict(state_dict, strict=True)
+
+    extracted_letters = extract_letters('test_black_white.png')
     result = ''
 
     for idx, letter in enumerate(extracted_letters):
