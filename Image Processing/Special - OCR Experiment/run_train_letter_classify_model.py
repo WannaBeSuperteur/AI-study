@@ -29,7 +29,7 @@ np.set_printoptions(suppress=True)
 image_transform = transforms.Compose([
     transforms.ToPILImage(),
     transforms.ToTensor(),
-    transforms.Resize((256, 256)),
+    transforms.Resize((64, 64)),
     transforms.Normalize(mean=0.5, std=0.5)  # -1.0 ~ +1.0 min-max normalization
 ])
 
