@@ -82,6 +82,10 @@ Image Processing/Special - OCR Experiment/models
 Image Processing/Special - OCR Experiment/models/*.pth
 Image Processing/Special - OCR Experiment/test_extract_letter
 Image Processing/Special - OCR Experiment/test_extract_letter/*
+Image Processing/Special - OCR Experiment/test_result
+Image Processing/Special - OCR Experiment/test_result/*
+Image Processing/Special - OCR Experiment/final_result
+Image Processing/Special - OCR Experiment/final_result/*
 *.pyc
 __pycache__/
 .idea/*

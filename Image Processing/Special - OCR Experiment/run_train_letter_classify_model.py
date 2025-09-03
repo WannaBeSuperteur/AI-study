@@ -6,6 +6,7 @@ import torchvision.transforms as transforms
 
 from torch.utils.data import Dataset, random_split, DataLoader
 from torchvision.io import read_image
+from common import save_tensor_as_image
 
 import numpy as np
 import pandas as pd
@@ -136,18 +137,19 @@ def run_train(model, train_loader, device):
 
 # 모델 validation / test 실시
 # Create Date : 2025.08.26
-# Last Update Date : 2025.08.27
-# - Confusion Matrix 추가
+# Last Update Date : 2025.09.03
+# - valid/test mode 에 따라 테스트 대상 이미지 저장 여부 처리
 
 # args :
 # - model                (nn.Module)  : validation / test 할 모델
 # - valid_or_test_loader (DataLoader) : Validation / Test Data Loader
 # - device               (Device)     : CUDA or CPU device
+# - is_test              (Boolean)    : valid mode 이면 False, test mode 이면 True
 
 # returns :
 # - result (dict) : validation/test result (accuracy 및 Loss)
 
-def run_valid_or_test(model, valid_or_test_loader, device):
+def run_valid_or_test(model, valid_or_test_loader, device, is_test=False):
     model.eval()
 
     # initialize confusion matrix
@@ -164,6 +166,10 @@ def run_valid_or_test(model, valid_or_test_loader, device):
     with torch.no_grad():
         for idx, (images, labels) in enumerate(valid_or_test_loader):
             images, labels = images['image'].to(device), labels.to(device).to(torch.float32)
+
+            if is_test:
+                save_tensor_as_image(images[0], dir_name='test_result', img_idx=idx)
+
             outputs = model(images).to(torch.float32)
 
             loss_batch = loss_func(outputs, labels)
@@ -259,8 +265,8 @@ def run_train_process(model, train_loader, valid_loader):
 
 # 글자 분류 모델 전체 학습 실시
 # Create Date : 2025.08.26
-# Last Update Date : 2025.08.27
-# - 이미 존재하는 모델이 있을 경우 그 모델을 로딩
+# Last Update Date : 2025.09.03
+# - test mode 일 때 이미지 저장 처리
 
 # Arguments:
 # - train_loader (DataLoader) : Training Data Loader
@@ -305,7 +311,8 @@ def run_model_pipeline(train_loader, valid_loader, test_loader):
 
     test_result = run_valid_or_test(model=model_to_test,
                                     valid_or_test_loader=test_loader,
-                                    device=device)
+                                    device=device,
+                                    is_test=True)
 
     # save model
     if not is_model_exist:

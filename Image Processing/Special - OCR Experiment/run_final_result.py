@@ -5,6 +5,8 @@ from run_train_letter_classify_model import image_transform, load_pretrained_mod
 import torch
 import numpy as np
 
+from common import save_tensor_as_image
+
 
 if __name__ == '__main__':
     pretrained_model_path = 'models/letter_classify_model.pth'
@@ -18,6 +20,8 @@ if __name__ == '__main__':
 
     for idx, letter in enumerate(extracted_letters):
         transformed_letter = image_transform(letter)
+        save_tensor_as_image(transformed_letter, dir_name='final_result', img_idx=idx)
+
         prediction_result = pretrained_model(transformed_letter.unsqueeze(0).cuda())
         prediction_result = prediction_result.detach().cpu().numpy()
         prediction_max_idx = np.argmax(prediction_result)
