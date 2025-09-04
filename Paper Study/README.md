@@ -2,17 +2,17 @@ Paper Study (2025.03.12 -)
 
 ## Overview
 
-* **Total 33 Papers | 35 Documents** (2025.08.30)
+* **Total 34 Papers | 36 Documents** (2025.09.04)
 
 | Field                                            | Paper Count         | Paper Count<br>(Generative AI) |
 |--------------------------------------------------|---------------------|--------------------------------|
-| [Large Language Model](Large%20Language%20Model) | 24 Papers (26 Docs) | 24 Papers                      |
+| [Large Language Model](Large%20Language%20Model) | 25 Papers (27 Docs) | 25 Papers                      |
 | [Vision Model](Vision%20Model)                   | 9 Papers (9 Docs)   | 5 Papers                       |
 
 ## Large Language Model
 
-* **Total 24 Papers | 26 Documents** (2025.08.30)
-  * Including 24 Generative AI Papers
+* **Total 25 Papers | 27 Documents** (2025.09.04)
+  * Including 25 Generative AI Papers
   * 💻 (Single LLM Product / Model), 🤖 (LLM Agent), 🧪 (LLM Methodology), ⚖ (LLM Ethics), 🧠 [(LLM Reasoning)](../AI%20Basics/LLM%20Basics/LLM_기초_추론형_모델.md), 🎭 (multi-modal), 💬 (others)
 
 | Study Date<br>(Study Doc. Link)                                                                                                                                                                               | Paper                                                                                                                                                                 | Published | 비고                                                                                                                                      |
@@ -43,6 +43,7 @@ Paper Study (2025.03.12 -)
 | 2025.08.17 - 08.18 [(Study Doc)](Large%20Language%20Model/%5B2025.08.17%5D%20Context-Independent%20OCR%20with%20Multimodal%20LLMs%20-%20Effects%20of%20Image%20Resolution%20and%20Visual%20Complexity.md)     | 🎭 [Context-Independent OCR with Multimodal LLMs: Effects of Image Resolution and Visual Complexity](https://arxiv.org/pdf/2503.23667)                                | 2025.03   |                                                                                                                                         |
 | 2025.08.21 - 08.22 [(Study Doc)](Large%20Language%20Model/%5B2025.08.21%5D%20Thinkless%20-%20LLM%20Learns%20When%20to%20Think.md)                                                                             | 🧪 [Thinkless: LLM Learns When to Think](https://arxiv.org/pdf/2505.13379)                                                                                            | 2025.05   |                                                                                                                                         |
 | 2025.08.30 + 2025.09.01 [(Study Doc)](Large%20Language%20Model/%5B2025.08.30%5D%20A%20Minimalist%20Approach%20to%20LLM%20Reasoning%20-%20from%20Rejection%20Sampling%20to%20Reinforce.md)                     | 🧠 [A Minimalist Approach to LLM Reasoning: from Rejection Sampling to Reinforce](https://arxiv.org/pdf/2504.11343)                                                   | 2025.04   |                                                                                                                                         |
+| 2025.09.04 - 09.05 [(Study Doc)](Large%20Language%20Model/%5B2025.09.04%5D%20ChainBuddy%20-%20An%20AI%20Agent%20System%20for%20Generating%20LLM%20Pipelines.md)                                               | 🤖 [ChainBuddy: An AI Agent System for Generating LLM Pipelines](https://arxiv.org/pdf/2409.13588)                                                                    | 2024.09   |                                                                                                                                         |
 
 ## Vision Model
 
