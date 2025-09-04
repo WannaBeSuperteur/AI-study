@@ -14,6 +14,7 @@ if __name__ == '__main__':
     pretrained_model = load_pretrained_model()
     state_dict = torch.load(pretrained_model_path, map_location=pretrained_model.device)
     pretrained_model.load_state_dict(state_dict, strict=True)
+    pretrained_model.eval()
 
     extracted_letters = extract_letters('test_black_white.png')
     result = ''
