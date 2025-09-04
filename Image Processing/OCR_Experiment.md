@@ -59,12 +59,13 @@
   * **Pre-trained ResNet18** 기반
 * 모델 성능
 
-| Image Size<br>(after resized) | MSE Loss<br>(= MSE Error) | Accuracy           |
-|-------------------------------|---------------------------|--------------------|
-| 256 x 256                     | 2.6608                    | 0.9702 (= 97.02 %) |
-| 64 x 64                       | 2.6806                    | 0.9494 (= 94.94 %) |
-| 32 x 32                       | 2.6809                    | 0.9494 (= 94.94 %) |
+| Image Size<br>(after resized) | MSE Loss<br>(= MSE Error) | Accuracy               |
+|-------------------------------|---------------------------|------------------------|
+| 256 x 256                     | 2.6608                    | 0.9702 (= 97.02 %)     |
+| 128 x 128                     | **2.6573**                | **0.9742 (= 97.42 %)** |
+| 64 x 64                       | 2.6806                    | 0.9494 (= 94.94 %)     |
+| 32 x 32                       | 2.6809                    | 0.9494 (= 94.94 %)     |
 
-* [Confusion Matrxix](Special%20-%20OCR%20Experiment/cf_matrix_letter_classify_model.csv)
+* [Confusion Matrxix (with image size 128 x 128)](Special%20-%20OCR%20Experiment/cf_matrix_letter_classify_model.csv)
 
 ## 3. 실험 결과
