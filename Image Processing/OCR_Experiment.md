@@ -52,6 +52,11 @@
 
 ### 2-2. 글자 직사각형 영역 탐지
 
+* 흰색 이미지에서 검은색 글자 영역 추출
+  * 해당 영역의 가로/세로 길이 및 비율 조건 만족 시 글자로 판정
+* BFS 알고리즘 기반
+* [상세 구현 코드](Special%20-%20OCR%20Experiment/run_extract_letters.py)
+
 ### 2-3. 텍스트 인식 (글자 분류)
 
 * 모델 정보
@@ -59,10 +64,31 @@
   * **Pre-trained ResNet18** 기반
 * 모델 성능
 
-| MSE Loss (= MSE Error) | Accuracy           |
-|------------------------|--------------------|
-| 2.6608                 | 0.9702 (= 97.02 %) |
+| Image Size<br>(after resized) | MSE Loss<br>(= MSE Error) | Accuracy               |
+|-------------------------------|---------------------------|------------------------|
+| 256 x 256                     | 2.6608                    | 0.9702 (= 97.02 %)     |
+| 128 x 128                     | **2.6573**                | **0.9742 (= 97.42 %)** |
+| 64 x 64                       | 2.6806                    | 0.9494 (= 94.94 %)     |
+| 32 x 32                       | 2.6809                    | 0.9494 (= 94.94 %)     |
 
-* [Confusion Matrxix](Special%20-%20OCR%20Experiment/cf_matrix_letter_classify_model.csv)
+* [Confusion Matrix (with image size 128 x 128)](Special%20-%20OCR%20Experiment/cf_matrix_letter_classify_model.csv)
 
 ## 3. 실험 결과
+
+* 결론
+  * 글자 인식 정확도 **매우 낮음 (거의 인식되지 않음)** 또는 **배열 순서 오류**
+  * 향후 OCR 실무 수행 후, 재 학습 및 성능 향상 시도
+
+* 실험 대상 이미지
+
+![image](Special%20-%20OCR%20Experiment/test_black_white.png)
+
+* 실험 결과
+
+```
+QLV6PSNX90C0108U6C3KD2VX6209X0002222939F2022J2X60C1NU0EICN221991MCC811HGCL11C0QPS80L0Y0C00R0N88TCP1GQH1I1SL0VPP1C1061000N00LWP1RCC0S01G6Q16PLCHSCPL1011Y81C502C0Y1RC00008P1G61LHHQCLL0P10508L100Y8RC0800CQP111HLL11MK50D1FXL0L1ALLLC
+5C06TL00C0S05111C01C0AB0N9116L5301SJ0C01L11LHC11021NC61N00L001S00L00C0I0Q6LE05090IPU0Y01E6LX00WL6S8QC5086000L01103905UCCQ151N6199176Y1FL180NQC01NI21990C60S6LNLA1R0C1QNC0B1CCNJ111M0XB1N06Y001LC0NLR00Q51110CS00N16KX8NNI1GY0XWK100C
+0M016S6L5S1N0111Q0N0C9NL11I299L01LAR1C0E1060CX0LX050P1IL80D0N1506X0C6L0N1L19001910L0S11116060L1I0H11LLSYQC0P8C010LLNLL1Y1Z0I51106P0610DL10I1N911Q0L19906N01N90C11616CL10XPXLSC061C00YC10N5S00INRTX0FCENGU9E8II0C0NN8CTI0408T286CUCT8
+DAININGPR0C0112616LLCL1L2L601S00000C000060LWV01Y0NN01011L11C50519C0PC9CP01N9E5HLC05LP2UX01N10MH66L1020115P1CLL6CLS6L0N0CL1C0002L10H6LL5WY211111LL10C11CC2551096LCPC0L01501N0X11LN511611C00XC0116NN081661L0660YL08N6P0C0L1L00XP111016
+L019106L62Y6L0L0P0XC010C00Z151P1219XL1901106L1PY601L01C0N0L112L13P0510S1C6L0192X4W8EWWUFU941444F
+```

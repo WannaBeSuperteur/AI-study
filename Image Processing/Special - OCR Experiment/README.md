@@ -22,6 +22,7 @@
 | 이미지 회전                  | ```run_rotate_image.py```                |
 | 이미지에서 글자 추출             | ```run_extract_letters.py```             |
 | 글자 분류 모델 학습             | ```run_train_letter_classify_model.py``` |
+| 최종 결과 도출                | ```run_final_result.py```                |
 
 ## 2. 디렉토리 구성
 
