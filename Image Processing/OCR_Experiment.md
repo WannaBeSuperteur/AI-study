@@ -71,7 +71,7 @@
 | 64 x 64                       | 2.6806                    | 0.9494 (= 94.94 %)     |
 | 32 x 32                       | 2.6809                    | 0.9494 (= 94.94 %)     |
 
-* [Confusion Matrxix (with image size 128 x 128)](Special%20-%20OCR%20Experiment/cf_matrix_letter_classify_model.csv)
+* [Confusion Matrix (with image size 128 x 128)](Special%20-%20OCR%20Experiment/cf_matrix_letter_classify_model.csv)
 
 ## 3. 실험 결과
 
