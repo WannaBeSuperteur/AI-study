@@ -1,7 +1,7 @@
 ## Vision Model
 
-* **Total 9 Papers | 9 Documents** (2025.08.22)
-  * Including 5 Generative AI Papers
+* **Total 10 Papers | 10 Documents** (2025.09.07)
+  * Including 6 Generative AI Papers
   * 🖼 (non-generative), 🎨 (generative), 🎭 (generative multi-modal), 🔠 (OCR)
 
 | Study Date<br>(Study Doc. Link)                                                                                                                                                                         | Paper                                                                                                                                                               | Published | 비고                                                                                                                                                 |
@@ -15,3 +15,6 @@
 | 2025.06.20 + 2025.06.22 [(Study Doc)](%5B2025.06.20%5D%20StyleCLIP%20-%20Text-Driven%20Manipulation%20of%20StyleGAN%20Imagery.md)                                                                       | 🎭 [StyleCLIP: Text-Driven Manipulation of StyleGAN Imagery](https://arxiv.org/pdf/2103.17249)                                                                      | 2021.03   | [Oh-LoRA v4 (2025.06.24 - 06.30)](https://github.com/WannaBeSuperteur/AI_Projects/tree/main/2025_06_24_OhLoRA_v4) 개발 시 참고 논문                       |
 | 2025.06.22 - 06.23 [(Study Doc)](%5B2025.06.22%5D%20Scaling%20up%20GANs%20for%20Text-to-Image%20Synthesis.md)                                                                                           | 🎭 [Scaling up GANs for Text-to-Image Synthesis](https://arxiv.org/pdf/2303.05511)                                                                                  | 2023.03   | Oh-LoRA v4 (2025.06.24 - 06.30) 개발 시 참고 논문                                                                                                         |
 | 2025.08.22 - 08.23 [(Study Doc)](%5B2025.08.22%5D%20General%20OCR%20Theory%20-%20Towards%20OCR-2.0%20via%20a%20Unified%20End-to-end%20Model.md)                                                         | 🔠 [General OCR Theory: Towards OCR-2.0 via a Unified End-to-end Model](https://arxiv.org/pdf/2409.01704)                                                           | 2024.09   |                                                                                                                                                    |
+| 2025.09.07 [(Study Doc)](%5B2025.09.07%5D%20CLIPArTT%20-%20Adaption%20of%20CLIP%20to%20New%20Domains%20at%20Test%20Time.md)                                                                             | 🎭 [CLIPArTT: Adaption of CLIP to New Domains at Test Time](https://arxiv.org/pdf/2405.00754)                                                                       | 2024.05   |                                                                                                                                                    |
+
+
