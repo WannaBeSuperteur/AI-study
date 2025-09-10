@@ -1,3 +1,16 @@
+## 2025.09.10 (수)
+**[트릴리온랩스, 국내 최초 700억 파라미터 규모 LLM 공개](https://n.news.naver.com/mnews/article/009/0005556236?sid=105)** ```AI``` ```Large Language Model```
+
+* 국내 AI 모델 스타트업 '트릴리온랩스'가 **국내 최초로 700억 파라미터 (= 70B) 규모의 LLM을 공개** 했다.
+  * 이 모델의 이름은 **트리(Tri)-70B** 로, 2025.09.10일 오픈소스로 공개된 상태이다.
+* 이 모델의 특징은 다음과 같다.
+  * 사전 학습 (Pre-training) 데이터 규모는 **1.5조 개 토큰**
+  * 입력 데이터의 Context Window 크기는 **3.2만 토큰** 수준
+  * **한국어, 영어, 일본어** 특화
+* 외부 링크
+  * [HuggingFace Tri-70B (preview SFT)](https://huggingface.co/trillionlabs/Tri-70B-preview-SFT)
+  * [HuggingFace Tri-70B (intermediate checkpoints)](https://huggingface.co/trillionlabs/Tri-70B-Intermediate-Checkpoints)
+
 ## 2025.09.09 (화)
 **[알리바바, 1조 파라미터 LLM 공개](https://n.news.naver.com/mnews/article/009/0005555580?sid=105)** ```AI``` ```Large Language Model```
 
