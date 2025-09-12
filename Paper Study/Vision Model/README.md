@@ -1,8 +1,8 @@
 ## Vision Model
 
-* **Total 10 Papers | 10 Documents** (2025.09.07)
-  * Including 6 Generative AI Papers
-  * 🖼 (non-generative), 🎨 (generative), 🎭 (generative multi-modal), 🔠 (OCR)
+* **Total 11 Papers | 11 Documents** (2025.09.12)
+  * Including 7 Generative AI Papers
+  * 🖼 (non-generative), 🎨 (generative), 🎭 (generative multi-modal & CLIP), 🔠 (OCR)
 
 | Study Date<br>(Study Doc. Link)                                                                                                                                                                         | Paper                                                                                                                                                               | Published | 비고                                                                                                                                                 |
 |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|----------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -16,5 +16,4 @@
 | 2025.06.22 - 06.23 [(Study Doc)](%5B2025.06.22%5D%20Scaling%20up%20GANs%20for%20Text-to-Image%20Synthesis.md)                                                                                           | 🎭 [Scaling up GANs for Text-to-Image Synthesis](https://arxiv.org/pdf/2303.05511)                                                                                  | 2023.03   | Oh-LoRA v4 (2025.06.24 - 06.30) 개발 시 참고 논문                                                                                                         |
 | 2025.08.22 - 08.23 [(Study Doc)](%5B2025.08.22%5D%20General%20OCR%20Theory%20-%20Towards%20OCR-2.0%20via%20a%20Unified%20End-to-end%20Model.md)                                                         | 🔠 [General OCR Theory: Towards OCR-2.0 via a Unified End-to-end Model](https://arxiv.org/pdf/2409.01704)                                                           | 2024.09   |                                                                                                                                                    |
 | 2025.09.07 [(Study Doc)](%5B2025.09.07%5D%20CLIPArTT%20-%20Adaption%20of%20CLIP%20to%20New%20Domains%20at%20Test%20Time.md)                                                                             | 🎭 [CLIPArTT: Adaption of CLIP to New Domains at Test Time](https://arxiv.org/pdf/2405.00754)                                                                       | 2024.05   |                                                                                                                                                    |
-
-
+| 2025.09.12 - 09.13 [(Study Doc)](%5B2025.09.12%5D%20CLIP-CID%20-%20Efficient%20CLIP%20Distillation%20via%20Cluster-Instance%20Discrimination.md)                                                        | 🎭 [CLIP-CID: Efficient CLIP Distillation via Cluster-Instance Discrimination](https://ojs.aaai.org/index.php/AAAI/article/download/35505/37660)                    | 2025.04   |                                                                                                                                                    |
