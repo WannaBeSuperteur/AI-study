@@ -2,12 +2,12 @@ Paper Study (2025.03.12 -)
 
 ## Overview
 
-* **Total 37 Papers | 39 Documents** (2025.09.12)
+* **Total 38 Papers | 40 Documents** (2025.09.13)
 
 | Field                                            | Paper Count         | Paper Count<br>(Generative AI) |
 |--------------------------------------------------|---------------------|--------------------------------|
 | [Large Language Model](Large%20Language%20Model) | 26 Papers (28 Docs) | 26 Papers                      |
-| [Vision Model](Vision%20Model)                   | 11 Papers (11 Docs) | 7 Papers                       |
+| [Vision Model](Vision%20Model)                   | 12 Papers (12 Docs) | 8 Papers                       |
 
 ## Large Language Model
 
@@ -48,8 +48,8 @@ Paper Study (2025.03.12 -)
 
 ## Vision Model
 
-* **Total 11 Papers | 11 Documents** (2025.09.12)
-  * Including 7 Generative AI Papers
+* **Total 12 Papers | 12 Documents** (2025.09.13)
+  * Including 8 Generative AI Papers
   * 🖼 (non-generative), 🎨 (generative), 🎭 (generative multi-modal & CLIP), 🔠 (OCR)
 
 | Study Date<br>(Study Doc. Link)                                                                                                                                                                                      | Paper                                                                                                                                                               | Published | 비고                                                                                                                                                 |
@@ -65,3 +65,4 @@ Paper Study (2025.03.12 -)
 | 2025.08.22 - 08.23 [(Study Doc)](Vision%20Model/%5B2025.08.22%5D%20General%20OCR%20Theory%20-%20Towards%20OCR-2.0%20via%20a%20Unified%20End-to-end%20Model.md)                                                       | 🔠 [General OCR Theory: Towards OCR-2.0 via a Unified End-to-end Model](https://arxiv.org/pdf/2409.01704)                                                           | 2024.09   |                                                                                                                                                    |
 | 2025.09.07 [(Study Doc)](Vision%20Model/%5B2025.09.07%5D%20CLIPArTT%20-%20Adaption%20of%20CLIP%20to%20New%20Domains%20at%20Test%20Time.md)                                                                           | 🎭 [CLIPArTT: Adaption of CLIP to New Domains at Test Time](https://arxiv.org/pdf/2405.00754)                                                                       | 2024.05   |                                                                                                                                                    |
 | 2025.09.12 - 09.13 [(Study Doc)](Vision%20Model/%5B2025.09.12%5D%20CLIP-CID%20-%20Efficient%20CLIP%20Distillation%20via%20Cluster-Instance%20Discrimination.md)                                                      | 🎭 [CLIP-CID: Efficient CLIP Distillation via Cluster-Instance Discrimination](https://ojs.aaai.org/index.php/AAAI/article/download/35505/37660)                    | 2025.04   |                                                                                                                                                    |
+| 2025.09.13 - 09.14 [(Study Doc)](Vision%20Model/%5B2025.09.13%5D%20Stable-Hair%20-%20Real-World%20Hair%20Transfer%20via%20Diffusion%20Model.md)                                                                      | 🎭 [Stable-Hair: Real-World Hair Transfer via Diffusion Model](https://ojs.aaai.org/index.php/AAAI/article/view/33123/35278)                                        | 2025.04   |                                                                                                                                                    |
