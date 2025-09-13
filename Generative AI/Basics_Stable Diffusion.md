@@ -17,7 +17,19 @@
 
 ## 1. Stable Diffusion 이란?
 
+**Stable Diffusion** 은 [Diffusion Model](Basics_Diffusion%20Model.md) 을 **계산 복잡도 및 효율성** 측면에서 개선한 모델이다.
+
+* 기존의 Diffusion Model 은 **전체 사이즈 이미지를 [U-Net](../Image%20Processing/Model_U-Net.md) 등을 이용하여 처리** 하기 때문에 계산량 및 메모리 사용량이 많다.
+* 특히 **Gaussian Noise 로부터 Denoising 하여 이미지를 생성** 하는 과정은 수행 시간이 매우 길다.
+
 ## 2. Diffusion Model 과의 차이점
+
+Stable Diffusion 이 기존 Diffusion Model 과 다른 점은 다음과 같다.
+
+| 차이점                                                   | 설명                                                                                                                                                                                      |
+|-------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Latent Space를 이용하는 구조](#2-1-latent-space-를-이용)       | [Auto-Encoder](Basics_Auto%20Encoder.md) 또는 [VAE (Variational Auto-Encoder)](Basics_Variational%20Auto%20Encoder.md) 처럼 Encoder 와 Decoder 를 이용하여 **full-size 이미지를 latent space로 차원 축소** |
+| [Conditioning Mechanism](#2-2-conditioning-mechanism) | 특정 Class 의 이미지를 생성하기 위해, **Conditional mechanism (Classifier-Free Guidance, CFG)** 방식 적용                                                                                                |
 
 ### 2-1. Latent Space 를 이용
 
