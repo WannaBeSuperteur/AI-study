@@ -62,9 +62,46 @@ Stable Diffusion 의 **Conditioning Mechanism** 은 아래와 같이 **Embedding
 
 ## 3. Stable Diffusion 의 구조
 
+Stable Diffusion 의 구조는 다음과 같다.
+
+* 최종 예측은 $z*_0$ 을 **Decoder 에 입력시켰을 때의 출력값** 이다.
+
+| 실행 단계                     | 구조                                                                                                                               | 복원된 Latent Data 의 예측             |
+|---------------------------|----------------------------------------------------------------------------------------------------------------------------------|----------------------------------|
+| 학습 (Training)             | Forward Diffusion + Reverse Diffusion (U-Net, with **Conditional Inputs**)<br>- Diffusion과 유사하지만, 전체 이미지 대신 **Latent Data** 를 이용 | $z_0^★ = z_t - (PredictedNoise)$ |
+| 추론 (Sampling / Inference) | Text Prompt + 직전 단계의 Latent Vector → (U-Net) → 다음 단계의 Laten Vector                                                               | $z_T → z_{T-1}^★ → ... → z_0^★$  |
+
 ### 3-1. Training 시
 
+* 기본 구조
+  * **Forward Diffusion + Reverse Diffusion (U-Net)** 구조
+* Diffusion 과의 차이점
+  * 전체 이미지 대신 **Latent Data** 를 이용
+  * **Conditional Input** 이 추가됨 (text embedding 등)
+* 복원된 Latent Data 예측 
+  * **Predicted Noise** 를 이용하여 **복원된 Latent Data $z_0^★$ 를 예측**
+
+![image](images/StableDiffusion_4.PNG)
+
+[(출처)](https://blog.marvik.ai/2023/11/28/an-introduction-to-diffusion-models-and-stable-diffusion/) : Marvik, "An Introduction to Diffusion Models and Stable Diffusion"
+
 ### 3-2. Sampling (= Inference) 시
+
+* 기본 구조
+
+| 구분     | 설명                                                          |
+|--------|-------------------------------------------------------------|
+| 입력     | Text Prompt + (원본 Latent Vector 복원에서의 직전 단계의 Latent Vector) |
+| 출력     | 다음 단계의 Latent Vector                                        |
+| 중간 신경망 | U-Net 등                                                     |
+
+* 복원된 Latent Data 예측
+  * $z_T → z_{T-1}^★ → ... → z_0^★$
+  * $z_0^★$ 를 **Decoder 에 입력시켰을 때의 출력** 이 최종 복원된 이미지
+
+![image](images/StableDiffusion_5.PNG)
+
+[(출처)](https://blog.marvik.ai/2023/11/28/an-introduction-to-diffusion-models-and-stable-diffusion/) : Marvik, "An Introduction to Diffusion Models and Stable Diffusion"
 
 ## 4. Stable Diffusion 사용 사례
 
