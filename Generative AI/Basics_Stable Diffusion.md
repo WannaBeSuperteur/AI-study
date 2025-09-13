@@ -42,10 +42,23 @@ Stable Diffusion 에서는 **계산량 감소를 위해 차원 축소** 를 실�
 [(출처)](https://blog.marvik.ai/2023/11/28/an-introduction-to-diffusion-models-and-stable-diffusion/) : Marvik, "An Introduction to Diffusion Models and Stable Diffusion"
 
 * Latent Space 를 이용한 Forward/Reverse Diffusion Process
+  * 왼쪽이 **Diffusion Model (NOT Stable Diffusion)**, 오른쪽이 **Stable Diffusion** 이다. (Latent Data 는 2 x 2 로 표현)
 
 ![image](images/StableDiffusion_1.PNG)
 
 ### 2-2. Conditioning Mechanism
+
+Stable Diffusion 의 **Conditioning Mechanism** 은 아래와 같이 **Embedding 을 U-Net 에 추가로 입력** 하는 구조이다. 
+
+![image](images/StableDiffusion_3.PNG)
+
+[(출처)](https://blog.marvik.ai/2023/11/28/an-introduction-to-diffusion-models-and-stable-diffusion/) : Marvik, "An Introduction to Diffusion Models and Stable Diffusion"
+
+| 구조                               | 설명                                                                                                                                                                                                                                                                                                              |
+|----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Embedding 추가 입력                  | - 텍스트 입력을 [BERT](../Natural%20Language%20Processing/Basics_BERT,%20SBERT%20모델.md#1-bert-모델이란) 또는 [CLIP](../Paper%20Study/Vision%20Model/%5B2025.09.07%5D%20CLIPArTT%20-%20Adaption%20of%20CLIP%20to%20New%20Domains%20at%20Test%20Time.md#1-1-기존-clip-방법-및-그-문제점) 등으로 임베딩한다.<br>- 임베딩 결과물을 **U-Net 으로 입력** 시킨다. |
+| U-Net 의 Multi-Head Attention 레이어 | - U-Net 에 입력된 결과물은 **U-Net 의 Multi-Head Attention Layer 로 입력되어 Query/Key/Value 로 표현** 된다.<br>- 즉, Multi-Head Attention Layer 는 **이 임베딩을 mapping 시키는 역할** 을 한다.                                                                                                                                                  |
+| 기타 조건 정보 추가 입력                   | 경우에 따라 Semantic Map, 이미지 등 **추가적인 Conditional info** 가 입력될 수 있다.                                                                                                                                                                                                                                                |
 
 ## 3. Stable Diffusion 의 구조
 
