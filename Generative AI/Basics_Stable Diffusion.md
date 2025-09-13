@@ -33,6 +33,18 @@ Stable Diffusion 이 기존 Diffusion Model 과 다른 점은 다음과 같다.
 
 ### 2-1. Latent Space 를 이용
 
+Stable Diffusion 에서는 **계산량 감소를 위해 차원 축소** 를 실시하고, 이를 위해 **Encoder-Decoder 구조를 이용하여 원본 이미지를 Latent Space 로 차원 축소** 한다.
+
+* Encoder-Decoder 구조
+
+![image](images/StableDiffusion_2.PNG)
+
+[(출처)](https://blog.marvik.ai/2023/11/28/an-introduction-to-diffusion-models-and-stable-diffusion/) : Marvik, "An Introduction to Diffusion Models and Stable Diffusion"
+
+* Latent Space 를 이용한 Forward/Reverse Diffusion Process
+
+![image](images/StableDiffusion_1.PNG)
+
 ### 2-2. Conditioning Mechanism
 
 ## 3. Stable Diffusion 의 구조
