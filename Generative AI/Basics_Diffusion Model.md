@@ -8,6 +8,7 @@
   * [3-2. Reverse Diffusion Process](#3-2-reverse-diffusion-process)
   * [3-3. Sampling Process](#3-3-sampling-process)
 * [4. Diffusion Model 의 Loss Function](#4-diffusion-model-의-loss-function)
+* [5. Stable Diffusion](#5-stable-diffusion)
 
 ## 참고 문헌
 
@@ -118,3 +119,7 @@ Diffusion Model 의 구성을 그림으로 나타내면 다음과 같다.
 
 * 위와 같은 [Cross-Entropy Loss](../AI%20Basics/Deep%20Learning%20Basics/딥러닝_기초_Loss_function.md#2-5-categorical-cross-entropy-loss), 즉 negative [log likelihood](../AI%20Basics/Data%20Science%20Basics/데이터_사이언스_기초_Probability_vs_Likelihood.md#3-1-log-likelihood-로그-가능도-로그-우도) 가 Diffusion Model 의 Loss Function 이다.
 * 위 Loss Function 을 최소화해야 한다.
+
+## 5. Stable Diffusion
+
+* [Stable Diffusion](Basics_Stable%20Diffusion.md) 문서 참고.
