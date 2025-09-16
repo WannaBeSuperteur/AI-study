@@ -1,3 +1,12 @@
+## 2025.09.16 (화)
+**[SKT, OpenAI와 ChatGPT 관련 국내 단독 B2C 협력](https://n.news.naver.com/mnews/article/001/0015628036?sid=105)** ```AI``` ```OpenAI``` ```ChatGPT```
+
+* SKT가 OpenAI와 국내 통신사 중에서는 단독으로 **B2C 서비스를 협력하여 제공** 한다고 밝혔다.
+  * 구체적으로는 ChatGPT Plus 1개월 구독 시 2개월간 무료로 이용할 수 있게 된다. **(ChatGPT 신규 가입자 & 3개월 미만 유료 사용자 대상)**
+  * 이는 **OpenAI의 한국 사무소 개소 및 국내 진출** 이 배경이 된 것이다.
+* SKT AI성장전략본부장은 **OpenAI와의 글로벌 협력 & 자체 개발 AI 역량 강화** 전략을 축으로 고객 중심 AI 생태계를 확장하겠다고 했다.
+* 한편, SKT는 OpenAI와 2023년에 '글로벌 AI 해커톤'을 공동 개최한 바 있다.
+
 ## 2025.09.15 (월)
 **[공정거래위원회, AI 기반 업무 혁신 돌입](https://n.news.naver.com/mnews/article/003/0013481497?sid=101)** ```AI```
 
