@@ -1,7 +1,7 @@
 ## Large Language Model
 
-* **Total 27 Papers | 29 Documents** (2025.09.15)
-  * Including 27 Generative AI Papers
+* **Total 28 Papers | 30 Documents** (2025.09.24)
+  * Including 28 Generative AI Papers
   * 💻 (Single LLM Product / Model), 🤖 (LLM Agent), 🧪 (LLM Methodology), ⚖ (LLM Ethics), 🧠 [(LLM Reasoning)](../../AI%20Basics/LLM%20Basics/LLM_기초_추론형_모델.md), 🎭 (multi-modal), 💬 (others)
 
 | Study Date<br>(Study Doc. Link)                                                                                                                                                      | Paper                                                                                                                                                                 | Published | 비고                                                                                                                                      |
@@ -35,3 +35,4 @@
 | 2025.09.04 - 09.06 [(Study Doc)](%5B2025.09.04%5D%20ChainBuddy%20-%20An%20AI%20Agent%20System%20for%20Generating%20LLM%20Pipelines.md)                                               | 🤖 [ChainBuddy: An AI Agent System for Generating LLM Pipelines](https://arxiv.org/pdf/2409.13588)                                                                    | 2024.09   |                                                                                                                                         |
 | 2025.09.09 - 09.12 [(Study Doc)](%5B2025.09.09%5D%20Why%20Language%20Models%20Hallucinate.md)                                                                                        | ⚖ [Why Language Models Hallucinate](https://cdn.openai.com/pdf/d04913be-3f6f-4d2b-b283-ff432ef4aaa5/why-language-models-hallucinate.pdf)                              | 2025.09   |                                                                                                                                         |
 | 2025.09.15 [(Study Doc)](%5B2025.09.15%5D%20PaSa%20-%20An%20LLM%20Agent%20for%20Comprehensive%20Academic%20Paper%20Search.md)                                                        | 🤖 [PaSa: An LLM Agent for Comprehensive Academic Paper Search](https://arxiv.org/pdf/2501.10120)                                                                     | 2025.01   |                                                                                                                                         |
+| 2025.09.24 - 09.25 [(Study Doc)](%5B2025.09.24%5D%20HalluLens%20-%20LLM%20Hallucination%20Benchmark.md)                                                                              | ⚖ [HalluLens: LLM Hallucination Benchmark](https://arxiv.org/pdf/2504.17550)                                                                                          | 2025.04   |                                                                                                                                         | 
