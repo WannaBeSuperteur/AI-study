@@ -13,6 +13,7 @@
   * [Optimizer](딥러닝_기초_Optimizer.md)
   * [Regularization](딥러닝_기초_Regularization.md)
   * [Weight Initialization](딥러닝_기초_Weight_initialization.md)
+  * [Shared Backbone & Shared Head](딥러닝_기초_Shared_Backbone_Head.md)
 
 * 🔮 **딥러닝 학습에 쓰이는 함수**
   * [Loss Function](딥러닝_기초_Loss_function.md)
