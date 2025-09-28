@@ -67,10 +67,10 @@
 * **실험 1 결과**
   * **Splitted Head** 인 **(3), (4)-1, (4)-2** 의 경우, **각 Head의 2가지 Class의 예측 정확도 평균** 사용
 
-| 구분    | 실험 결과                                | 결과 요약                                                                                                               |
-|-------|--------------------------------------|---------------------------------------------------------------------------------------------------------------------|
-| 정확도   | ![image](images/Backbone_Head_2.PNG) | - **Splitted Backbone** 이 Shared backbone 보다 정확도 **소폭 높음**<br>- **Splitted Head** 가 Shared Head 보다 정확도 **높음**       |
-| 추론 시간 | ![image](images/Backbone_Head_3.PNG) | - **Shared Backbone** 이 Splitted Backbone 보다 **추론 시간이 절반 수준으로, 속도가 빠름**<br>- backbone 모델 크기가 커질수록 추론 시간이 이에 비례하여 증가 |
+| 구분        | 실험 결과                                | 결과 요약                                                                                                         |
+|-----------|--------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| 정확도       | ![image](images/Backbone_Head_2.PNG) | - **Splitted Backbone** 이 Shared backbone 보다 정확도 **소폭 높음**<br>- **Splitted Head** 가 Shared Head 보다 정확도 **높음** |
+| 추론 시간 (초) | ![image](images/Backbone_Head_3.PNG) | - **Shared Backbone** 이 Splitted Backbone 보다 **2배 정도 빠름**<br>- backbone 모델 자체가 클수록, 추론 시간이 이에 비례하여 증가         |
 
 * **실험 2 결과**
   * **Splitted Head** 인 **(3), (4)-1, (4)-2** 의 경우, **2개의 Head 모두 정확히 예측해야 정답 처리되는 정확도** 사용
