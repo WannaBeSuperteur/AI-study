@@ -73,7 +73,7 @@
 * **실험 결과 요약**
   * **Splitted Head & Backbone 인 (4)-1** 이 다른 case 들에 비해 정확도가 소폭 높은 편
   * 추론 시간은 **모델의 크기가 크고 (ResNet50 등), Splitted Backbone** 인 경우에 오래 걸림
-  * 정확도와 추론 시간의 trade-off 를 고려할 때, 본 실험 결과만으로는 **(3) 과 같은 모델 구조를 적용** 하는 것이 최선으로 판단 
+  * 정확도와 추론 시간의 trade-off 를 고려할 때, 본 실험 결과만으로는 **(3) 과 같은 Shared Backbone & Non-shared Head 모델 구조를 적용** 하는 것이 최선으로 판단 
 
 * **실험 1 결과**
   * **Splitted Head** 인 **(3), (4)-1, (4)-2** 의 경우, **각 Head의 2가지 Class의 예측 정확도 평균** 사용
