@@ -6,7 +6,7 @@
   * [인공신경망 (ANN)](딥러닝_기초_인공신경망.md)
   * [퍼셉트론 (Perceptron)](딥러닝_기초_퍼셉트론.md)
 
-* ⚡ **학습 프로세스 기본 설정**
+* ⚡ **학습 프로세스 & 모델 기본 설정**
   * [Early Stopping](딥러닝_기초_Early_Stopping.md)
   * [Learning Rate](딥러닝_기초_Learning_Rate.md)
     * [Learning Rate Scheduler](딥러닝_기초_Learning_Rate_Scheduler.md)
