@@ -1,3 +1,15 @@
+## 2025.09.30 (화)
+**[한컴, 소형 AI 연합 기술 공개](https://n.news.naver.com/mnews/article/003/0013514866?sid=105)** ```AI``` ```Large Language Model```
+
+* 한컴 (한글과컴퓨터) 이 **AI 기술을 자체적으로 개발하여 이를 바탕으로 논문 2편을 arXiv에 등재** 했다.
+  * 이를 통해 **향후 AI 기술 기업으로서 발전 가능성** 을 보여주었다.
+* 해당 논문 2편에 대한 구체적인 사항은 다음과 같다.
+
+| 논문                                                                                                  | 설명                                                                                                                                                                              |
+|-----------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| SLM-Based Agentic AI with P–C–G: Optimized for Korean Tool Use                                      | - **Agentic AI (AI 에이전트)** 관련 논문<br>- 거대 언어 모델이 아닌, **소형 언어 모델 (sLM) 간 협업** 구조를 통한 에이전트 구현<br>- sLM은 **기획자, 실행자, 생성자** 로 구분                                                     |
+| Chunk Knowledge Generation Model for Enhanced Information Retrieval: A Multi-task Learning Approach | - [검색 증강 생성 (RAG)](../AI%20Basics/LLM%20Basics/LLM_기초_RAG.md) 성능 향상을 통한 [환각 현상](../AI%20Basics/LLM%20Basics/LLM_기초_환각_현상.md) 감소 기술<br>- **DB 구축 시 '검색 힌트'를 AI가 자체적으로 생성** 하는 기술 |
+
 ## 2025.09.29 (월)
 **[KT, 한국형 LLM 'SOTA K' 발표](https://n.news.naver.com/mnews/article/009/0005566483?sid=105)** ```AI``` ```Large Language Model```
 
