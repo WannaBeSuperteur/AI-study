@@ -14,6 +14,7 @@
 |-------------------|-------------------------------------------------------------|---------------------------------------------------------|
 | ```0,3,4``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_034.ipynb) | [결과 csv](codes/Shared_Backbone_Head_experiment_034.csv) |
 | ```0,5,6``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_056.ipynb) | [결과 csv](codes/Shared_Backbone_Head_experiment_056.csv) |
+| ```6,8,9``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_689.ipynb) | [결과 csv](codes/Shared_Backbone_Head_experiment_689.csv) |
 
 ## 1. 개요
 
@@ -55,6 +56,8 @@
 ![image](images/Backbone_Head_7.PNG)
 
 * 조합 ```{6,8,9}```
+
+![image](images/Backbone_Head_8.PNG)
 
 * 조합 ```{0,3,8}```
 
