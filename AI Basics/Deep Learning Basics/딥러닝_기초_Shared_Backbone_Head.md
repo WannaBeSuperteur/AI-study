@@ -13,10 +13,10 @@
 
 * [가장 적절한 모델 구조 실험](#3-탐구-어떤-구조가-가장-좋을까) 코드
 
-| 실험    | ipynb 코드                                                  | 결과 csv 파일                               |
-|-------|-----------------------------------------------------------|-----------------------------------------|
-| 1차 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_1.ipynb) | [결과 csv](codes/result_experiment_1.csv) |
-| 2차 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_2.ipynb) | [결과 csv](codes/result_experiment_2.csv) |
+| 실험    | ipynb 코드                                                  | 결과 csv 파일                                             |
+|-------|-----------------------------------------------------------|-------------------------------------------------------|
+| 1차 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_1.ipynb) | [결과 csv](codes/Shared_Backbone_Head_experiment_1.csv) |
+| 2차 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_2.ipynb) | [결과 csv](codes/Shared_Backbone_Head_experiment_2.csv) |
 
 ## 1. Shared Backbone & Shared Head 개요
 
