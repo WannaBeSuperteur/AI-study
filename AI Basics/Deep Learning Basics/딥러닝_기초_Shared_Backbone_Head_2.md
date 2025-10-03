@@ -8,6 +8,12 @@
   * [3-2. 데이터셋 크기에 따른 실험](#3-2-데이터셋-크기에-따른-실험)
   * [3-3. Learning Rate 에 따른 실험 (작은 데이터셋)](#3-3-learning-rate-에-따른-실험-작은-데이터셋)
 
+## 코드
+
+| 실험                | ipynb 코드                                                    | 결과 csv 파일                                               |
+|-------------------|-------------------------------------------------------------|---------------------------------------------------------|
+| ```0,3,4``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_034.ipynb) | [결과 csv](codes/Shared_Backbone_Head_experiment_034.csv) |
+
 ## 1. 개요
 
 * [Shared Backbone / Shared Head 문서](딥러닝_기초_Shared_Backbone_Head.md) 에서 진행한, **어떤 모델 구조가 최적인지** 에 대한 [실험](딥러닝_기초_Shared_Backbone_Head.md#3-탐구-어떤-구조가-가장-좋을까) 을 추가 진행
