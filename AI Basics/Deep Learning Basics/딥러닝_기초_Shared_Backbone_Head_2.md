@@ -13,6 +13,7 @@
 | 실험                | ipynb 코드                                                    | 결과 csv 파일                                               |
 |-------------------|-------------------------------------------------------------|---------------------------------------------------------|
 | ```0,3,4``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_034.ipynb) | [결과 csv](codes/Shared_Backbone_Head_experiment_034.csv) |
+| ```0,5,6``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_056.ipynb) | [결과 csv](codes/Shared_Backbone_Head_experiment_056.csv) |
 
 ## 1. 개요
 
