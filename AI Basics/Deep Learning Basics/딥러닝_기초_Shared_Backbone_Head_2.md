@@ -111,10 +111,14 @@
 
 * train dataset size 에 따른 각 Architecture 의 정확도 변화
 
-![image](images/Backbone_Head_13.PNG)
+| 그래프                                   | 최고/최저 정확도 케이스                                                                                                              |
+|---------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
+| ![image](images/Backbone_Head_13.PNG) | 최고:<br>- **(1) Non-Shared** backbone & **Shared** head<br><br>최저:<br>- **(4)-2 Non-Shared** backbone & **Non-Shared** head |
 
 * train dataset size 구간에 따른 각 Architecture 의 정확도 평균
 
-![image](images/Backbone_Head_14.PNG)
+| 그래프                                   | 최고/최저 정확도 케이스                                                                                                              |
+|---------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
+| ![image](images/Backbone_Head_14.PNG) | 최고:<br>- **(1) Non-Shared** backbone & **Shared** head<br><br>최저:<br>- **(4)-2 Non-Shared** backbone & **Non-Shared** head |
 
 ### 3-3. Learning Rate 에 따른 실험 (작은 데이터셋)
