@@ -38,7 +38,7 @@
 **1. 전체 결과 요약**
 
 * 실험 결과 요약
-  * 본 실험 결과만을 고려할 때, **(3) Shared backbone & Non-Shared head** 가 정확도 및 추론 시간의 양 측면에서 최선의 선택
+  * 본 실험 결과만을 고려할 때, **(3) Shared backbone & Non-Shared head** 가 '정확도' 및 '추론 시간'의 양 측면에서 최선의 선택
   * 정확도가 중요한 경우, 차선책으로는 **(1) Non-Shared backbone & Shared head** 를 선택할 수 있음
 
 * 전체 조합 정확도 평균
@@ -49,10 +49,10 @@
 
 * 각 조합 별 정확도 및 inference 시간 평균
 
-| 구분                                                            | 그래프                                   |
-|---------------------------------------------------------------|---------------------------------------|
-| 정확도                                                           | ![image](images/Backbone_Head_11.PNG) |
-| inference 시간 [(참고)](딥러닝_기초_Shared_Backbone_Head.md#3-2-실험-결과) | ![image](images/Backbone_Head_3.PNG)  |
+| 구분                                                               | 그래프                                   |
+|------------------------------------------------------------------|---------------------------------------|
+| 정확도                                                              | ![image](images/Backbone_Head_11.PNG) |
+| inference 시간<br>[(참고)](딥러닝_기초_Shared_Backbone_Head.md#3-2-실험-결과) | ![image](images/Backbone_Head_3.PNG)  |
 
 **2. 개별 케이스 실험 결과**
 
