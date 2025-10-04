@@ -39,6 +39,7 @@
 
 * 실험 결과 요약
   * 본 실험 결과만을 고려할 때, **(3) Shared backbone & Non-Shared head** 가 정확도 및 추론 시간의 양 측면에서 최선의 선택
+  * 정확도가 중요한 경우, 차선책으로는 **(1) Non-Shared backbone & Shared head** 를 선택할 수 있음
 
 * 전체 조합 정확도 평균
 
@@ -53,27 +54,39 @@
 
 * 조합 ```{0,1,2}```
 
-![image](images/Backbone_Head_5.PNG)
+| 그래프                                  | 최고 정확도 케이스                                                                |
+|--------------------------------------|---------------------------------------------------------------------------|
+| ![image](images/Backbone_Head_5.PNG) | **(4)-1** with **ResNet34**<br>- Non-Shared backbone<br>- Non-Shared head |
 
 * 조합 ```{0,3,4}```
 
-![image](images/Backbone_Head_6.PNG)
+| 그래프                                  | 최고 정확도 케이스                                                                |
+|--------------------------------------|---------------------------------------------------------------------------|
+| ![image](images/Backbone_Head_6.PNG) | **(4)-2** with **ResNet50**<br>- Non-Shared backbone<br>- Non-Shared head |
 
 * 조합 ```{0,5,6}```
 
-![image](images/Backbone_Head_7.PNG)
+| 그래프                                  | 최고 정확도 케이스                                                          |
+|--------------------------------------|---------------------------------------------------------------------|
+| ![image](images/Backbone_Head_7.PNG) | **(1)** with **ResNet18**<br>- Non-Shared backbone<br>- Shared Head |
 
 * 조합 ```{6,8,9}```
 
-![image](images/Backbone_Head_8.PNG)
+| 그래프                                  | 최고 정확도 케이스                                                          |
+|--------------------------------------|---------------------------------------------------------------------|
+| ![image](images/Backbone_Head_8.PNG) | **(1)** with **ResNet34**<br>- Non-Shared backbone<br>- Shared Head |
 
 * 조합 ```{0,3,8}```
 
-![image](images/Backbone_Head_9.PNG)
+| 그래프                                  | 최고 정확도 케이스                                                                |
+|--------------------------------------|---------------------------------------------------------------------------|
+| ![image](images/Backbone_Head_9.PNG) | **(4)-1** with **ResNet18**<br>- Non-Shared backbone<br>- Non-Shared head |
 
 * 조합 ```{1,7,9}```
 
-![image](images/Backbone_Head_10.PNG)
+| 그래프                                   | 최고 정확도 케이스                                                          |
+|---------------------------------------|---------------------------------------------------------------------|
+| ![image](images/Backbone_Head_10.PNG) | **(1)** with **ResNet34**<br>- Non-Shared backbone<br>- Shared Head |
 
 ### 3-2. 데이터셋 크기에 따른 실험
 
