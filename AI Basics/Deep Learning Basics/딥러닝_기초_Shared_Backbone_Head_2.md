@@ -38,10 +38,17 @@
 **1. 전체 결과 요약**
 
 * 실험 결과 요약
+  * 본 실험 결과만을 고려할 때, **(3) Shared backbone & Non-Shared head** 가 정확도 및 추론 시간의 양 측면에서 최선의 선택
 
-* 전체 조합 평균
+* 전체 조합 정확도 평균
 
-* 각 조합 별 정확도 평균
+* 각 조합 별 정확도 및 inference 시간 평균
+
+| 구분           | 그래프                                   |
+|--------------|---------------------------------------|
+| 정확도          | ![image](images/Backbone_Head_11.PNG) |
+| inference 시간 | ![image](images/Backbone_Head_3.PNG)  |
+
 
 **2. 개별 케이스 실험 결과**
 
@@ -66,6 +73,8 @@
 ![image](images/Backbone_Head_9.PNG)
 
 * 조합 ```{1,7,9}```
+
+![image](images/Backbone_Head_10.PNG)
 
 ### 3-2. 데이터셋 크기에 따른 실험
 
