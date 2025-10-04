@@ -44,11 +44,10 @@
 
 * 각 조합 별 정확도 및 inference 시간 평균
 
-| 구분           | 그래프                                   |
-|--------------|---------------------------------------|
-| 정확도          | ![image](images/Backbone_Head_11.PNG) |
-| inference 시간 | ![image](images/Backbone_Head_3.PNG)  |
-
+| 구분                                                            | 그래프                                   |
+|---------------------------------------------------------------|---------------------------------------|
+| 정확도                                                           | ![image](images/Backbone_Head_11.PNG) |
+| inference 시간 [(참고)](딥러닝_기초_Shared_Backbone_Head.md#3-2-실험-결과) | ![image](images/Backbone_Head_3.PNG)  |
 
 **2. 개별 케이스 실험 결과**
 
