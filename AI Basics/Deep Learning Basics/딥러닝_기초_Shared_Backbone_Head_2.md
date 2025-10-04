@@ -10,13 +10,14 @@
 
 ## 코드
 
-| 실험                | ipynb 코드                                                    | 결과 csv 파일                                               |
-|-------------------|-------------------------------------------------------------|---------------------------------------------------------|
-| ```0,3,4``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_034.ipynb) | [결과 csv](codes/Shared_Backbone_Head_experiment_034.csv) |
-| ```0,5,6``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_056.ipynb) | [결과 csv](codes/Shared_Backbone_Head_experiment_056.csv) |
-| ```6,8,9``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_689.ipynb) | [결과 csv](codes/Shared_Backbone_Head_experiment_689.csv) |
-| ```0,3,8``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_038.ipynb) | [결과 csv](codes/Shared_Backbone_Head_experiment_038.csv) |
-| ```1,7,9``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_179.ipynb) | [결과 csv](codes/Shared_Backbone_Head_experiment_179.csv) |
+| 실험                | ipynb 코드                                                                                    | 결과 csv 파일                                               |
+|-------------------|---------------------------------------------------------------------------------------------|---------------------------------------------------------|
+| ```0,3,4``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_034.ipynb)                                 | [결과 csv](codes/Shared_Backbone_Head_experiment_034.csv) |
+| ```0,5,6``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_056.ipynb)                                 | [결과 csv](codes/Shared_Backbone_Head_experiment_056.csv) |
+| ```6,8,9``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_689.ipynb)                                 | [결과 csv](codes/Shared_Backbone_Head_experiment_689.csv) |
+| ```0,3,8``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_038.ipynb)                                 | [결과 csv](codes/Shared_Backbone_Head_experiment_038.csv) |
+| ```1,7,9``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_179.ipynb)                                 | [결과 csv](codes/Shared_Backbone_Head_experiment_179.csv) |
+| 데이터셋 크기에 따른 실험    | [ipynb 코드](codes/Shared_Backbone_Head_experiment_3/Shared_Backbone_Head_experiment_3.ipynb) | [결과 csv 디렉토리](codes/Shared_Backbone_Head_experiment_3)  |
 
 ## 1. 개요
 
