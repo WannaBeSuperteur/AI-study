@@ -10,15 +10,15 @@
 
 ## 코드
 
-| 실험                   | ipynb 코드                                                                                       | 결과 csv 파일                                                 |
-|----------------------|------------------------------------------------------------------------------------------------|-----------------------------------------------------------|
-| ```0,3,4``` 조합 실험    | [ipynb 코드](codes/Shared_Backbone_Head_experiment_034.ipynb)                                    | [결과 csv](codes/Shared_Backbone_Head_experiment_034.csv)   |
-| ```0,5,6``` 조합 실험    | [ipynb 코드](codes/Shared_Backbone_Head_experiment_056.ipynb)                                    | [결과 csv](codes/Shared_Backbone_Head_experiment_056.csv)   |
-| ```6,8,9``` 조합 실험    | [ipynb 코드](codes/Shared_Backbone_Head_experiment_689.ipynb)                                    | [결과 csv](codes/Shared_Backbone_Head_experiment_689.csv)   |
-| ```0,3,8``` 조합 실험    | [ipynb 코드](codes/Shared_Backbone_Head_experiment_038.ipynb)                                    | [결과 csv](codes/Shared_Backbone_Head_experiment_038.csv)   |
-| ```1,7,9``` 조합 실험    | [ipynb 코드](codes/Shared_Backbone_Head_experiment_179.ipynb)                                    | [결과 csv](codes/Shared_Backbone_Head_experiment_179.csv)   |
-| 데이터셋 크기에 따른 실험       | [ipynb 코드](codes/Shared_Backbone_Head_experiment_3/Shared_Backbone_Head_experiment_3.ipynb)    | [결과 csv 디렉토리](codes/Shared_Backbone_Head_experiment_3)    |
-| Learning Rate에 따른 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_3_lr/Shared_Backbone_Head_experiment_3.ipynb) | [결과 csv 디렉토리](codes/Shared_Backbone_Head_experiment_3_lr) |
+| 실험                   | ipynb 코드                                                                                     | 결과 csv 파일                                                 |
+|----------------------|----------------------------------------------------------------------------------------------|-----------------------------------------------------------|
+| ```0,3,4``` 조합 실험    | [ipynb 코드](codes/Shared_Backbone_Head_experiment_034.ipynb)                                  | [결과 csv](codes/Shared_Backbone_Head_experiment_034.csv)   |
+| ```0,5,6``` 조합 실험    | [ipynb 코드](codes/Shared_Backbone_Head_experiment_056.ipynb)                                  | [결과 csv](codes/Shared_Backbone_Head_experiment_056.csv)   |
+| ```6,8,9``` 조합 실험    | [ipynb 코드](codes/Shared_Backbone_Head_experiment_689.ipynb)                                  | [결과 csv](codes/Shared_Backbone_Head_experiment_689.csv)   |
+| ```0,3,8``` 조합 실험    | [ipynb 코드](codes/Shared_Backbone_Head_experiment_038.ipynb)                                  | [결과 csv](codes/Shared_Backbone_Head_experiment_038.csv)   |
+| ```1,7,9``` 조합 실험    | [ipynb 코드](codes/Shared_Backbone_Head_experiment_179.ipynb)                                  | [결과 csv](codes/Shared_Backbone_Head_experiment_179.csv)   |
+| 데이터셋 크기에 따른 실험       | [ipynb 코드](codes/Shared_Backbone_Head_experiment_3/Shared_Backbone_Head_experiment_3.ipynb)  | [결과 csv 디렉토리](codes/Shared_Backbone_Head_experiment_3)    |
+| Learning Rate에 따른 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_3_lr/Shared_Backbone_Head_experiment.ipynb) | [결과 csv 디렉토리](codes/Shared_Backbone_Head_experiment_3_lr) |
 
 ## 1. 개요
 
@@ -34,11 +34,11 @@
 
 * 실험 결과 요약
 
-| 실험                                                                    | 실험 결과 요약                                                            |
-|-----------------------------------------------------------------------|---------------------------------------------------------------------|
-| [0,1,2 외의 서로 다른 숫자 조합 실험](#3-1-012-외의-서로-다른-숫자-조합-실험)                 | **(3) Shared backbone & Non-Shared head** 가 정확도 및 추론 시간 고려 시 최선의 선택 |
-| [데이터셋 크기에 따른 실험](#3-2-데이터셋-크기에-따른-실험)                                 | **(1) Non-Shared backbone & Shared head** 의 정확도가 가장 높음              |
-| [Learning Rate 에 따른 실험 (작은 데이터셋)](#3-3-learning-rate-에-따른-실험-작은-데이터셋) |                                                                     |
+| 실험                                                                    | 실험 결과 요약                                                                                                                   | 정확도 최고 / 최저 아키텍쳐                                               |
+|-----------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------|
+| [0,1,2 외의 서로 다른 숫자 조합 실험](#3-1-012-외의-서로-다른-숫자-조합-실험)                 | **(3) Shared backbone & Non-Shared head** 가 정확도 및 추론 시간 고려 시 최선의 선택                                                        | - 최고: **(1), (3)**<br>- 최저: **(4)-2**                          |
+| [데이터셋 크기에 따른 실험](#3-2-데이터셋-크기에-따른-실험)                                 | **(1) Non-Shared backbone & Shared head** 의 정확도가 가장 높음                                                                     | - 최고: **(1)**<br>- 최저: **(4)-2**                               |
+| [Learning Rate 에 따른 실험 (작은 데이터셋)](#3-3-learning-rate-에-따른-실험-작은-데이터셋) | - 전체적으로는 **(1) (2)** 아키텍쳐의 정확도가 가장 높음<br>- learning rate 가 클 때는 **(2) Shared** backbone & **Shared** head 아키텍쳐의 정확도가 가장 높음 | - 최고: **(2)**<br>(learning rate 가 클수록 **(1)** 과의 정확도 차이가 두드러짐) |
 
 ### 3-1. 0,1,2 외의 서로 다른 숫자 조합 실험
 
