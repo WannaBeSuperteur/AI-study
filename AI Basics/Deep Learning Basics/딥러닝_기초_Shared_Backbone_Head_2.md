@@ -10,14 +10,15 @@
 
 ## 코드
 
-| 실험                | ipynb 코드                                                                                    | 결과 csv 파일                                               |
-|-------------------|---------------------------------------------------------------------------------------------|---------------------------------------------------------|
-| ```0,3,4``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_034.ipynb)                                 | [결과 csv](codes/Shared_Backbone_Head_experiment_034.csv) |
-| ```0,5,6``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_056.ipynb)                                 | [결과 csv](codes/Shared_Backbone_Head_experiment_056.csv) |
-| ```6,8,9``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_689.ipynb)                                 | [결과 csv](codes/Shared_Backbone_Head_experiment_689.csv) |
-| ```0,3,8``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_038.ipynb)                                 | [결과 csv](codes/Shared_Backbone_Head_experiment_038.csv) |
-| ```1,7,9``` 조합 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_179.ipynb)                                 | [결과 csv](codes/Shared_Backbone_Head_experiment_179.csv) |
-| 데이터셋 크기에 따른 실험    | [ipynb 코드](codes/Shared_Backbone_Head_experiment_3/Shared_Backbone_Head_experiment_3.ipynb) | [결과 csv 디렉토리](codes/Shared_Backbone_Head_experiment_3)  |
+| 실험                   | ipynb 코드                                                                                       | 결과 csv 파일                                                 |
+|----------------------|------------------------------------------------------------------------------------------------|-----------------------------------------------------------|
+| ```0,3,4``` 조합 실험    | [ipynb 코드](codes/Shared_Backbone_Head_experiment_034.ipynb)                                    | [결과 csv](codes/Shared_Backbone_Head_experiment_034.csv)   |
+| ```0,5,6``` 조합 실험    | [ipynb 코드](codes/Shared_Backbone_Head_experiment_056.ipynb)                                    | [결과 csv](codes/Shared_Backbone_Head_experiment_056.csv)   |
+| ```6,8,9``` 조합 실험    | [ipynb 코드](codes/Shared_Backbone_Head_experiment_689.ipynb)                                    | [결과 csv](codes/Shared_Backbone_Head_experiment_689.csv)   |
+| ```0,3,8``` 조합 실험    | [ipynb 코드](codes/Shared_Backbone_Head_experiment_038.ipynb)                                    | [결과 csv](codes/Shared_Backbone_Head_experiment_038.csv)   |
+| ```1,7,9``` 조합 실험    | [ipynb 코드](codes/Shared_Backbone_Head_experiment_179.ipynb)                                    | [결과 csv](codes/Shared_Backbone_Head_experiment_179.csv)   |
+| 데이터셋 크기에 따른 실험       | [ipynb 코드](codes/Shared_Backbone_Head_experiment_3/Shared_Backbone_Head_experiment_3.ipynb)    | [결과 csv 디렉토리](codes/Shared_Backbone_Head_experiment_3)    |
+| Learning Rate에 따른 실험 | [ipynb 코드](codes/Shared_Backbone_Head_experiment_3_lr/Shared_Backbone_Head_experiment_3.ipynb) | [결과 csv 디렉토리](codes/Shared_Backbone_Head_experiment_3_lr) |
 
 ## 1. 개요
 
@@ -122,3 +123,24 @@
 | ![image](images/Backbone_Head_14.PNG) | 최고:<br>- **(1) Non-Shared** backbone & **Shared** head<br><br>최저:<br>- **(4)-2 Non-Shared** backbone & **Non-Shared** head |
 
 ### 3-3. Learning Rate 에 따른 실험 (작은 데이터셋)
+
+* 실험 개요
+  * 위 [0,1,2 외의 서로 다른 숫자 조합 실험](#3-1-012-외의-서로-다른-숫자-조합-실험) 에서 조합 ```{6,8,9}``` 로 실험 (단, 학습 데이터 **4,000 개**)
+  * 모델 아키텍쳐 (```(1)``` ```(2)``` ```(3)``` ```(4)-1``` ```(4)-2```) 와 ResNet 종류 조합은 동일
+  * **Learning Rate 를 기존 1e-4 에서 늘려서** 테스트
+
+* 실험 결과 요약
+  * 본 실험 결과만을 고려할 때, **(1) Non-Shared backbone & Shared head** 가 '정확도' 측면에서 최선의 선택
+  * 단, 조합 케이스가 1가지뿐이므로, **실험의 신뢰성을 높이려면 다른 조합에 대한 실험 필요**
+
+* train dataset size 에 따른 각 Architecture 의 정확도 변화
+
+| 그래프                                   | 최고/최저 정확도 케이스                                                                                               |
+|---------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| ![image](images/Backbone_Head_15.PNG) | 최고:<br>- 전체적으로는 불분명<br>- learning rate 가 클 때는 **(2) Shared** backbone & **Shared** head<br><br>최저:<br>- 불분명 |
+
+* train dataset size 구간에 따른 각 Architecture 의 정확도 평균
+
+| 그래프                                   | 최고/최저 정확도 케이스                                                          |
+|---------------------------------------|------------------------------------------------------------------------|
+| ![image](images/Backbone_Head_16.PNG) | 최고:<br>- **(2) Shared** backbone & **Shared** head<br><br>최저:<br>- 불분명 |
