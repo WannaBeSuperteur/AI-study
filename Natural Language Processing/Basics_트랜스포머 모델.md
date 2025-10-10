@@ -4,6 +4,7 @@
 
 * [1. 트랜스포머 모델](#1-트랜스포머-모델)
 * [2. 포지셔널 인코딩 (Positional Encoding)](#2-포지셔널-인코딩-positional-encoding)
+  * [2-1. RoPE (Rotary Positional Embedding)](#2-1-rope-rotary-positional-embedding) 
 * [3. 트랜스포머에서의 어텐션 메커니즘](#3-트랜스포머에서의-어텐션-메커니즘)
   * [3-1. Encoder Self-Attention](#3-1-encoder-self-attention)
   * [3-2. Masked Decoder Self-Attention](#3-2-masked-decoder-self-attention)
@@ -54,6 +55,12 @@ Transformer 모델에서는 임베딩 벡터가 입력되기 전에 **Positional
 ![Positional Encoding 예시](./images/Transformer_3.PNG)
 
 즉, 단어가 Encoder 또는 Decoder의 hidden layer로 입력되기 전에 먼저 Positional Encoding 값이 더해진다.
+
+### 2-1. RoPE (Rotary Positional Embedding)
+
+**RoPE (Rotary Positional Embedding)** 은 **Embedding 된 Vector 의 성분을 2개씩 묶고, 이를 좌표로 한 점의 회전 각도** 를 이용한 Embedding 이다.
+
+* [상세 정보](../Paper%20Study/Large%20Language%20Model/%5B2025.03.12%5D%20LLaMA%20-%20Open%20and%20Efficient%20Foundation%20Language%20Models.md#2-3-rotary-embedding)
 
 ## 3. 트랜스포머에서의 어텐션 메커니즘
 
