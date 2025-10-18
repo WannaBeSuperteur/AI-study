@@ -1,7 +1,7 @@
 ## Large Language Model
 
-* **Total 30 Papers | 32 Documents** (2025.10.10)
-  * Including 30 Generative AI Papers
+* **Total 31 Papers | 33 Documents** (2025.10.18)
+  * Including 31 Generative AI Papers
   * 💻 (Single LLM Product / Model), 🤖 (LLM Agent), 🧪 (LLM Methodology), ⚖ (LLM Ethics), 🧠 [(LLM Reasoning)](../../AI%20Basics/LLM%20Basics/LLM_기초_추론형_모델.md), 🎭 (multi-modal), 💬 (others)
 
 | Study Date<br>(Study Doc. Link)                                                                                                                                                      | Paper                                                                                                                                                                 | Published | 비고                                                                                                                                      |
@@ -38,3 +38,5 @@
 | 2025.09.24 - 10.01 [(Study Doc)](%5B2025.09.24%5D%20HalluLens%20-%20LLM%20Hallucination%20Benchmark.md)                                                                              | ⚖ [HalluLens: LLM Hallucination Benchmark](https://arxiv.org/pdf/2504.17550)                                                                                          | 2025.04   |                                                                                                                                         | 
 | 2025.10.01 - 10.02 [(Study Doc)](%5B2025.10.01%5D%20Usable%20XAI%20-%2010%20Strategies%20Towards%20Exploiting%20Explainability%20in%20the%20LLM%20Era.md)                            | ⚖ [Usable XAI: 10 Strategies Towards Exploiting Explainability in the LLM Era](https://arxiv.org/pdf/2403.08946)                                                      | 2024.03   |
 | 2025.10.10 [(Study Doc)](%5B2025.10.10%5D%20LLM%20Maybe%20LongLM%20-%20SelfExtend%20LLM%20Context%20Window%20Without%20Training.md)                                                  | 🧪 [LLM Maybe LongLM: SelfExtend LLM Context Window Without Tuning](https://arxiv.org/pdf/2401.01325)                                                                 | 2024.01   |                                                                                                                                         |
+| 2025.10.18 [(Study Doc)](%5B2025.10.18%5D%20Memento%20-%20Fine-tuning%20LLM%20Agents%20without%20Fine-tuning%20LLMs.md)                                                              | 🧪 [Memento: Fine-tuning LLM Agents without Fine-tuning LLMs](https://arxiv.org/pdf/2508.16153)                                                                       | 2025.08   |                                                                                                                                         |
+
