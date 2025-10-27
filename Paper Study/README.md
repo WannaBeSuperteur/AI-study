@@ -2,17 +2,17 @@ Paper Study (2025.03.12 -)
 
 ## Overview
 
-* **Total 43 Papers | 45 Documents** (2025.10.18)
+* **Total 44 Papers | 46 Documents** (2025.10.27)
 
 | Field                                            | Paper Count         | Paper Count<br>(Generative AI) |
 |--------------------------------------------------|---------------------|--------------------------------|
-| [Large Language Model](Large%20Language%20Model) | 31 Papers (33 Docs) | 31 Papers                      |
+| [Large Language Model](Large%20Language%20Model) | 32 Papers (34 Docs) | 32 Papers                      |
 | [Vision Model](Vision%20Model)                   | 12 Papers (12 Docs) | 8 Papers                       |
 
 ## Large Language Model
 
-* **Total 31 Papers | 33 Documents** (2025.10.18)
-  * Including 31 Generative AI Papers
+* **Total 32 Papers | 34 Documents** (2025.10.27)
+  * Including 32 Generative AI Papers
   * 💻 (Single LLM Product / Model), 🤖 (LLM Agent), 🧪 (LLM Methodology), ⚖ (LLM Ethics), 🧠 [(LLM Reasoning)](../AI%20Basics/LLM%20Basics/LLM_기초_추론형_모델.md), 🎭 (multi-modal), 💬 (others)
 
 | Study Date<br>(Study Doc. Link)                                                                                                                                                                               | Paper                                                                                                                                                                 | Published | 비고                                                                                                                                      |
@@ -50,6 +50,7 @@ Paper Study (2025.03.12 -)
 | 2025.10.01 - 10.02 [(Study Doc)](Large%20Language%20Model/%5B2025.10.01%5D%20Usable%20XAI%20-%2010%20Strategies%20Towards%20Exploiting%20Explainability%20in%20the%20LLM%20Era.md)                            | ⚖ [Usable XAI: 10 Strategies Towards Exploiting Explainability in the LLM Era](https://arxiv.org/pdf/2403.08946)                                                      | 2024.03   |
 | 2025.10.10 [(Study Doc)](Large%20Language%20Model/%5B2025.10.10%5D%20LLM%20Maybe%20LongLM%20-%20SelfExtend%20LLM%20Context%20Window%20Without%20Training.md)                                                  | 🧪 [LLM Maybe LongLM: SelfExtend LLM Context Window Without Tuning](https://arxiv.org/pdf/2401.01325)                                                                 | 2024.01   |                                                                                                                                         |
 | 2025.10.18 - 10.25 [(Study Doc)](Large%20Language%20Model/%5B2025.10.18%5D%20Memento%20-%20Fine-tuning%20LLM%20Agents%20without%20Fine-tuning%20LLMs.md)                                                      | 🧪 [Memento: Fine-tuning LLM Agents without Fine-tuning LLMs](https://arxiv.org/pdf/2508.16153)                                                                       | 2025.08   |                                                                                                                                         |
+| 2025.10.27 - 10.28 [(Study Doc)](Large%20Language%20Model/%5B2025.10.27%5D%20Next-Generation%20Database%20Interfaces%20-%20A%20Surve%20of%20LLM-based%20Text-to-SQL.md)                                       | 💬 [Next-Generation Database Interfaces: A Survey of LLM-based Text-to-SQL](https://arxiv.org/pdf/2406.08426)                                                         | 2024.06   |                                                                                                                                         |
 
 ## Vision Model
 
