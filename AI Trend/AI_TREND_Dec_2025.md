@@ -1,3 +1,12 @@
+## 2025.12.10 (수)
+**[OpenAI, 슬랙 CEO 영입](https://n.news.naver.com/mnews/article/009/0005603634?sid=101)** ```AI``` ```OpenAI```
+
+* ChatGPT 개발사 OpenAI가 최근 슬랙 (Slack) CEO인 데니스 드레서를 영입했다.
+  * 데니스 드레서는 **OpenAI의 최고매출책임자 (CRO)** 로 영입되었다. 
+  * 데니스 드레서 CRO는 **OpenAI의 수익 전략 총괄 및 기업 고객 AI 도입 지원** 을 담당한다.
+* 한편, OpenAI는 현재 기업 가치 5000억 달러 정도이지만, **AI 인프라 등 투자로 인해 재정적 압박** 이 있는 상태이다.
+  * 또한, 경쟁 AI 모델인 Google의 Gemini-3 Pro의 이용자 수 상승 추이 역시 위기이다.
+
 ## 2025.12.09 (화)
 **[알파고, 바둑 국가대표 훈련용 AI가 되다](https://m.sports.naver.com/general/article/056/0012081928)** ```AI```
 
