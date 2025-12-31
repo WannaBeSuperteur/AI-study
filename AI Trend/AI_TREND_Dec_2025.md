@@ -1,3 +1,15 @@
+## 2025.12.31 (수)
+**[NC AI 정예팀, 국가 핵심 산업 특화 AI '배키' 오픈소스 공개](https://n.news.naver.com/mnews/article/003/0013685245?sid=105)** ```AI```
+
+* 2025.12.31일 NC AI 컨소시엄에서 **독자 AI 파운데이션 모델인 배키 (VAETKI) 를 오픈소스로 공개** 했다.
+  * 배키는 **Vertical AI Engine for Transformation of Key Industries** 로, 말 그대로 **산업 분야에 특화된 AI 모델** 이다.
+  * 즉, 거대 언어 모델 (LLM) 과는 본질적으로 다른, **산업 현장의 특수성과 보안성** 을 차별점으로 하는 모델이다.
+* '배키'의 특징은 다음과 같다.
+  * **1000억 개 (100B)** 이상의 파라미터 
+  * 비용 절감을 위해 [MoE (전문가 혼합)](../AI%20Basics/LLM%20Basics/LLM_기초_Mixture_of_Experts.md) 을 적용하여, 실제 추론 시 활성화되는 파라미터는 **11B 규모**
+  * 독자적 Multi-Head Latent Attention 기술을 통해 **메모리 사용량 감소 및 연산 속도 향상**
+    * GPU가 부족한 실제 산업 현장에서도 활용 가능 
+
 ## 2025.12.30 (화)
 **[식/의약품 안전 관리에 AI 접목한다](https://n.news.naver.com/mnews/article/003/0013683403?sid=105)** ```AI```
 
