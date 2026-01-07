@@ -1,4 +1,21 @@
 
+## 2026.01.07 (수)
+**[SKT, 519B 파라미터 LLM 'A.X K1' 오픈소스 공개](https://n.news.naver.com/mnews/article/003/0013697284?sid=105)** ```AI``` ```Large Language Model```
+
+* SK텔레콤이 자사 초거대 LLM인 **A.X K1 (519B 파라미터 규모)** 을 오픈소스로 공개했다.
+  * A.X K1의 기술 보고서는 [HuggingFace](https://huggingface.co/skt/A.X-K1) 에서 확인할 수 있다. 
+  * 이 모델의 의의는 **GPU 자원 제한 및 짧은 기간 등 제약 사항** 에도 불구하고 **국내 최초로 500B 이상의 LLM을 완성** 했다는 것이다. 
+* A.X K1의 성능 수준은 다음과 같다.
+  * 주요 벤치마크에서 DeepSeek-V3.1 등 **글로벌 초거대 LLM 수준 이상의 성능** 달성 
+
+| 벤치마크               | 성능 수준                                                                 |
+|--------------------|-----------------------------------------------------------------------|
+| AIME25 (수학)        | **89.8점** > 88.4점 (DeepSeek-V3.1)                                     |
+| LiveCodeBench (코딩) | **75.8점 (영어), 73.1점 (한국어)** > 69.5점 (영어), 66.2점 (한국어) (DeepSeek-V3.1) |
+
+* 또한, A.X K1은 [전문가 혼합 (MoE)](../AI%20Basics/LLM%20Basics/LLM_기초_Mixture_of_Experts.md) 을 통해 **일부 파라미터 (33B) 를 선택적으로 활성화** 하여 높은 효율을 달성했다.
+* Context Length 는 **128K tokens** 이다.
+
 ## 2026.01.06 (화)
 **[SK AX, 생성형 AI 역량 인증 정부 공인 획득](https://n.news.naver.com/mnews/article/366/0001134417?sid=105)** ```AI``` ```Generative AI``` ```Large Language Model```
 
