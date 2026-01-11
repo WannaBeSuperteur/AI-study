@@ -1,4 +1,17 @@
 
+## 2026.01.11 (일)
+**[LG, 독자 AI 모델 'K-엑사원' 공개](https://n.news.naver.com/mnews/article/003/0013703225?sid=101)** ```AI``` ```Large Language Model```
+
+* 2026.01.11일 LG AI연구원이 **독자 AI 파운데이션 모델 'K-엑사원 (EXAONE)' 을 공개** 했다.
+  * 이 모델은 2026.01.28일까지 **API가 무료 제공** 된다.
+* 이 모델의 성능 수준은 다음과 같다.
+  * 독자 AI 파운데이션 모델 벤치마크 데이터셋 13개 중 **10개에서 1위 달성**
+  * 전체 평균 **72점** (5개 정예팀 모델 중 **최고 성능** 기록)
+  * Artificial Analysis의 Intelligence Index 기준 **32점 (가중치 공개 모델 전 세계 7위 & 국내 1위)**
+* 이 모델의 특징은 다음과 같다.
+  * **고효율 저비용** (성능 향상, 학습 및 운용 비용 절감) 
+  * 하이브리드 어텐션 (Hybrid Attention = Sliding Window 어텐션 + 글로벌 어텐션) 의 고도화 적용을 통한 **메모리 요구량 & 연산량 엑사원 4.0 대비 70% 감소**
+
 ## 2026.01.10 (토)
 **[OpenAI, ChatGPT 건강 출시](https://n.news.naver.com/mnews/article/014/0005459819?sid=105)** ```AI``` ```OpenAI``` ```ChatGPT```
 
