@@ -7,6 +7,7 @@
   * [2-3. 인덱스 (DB 검색)](#2-3-인덱스-db-검색)
   * [2-4. 추상화된 거대 언어 모델 (LLM)](#2-4-추상화된-거대-언어-모델-llm)
   * [2-5. 기타 요소](#2-5-기타-요소)
+* [3. LangChain Study (GitHub Directory)](#3-langchain-study-github-directory)
 
 ## 1. Langchain 이란?
 
@@ -103,3 +104,7 @@ LLM 추상화의 중요성은 다음과 같다.
 
 * 일반적으로 Langchain 애플리케이션에 적용되는 챗봇 (Chatbot) 을 의미한다.
 * 최근 (2024년 11월 이후) 에는 **행동을 생성** 하는 **행동형 AI (AI 에이전트)** 가 생성형 AI를 이을, 에이전트의 최신 트렌드로 떠오르고 있다.
+
+## 3. LangChain Study (GitHub Directory)
+
+* [LangChain 스터디 디렉토리 바로가기](../../LangChain%20Study)
