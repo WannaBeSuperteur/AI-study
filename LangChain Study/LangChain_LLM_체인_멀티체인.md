@@ -7,7 +7,7 @@
     * [2-2. 병렬 체인 (Parellel)](#2-2-병렬-체인-parellel)
     * [2-3. 조건부 분기 (Branching)](#2-3-조건부-분기-branching)
 * ipynb 실습 파일
-  * TBU
+  * [ipynb 실습 파일](ipynb/LangChain_LLM_체인_멀티체인.ipynb)
 
 ## 1. 멀티 체인의 유형
 
