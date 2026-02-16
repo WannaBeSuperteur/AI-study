@@ -5,8 +5,9 @@
   * [2. Chain 연결 및 호출 실습](#2-chain-연결-및-호출-실습)
     * [2-1. Chain 연결](#2-1-chain-연결)
     * [2-2. Chain 호출](#2-2-chain-호출)
+    * [2-3. Output Parser를 이용한 처리](#2-3-output-parser를-이용한-처리)
 * ipynb 실습 파일
-  * TBU 
+  * [ipynb 실습 파일](ipynb/LangChain_LLM_체인_기본.ipynb)
 
 ## 1. LLM 체인의 구성 요소
 
@@ -22,3 +23,5 @@
 ### 2-1. Chain 연결
 
 ### 2-2. Chain 호출
+
+### 2-3. Output Parser를 이용한 처리
