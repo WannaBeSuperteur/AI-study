@@ -9,7 +9,7 @@
   * [3. Partial Prompt](#3-partial-prompt)
   * [4. 참고 링크](#4-참고-링크)
 * ipynb 실습 파일
-  * TBU 
+  * [ipynb 실습 파일](ipynb/LangChain_프롬프트.ipynb)
 
 ## 1. 프롬프트의 개념
 
