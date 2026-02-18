@@ -11,6 +11,7 @@
     * [4-2. 장기 메모리](#4-2-장기-메모리)
 * ipynb 실습 파일
   * [LangGraph 실습 파일](ipynb/LangChain_메모리_LangGraph_기반.ipynb)
+  * [장기 메모리 예제](ipynb/LangChain_메모리_장기_메모리_예제.ipynb)
 
 ## 1. LangChain의 메모리 개요 및 필요성
 
