@@ -158,3 +158,252 @@ agent = create_agent(
   * 사용자 프로필 정보
   * 사용자 선호도 데이터
   * 과거 사용자-LLM 간 상호작용 패턴 등
+
+**실전 예제 코드**
+
+* OpenAI LLM 환경 설정
+
+```python
+# setting OpenAI API
+
+from langchain_openai import ChatOpenAI
+import os
+
+with open('openai_api_key.txt', 'r') as f:
+    openai_api_key = f.readlines()[0].split('\n')[0]
+    os.environ['OPENAI_API_KEY'] = openai_api_key
+
+llm = ChatOpenAI(model='gpt-4o-mini')
+```
+
+```python
+from langgraph.store.memory import InMemoryStore
+
+# 메모리 기반 Store 생성
+store = InMemoryStore()
+```
+
+```python
+# store 에 저장하기 위한 key 이름
+
+USER_INFO_KEY = 'user_info'
+```
+
+* LLM 에이전트의 tool call 용 함수들
+
+```python
+from langchain.tools import tool, ToolRuntime
+
+# 사용자 정보 조회
+
+@tool
+def get_user_info(info_type: str, runtime: ToolRuntime) -> str:
+    """Get user info of info_type."""
+
+    # get user ID
+    store = runtime.store
+    user_id = runtime.config['metadata'].get("user_id", "default")
+
+    # search user_info (dict-like)
+    namespace = ("users", user_id)
+    memory = store.get(namespace, USER_INFO_KEY)
+
+    if memory:
+        try:
+            return f"사용자의 {info_type} 정보: {memory.value[info_type]}"
+        except:
+            return f"{info_type} 과 일치하는 데이터가 없습니다."
+    else:
+        return "저장된 데이터가 없습니다."
+```
+
+```python
+# 사용자 정보 저장 (기록)
+
+@tool
+def set_user_info(info_type: str, info_value: str, runtime: ToolRuntime) -> str:
+    """Store user info of info_type as info_value."""
+
+    # get user ID
+    store = runtime.store
+    user_id = runtime.config['metadata'].get("user_id", "default")
+
+    # search or create user_info (dict-like)
+    namespace = ("users", user_id)
+    memory = store.get(namespace, USER_INFO_KEY)
+
+    if memory:
+        user_info = memory.value
+    else:
+        user_info = {}
+
+    # store user info
+    user_info[info_type] = info_value
+    store.put(namespace, USER_INFO_KEY, user_info)
+
+    return f"{info_type} 정보가 업데이트되었습니다."
+```
+
+* LLM 에이전트 실행
+
+```python
+# LLM 에이전트 생성
+
+from langchain.agents import create_agent
+from langgraph.checkpoint.memory import MemorySaver
+
+agent = create_agent(
+    llm,
+    tools=[get_user_info, set_user_info],
+    checkpointer=MemorySaver(),
+    store=store
+)
+```
+
+```python
+# LLM 에이전트 실행 (정보 저장 - 1)
+
+config = {
+    "configurable": {"thread_id": "thread-1"},
+    "user_id": "test"
+}
+result = agent.invoke(
+    {"messages": [("user", "내 경력을 3년 5개월로 저장해 줘")]},
+    config=config
+)
+
+# LLM 실행 결과 출력
+result['messages'][-1].content
+```
+
+* 결과
+  * ```경력이 3년 5개월로 저장되었습니다. 다른 도움이 필요하시면 말씀해 주세요!```
+
+```python
+# LLM 에이전트 실행 (정보 저장 - 2)
+
+config = {
+    "configurable": {"thread_id": "thread-1"},
+    "user_id": "test"
+}
+result = agent.invoke(
+    {"messages": [("user", "내 전공분야를 머신러닝/딥러닝으로 저장해 줘")]},
+    config=config
+)
+
+# LLM 실행 결과 출력
+result['messages'][-1].content
+```
+
+* 결과
+  * ```전공분야가 머신러닝/딥러닝으로 저장되었습니다. 추가로 필요한 사항이 있으면 알려주세요!```
+
+```python
+# LLM 에이전트 실행 (정보 저장 - 3)
+
+config = {
+    "configurable": {"thread_id": "thread-1"},
+    "user_id": "test"
+}
+result = agent.invoke(
+    {"messages": [("user", "내 학력을 석사 졸업으로 저장해 줘")]},
+    config=config
+)
+
+# LLM 실행 결과 출력
+result['messages'][-1].content
+```
+
+* 결과
+  * ```학력이 석사 졸업으로 저장되었습니다. 더 필요한 것이 있으면 말씀해 주세요!```
+
+```python
+# LLM 에이전트 실행 (정보 조회)
+
+config = {
+    "configurable": {"thread_id": "thread-2"},
+    "user_id": "test"
+}
+result = agent.invoke(
+    {"messages": [("user", "내 경력 정보를 조회해 줘")]},
+    config=config
+)
+
+# LLM 실행 결과 출력
+result['messages'][-1].content
+```
+
+* 결과
+  * ```당신의 경력 정보는 3년 5개월입니다. 추가적으로 필요한 정보가 있으면 말씀해 주세요!``` 
+
+```python
+# 모든 정보 조회
+def get_all_user_info(store, user_id):
+
+    # search user_info (dict-like)
+    namespace = ("users", user_id)
+    memory = store.get(namespace, USER_INFO_KEY)
+    print(memory.value)
+```
+
+```python
+get_all_user_info(store, user_id='test')
+```
+
+* 결과
+  * ```{'경력': '3년 5개월', '전공분야': '머신러닝/딥러닝', '학력': '석사 졸업'}``` 
+
+```python
+# LLM 에이전트 실행 (추가 질문)
+
+config = {
+    "configurable": {"thread_id": "thread-3"},
+    "user_id": "test"
+}
+result = agent.invoke(
+    {"messages": [("user", "지금까지 저장된 전공분야, 학력, 경력 정보를 바탕으로, 나에게 맞는 이직 준비 전략을 추천해 줘")]},
+    config=config
+)
+
+# LLM 실행 결과 출력
+result['messages'][-1].content
+```
+
+* 결과
+
+```
+당신의 전공 분야, 학력, 경력 정보를 바탕으로 다음과 같은 이직 준비 전략을 추천합니다.
+
+### 1. 전공 분야
+- **전공 정보가 없음**: 전공이 명확하지 않으므로, 이직을 고려할 때 다양한 분야에 도전할 수 있습니다. 관심 있는 분야를 탐색하고, 해당 분야에 맞는 경로를 설정하는 것이 중요합니다.
+
+### 2. 학력
+- **산업 관련 전문학교 졸업**: 이 학벌은 여러 산업 분야에서 기초적인 전문 지식을 갖추고 있으므로, 이를 살릴 수 있는 분야를 정하는 것이 좋습니다.
+
+### 3. 경력
+- **3년 5개월의 경력**: 중간 경력자로서, 이직 시 경력을 강조하여 더 높은 직급이나 책임 있는 역할을 요청할 수 있습니다.
+
+---
+
+### 이직 준비 전략
+
+1. **관심 분야 발굴**:
+   - 어떤 분야에서 일하고 싶은지 깊이 고민해 보세요. IT, 마케팅, 디자인, 운영관리 등 다양한 옵션을 고려할 수 있습니다.
+
+2. **기술 향상**:
+   - 현재 산업이나 희망 직무에 필요한 추가 교육이나 자격증 취득을 고려해 보세요. 신기술이나 트렌드를 반영한 교육을 통해 경쟁력을 높이는 것이 중요합니다.
+
+3. **이력서 업데이트**:
+   - 전문학교에서의 경험, 프로젝트, 성과 등을 중심으로 이력서를 업데이트하세요. 경력과 관련된 구체적인 성과를 강조하는 것이 좋습니다.
+
+4. **네트워킹 및 커뮤니티 참여**:
+   - 관련 업종의 행사, 세미나, 온라인 커뮤니티에 적극 참여하여 인맥을 넓히고 정보 교류를 하세요. 네트워킹은 이직에 큰 도움이 됩니다.
+
+5. **면접 준비**:
+   - 목표로 하는 직무에 대한 충분한 연구 후, 관련 질문을 미리 준비하세요. 차별화된 답변을 준비하여 면접 시 자신감을 가지고 대처하는 것이 필요합니다.
+
+6. **모의 면접 실시**:
+   - 친구나 멘토를 통해 모의 면접을 진행하여 실제 면접 상황에 대비하세요. 이 과정을 통해 피드백을 받고 개선할 수 있습니다.
+
+이직은 개인의 경력을 발전시키는 중요한 기회입니다. 충분한 준비를 통해 원하는 방향으로 나아가길 바랍니다. 추가적인 질문이나 도움이 필요하시면 언제든지 말씀해 주세요!
+```
