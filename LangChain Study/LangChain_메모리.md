@@ -5,11 +5,12 @@
   * [2. LangChain의 메모리 유형](#2-langchain의-메모리-유형)
   * [3. 메모리의 구현 방식](#3-메모리의-구현-방식)
     * [3-1. RunnableWithMessageHistory](#3-1-runnablewithmessagehistory)
+    * [3-2. LangGraph 기반 방법](#3-2-langgraph-기반-방법)
   * [4. 실전 예제](#4-실전-예제)
     * [4-1. 단기 메모리](#4-1-단기-메모리)
     * [4-2. 장기 메모리](#4-2-장기-메모리)
 * ipynb 실습 파일
-  * TBU
+  * [LangGraph 실습 파일](ipynb/LangChain_메모리_LangGraph_기반.ipynb)
 
 ## 1. LangChain의 메모리 개요 및 필요성
 
@@ -39,6 +40,8 @@ LangChain 메모리의 구현 방식은 다음과 같다.
 | LangGraph 기반                     | 복잡한 에이전트 (상태 관리 등) 에 적합<br>- **LangChain 1.0 권장** |
 
 ### 3-1. RunnableWithMessageHistory
+
+### 3-2. LangGraph 기반 방법
 
 ## 4. 실전 예제
 
