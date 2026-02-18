@@ -78,4 +78,42 @@ agent = create_agent(
 
 ## 2. LangChain 내장 미들웨어
 
+LangChain에서 제공하는 내장 미들웨어는 다음과 같이 10가지이다.
+
+| 미들웨어 카테고리   | 미들웨어                                                                                                                                                               |
+|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 컨텍스트 관리     | - ```SummarizationMiddleware``` (자동 요약)<br>- ```ContextEditingMiddleware``` (컨텍스트 수정을 통해 **오래된 도구 호출 결과 제거**)                                                      |
+| 호출 제한       | - ```ModelCallLimitMiddleware``` (모델 **API 호출** 횟수 제한)<br>- ```ToolCallLimitMiddleware``` (**도구 호출** 횟수 제한)                                                        |
+| 오류 대응 및 재시도 | - ```ModelFallbackMiddleware``` (모델 실패, 즉 fallback 시 **대체 모델로 전환**)<br>- ```ModelRetryMiddleware``` (**모델 호출** 재시도)<br>- ```ToolRetryMiddleware``` (**도구 호출** 재시도) |
+| 도구 최적화      | - ```LLMToolSelectorMiddleware``` (도구 선택)                                                                                                                          |
+| 가드레일        | - ```PIIMiddleware``` (**개인정보** 탐지 및 마스킹 처리)<br>- ```HumanInTheLoopMiddleware``` (실행 시 **사전에 사람의 승인** 필요)                                                          |
+
 ### 2-1. 가드레일
+
+LangChain 미들웨어 중 **가드레일 (Guardrails)** 은 **AI 에이전트 실행 시 안전성, 품질 등을 보장** 하기 위한 장치이다.
+
+* 미들웨어의 역할은 다음과 같다.
+  * 개인정보 등 **민감한 정보 유출 방지**
+  * 각종 악의적 공격 (prompt injection 등), 부적절한 콘텐츠 등 차단
+  * 각 산업별 AI Agent가 지켜야 하는 **규정 준수**
+  * AI Agent 출력에 대한 **품질 및 정확성 보증**
+
+가드레일 구현 방법은 **결정적 (Deterministic), 모델 기반 (Model-based)** 가드레일이 있다.
+
+| 구현 방법               | 설명                                             |
+|---------------------|------------------------------------------------|
+| 결정적 (Deterministic) | **규칙 기반 로직** (정규 표현식 등) 을 통한 가드레일 구현           |
+| 모델 기반 (Model-based) | **AI 모델 (LLM, 분류 모델 등)** 을 사용한 **의미론적 콘텐츠 평가** |
+
+* 실제 구현 예시
+
+```python
+@before_agent
+def validate_user_input(state: AgentState, runtime: Runtime):
+    """Validate user input prompt."""
+
+    # ... function body ...
+    
+    if not is_valid:  # raise ValueError on non-valid user input
+        raise ValueError(...)
+```
