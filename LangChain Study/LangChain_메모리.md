@@ -129,4 +129,31 @@ result2_answer_final
 
 ### 4-1. 단기 메모리
 
+**단기 메모리 (Short-term Memory)** 는 **단일 대화 세션** 에서의 사용자-LLM 간 이전 상호작용을 기억한다.
+
+* LangGraph 기반의 MemorySaver 방법 사용
+* LLM Agent 를 호출하는 함수 ```create_agent``` 에 ```checkpointer``` 를 전달하면 됨
+* 참고
+  * [3-2. LangGraph 기반 방법](#3-2-langgraph-기반-방법)
+
+```python
+# create memory saver
+checkpointer = MemorySaver()
+
+# create agent
+agent = create_agent(
+    local_llm,
+    tools=[],
+    checkpointer=checkpointer
+)
+```
+
 ### 4-2. 장기 메모리
+
+**장기 메모리 (Long-term Memory)** 는 대화 세션이 종료되어도 **영구적으로 정보를 저장 및 조회가 가능한 시스템** 이다.
+
+* 장기 메모리를 구현하기 위해서는 **LangGraph 의 영속성 (Persistence)** 기능을 사용한다.
+* 장기 메모리에 저장되는 데이터는 **사용자에 대한 여러 가지 정보** 이다.
+  * 사용자 프로필 정보
+  * 사용자 선호도 데이터
+  * 과거 사용자-LLM 간 상호작용 패턴 등
