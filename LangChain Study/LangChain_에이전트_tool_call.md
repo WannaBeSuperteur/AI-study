@@ -5,10 +5,12 @@
     * [1-1. 내장 도구](#1-1-내장-도구)
     * [1-2. 커스텀 도구](#1-2-커스텀-도구)
   * [2. Agent와 도구 통합 예제](#2-agent와-도구-통합-예제)
-  * [3. 커스텀 도구 생성 예제](#3-커스텀-도구-생성-예제)
-  * [4. LangChain v1.0 에이전트 생성 예제](#4-langchain-v10-에이전트-생성-예제)
+  * [3. 커스텀 도구를 활용한 에이전트 생성 예제](#3-커스텀-도구를-활용한-에이전트-생성-예제)
+    * [3-1. 문제점 및 해결 방법](#3-1-문제점-및-해결-방법)
+    * [3-2. 참고 사항](#3-2-참고-사항)
 * ipynb 실습 파일
   * [도구 호출 기본 (Agent와 도구 통합 예제)](ipynb/LangChain_에이전트_도구_호출_기본.ipynb)
+  * [커스텀 도구를 활용한 에이전트 생성 예제](ipynb/LangChain_에이전트_도구_호출_커스텀.ipynb)
 
 ## 1. LangChain에서 호출 가능한 도구
 
@@ -167,6 +169,108 @@ print(result["messages"][-1].content)
 비트코인의 최근 5년간 연 평균 수익률은 약 **11.41%**입니다.
 ```
 
-## 3. 커스텀 도구 생성 예제
+## 3. 커스텀 도구를 활용한 에이전트 생성 예제
 
-## 4. LangChain v1.0 에이전트 생성 예제
+* 예제 코드
+
+```python
+# LLM이 호출할 도구 (tool) 로 사용할 함수 (evaluate_expression)
+
+from langchain.tools import tool
+
+@tool
+def evaluate_expression(expression: str) -> str:
+    """Evaluate given math expression."""
+
+    print(f'\n\n[ expression to solve ] {expression}\n\n')
+
+    python_expression = expression.replace('x', '*')
+    return eval(python_expression)
+```
+
+```python
+from langchain.agents import create_agent
+
+# create LLM agent
+agent = create_agent(
+    model=llm,
+    tools=[evaluate_expression],
+    system_prompt="""당신은 수학 교사입니다.
+- 사용자가 수학 문제를 제시하면, 해당 문제에 대한 풀이 과정 및 답을 제시합니다.
+- 사용자가 제시하는 수학 문제는 실생활 기반 문장제 문제입니다."""
+)
+```
+
+```python
+# run LLM agent (1)
+
+result = agent.invoke({
+    "messages": [
+        {"role": "user", "content": """
+영준이는 사과 2개를 가지고 있고, 유영이는 사과 4개를 가지고 있다.
+영준이와 유영이가 가진 사과의 개수의 합과 차는?        
+"""}
+    ]
+})
+
+print(result["messages"][-1].content)
+```
+
+```python
+# run LLM agent (2)
+
+result = agent.invoke({
+    "messages": [
+        {"role": "user", "content": """
+영준이가 가진 사과는 유영이가 가진 사과 개수의 3배이다.
+영준이와 유영이가 각각 사과 8개씩을 더 가지면, 영준이가 가진 사과는 유영이가 가진 사과 개수의 2배가 된다.
+영준이와 유영이가 각각 가진 사과의 개수는?       
+"""}
+    ]
+})
+
+print(result["messages"][-1].content)
+```
+
+* 실행 결과 (```run LLM agent (1)```, 일부 개행 제거)
+
+```
+[ expression to solve ] 2 + 4
+[ expression to solve ] 4 - 2
+
+영준이와 유영이가 가진 사과의 개수의 합은 6개, 차는 2개입니다. 
+
+- 사과의 개수의 합: \(2 + 4 = 6\)
+- 사과의 개수의 차: \(4 - 2 = 2\)
+```
+
+* 실행 결과 (```run LLM agent (2)```, 일부 개행 제거)
+
+```
+[ expression to solve ] x = 유영이의 사과 개수, 영준이의 사과 개수 = 3x (사과의 개수 관계)
+[ expression to solve ] (3x + 8) = 2(x + 8) (사과 개수 조건)
+[ expression to solve ] 3x + 8 = 2x + 16 (방정식 정리)
+
+Traceback (most recent call last):
+
+...
+
+  File "<string>", line 1
+    (3* + 8) = 2(* + 8) (사과 개수 조건)
+             ^
+SyntaxError: invalid syntax
+
+```
+
+### 3-1. 문제점 및 해결 방법
+
+* 문제점
+  * 주어진 tool 함수를 호출할 때 **입력 형식이 잘못된 경우 오류 발생 → 프로세스 종료됨**
+* 해결 방법
+  * tool 함수 호출에서 오류 발생 시, **오류가 발생했다는 예외 처리**
+  * 오류가 발생했을 때 대안으로 호출해야 하는 tool을 별도로 준비
+    * 해당 tool을 호출하도록 시스템 프롬프트 추가 구성 
+
+### 3-2. 참고 사항
+
+* tool 로 사용되는 함수의 인수명으로 ```config```, ```runtime``` 은 사용할 수 없다.
