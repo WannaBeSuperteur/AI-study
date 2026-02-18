@@ -130,3 +130,129 @@ Agent의 구성 요소는 다음과 같다.
 
 ## 4. 에이전트 실행 방법 상세
 
+**1. 단일 실행 (```invoke()```)**
+
+* [2. Agent 기본 생성 및 실행 방법](#2-agent-기본-생성-및-실행-방법) 의 예제 참고.
+
+**2. 스트리밍 실행 (```stream()```)**
+
+* 스트리밍 실행 모드
+
+| ```updates```               | ```messages``` | ```custom``` |
+|-----------------------------|----------------|--------------|
+| 각 에이전트 **단계별 결과 도출** 시 업데이트 | **토큰 단위** 스트리밍 | 사용자 지정 스트리밍  |
+
+* 예제 코드
+
+```python
+# 스트리밍 방식
+
+for event in agent.stream(
+    {"messages": [{"role": "user", "content": "벡터의 내적이 갖는 의미를 20글자 이내의 명사 조합으로 설명해줘."}]},
+    stream_mode="messages"
+):
+    print(event)
+```
+
+* 실행 결과
+
+```
+(AIMessageChunk(content='', additional_kwargs={}, response_metadata={'model_provider': 'openai'}, id='lc_run--019c6fc0-92c6-7973-826c-d4afdb1a06f6', tool_calls=[], invalid_tool_calls=[], tool_call_chunks=[]), {'langgraph_step': 1, 'langgraph_node': 'model', 'langgraph_triggers': ('branch:to:model',), 'langgraph_path': ('__pregel_pull', 'model'), 'langgraph_checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'ls_provider': 'openai', 'ls_model_name': 'gpt-4o-mini', 'ls_model_type': 'chat', 'ls_temperature': None})
+(AIMessageChunk(content='두', additional_kwargs={}, response_metadata={'model_provider': 'openai'}, id='lc_run--019c6fc0-92c6-7973-826c-d4afdb1a06f6', tool_calls=[], invalid_tool_calls=[], tool_call_chunks=[]), {'langgraph_step': 1, 'langgraph_node': 'model', 'langgraph_triggers': ('branch:to:model',), 'langgraph_path': ('__pregel_pull', 'model'), 'langgraph_checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'ls_provider': 'openai', 'ls_model_name': 'gpt-4o-mini', 'ls_model_type': 'chat', 'ls_temperature': None})
+(AIMessageChunk(content=' 벡', additional_kwargs={}, response_metadata={'model_provider': 'openai'}, id='lc_run--019c6fc0-92c6-7973-826c-d4afdb1a06f6', tool_calls=[], invalid_tool_calls=[], tool_call_chunks=[]), {'langgraph_step': 1, 'langgraph_node': 'model', 'langgraph_triggers': ('branch:to:model',), 'langgraph_path': ('__pregel_pull', 'model'), 'langgraph_checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'ls_provider': 'openai', 'ls_model_name': 'gpt-4o-mini', 'ls_model_type': 'chat', 'ls_temperature': None})
+(AIMessageChunk(content='터', additional_kwargs={}, response_metadata={'model_provider': 'openai'}, id='lc_run--019c6fc0-92c6-7973-826c-d4afdb1a06f6', tool_calls=[], invalid_tool_calls=[], tool_call_chunks=[]), {'langgraph_step': 1, 'langgraph_node': 'model', 'langgraph_triggers': ('branch:to:model',), 'langgraph_path': ('__pregel_pull', 'model'), 'langgraph_checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'ls_provider': 'openai', 'ls_model_name': 'gpt-4o-mini', 'ls_model_type': 'chat', 'ls_temperature': None})
+(AIMessageChunk(content='의', additional_kwargs={}, response_metadata={'model_provider': 'openai'}, id='lc_run--019c6fc0-92c6-7973-826c-d4afdb1a06f6', tool_calls=[], invalid_tool_calls=[], tool_call_chunks=[]), {'langgraph_step': 1, 'langgraph_node': 'model', 'langgraph_triggers': ('branch:to:model',), 'langgraph_path': ('__pregel_pull', 'model'), 'langgraph_checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'ls_provider': 'openai', 'ls_model_name': 'gpt-4o-mini', 'ls_model_type': 'chat', 'ls_temperature': None})
+(AIMessageChunk(content=' 유', additional_kwargs={}, response_metadata={'model_provider': 'openai'}, id='lc_run--019c6fc0-92c6-7973-826c-d4afdb1a06f6', tool_calls=[], invalid_tool_calls=[], tool_call_chunks=[]), {'langgraph_step': 1, 'langgraph_node': 'model', 'langgraph_triggers': ('branch:to:model',), 'langgraph_path': ('__pregel_pull', 'model'), 'langgraph_checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'ls_provider': 'openai', 'ls_model_name': 'gpt-4o-mini', 'ls_model_type': 'chat', 'ls_temperature': None})
+(AIMessageChunk(content='사', additional_kwargs={}, response_metadata={'model_provider': 'openai'}, id='lc_run--019c6fc0-92c6-7973-826c-d4afdb1a06f6', tool_calls=[], invalid_tool_calls=[], tool_call_chunks=[]), {'langgraph_step': 1, 'langgraph_node': 'model', 'langgraph_triggers': ('branch:to:model',), 'langgraph_path': ('__pregel_pull', 'model'), 'langgraph_checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'ls_provider': 'openai', 'ls_model_name': 'gpt-4o-mini', 'ls_model_type': 'chat', 'ls_temperature': None})
+(AIMessageChunk(content='성', additional_kwargs={}, response_metadata={'model_provider': 'openai'}, id='lc_run--019c6fc0-92c6-7973-826c-d4afdb1a06f6', tool_calls=[], invalid_tool_calls=[], tool_call_chunks=[]), {'langgraph_step': 1, 'langgraph_node': 'model', 'langgraph_triggers': ('branch:to:model',), 'langgraph_path': ('__pregel_pull', 'model'), 'langgraph_checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'ls_provider': 'openai', 'ls_model_name': 'gpt-4o-mini', 'ls_model_type': 'chat', 'ls_temperature': None})
+(AIMessageChunk(content=' 측', additional_kwargs={}, response_metadata={'model_provider': 'openai'}, id='lc_run--019c6fc0-92c6-7973-826c-d4afdb1a06f6', tool_calls=[], invalid_tool_calls=[], tool_call_chunks=[]), {'langgraph_step': 1, 'langgraph_node': 'model', 'langgraph_triggers': ('branch:to:model',), 'langgraph_path': ('__pregel_pull', 'model'), 'langgraph_checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'ls_provider': 'openai', 'ls_model_name': 'gpt-4o-mini', 'ls_model_type': 'chat', 'ls_temperature': None})
+(AIMessageChunk(content='정', additional_kwargs={}, response_metadata={'model_provider': 'openai'}, id='lc_run--019c6fc0-92c6-7973-826c-d4afdb1a06f6', tool_calls=[], invalid_tool_calls=[], tool_call_chunks=[]), {'langgraph_step': 1, 'langgraph_node': 'model', 'langgraph_triggers': ('branch:to:model',), 'langgraph_path': ('__pregel_pull', 'model'), 'langgraph_checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'ls_provider': 'openai', 'ls_model_name': 'gpt-4o-mini', 'ls_model_type': 'chat', 'ls_temperature': None})
+(AIMessageChunk(content='.', additional_kwargs={}, response_metadata={'model_provider': 'openai'}, id='lc_run--019c6fc0-92c6-7973-826c-d4afdb1a06f6', tool_calls=[], invalid_tool_calls=[], tool_call_chunks=[]), {'langgraph_step': 1, 'langgraph_node': 'model', 'langgraph_triggers': ('branch:to:model',), 'langgraph_path': ('__pregel_pull', 'model'), 'langgraph_checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'ls_provider': 'openai', 'ls_model_name': 'gpt-4o-mini', 'ls_model_type': 'chat', 'ls_temperature': None})
+(AIMessageChunk(content='', additional_kwargs={}, response_metadata={'finish_reason': 'stop', 'model_name': 'gpt-4o-mini-2024-07-18', 'system_fingerprint': 'fp_373a14eb6f', 'service_tier': 'default', 'model_provider': 'openai'}, id='lc_run--019c6fc0-92c6-7973-826c-d4afdb1a06f6', tool_calls=[], invalid_tool_calls=[], tool_call_chunks=[]), {'langgraph_step': 1, 'langgraph_node': 'model', 'langgraph_triggers': ('branch:to:model',), 'langgraph_path': ('__pregel_pull', 'model'), 'langgraph_checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'ls_provider': 'openai', 'ls_model_name': 'gpt-4o-mini', 'ls_model_type': 'chat', 'ls_temperature': None})
+(AIMessageChunk(content='', additional_kwargs={}, response_metadata={}, id='lc_run--019c6fc0-92c6-7973-826c-d4afdb1a06f6', tool_calls=[], invalid_tool_calls=[], usage_metadata={'input_tokens': 50, 'output_tokens': 11, 'total_tokens': 61, 'input_token_details': {'audio': 0, 'cache_read': 0}, 'output_token_details': {'audio': 0, 'reasoning': 0}}, tool_call_chunks=[]), {'langgraph_step': 1, 'langgraph_node': 'model', 'langgraph_triggers': ('branch:to:model',), 'langgraph_path': ('__pregel_pull', 'model'), 'langgraph_checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'ls_provider': 'openai', 'ls_model_name': 'gpt-4o-mini', 'ls_model_type': 'chat', 'ls_temperature': None})
+(AIMessageChunk(content='', additional_kwargs={}, response_metadata={}, id='lc_run--019c6fc0-92c6-7973-826c-d4afdb1a06f6', tool_calls=[], invalid_tool_calls=[], tool_call_chunks=[], chunk_position='last'), {'langgraph_step': 1, 'langgraph_node': 'model', 'langgraph_triggers': ('branch:to:model',), 'langgraph_path': ('__pregel_pull', 'model'), 'langgraph_checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'checkpoint_ns': 'model:9fb5d23b-bfab-f612-ebcf-4c041d83a34e', 'ls_provider': 'openai', 'ls_model_name': 'gpt-4o-mini', 'ls_model_type': 'chat', 'ls_temperature': None})
+```
+
+**3. 대화 히스토리 관리**
+
+여러 턴의 대화가 이어지는 동안 메시지 기록을 유지한다.
+
+* 예제 코드
+
+```python
+# 대화 히스토리 관리
+
+from langchain_core.messages import HumanMessage
+
+# initialize message history
+messages = []
+messages.append(HumanMessage(content="다항함수의 미분법을 알려줘"))
+result = agent.invoke({"messages": messages})
+print('\n\nLLM 답변 (1):\n', result["messages"][-1].content)
+
+# add result to message history
+messages.extend(result["messages"])
+
+# additional question with context
+messages.append(HumanMessage(content="그럼 이걸로 간단한 수학 문제 하나 내줘"))
+result = agent.invoke({"messages": messages})
+print('\n\n\n\nLLM 답변 (2):\n', result["messages"][-1].content)
+```
+
+* 실행 결과
+
+```
+LLM 답변 (1):
+ 다항함수의 미분법은 매우 간단하며, 기본적인 미분 규칙을 활용합니다. 다항함수는 일반적으로 다음과 같은 형태로 표현됩니다.
+
+\[ f(x) = a_n x^n + a_{n-1} x^{n-1} + \ldots + a_1 x + a_0 \]
+
+여기서 \( a_n, a_{n-1}, \ldots, a_1, a_0 \)는 상수이고, \( n \)은 자연수입니다.
+
+다항함수의 미분법의 기본 원칙은 다음과 같습니다:
+
+1. **거듭제곱 미분법**: 
+   \( x^n \)의 미분은 다음과 같습니다.
+   \[ \frac{d}{dx}(x^n) = n x^{n-1} \]
+
+2. **상수 미분법**: 
+   상수의 미분은 0입니다.
+   \[ \frac{d}{dx}(c) = 0 \] (여기서 \( c \)는 상수)
+
+3. **선형성**: 
+   미분은 합과 차에 대해 선형적입니다.
+   \[ \frac{d}{dx}(f(x) + g(x)) = \frac{d}{dx}(f(x)) + \frac{d}{dx}(g(x)) \]
+   \[ \frac{d}{dx}(cf(x)) = c \cdot \frac{d}{dx}(f(x)) \] (여기서 \( c \)는 상수)
+
+위의 원칙을 사용하여 다항함수를 미분할 수 있습니다. 예를 들어, 다음 다항함수를 미분해 보겠습니다.
+
+\[ f(x) = 3x^4 + 5x^3 - 2x + 7 \]
+
+이 함수의 미분은 다음과 같이 수행됩니다:
+
+1. \( 3x^4 \)의 미분: \( 3 \cdot 4 x^{4-1} = 12x^3 \)
+2. \( 5x^3 \)의 미분: \( 5 \cdot 3 x^{3-1} = 15x^2 \)
+3. \( -2x \)의 미분: \( -2 \)
+4. \( 7 \)의 미분: \( 0 \)
+
+따라서, 전체 미분 결과는 다음과 같습니다:
+
+\[ f'(x) = 12x^3 + 15x^2 - 2 \]
+
+이와 같은 방식으로 다항함수를 미분할 수 있습니다. 추가적으로 궁금한 내용이나 설명이 필요한 부분이 있다면 말씀해 주세요!
+```
+
+```
+LLM 답변 (2):
+ 좋습니다! 다음은 다항함수의 미분을 이용한 간단한 문제입니다.
+
+**문제:** 
+
+다음 다항함수 \( f(x) = 2x^5 - 3x^4 + 4x^2 - 7 \)의 미분을 구하고, \( x = 1 \)에서의 기울기를 구하세요.
+
+**풀이 방법:**
+1. 먼저 \( f(x) \)를 미분합니다.
+2. 그 다음, 미분한 결과를 \( x = 1 \)에 대입하여 기울기를 구합니다.
+
+과제를 완료한 후에 답을 확인해드릴게요!
+```
