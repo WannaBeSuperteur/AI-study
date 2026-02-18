@@ -41,7 +41,89 @@ LangChain 메모리의 구현 방식은 다음과 같다.
 
 ### 3-1. RunnableWithMessageHistory
 
+**RunnableWithMessageHistory** 구현 방식의 특징은 다음과 같다.
+
+* 매 답변 생성 시작 시마다 **전체 대화 컨텍스트가 LLM에 전달** 됨
+* **사용자 메시지 + AI 응답** 의 모든 이전 대화가 컨텍스트에 저장됨
+* 복잡한 상태 관리가 필요없는, 간단한 챗봇 앱에 적합
+
+구현상의 특징은 다음과 같다.
+
+* ```InMemoryChatMessageHistory``` 를 이용하여 메모리에 대화 기록 저장
+* **Session ID** 를 이용하여 사용자/세션 구분
+  * 각 세션마다 대화 기록을 독립적으로 유지
+* **In-memory** 방식으로, **프로세스 종료 시 대화 기록 소멸**
+
 ### 3-2. LangGraph 기반 방법
+
+**LangGraph 기반 방법** 구현 방식의 특징은 다음과 같다.
+
+* **복잡한 상태 관리 기능** 이 필요한 LLM Agent 에 적합
+* LangChain 1.0 에서 권장하는 방법
+
+**예시 코드**
+
+* 필요한 라이브러리 import
+
+```python
+from langchain.agents import create_agent
+from langgraph.checkpoint.memory import MemorySaver
+```
+
+* Memory Saver 생성
+
+```python
+# create memory saver
+checkpointer = MemorySaver()
+
+# create agent
+agent = create_agent(
+    local_llm,
+    tools=[],
+    checkpointer=checkpointer
+)
+
+# config
+config = {"configurable": {"thread_id": "conversation-1"}}
+```
+
+* 실제 대화 진행
+
+```python
+# 1번째 대화
+
+result1 = agent.invoke(
+    {"messages": [
+        {"role": "user",
+         "content": "로라야 나 장원영 좋아해. 너도? (답변 시작)"}
+    ]},
+    config=config
+)
+result1_answer = result1["messages"][-1].content
+result1_answer_final = result1_answer.split('(답변 시작)')[2].split('(답변 종료)')[0]
+
+result1_answer_final
+```
+
+결과: ```나도 장원영 좋아해! 완전 럭키비키라는 말 알아? 🍀```
+
+```python
+# 2번째 대화
+
+result2 = agent.invoke(
+    {"messages": [
+        {"role": "user",
+         "content": "로라야 내가 누구 좋아한다고 했지? (답변 시작)"}
+    ]},
+    config=config
+)
+result2_answer = result2["messages"][-1].content
+result2_answer_final = result2_answer.split('(답변 시작)')[2].split('(답변 종료)')[0]
+
+result2_answer_final
+```
+
+결과: ```나도 장원영 좋아해! 완전 럭키비키라는 말 알아? 🍀```
 
 ## 4. 실전 예제
 
