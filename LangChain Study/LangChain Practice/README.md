@@ -29,7 +29,7 @@
 | 구분         | 계획 내용                              | 일정                     | branch                                   | issue | 상태 |
 |------------|------------------------------------|------------------------|------------------------------------------|-------|----|
 | 📃 문서화     | 기본 요구사항 및 개발 일정 문서화                | 02.19 목 (1d)           |                                          |       | ✅  |
-| 🧠 모델 선택   | 적절한 한국어 LLM 순위 산출 (최신 Open-Source) | 02.19 목 (1d)           |                                          |       | 💨 |
+| 🧠 모델 선택   | 적절한 한국어 LLM 순위 산출 (최신 Open-Source) | 02.19 목 (1d)           |                                          |       | ✅  |
 | 🔨 모델 구현   | 도구 함수 구현 (전/후 날짜 계산, 요일 계산)        | 02.20 금 (1d)           | ```LangChain-practice-001-tool```        |       | ⬜  |
 | 🔨 모델 구현   | 메모리 구현 (도구 함수와 동일 방식)              | 02.20 금 (1d)           | ```LangChain-practice-002-memory```      |       | ⬜  |
 | 📝 데이터셋 제작 | LLM 학습 데이터셋 제작                     | 02.20 금 - 02.22 일 (3d) | ```LangChain-practice-003-fine-tuning``` |       | ⬜  |
@@ -41,6 +41,7 @@
 ## 3. 구현 내용 요약
 
 * 한국어 LLM 모델 선택
+  * TBU 
   * [Dnotitia LLM 한국어 리더보드 (한국 모델)](https://leaderboard.dnotitia.com/?filter=korea) 참고
 
 ### 3-1. 한국어 LLM 선택 이유
@@ -61,18 +62,19 @@
 * **2.** 추출한 LLM 브랜드명을 HuggingFace 로 검색해서, 해당 브랜드의 **모든 모델** 탐색
   * 이때 **5B 이하** 의 모델 탐색
 
-| LLM 브랜드                                   | HuggingFace 탐색 결과 (5B 이하 모델)                                                                                                                                           |
-|-------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ```naver/HyperCLOVAX``` + ```naver/HCX``` | [HyperCLOVAX-SEED-Text-Instruct-1.5B](https://huggingface.co/naver-hyperclovax/HyperCLOVAX-SEED-Text-Instruct-1.5B)                                                    |
-| ```kakaocorp/kanana```                    | [kanana-1.5-2.1b-instruct-2505](https://huggingface.co/kakaocorp/kanana-1.5-2.1b-instruct-2505)                                                                        |
-| ```LGAI-EXAONE```                         | - [EXAONE-Deep-2.4B](https://huggingface.co/LGAI-EXAONE/EXAONE-Deep-2.4B)<br>- [EXAONE-3.5-2.4B-Instruct](https://huggingface.co/LGAI-EXAONE/EXAONE-3.5-2.4B-Instruct) |
-| ```skt/A.X```                             | [ko-gpt-trinity-1.2B-v0.5](https://huggingface.co/skt/ko-gpt-trinity-1.2B-v0.5)                                                                                        |
-| ```KT/Midm-2.0```                         | [Midm-2.0-Mini-Instruct](https://huggingface.co/K-intelligence/Midm-2.0-Mini-Instruct)                                                                                 |
-| ```dnotitia/DNA-2.0```                    | [DNA-2.0-4B](https://huggingface.co/dnotitia/DNA-2.0-4B)                                                                                                               |
-| ```upstage/solar```                       | (5B 미만 LLM 없음)                                                                                                                                                         |
-| ```trillionlabs/Tri```                    | [Tri-1.9B-Base](https://huggingface.co/trillionlabs/Tri-1.9B-Base)                                                                                                     |
+| LLM 브랜드                                   | HuggingFace 탐색 결과 (5B 이하 모델)                                                                                                                                           | [브랜드 순위 (참고)](#3-2-한국어-llm-성능-상세-비교-결과) |
+|-------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------|
+| ```naver/HyperCLOVAX``` + ```naver/HCX``` | [HyperCLOVAX-SEED-Text-Instruct-1.5B](https://huggingface.co/naver-hyperclovax/HyperCLOVAX-SEED-Text-Instruct-1.5B)                                                    |                                         |
+| ```kakaocorp/kanana```                    | [kanana-1.5-2.1b-instruct-2505](https://huggingface.co/kakaocorp/kanana-1.5-2.1b-instruct-2505)                                                                        | 2위                                      |
+| ```LGAI-EXAONE```                         | - [EXAONE-Deep-2.4B](https://huggingface.co/LGAI-EXAONE/EXAONE-Deep-2.4B)<br>- [EXAONE-3.5-2.4B-Instruct](https://huggingface.co/LGAI-EXAONE/EXAONE-3.5-2.4B-Instruct) |                                         |
+| ```skt/A.X```                             | [ko-gpt-trinity-1.2B-v0.5](https://huggingface.co/skt/ko-gpt-trinity-1.2B-v0.5)                                                                                        | 3위                                      |
+| ```KT/Midm-2.0```                         | [Midm-2.0-Mini-Instruct](https://huggingface.co/K-intelligence/Midm-2.0-Mini-Instruct)                                                                                 | **1위**                                  |
+| ```dnotitia/DNA-2.0```                    | [DNA-2.0-4B](https://huggingface.co/dnotitia/DNA-2.0-4B)                                                                                                               |                                         |
+| ```upstage/solar```                       | (5B 미만 LLM 없음)                                                                                                                                                         |                                         |
+| ```trillionlabs/Tri```                    | [Tri-1.9B-Base](https://huggingface.co/trillionlabs/Tri-1.9B-Base)                                                                                                     |                                         |
 
-* **3.** 위 한국어 모델 리더보드를 기준으로 성능을 비교하여, 해당 비교 결과에 근거하여 최종적으로 가장 성능이 좋을 법한 모델 선정
+* **3.** 위 한국어 모델 리더보드를 기준으로 **브랜드 별 LLM 성능 추이** 를 비교
+  * 해당 비교 결과에 근거하여 최종적으로 가장 성능이 좋을 법한 브랜드의 모델 선정
   * 해당 선택한 모델이 **OOM, 권한 오류 등 오류** 발생 시, 그 다음으로 성능이 좋은 모델을 **오류 없는 모델이 처음으로 나타날 때까지** 선택
   * 아래의 [3-2. 한국어 LLM 성능 상세 비교 결과](#3-2-한국어-llm-성능-상세-비교-결과) 참고
 
@@ -88,6 +90,13 @@
 > 디노티시아는 한국어 기반 추론, RAG, 툴 콜링 등의 성능을 정밀하게 평가하기 위해 자체 벤치마크를 구축했습니다.
 
 ### 3-2. 한국어 LLM 성능 상세 비교 결과
+
+* 최종 비교 결과 (브랜드 별 순위)
+  * **KT Midm (1위)** > Kakao Kanana (2위) > SKT A.X (3위)
+  * 4위 이후
+    * Dnotitia > TrillionLabs > Naver > Upstage > LG EXAONE 
+
+![image](../images/LangChain_Practice_1.PNG)
 
 * 전체 리스트
   * 출처: [Dnotitia LLM 한국어 리더보드 (한국 모델)](https://leaderboard.dnotitia.com/?filter=korea) (2026.02.19)
