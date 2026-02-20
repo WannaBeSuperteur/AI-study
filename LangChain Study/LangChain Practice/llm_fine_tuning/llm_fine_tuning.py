@@ -12,6 +12,7 @@ import pandas as pd
 
 
 LLM_PATH = 'midm_original_llm'
+ANSWER_START_MARK = ' ### Answer:'
 lora_llm = None
 tokenizer = None
 
@@ -28,12 +29,20 @@ class ValidateCallback(TrainerCallback):
         print('=== INFERENCE TEST ===')
 
         for valid_input in self.valid_dataset:
-            outputs = lora_llm.generate(**valid_input,
+            valid_input_text = valid_input['text'].split(ANSWER_START_MARK)[0]
+
+            inputs = tokenizer(valid_input_text, return_tensors='pt').to(lora_llm.device)
+            inputs = {'input_ids': inputs['input_ids'].to(lora_llm.device),
+                      'attention_mask': inputs['attention_mask'].to(lora_llm.device)}
+
+            outputs = lora_llm.generate(**inputs,
                                         max_length=128,
                                         do_sample=True,
                                         temperature=0.6)
+            llm_answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
+            llm_answer = llm_answer[len(valid_input_text):]
 
-            print(f'valid input: {valid_input}\noutput: {outputs}')
+            print(f'valid input: {valid_input_text}\nLLM answer: {llm_answer} (tokens: {len(outputs[0])})')
 
 
 def get_llm(llm_path: str):
@@ -71,6 +80,7 @@ def get_llm(llm_path: str):
         task_type="CAUSAL_LLM"
     )
     lora_llm = get_peft_model(llm, lora_config)
+    lora_llm.generation_config.pad_token_id = tokenizer.pad_token_id
 
 
 def train_llm(llm, dataset, data_collator):
@@ -134,11 +144,11 @@ if __name__ == '__main__':
                         '데이터 학습 중!', '데이터 학습하고 있어', '반가워!', '반가워 오랜만이야!', '나도 정말 반가워!']
     }
     dataset_df = pd.DataFrame(dataset_dict)
-    dataset_df['text'] = dataset_df.apply(lambda x: f"{x['input_data']} ### Answer: {x['output_data']}", axis=1)
+    dataset_df['text'] = dataset_df.apply(lambda x: f"{x['input_data']}{ANSWER_START_MARK} {x['output_data']}", axis=1)
     dataset = generate_llm_trainable_dataset(dataset_df)
 
     # create data collator
-    response_template = tokenizer.encode(' ### Answer:')[1:]
+    response_template = tokenizer.encode(ANSWER_START_MARK)[1:]
     collator = DataCollatorForCompletionOnlyLM(response_template, tokenizer=tokenizer)
 
     # train LLM
