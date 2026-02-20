@@ -8,6 +8,8 @@
   * [3-1. 한국어 LLM 선택 이유](#3-1-한국어-llm-선택-이유)
   * [3-2. 한국어 LLM 성능 상세 비교 결과](#3-2-한국어-llm-성능-상세-비교-결과)
 * [4. 이슈 사항 및 해결 방법](#4-이슈-사항-및-해결-방법)
+  * [4-1. EOS token 학습 안됨](#4-1-eos-token-학습-안됨)
+  * [4-2. LLM Fine-Tuning 후, 응답이 제대로 생성되지 않음](#4-2-llm-fine-tuning-후-응답이-제대로-생성되지-않음)
 
 ## 1. 기본 요구사항
 
@@ -134,4 +136,48 @@
 
 ## 4. 이슈 사항 및 해결 방법
 
-TBU
+### 4-1. EOS token 학습 안됨
+
+* 문제 상황
+  * LLM 학습 시 EOS token이 학습이 되지 않아서, **inference 시 EOS token 이 생성되지 않아서 token limit 까지 계속 생성**
+* 문제 원인
+  * LLM tokenizer 의 ```pad_token``` 이 ```eos_token``` 과 같은 경우,
+  * ```DataCollatorForCompletionOnlyLM``` 에 의해 **해당 토큰이 ```-100``` 으로 라벨링되어 학습 불가**
+* 해결 방법
+  * tokenizer 의 ```pad_token``` 과 ```eos_token``` 이 서로 동일할 경우, **서로 다르게 설정** 
+
+```python
+if tokenizer.pad_token == tokenizer.eos_token:
+    tokenizer.pad_token = '<pad>'
+```
+
+### 4-2. LLM Fine-Tuning 후, 응답이 제대로 생성되지 않음
+
+* 문제 상황
+  * [4-1. EOS token 학습 안됨](#4-1-eos-token-학습-안됨) 해결 이후
+  * LLM Fine-Tuning 후, 해당 LLM으로부터 **응답이 제대로 생성되지 않음**
+    * 응답 시작 시점에 ```eos_token``` 이 자주 등장하여, LLM에 의해 추가 생성되는 내용이 사실상 없는 경우가 많음
+* 문제 원인 **(추정)**
+  * LLM의 학습 데이터는 ```(입력 데이터) ### Answer: (출력 데이터)``` 꼴 
+  * LLM이 그 중간의 ```response_template``` (= ``` ### Answer:```) 에 해당하는 부분을 **학습 시 무시** 하는 것으로 추정
+    * 근거: 기존 문장에 이어지는 듯한 내용이 생성되곤 함 (예: ```안녕 반가워``` → ```!```가 추가 생성) 
+* 해결 방법
+  * 기존 Oh-LoRA 프로젝트를 참고하여, **답변 시작 지점 = 사용자 프롬프트 끝 지점** 에 ```(답변 시작)``` 추가
+
+```python
+dataset_df['text'] = dataset_df.apply(
+    lambda x: f"{x['input_data']}{ANSWER_PREFIX} {ANSWER_START_MARK} {x['output_data']}{tokenizer.eos_token}",
+    axis=1
+)
+dataset = generate_llm_trainable_dataset(dataset_df)
+```
+
+```python
+def on_epoch_end(self, args: TrainingArguments, state: TrainerState, control: TrainerControl, **kwargs):
+    global lora_llm, tokenizer
+
+    print('=== INFERENCE TEST ===')
+
+    for valid_input in self.valid_dataset:
+        valid_input_text = valid_input['text'].split(ANSWER_PREFIX)[0] + f' {ANSWER_PREFIX}'
+```
