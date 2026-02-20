@@ -19,11 +19,7 @@ def calculate_date(date_str: str, days: int) -> str:
     original_day = int(date_str.split("-")[2])
     original_date = date(original_year, original_month, original_day)
 
-    if days >= 0:
-        dest_date = original_date + timedelta(days=days)
-    else:
-        dest_date = original_date - timedelta(days=days)
-
+    dest_date = original_date - timedelta(days=days)
     formatted_dest_date = dest_date.strftime('%Y년 %m월 %d일')
     return formatted_dest_date
 
@@ -69,4 +65,11 @@ def calculate_day_of_week_(date_str: str, runtime: ToolRuntime) -> str:
 
 if __name__ == '__main__':
     print(calculate_date("2026-02-01", 15))
+    print(calculate_date("2026-02-01", -15))
+    print(calculate_date("2026-02-01", 365))
+    print(calculate_date("2026-02-01", -365))
+    print(calculate_date("2026-02-01", 0))
+
     print(calculate_day_of_week("2026-02-20"))
+    print(calculate_day_of_week("2026-03-01"))
+    print(calculate_day_of_week("2028-01-01"))
