@@ -1,8 +1,35 @@
-
-from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments, Trainer, BitsAndBytesConfig
+from datasets import DatasetDict, Dataset
+from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments, BitsAndBytesConfig, TrainerCallback, \
+                         TrainerState, TrainerControl
 from peft import prepare_model_for_kbit_training, LoraConfig, get_peft_model
+from trl import SFTTrainer, DataCollatorForCompletionOnlyLM
+
+import pandas as pd
+
 
 LLM_PATH = 'midm_original_llm'
+lora_llm = None
+tokenizer = None
+
+
+class ValidateCallback(TrainerCallback):
+
+    def __init__(self, valid_dataset):
+        super(ValidateCallback, self).__init__()
+        self.valid_dataset = valid_dataset
+
+    def on_epoch_end(self, args: TrainingArguments, state: TrainerState, control: TrainerControl, **kwargs):
+        global lora_llm, tokenizer
+
+        print('=== INFERENCE TEST ===')
+
+        for valid_input in self.valid_dataset:
+            outputs = lora_llm.generate(**valid_input,
+                                        max_length=128,
+                                        do_sample=True,
+                                        temperature=0.6)
+
+            print(f'valid input: {valid_input}\noutput: {outputs}')
 
 
 def get_llm(llm_path: str):
@@ -11,8 +38,9 @@ def get_llm(llm_path: str):
         Create Date : 2026.02.20
 
         :param llm_path: Path of Large Language Model (LLM)
-        :return:         Tuple of (Transformers LoRA LLM, Tokenizer for the LLM)
     """
+
+    global lora_llm, tokenizer
 
     tokenizer = AutoTokenizer.from_pretrained(llm_path)
 
@@ -40,13 +68,76 @@ def get_llm(llm_path: str):
     )
     lora_llm = get_peft_model(llm, lora_config)
 
-    return (lora_llm, tokenizer)
+
+def train_llm(llm, dataset, data_collator):
+    """
+        Train LLM for AI Agent, with given dataset.
+        Create Date : 2026.02.20
+
+        :param llm:           Large Language Model (LLM) to train
+        :param dataset:       Training + Valid Dataset of LLM,
+                              in the form of {'train': (Train Dataset), 'valid': (Valid Dataset)}
+        :param data_collator: Data Collator for the Dataset
+    """
+
+    training_args = TrainingArguments(
+        output_dir='./output',
+        overwrite_output_dir=True,
+        num_train_epochs=5,              # temp
+        per_device_train_batch_size=2,   # temp
+        per_device_eval_batch_size=1,
+        save_steps=1000,
+        save_total_limit=2,
+        logging_dir='./logs',
+        logging_steps=10,
+        bf16=True,                       # for GPU
+        report_to=None                   # to prevent wandb API key request at start of Fine-Tuning
+    )
+
+    trainer = SFTTrainer(
+        llm,
+        train_dataset=dataset['train'],
+        eval_dataset=dataset['valid'],
+        processing_class=tokenizer,
+        args=training_args,
+        data_collator=data_collator,
+        callbacks=[ValidateCallback(dataset['valid'])]
+    )
+
+    trainer.train()
+    trainer.save_model('fine_tuned_llm')
+
+
+def generate_llm_trainable_dataset(dataset_df):
+    dataset = DatasetDict()
+    dataset['train'] = Dataset.from_pandas(dataset_df[dataset_df['data_type'] == 'train'][['text']])
+    dataset['valid'] = Dataset.from_pandas(dataset_df[dataset_df['data_type'] == 'valid'][['text']])
+
+    return dataset
 
 
 if __name__ == '__main__':
-    (lora_llm, tokenizer) = get_llm(LLM_PATH)
+    get_llm(LLM_PATH)
 
-    print(f'LoRA LLM :\n{str(lora_llm)[:200]}')
-    print(f'\n\ntokenizer :\n{str(tokenizer)[:200]}')
+    # mock toy dataset for functionality test
+    dataset_dict = {
+        'data_type': ['train', 'train', 'train', 'train', 'train',
+                      'train', 'train', 'train', 'valid', 'valid'],
+        'input_data': ['안녕?', '잘 지내?', '뭐하고 지내?', '반가워', '안녕!',
+                       '안녕 요즘 뭐해', '요즘 뭐해?', '오랜만이야', '반가워!', '안녕 반가워'],
+        'output_data': ['너도 잘 지내?', '나야 잘 지내지', '데이터 학습하는 중이야', '나는 LLM이야', '반가워 나는 LLM이야',
+                        '데이터 학습 중!', '데이터 학습하고 있어', '반가워!', '반가워 오랜만이야!', '나도 정말 반가워!']
+    }
+    dataset_df = pd.DataFrame(dataset_dict)
+    dataset_df['text'] = dataset_df.apply(lambda x: f"{x['input_data']} ### Answer: {x['output_data']}", axis=1)
+    dataset = generate_llm_trainable_dataset(dataset_df)
+
+    # create data collator
+    response_template = tokenizer.encode(' ### Answer:')[1:]
+    collator = DataCollatorForCompletionOnlyLM(response_template, tokenizer=tokenizer)
+
+    # train LLM
+    train_llm(lora_llm, dataset, collator)
+
 
 
