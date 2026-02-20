@@ -97,30 +97,31 @@ def get_llm(llm_path: str):
     return lora_llm, tokenizer
 
 
-def train_llm(llm, dataset, data_collator, save_model_dir='fine_tuned_llm', max_length=128):
+def train_llm(llm, dataset, data_collator, save_model_dir='fine_tuned_llm', num_train_epochs=10, max_length=128):
     """
         Train LLM for AI Agent, with given dataset.
         Create Date : 2026.02.20
 
-        :param llm:            Large Language Model (LLM) to train
-        :param dataset:        Training + Valid Dataset of LLM,
-                               in the form of {'train': (Train Dataset), 'valid': (Valid Dataset)}
-        :param data_collator:  Data Collator for the Dataset
-        :param save_model_dir: Directory to save fine-tuned LLM
-        :param max_length:     Maximum number of LLM output tokens
+        :param llm:              Large Language Model (LLM) to train
+        :param dataset:          Training + Valid Dataset of LLM,
+                                 in the form of {'train': (Train Dataset), 'valid': (Valid Dataset)}
+        :param data_collator:    Data Collator for the Dataset
+        :param save_model_dir:   Directory to save fine-tuned LLM
+        :param num_train_epochs: Train Epoch count
+        :param max_length:       Maximum number of LLM output tokens
     """
 
     training_args = TrainingArguments(
         learning_rate=0.0003,            # lower learning rate is recommended for Fine-Tuning
         output_dir='./output',
         overwrite_output_dir=True,
-        num_train_epochs=5,              # temp
-        per_device_train_batch_size=2,   # temp
+        num_train_epochs=num_train_epochs,
+        per_device_train_batch_size=2,
         per_device_eval_batch_size=1,
         save_steps=1000,
         save_total_limit=2,
         logging_dir='./logs',
-        logging_steps=1,                 # temp
+        logging_steps=5,
         bf16=True,                       # for GPU
         report_to=None                   # to prevent wandb API key request at start of Fine-Tuning
     )
