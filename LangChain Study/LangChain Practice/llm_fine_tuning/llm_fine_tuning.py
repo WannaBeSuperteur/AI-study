@@ -56,6 +56,7 @@ def get_llm(llm_path: str):
         Create Date : 2026.02.20
 
         :param llm_path: Path of Large Language Model (LLM)
+        :return: tuple of (LoRA LLM, tokenizer)
     """
 
     global lora_llm, tokenizer
@@ -93,17 +94,20 @@ def get_llm(llm_path: str):
     )
     lora_llm = get_peft_model(llm, lora_config)
 
+    return lora_llm, tokenizer
 
-def train_llm(llm, dataset, data_collator, max_length=128):
+
+def train_llm(llm, dataset, data_collator, save_model_dir='fine_tuned_llm', max_length=128):
     """
         Train LLM for AI Agent, with given dataset.
         Create Date : 2026.02.20
 
-        :param llm:           Large Language Model (LLM) to train
-        :param dataset:       Training + Valid Dataset of LLM,
-                              in the form of {'train': (Train Dataset), 'valid': (Valid Dataset)}
-        :param data_collator: Data Collator for the Dataset
-        :param max_length:    Maximum number of LLM output tokens
+        :param llm:            Large Language Model (LLM) to train
+        :param dataset:        Training + Valid Dataset of LLM,
+                               in the form of {'train': (Train Dataset), 'valid': (Valid Dataset)}
+        :param data_collator:  Data Collator for the Dataset
+        :param save_model_dir: Directory to save fine-tuned LLM
+        :param max_length:     Maximum number of LLM output tokens
     """
 
     training_args = TrainingArguments(
@@ -132,7 +136,7 @@ def train_llm(llm, dataset, data_collator, max_length=128):
     )
 
     trainer.train()
-    trainer.save_model('fine_tuned_llm')
+    trainer.save_model(save_model_dir)
 
 
 def generate_llm_trainable_dataset(dataset_df):
