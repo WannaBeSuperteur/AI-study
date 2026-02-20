@@ -19,9 +19,10 @@ tokenizer = None
 
 class ValidateCallback(TrainerCallback):
 
-    def __init__(self, valid_dataset):
+    def __init__(self, valid_dataset, max_length=128):
         super(ValidateCallback, self).__init__()
         self.valid_dataset = valid_dataset
+        self.max_length = max_length
 
     def on_epoch_end(self, args: TrainingArguments, state: TrainerState, control: TrainerControl, **kwargs):
         global lora_llm, tokenizer
@@ -36,9 +37,11 @@ class ValidateCallback(TrainerCallback):
                       'attention_mask': inputs['attention_mask'].to(lora_llm.device)}
 
             outputs = lora_llm.generate(**inputs,
-                                        max_length=128,
+                                        max_length=self.max_length,
                                         do_sample=True,
-                                        temperature=0.6)
+                                        temperature=0.6,
+                                        eos_token_id=tokenizer.eos_token_id,
+                                        pad_token_id=tokenizer.pad_token_id)
             llm_answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
             llm_answer = llm_answer[len(valid_input_text):]
 
@@ -56,6 +59,8 @@ def get_llm(llm_path: str):
     global lora_llm, tokenizer
 
     tokenizer = AutoTokenizer.from_pretrained(llm_path)
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
 
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
@@ -67,6 +72,7 @@ def get_llm(llm_path: str):
     llm = AutoModelForCausalLM.from_pretrained(llm_path,
                                                quantization_config=bnb_config,
                                                trust_remote_code=True)
+    llm.resize_token_embeddings(len(tokenizer))
     llm.gradient_checkpointing_enable()
     llm = prepare_model_for_kbit_training(llm)
 
@@ -80,10 +86,11 @@ def get_llm(llm_path: str):
         task_type="CAUSAL_LLM"
     )
     lora_llm = get_peft_model(llm, lora_config)
-    lora_llm.generation_config.pad_token_id = tokenizer.pad_token_id
+    lora_llm.config.eos_token_id = tokenizer.eos_token_id
+    lora_llm.config.pad_token_id = tokenizer.pad_token_id
 
 
-def train_llm(llm, dataset, data_collator):
+def train_llm(llm, dataset, data_collator, max_length=128):
     """
         Train LLM for AI Agent, with given dataset.
         Create Date : 2026.02.20
@@ -92,6 +99,7 @@ def train_llm(llm, dataset, data_collator):
         :param dataset:       Training + Valid Dataset of LLM,
                               in the form of {'train': (Train Dataset), 'valid': (Valid Dataset)}
         :param data_collator: Data Collator for the Dataset
+        :param max_length:    Maximum number of LLM output tokens
     """
 
     training_args = TrainingArguments(
@@ -116,7 +124,7 @@ def train_llm(llm, dataset, data_collator):
         processing_class=tokenizer,
         args=training_args,
         data_collator=data_collator,
-        callbacks=[ValidateCallback(dataset['valid'])]
+        callbacks=[ValidateCallback(dataset['valid'], max_length=max_length)]
     )
 
     trainer.train()
@@ -144,7 +152,10 @@ if __name__ == '__main__':
                         '데이터 학습 중!', '데이터 학습하고 있어', '반가워!', '반가워 오랜만이야!', '나도 정말 반가워!']
     }
     dataset_df = pd.DataFrame(dataset_dict)
-    dataset_df['text'] = dataset_df.apply(lambda x: f"{x['input_data']}{ANSWER_START_MARK} {x['output_data']}", axis=1)
+    dataset_df['text'] = dataset_df.apply(
+        lambda x: f"{x['input_data']}{ANSWER_START_MARK} {x['output_data']}{tokenizer.eos_token}",
+        axis=1
+    )
     dataset = generate_llm_trainable_dataset(dataset_df)
 
     # create data collator
@@ -152,7 +163,4 @@ if __name__ == '__main__':
     collator = DataCollatorForCompletionOnlyLM(response_template, tokenizer=tokenizer)
 
     # train LLM
-    train_llm(lora_llm, dataset, collator)
-
-
-
+    train_llm(lora_llm, dataset, collator, max_length=32)
