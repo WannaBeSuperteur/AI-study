@@ -1,3 +1,7 @@
+
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
 from datasets import DatasetDict, Dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments, BitsAndBytesConfig, TrainerCallback, \
                          TrainerState, TrainerControl
@@ -81,6 +85,7 @@ def train_llm(llm, dataset, data_collator):
     """
 
     training_args = TrainingArguments(
+        learning_rate=0.0003,            # lower learning rate is recommended for Fine-Tuning
         output_dir='./output',
         overwrite_output_dir=True,
         num_train_epochs=5,              # temp
@@ -89,7 +94,7 @@ def train_llm(llm, dataset, data_collator):
         save_steps=1000,
         save_total_limit=2,
         logging_dir='./logs',
-        logging_steps=10,
+        logging_steps=1,                 # temp
         bf16=True,                       # for GPU
         report_to=None                   # to prevent wandb API key request at start of Fine-Tuning
     )
