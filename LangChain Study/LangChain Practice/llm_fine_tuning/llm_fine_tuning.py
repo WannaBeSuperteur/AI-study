@@ -61,7 +61,10 @@ def get_llm(llm_path: str):
     tokenizer = AutoTokenizer.from_pretrained(llm_path)
     if tokenizer.pad_token is None:
         print('pad token of tokenizer is None, so add pad token')
-        tokenizer.add_special_tokens({"pad_token": "<|pad|>"})
+        tokenizer.add_special_tokens({"pad_token": "<pad>"})
+
+    if tokenizer.pad_token == tokenizer.eos_token:
+        tokenizer.pad_token = '<pad>'
 
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
@@ -105,7 +108,7 @@ def train_llm(llm, dataset, data_collator, max_length=128):
         learning_rate=0.0003,            # lower learning rate is recommended for Fine-Tuning
         output_dir='./output',
         overwrite_output_dir=True,
-        num_train_epochs=5,              # temp
+        num_train_epochs=15,             # temp
         per_device_train_batch_size=2,   # temp
         per_device_eval_batch_size=1,
         save_steps=1000,
