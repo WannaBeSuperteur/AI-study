@@ -60,7 +60,8 @@ def get_llm(llm_path: str):
 
     tokenizer = AutoTokenizer.from_pretrained(llm_path)
     if tokenizer.pad_token is None:
-        tokenizer.pad_token = tokenizer.eos_token
+        print('pad token of tokenizer is None, so add pad token')
+        tokenizer.add_special_tokens({"pad_token": "<|pad|>"})
 
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
@@ -86,8 +87,6 @@ def get_llm(llm_path: str):
         task_type="CAUSAL_LLM"
     )
     lora_llm = get_peft_model(llm, lora_config)
-    lora_llm.config.eos_token_id = tokenizer.eos_token_id
-    lora_llm.config.pad_token_id = tokenizer.pad_token_id
 
 
 def train_llm(llm, dataset, data_collator, max_length=128):
@@ -159,7 +158,7 @@ if __name__ == '__main__':
     dataset = generate_llm_trainable_dataset(dataset_df)
 
     # create data collator
-    response_template = tokenizer.encode(ANSWER_START_MARK)[1:]
+    response_template = tokenizer.encode(ANSWER_START_MARK, add_special_tokens=False)
     collator = DataCollatorForCompletionOnlyLM(response_template, tokenizer=tokenizer)
 
     # train LLM
