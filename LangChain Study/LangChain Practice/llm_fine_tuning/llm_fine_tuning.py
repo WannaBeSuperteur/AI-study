@@ -13,6 +13,7 @@ import pandas as pd
 
 LLM_PATH = 'midm_original_llm'
 ANSWER_START_MARK = ' ### Answer:'
+ANSWER_PREFIX = '(답변 시작)'
 lora_llm = None
 tokenizer = None
 
@@ -30,7 +31,7 @@ class ValidateCallback(TrainerCallback):
         print('=== INFERENCE TEST ===')
 
         for valid_input in self.valid_dataset:
-            valid_input_text = valid_input['text'].split(ANSWER_START_MARK)[0]
+            valid_input_text = valid_input['text'].split(ANSWER_PREFIX)[0] + f' {ANSWER_PREFIX}'
 
             inputs = tokenizer(valid_input_text, return_tensors='pt').to(lora_llm.device)
             inputs = {'input_ids': inputs['input_ids'].to(lora_llm.device),
@@ -44,8 +45,9 @@ class ValidateCallback(TrainerCallback):
                                         pad_token_id=tokenizer.pad_token_id)
             llm_answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
             llm_answer = llm_answer[len(valid_input_text):]
+            llm_answer = llm_answer.split(ANSWER_PREFIX)[-1]
 
-            print(f'valid input: {valid_input_text}\nLLM answer: {llm_answer} (tokens: {len(outputs[0])})')
+            print(f'valid input: {valid_input_text}\nLLM answer: {llm_answer} (total tokens: {len(outputs[0])})')
 
 
 def get_llm(llm_path: str):
@@ -108,7 +110,7 @@ def train_llm(llm, dataset, data_collator, max_length=128):
         learning_rate=0.0003,            # lower learning rate is recommended for Fine-Tuning
         output_dir='./output',
         overwrite_output_dir=True,
-        num_train_epochs=15,             # temp
+        num_train_epochs=5,              # temp
         per_device_train_batch_size=2,   # temp
         per_device_eval_batch_size=1,
         save_steps=1000,
@@ -147,15 +149,18 @@ if __name__ == '__main__':
     # mock toy dataset for functionality test
     dataset_dict = {
         'data_type': ['train', 'train', 'train', 'train', 'train',
-                      'train', 'train', 'train', 'valid', 'valid'],
+                      'train', 'train', 'train', 'valid', 'valid',
+                      'valid', 'valid'],
         'input_data': ['안녕?', '잘 지내?', '뭐하고 지내?', '반가워', '안녕!',
-                       '안녕 요즘 뭐해', '요즘 뭐해?', '오랜만이야', '반가워!', '안녕 반가워'],
+                       '안녕 요즘 뭐해', '요즘 뭐해?', '오랜만이야', '반가워!', '안녕 반가워',
+                       '안녕 뭐해?', '안녕 잘 지내?'],
         'output_data': ['너도 잘 지내?', '나야 잘 지내지', '데이터 학습하는 중이야', '나는 LLM이야', '반가워 나는 LLM이야',
-                        '데이터 학습 중!', '데이터 학습하고 있어', '반가워!', '반가워 오랜만이야!', '나도 정말 반가워!']
+                        '데이터 학습 중!', '데이터 학습하고 있어', '반가워!', '[valid]', '[valid]',
+                        '[valid]', '[valid]']
     }
     dataset_df = pd.DataFrame(dataset_dict)
     dataset_df['text'] = dataset_df.apply(
-        lambda x: f"{x['input_data']}{ANSWER_START_MARK} {x['output_data']}{tokenizer.eos_token}",
+        lambda x: f"{x['input_data']}{ANSWER_PREFIX} {ANSWER_START_MARK} {x['output_data']}{tokenizer.eos_token}",
         axis=1
     )
     dataset = generate_llm_trainable_dataset(dataset_df)
