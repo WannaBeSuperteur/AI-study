@@ -43,7 +43,7 @@
 ## 3. 구현 내용 요약
 
 * 한국어 LLM 모델 선택
-  * TBU 
+  * **최종 채택: [Midm-2.0-Mini-Instruct](https://huggingface.co/K-intelligence/Midm-2.0-Mini-Instruct)**
   * [Dnotitia LLM 한국어 리더보드 (한국 모델)](https://leaderboard.dnotitia.com/?filter=korea) 참고
 
 ### 3-1. 한국어 LLM 선택 이유
@@ -70,7 +70,7 @@
 | ```kakaocorp/kanana```                    | [kanana-1.5-2.1b-instruct-2505](https://huggingface.co/kakaocorp/kanana-1.5-2.1b-instruct-2505)                                                                        | 2위                                      |
 | ```LGAI-EXAONE```                         | - [EXAONE-Deep-2.4B](https://huggingface.co/LGAI-EXAONE/EXAONE-Deep-2.4B)<br>- [EXAONE-3.5-2.4B-Instruct](https://huggingface.co/LGAI-EXAONE/EXAONE-3.5-2.4B-Instruct) |                                         |
 | ```skt/A.X```                             | [ko-gpt-trinity-1.2B-v0.5](https://huggingface.co/skt/ko-gpt-trinity-1.2B-v0.5)                                                                                        | 3위                                      |
-| ```KT/Midm-2.0```                         | [Midm-2.0-Mini-Instruct](https://huggingface.co/K-intelligence/Midm-2.0-Mini-Instruct)                                                                                 | **1위**                                  |
+| ```KT/Midm-2.0```                         | [Midm-2.0-Mini-Instruct](https://huggingface.co/K-intelligence/Midm-2.0-Mini-Instruct)                                                                                 | **1위** (✅ 최종 채택)                        |
 | ```dnotitia/DNA-2.0```                    | [DNA-2.0-4B](https://huggingface.co/dnotitia/DNA-2.0-4B)                                                                                                               |                                         |
 | ```upstage/solar```                       | (5B 미만 LLM 없음)                                                                                                                                                         |                                         |
 | ```trillionlabs/Tri```                    | [Tri-1.9B-Base](https://huggingface.co/trillionlabs/Tri-1.9B-Base)                                                                                                     |                                         |
