@@ -59,12 +59,12 @@ def calculate_day_of_week(date_str: str) -> str:
 
 
 @tool
-def calculate_date_(date_str: str, days: int, runtime: ToolRuntime) -> str:
+def calculate_day_of_week_(date_str: str, runtime: ToolRuntime) -> str:
     """
-    Calculate the date before/after N days from original date.
+    Calculate day-of-week of the date.
     """
 
-    return calculate_date(date_str, days)
+    return calculate_day_of_week(date_str)
 
 
 if __name__ == '__main__':
