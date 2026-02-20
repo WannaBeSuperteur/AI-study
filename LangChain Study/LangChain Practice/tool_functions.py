@@ -37,5 +37,36 @@ def calculate_date_(date_str: str, days: int, runtime: ToolRuntime) -> str:
     return calculate_date(date_str, days)
 
 
+def calculate_day_of_week(date_str: str) -> str:
+    """
+    Calculate day-of-week of the date.
+    Create Date : 2026.02.20
+
+    :param date_str: original date string, in the format of "yyyy-mm-dd"
+    :return:         day-of-week of the date, in the format of "O요일"
+    """
+
+    year = int(date_str.split("-")[0])
+    month = int(date_str.split("-")[1])
+    day = int(date_str.split("-")[2])
+    original_date = date(year, month, day)
+
+    dow = original_date.weekday()
+    dow_mapping = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일']
+    dow_name = dow_mapping[dow]
+
+    return dow_name
+
+
+@tool
+def calculate_date_(date_str: str, days: int, runtime: ToolRuntime) -> str:
+    """
+    Calculate the date before/after N days from original date.
+    """
+
+    return calculate_date(date_str, days)
+
+
 if __name__ == '__main__':
     print(calculate_date("2026-02-01", 15))
+    print(calculate_day_of_week("2026-02-20"))
