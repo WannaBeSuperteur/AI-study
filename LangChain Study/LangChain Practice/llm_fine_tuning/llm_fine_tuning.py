@@ -31,7 +31,7 @@ class ValidateCallback(TrainerCallback):
         print('=== INFERENCE TEST ===')
 
         for valid_input in self.valid_dataset:
-            valid_input_text = valid_input['text'].split(ANSWER_PREFIX)[0] + f' {ANSWER_PREFIX}'
+            valid_input_text = valid_input['text'].split(ANSWER_PREFIX)[0] + ANSWER_PREFIX
 
             inputs = tokenizer(valid_input_text, return_tensors='pt').to(lora_llm.device)
             inputs = {'input_ids': inputs['input_ids'].to(lora_llm.device),
