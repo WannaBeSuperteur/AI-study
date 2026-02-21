@@ -71,7 +71,7 @@ def fine_tune_final_output_llm(dataset_df, lora_llm, tokenizer):
     """
     Train LLM (Large Language Model) for Final Output to user.
     Create Date: 2026.02.20
-    Last Update Date: 2026.02.21 (fix LLM input format)
+    Last Update Date: 2026.02.21 (fix LLM input format + epoch count)
 
     :param dataset_df: Dataset DataFrame
     :param lora_llm:   LLM to fine-tune
@@ -86,7 +86,7 @@ def fine_tune_final_output_llm(dataset_df, lora_llm, tokenizer):
     train_llm_with_dataset_df(dataset_df,
                               lora_llm,
                               tokenizer,
-                              num_train_epochs=10,
+                              num_train_epochs=20,
                               save_model_dir='final_output_llm')
 
 
