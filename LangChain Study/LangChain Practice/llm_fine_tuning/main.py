@@ -78,7 +78,7 @@ def fine_tune_final_output_llm(dataset_df, lora_llm, tokenizer):
     """
 
     dataset_df['text'] = dataset_df.apply(
-        lambda x: f"{x['user_input']} {x['tool_call_result']} {ANSWER_PREFIX} {ANSWER_START_MARK} {x['final_output']}{tokenizer.eos_token}",
+        lambda x: f"{x['user_input']} -> {x['tool_call_result']} {ANSWER_PREFIX} {ANSWER_START_MARK} {x['final_output']}{tokenizer.eos_token}",
         axis=1
     )
 
