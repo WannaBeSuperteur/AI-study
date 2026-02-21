@@ -42,7 +42,8 @@ class ValidateCallback(TrainerCallback):
                                         do_sample=True,
                                         temperature=0.6,
                                         eos_token_id=tokenizer.eos_token_id,
-                                        pad_token_id=tokenizer.pad_token_id)
+                                        pad_token_id=tokenizer.pad_token_id,
+                                        min_new_tokens=5)                      # 처음에 바로 EOS token 이 생성되는 것 방지
             llm_answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
             llm_answer = llm_answer[len(valid_input_text):]
             llm_answer = llm_answer.split(ANSWER_PREFIX)[-1]
