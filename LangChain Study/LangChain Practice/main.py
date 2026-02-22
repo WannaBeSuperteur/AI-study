@@ -34,8 +34,12 @@ def load_langchain_llm(llm_path: str):
         llm_path,
         config=config,
         trust_remote_code=True,
-        torch_dtype=torch.float16
+        torch_dtype=torch.float16,
+        ignore_mismatched_sizes=True
     )
+    llm.resize_token_embeddings(len(tokenizer))
+    llm.config.pad_token_id = tokenizer.pad_token_id
+    llm.config.eos_token_id = tokenizer.eos_token_id
 
     pipe = pipeline(
         "text-generation",

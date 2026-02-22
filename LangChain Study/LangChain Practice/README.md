@@ -13,6 +13,7 @@
   * [5-1. EOS token 학습 안됨](#5-1-eos-token-학습-안됨)
   * [5-2. LLM Fine-Tuning 후, 응답이 제대로 생성되지 않음](#5-2-llm-fine-tuning-후-응답이-제대로-생성되지-않음)
   * [5-3. LLM output 에서 처음에 EOS token 발생](#5-3-llm-output-에서-처음에-eos-token-발생)
+  * [5-4. Fine-Tuning 된 LLM 로딩 시 tensor size 불일치](#5-4-fine-tuning-된-llm-로딩-시-tensor-size-불일치)
 
 ## 1. 기본 요구사항
 
@@ -257,4 +258,34 @@ outputs = lora_llm.generate(**inputs,
                             eos_token_id=tokenizer.eos_token_id,
                             pad_token_id=tokenizer.pad_token_id,
                             min_new_tokens=5)                      # 처음에 바로 EOS token 이 생성되는 것 방지
+```
+
+### 5-4. Fine-Tuning 된 LLM 로딩 시 tensor size 불일치
+
+* 문제 상황
+  * Fine-Tuning 된 LLM 로딩 시, tensor 크기가 불일치하여 다음과 같은 오류 발생
+
+```
+RuntimeError: Error(s) in loading state_dict for LlamaForCausalLM:
+        size mismatch for model.embed_tokens.weight: copying a param with shape torch.Size([131384, 1792]) from checkpoint, the shape in current model is torch.Size([131392, 1792]).
+        size mismatch for lm_head.weight: copying a param with shape torch.Size([131384, 1792]) from checkpoint, the shape in current model is torch.Size([131392, 1792]).
+```
+
+* 문제 원인
+  * Fine-Tuning 된 LLM과 원본 Mi:dm-2.0 LLM 간 **tokenizer 의 vocab size 불일치**
+* 해결 방법
+  * **config 에서 ```vocab_size```를 수정** (Fine-Tuning 된 LLM 의 vocab size)
+  * ```ignore_mismatched_sizes=True``` 로 **크기 불일치 시에도 오류 미 발생** 하도록 수정 + 후처리
+
+```python
+config = AutoConfig.from_pretrained(ORIGINAL_MIDM_LLM_PATH)
+config.vocab_size = len(tokenizer)  # new vocab size
+
+llm = AutoModelForCausalLM.from_pretrained(
+    llm_path,
+    config=config,
+    trust_remote_code=True,
+    torch_dtype=torch.float16,
+    ignore_mismatched_sizes=True
+)
 ```
