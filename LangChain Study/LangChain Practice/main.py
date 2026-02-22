@@ -4,8 +4,7 @@ import os
 from langchain.agents import create_agent
 import torch
 from langchain_huggingface import HuggingFacePipeline
-from transformers import AutoModelForCausalLM, pipeline, AutoTokenizer, AutoConfig
-
+from transformers import AutoModelForCausalLM, pipeline, AutoTokenizer, AutoConfig, BitsAndBytesConfig
 
 ORIGINAL_MIDM_LLM_PATH = 'llm_fine_tuning/midm_original_llm'
 
@@ -30,9 +29,17 @@ def load_langchain_llm(llm_path: str):
     config = AutoConfig.from_pretrained(ORIGINAL_MIDM_LLM_PATH)
     config.vocab_size = len(tokenizer)  # new vocab size
 
+    bnb_config = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_use_double_quant=True,
+        bnb_4bit_quant_type='nf4',
+        bnb_4bit_compute_dtype='bfloat16'
+    )
+
     llm = AutoModelForCausalLM.from_pretrained(
         llm_path,
         config=config,
+        quantization_config=bnb_config,
         trust_remote_code=True,
         torch_dtype=torch.float16,
         ignore_mismatched_sizes=True
