@@ -12,6 +12,7 @@
 * [5. 이슈 사항 및 해결 방법](#5-이슈-사항-및-해결-방법)
   * [5-1. EOS token 학습 안됨](#5-1-eos-token-학습-안됨)
   * [5-2. LLM Fine-Tuning 후, 응답이 제대로 생성되지 않음](#5-2-llm-fine-tuning-후-응답이-제대로-생성되지-않음)
+  * [5-3. LLM output 에서 처음에 EOS token 발생](#5-3-llm-output-에서-처음에-eos-token-발생)
 
 ## 1. 기본 요구사항
 
@@ -238,4 +239,21 @@ def on_epoch_end(self, args: TrainingArguments, state: TrainerState, control: Tr
 
     for valid_input in self.valid_dataset:
         valid_input_text = valid_input['text'].split(ANSWER_PREFIX)[0] + f' {ANSWER_PREFIX}'
+```
+
+### 5-3. LLM output 에서 처음에 EOS token 발생
+
+* 문제 상황
+  * LLM 이 생성하는 output 에서 처음에 EOS token 발생하여, **사실상 아무것도 생성되지 않음**
+* 해결 방법
+  * LLM 을 이용한 생성 시, 아래와 같이 **최소 생성 token 개수** 를 지정
+
+```python
+outputs = lora_llm.generate(**inputs,
+                            max_length=self.max_length,
+                            do_sample=True,
+                            temperature=0.6,
+                            eos_token_id=tokenizer.eos_token_id,
+                            pad_token_id=tokenizer.pad_token_id,
+                            min_new_tokens=5)                      # 처음에 바로 EOS token 이 생성되는 것 방지
 ```
