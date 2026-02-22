@@ -38,9 +38,9 @@
 | 🔨 모델 구현   | 도구 함수 구현 (전/후 날짜 계산, 요일 계산)        | 02.20 금 (1d)           | ```LangChain-practice-001-tool```        | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/1) | ✅  |
 | 🔨 모델 구현   | 메모리 구현 (도구 함수와 동일 방식)              | 02.20 금 (1d)           | ```LangChain-practice-002-memory```      | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/2) | ✅  |
 | 🧠 모델 선택   | LLM 학습 (Fine-Tuning) 대상 LLM 최종 선택  | 02.20 금 (1d)           | ```LangChain-practice-003-fine-tuning``` | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/3) | ✅  |
-| 📝 데이터셋 제작 | LLM 학습 데이터셋 제작                     | 02.20 금 - 02.22 일 (3d) | ```LangChain-practice-003-fine-tuning``` | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/3) | 💨 |
-| 🧪 모델 학습   | LLM 학습 (Fine-Tuning) 실시            | 02.20 금 - 02.23 월 (4d) | ```LangChain-practice-003-fine-tuning``` | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/3) | 💨 |
-| ⚙ 기능 구현    | LLM 에이전트 기능 구현                     | 02.23 월 - 02.24 화 (2d) | ```LangChain-practice-004-agent```       |                                                                | ⬜  |
+| 📝 데이터셋 제작 | LLM 학습 데이터셋 제작                     | 02.20 금 (1d)           | ```LangChain-practice-003-fine-tuning``` | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/3) | ✅  |
+| 🧪 모델 학습   | LLM 학습 (Fine-Tuning) 실시            | 02.20 금 - 02.22 일 (3d) | ```LangChain-practice-003-fine-tuning``` | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/3) | ✅  |
+| ⚙ 기능 구현    | LLM 에이전트 기능 구현                     | 02.22 일 - 02.23 월 (2d) | ```LangChain-practice-004-agent```       |                                                                | ⬜  |
 | 🔍 최종 검토   | 최종 QA (버그 유무 검사)                   | 02.24 화 (1d)           |                                          |                                                                | ⬜  |
 | 📃 문서화     | 프로젝트 문서 정리 및 마무리                   | 02.24 화 (1d)           |                                          |                                                                | ⬜  |
 
