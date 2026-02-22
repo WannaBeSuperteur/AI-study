@@ -14,6 +14,8 @@
   * [5-2. LLM Fine-Tuning 후, 응답이 제대로 생성되지 않음](#5-2-llm-fine-tuning-후-응답이-제대로-생성되지-않음)
   * [5-3. LLM output 에서 처음에 EOS token 발생](#5-3-llm-output-에서-처음에-eos-token-발생)
   * [5-4. Fine-Tuning 된 LLM 로딩 시 tensor size 불일치](#5-4-fine-tuning-된-llm-로딩-시-tensor-size-불일치)
+* [6. 참고](#6-참고)
+  * [6-1. Quantization 적용/미 적용 시 GPU 메모리 사용량 차이](#6-1-quantization-적용미-적용-시-gpu-메모리-사용량-차이) 
 
 ## 1. 기본 요구사항
 
@@ -289,3 +291,26 @@ llm = AutoModelForCausalLM.from_pretrained(
     ignore_mismatched_sizes=True
 )
 ```
+
+## 6. 참고
+
+### 6-1. Quantization 적용/미 적용 시 GPU 메모리 사용량 차이
+
+* 적용 Quantization
+  * **BitsAndBytesConfig**
+
+```python
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_use_double_quant=True,
+    bnb_4bit_quant_type='nf4',
+    bnb_4bit_compute_dtype='bfloat16'
+)
+```
+
+* Quantization 적용 vs. 미 적용 시 GPU 메모리 사용량
+  * 2개의 [Midm-2.0-Mini-Instruct](https://huggingface.co/K-intelligence/Midm-2.0-Mini-Instruct) Fine-Tuning 된 LLM 로딩 시 기준
+
+| Quantization 적용 시 | Quantization 미 적용 시 | 차이        |
+|-------------------|---------------------|-----------|
+| 9,970 MB          | 6,141 MB            | 🔻 38.4 % |
