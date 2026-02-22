@@ -1,8 +1,10 @@
 
+import os
+
 from langchain.agents import create_agent
 import torch
 from langchain_huggingface import HuggingFacePipeline
-from transformers import AutoModelForCausalLM, pipeline
+from transformers import AutoModelForCausalLM, pipeline, AutoTokenizer, AutoConfig
 
 
 def load_langchain_llm(llm_path: str):
@@ -14,12 +16,23 @@ def load_langchain_llm(llm_path: str):
     :return:         LLM for LangChain
     """
 
+    tokenizer = AutoTokenizer.from_pretrained(llm_path)
+    if tokenizer.pad_token is None:
+        print('pad token of tokenizer is None, so add pad token')
+        tokenizer.add_special_tokens({"pad_token": "<pad>"})
+
+    if tokenizer.pad_token == tokenizer.eos_token:
+        tokenizer.pad_token = '<pad>'
+
+    config = AutoConfig.from_pretrained(llm_path)
+    config.vocab_size = len(tokenizer)  # new vocab size
+
     llm = AutoModelForCausalLM.from_pretrained(
         llm_path,
+        config=config,
         trust_remote_code=True,
         torch_dtype=torch.float16
     )
-    tokenizer = AutoModelForCausalLM.from_pretrained(llm_path)
 
     pipe = pipeline(
         "text-generation",
