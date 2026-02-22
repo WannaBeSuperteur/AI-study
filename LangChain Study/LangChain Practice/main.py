@@ -1,3 +1,4 @@
+from langchain_core.prompts import ChatPromptTemplate
 
 from tool_functions import calculate_date_, calculate_day_of_week_, calculate_date, calculate_day_of_week
 import torch
@@ -7,7 +8,10 @@ from langchain.agents import create_agent
 from langchain_huggingface import HuggingFacePipeline, ChatHuggingFace
 from transformers import AutoModelForCausalLM, pipeline, AutoTokenizer, AutoConfig, BitsAndBytesConfig
 
+
 ORIGINAL_MIDM_LLM_PATH = 'llm_fine_tuning/midm_original_llm'
+ANSWER_PREFIX = '(답변 시작)'
+LANGCHAIN_ASSISTANT_PREFIX = '<|start_header_id|>assistant<|end_header_id|>\n\n'
 
 
 def load_langchain_llm(llm_path: str):
@@ -62,13 +66,14 @@ def load_langchain_llm(llm_path: str):
     return langchain_llm
 
 
-def run_agent(agent, tools_original_functions):
+def run_agent(agent, final_output_llm_chat_llm, tools_original_functions):
     """
     Run LLM Agent.
     Create Date: 2026.02.22
 
-    :param agent:                    LLM Agent to run
-    :param tools_original_functions: original tool function list
+    :param agent:                     LLM Agent to run
+    :param final_output_llm_chat_llm: LangChain LLM to convert Tool Call result to Final Output
+    :param tools_original_functions:  original tool function list
     """
 
     tool_map = {}
@@ -77,11 +82,13 @@ def run_agent(agent, tools_original_functions):
 
     while True:
         user_input = input('\nUSER INPUT:\n')
+
+        # execute tool
         tool_result = agent.invoke({
-            "messages": [{'role': 'user', 'content': user_input}]
+            "messages": [{'role': 'user', 'content': user_input + f' {ANSWER_PREFIX}'}]
         })
         tool_result_msg = tool_result["messages"][-1]
-        tool_result_content = tool_result_msg.content.split('<|start_header_id|>assistant<|end_header_id|>\n\n')[-1]
+        tool_result_content = tool_result_msg.content.split(LANGCHAIN_ASSISTANT_PREFIX)[-1]
         tool_result_content_json = json.loads(tool_result_content)
 
         try:
@@ -90,11 +97,22 @@ def run_agent(agent, tools_original_functions):
             arg_dict = tool_call.get("arguments")
             tool_execute_result = tool_map[tool_name](**arg_dict)
 
-            print('tool_execute_result :', tool_execute_result)
+            print(f'tool execution result : {tool_execute_result}')
 
         except Exception as e:
             print(e)
             tool_execute_result = '도구 호출 실패'
+
+        # convert to final answer
+        final_llm_prompt = ChatPromptTemplate.from_template(
+            '{user_input} -> {tool_execute_result}' + f' {ANSWER_PREFIX}'
+        )
+        print(f'final_llm_prompt : {final_llm_prompt}')
+
+        final_chain = final_llm_prompt | final_output_llm_chat_llm
+        final_result = final_chain.invoke({'user_input': user_input, 'tool_execute_result': tool_execute_result})
+        final_result_content = final_result.content.split(LANGCHAIN_ASSISTANT_PREFIX)[-1]
+        print(f'final result : {final_result_content}')
 
 
 if __name__ == '__main__':
@@ -112,6 +130,8 @@ if __name__ == '__main__':
 
     # Create and run LLM Agent
     execute_tool_call_chat_llm = ChatHuggingFace(llm=execute_tool_call_llm)
+    final_output_llm_chat_llm = ChatHuggingFace(llm=final_output_llm)
+
     tools = [calculate_date_, calculate_day_of_week_]
     tools_original_functions = [calculate_date, calculate_day_of_week]
 
@@ -119,4 +139,5 @@ if __name__ == '__main__':
         model=execute_tool_call_chat_llm,
         tools=tools
     )
-    run_agent(agent, tools_original_functions)
+
+    run_agent(agent, final_output_llm_chat_llm, tools_original_functions)
