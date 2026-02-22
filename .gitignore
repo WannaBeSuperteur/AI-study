@@ -85,6 +85,18 @@ Image Processing/Special - OCR Experiment/test_result
 Image Processing/Special - OCR Experiment/test_result/*
 Image Processing/Special - OCR Experiment/final_result
 Image Processing/Special - OCR Experiment/final_result/*
+LangChain Study/LangChain Practice/llm_fine_tuning/midm_original_llm
+LangChain Study/LangChain Practice/llm_fine_tuning/midm_original_llm/*
+LangChain Study/LangChain Practice/llm_fine_tuning/logs
+LangChain Study/LangChain Practice/llm_fine_tuning/logs/*
+LangChain Study/LangChain Practice/llm_fine_tuning/output
+LangChain Study/LangChain Practice/llm_fine_tuning/output/*
+LangChain Study/LangChain Practice/llm_fine_tuning/fine_tuned_llm
+LangChain Study/LangChain Practice/llm_fine_tuning/fine_tuned_llm/*
+LangChain Study/LangChain Practice/llm_fine_tuning/execute_tool_call_llm
+LangChain Study/LangChain Practice/llm_fine_tuning/execute_tool_call_llm/*
+LangChain Study/LangChain Practice/llm_fine_tuning/final_output_llm
+LangChain Study/LangChain Practice/llm_fine_tuning/final_output_llm/*
 *.pyc
 __pycache__/
 .idea/*

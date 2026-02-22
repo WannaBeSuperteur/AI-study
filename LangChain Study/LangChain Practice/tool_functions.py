@@ -10,7 +10,6 @@ def calculate_date(date_str: str, days: int) -> str:
 
     :param date_str: original date string, in the format of "yyyy-mm-dd"
     :param days:     number of days (positive for after, negative for before)
-    :param runtime:  LangChain tool runtime
     :return:         the date before/after N days, in the format of "yyyy년 m월 d일"
     """
 
