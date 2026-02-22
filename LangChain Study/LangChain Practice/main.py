@@ -7,6 +7,9 @@ from langchain_huggingface import HuggingFacePipeline
 from transformers import AutoModelForCausalLM, pipeline, AutoTokenizer, AutoConfig
 
 
+ORIGINAL_MIDM_LLM_PATH = 'llm_fine_tuning/midm_original_llm'
+
+
 def load_langchain_llm(llm_path: str):
     """
     Load LLM (Large Language Model) for LangChain.
@@ -24,7 +27,7 @@ def load_langchain_llm(llm_path: str):
     if tokenizer.pad_token == tokenizer.eos_token:
         tokenizer.pad_token = '<pad>'
 
-    config = AutoConfig.from_pretrained(llm_path)
+    config = AutoConfig.from_pretrained(ORIGINAL_MIDM_LLM_PATH)
     config.vocab_size = len(tokenizer)  # new vocab size
 
     llm = AutoModelForCausalLM.from_pretrained(
