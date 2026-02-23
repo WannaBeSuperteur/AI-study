@@ -66,19 +66,19 @@ def load_langchain_llm(llm_path: str):
     return langchain_llm
 
 
-def run_agent(agent, final_output_llm_chat_llm, tools_original_functions):
+def run_agent(agent, final_output_llm_chat_llm):
     """
     Run LLM Agent.
     Create Date: 2026.02.22
+    Last Update Date: 2026.02.23 (tool call 재 구현)
 
     :param agent:                     LLM Agent to run
     :param final_output_llm_chat_llm: LangChain LLM to convert Tool Call result to Final Output
-    :param tools_original_functions:  original tool function list
     """
 
     tool_map = {}
-    for tool in tools_original_functions:
-        tool_map[tool.__name__ + '_'] = tool
+#    for tool in tools_original_functions:
+#        tool_map[tool.__name__ + '_'] = tool
 
     while True:
         user_input = input('\nUSER INPUT:\n')
@@ -133,11 +133,10 @@ if __name__ == '__main__':
     final_output_llm_chat_llm = ChatHuggingFace(llm=final_output_llm)
 
     tools = [calculate_date_, calculate_day_of_week_]
-    tools_original_functions = [calculate_date, calculate_day_of_week]
 
     agent = create_agent(
         model=execute_tool_call_chat_llm,
         tools=tools
     )
 
-    run_agent(agent, final_output_llm_chat_llm, tools_original_functions)
+    run_agent(agent, final_output_llm_chat_llm)
