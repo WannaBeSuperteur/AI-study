@@ -1,9 +1,11 @@
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from tool_functions import calculate_date_, calculate_day_of_week_
-import torch
-import json
 
+import torch
+from typing import cast
+
+from langchain_core.language_models import BaseChatModel
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_classic.agents import AgentExecutor, create_tool_calling_agent
 from langchain_huggingface import HuggingFacePipeline, ChatHuggingFace
 from transformers import AutoModelForCausalLM, pipeline, AutoTokenizer, AutoConfig, BitsAndBytesConfig
@@ -114,6 +116,10 @@ if __name__ == '__main__':
 
     # tool binding
     tools = [calculate_date_, calculate_day_of_week_]
+    execute_tool_call_chat_llm_with_tools = cast(
+        BaseChatModel,
+        execute_tool_call_chat_llm.bind_tools(tools)
+    )
 
     prompt = ChatPromptTemplate.from_messages([
         ("system", "너는 날짜 및 요일을 계산하는 어시스턴트이다. 필요 시 tool을 사용한다."),
@@ -123,14 +129,15 @@ if __name__ == '__main__':
 
     # Expected type 'BaseLanguageModel', got 'Runnable[Any, AIMessage]' instead -> 수정 필요
     tool_call_agent = create_tool_calling_agent(
-        llm=execute_tool_call_chat_llm,
+        llm=execute_tool_call_chat_llm_with_tools,
         tools=tools,
         prompt=prompt
     )
     tool_call_agent_executor = AgentExecutor(
         agent=tool_call_agent,
         tools=tools,
-        verbose=True
+        verbose=True,
+        return_intermediate_steps=True
     )
 
     run_agent(tool_call_agent_executor, final_output_llm_chat_llm)

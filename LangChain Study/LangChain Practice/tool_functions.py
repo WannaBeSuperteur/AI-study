@@ -59,6 +59,8 @@ def calculate_day_of_week_(date_str: str, runtime: ToolRuntime) -> str:
     Calculate day-of-week of the date.
     """
 
+    print('runtime :', runtime)
+
     return calculate_day_of_week(date_str)
 
 
