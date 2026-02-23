@@ -1,10 +1,10 @@
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
-from tool_functions import calculate_date_, calculate_day_of_week_, calculate_date, calculate_day_of_week
+from tool_functions import calculate_date_, calculate_day_of_week_
 import torch
 import json
 
-from langchain.agents import create_agent
+from langchain_classic.agents import AgentExecutor, create_tool_calling_agent
 from langchain_huggingface import HuggingFacePipeline, ChatHuggingFace
 from transformers import AutoModelForCausalLM, pipeline, AutoTokenizer, AutoConfig, BitsAndBytesConfig
 
@@ -66,42 +66,22 @@ def load_langchain_llm(llm_path: str):
     return langchain_llm
 
 
-def run_agent(agent, final_output_llm_chat_llm):
+def run_agent(tool_call_agent_executor, final_output_llm_chat_llm):
     """
     Run LLM Agent.
     Create Date: 2026.02.22
     Last Update Date: 2026.02.23 (tool call 재 구현)
 
-    :param agent:                     LLM Agent to run
+    :param tool_call_agent_executor:  LLM Agent Executor (for Tool Call LLM)
     :param final_output_llm_chat_llm: LangChain LLM to convert Tool Call result to Final Output
     """
-
-    tool_map = {}
-#    for tool in tools_original_functions:
-#        tool_map[tool.__name__ + '_'] = tool
 
     while True:
         user_input = input('\nUSER INPUT:\n')
 
         # execute tool
-        tool_result = agent.invoke({
-            "messages": [{'role': 'user', 'content': user_input + f' {ANSWER_PREFIX}'}]
-        })
-        tool_result_msg = tool_result["messages"][-1]
-        tool_result_content = tool_result_msg.content.split(LANGCHAIN_ASSISTANT_PREFIX)[-1]
-        tool_result_content_json = json.loads(tool_result_content)
-
-        try:
-            tool_call = tool_result_content_json["tool_call"]
-            tool_name = tool_call.get("name")
-            arg_dict = tool_call.get("arguments")
-            tool_execute_result = tool_map[tool_name](**arg_dict)
-
-            print(f'tool execution result : {tool_execute_result}')
-
-        except Exception as e:
-            print(e)
-            tool_execute_result = '도구 호출 실패'
+        tool_execute_result = tool_call_agent_executor.invoke({'input': user_input + f' {ANSWER_PREFIX}'})
+        print(tool_execute_result)
 
         # convert to final answer
         final_llm_prompt = ChatPromptTemplate.from_template(
@@ -132,11 +112,25 @@ if __name__ == '__main__':
     execute_tool_call_chat_llm = ChatHuggingFace(llm=execute_tool_call_llm)
     final_output_llm_chat_llm = ChatHuggingFace(llm=final_output_llm)
 
+    # tool binding
     tools = [calculate_date_, calculate_day_of_week_]
 
-    agent = create_agent(
-        model=execute_tool_call_chat_llm,
-        tools=tools
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", "너는 날짜 및 요일을 계산하는 어시스턴트이다. 필요 시 tool을 사용한다."),
+        ("human", "{input}"),
+        MessagesPlaceholder(variable_name="agent_scratchpad")
+    ])
+
+    # Expected type 'BaseLanguageModel', got 'Runnable[Any, AIMessage]' instead -> 수정 필요
+    tool_call_agent = create_tool_calling_agent(
+        llm=execute_tool_call_chat_llm,
+        tools=tools,
+        prompt=prompt
+    )
+    tool_call_agent_executor = AgentExecutor(
+        agent=tool_call_agent,
+        tools=tools,
+        verbose=True
     )
 
-    run_agent(agent, final_output_llm_chat_llm)
+    run_agent(tool_call_agent_executor, final_output_llm_chat_llm)
