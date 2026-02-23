@@ -24,9 +24,9 @@ def calculate_date(date_str: str, days: int) -> str:
 
 
 @tool
-def calculate_date_(date_str: str, days: int, runtime: ToolRuntime) -> str:
+def calculate_date_(date_str: str, days: int) -> str:
     """
-    Calculate the date before/after N days from original date.
+    Calculate the date before/after N days from original date. (tool function)
     """
 
     return calculate_date(date_str, days)
@@ -54,12 +54,10 @@ def calculate_day_of_week(date_str: str) -> str:
 
 
 @tool
-def calculate_day_of_week_(date_str: str, runtime: ToolRuntime) -> str:
+def calculate_day_of_week_(date_str: str) -> str:
     """
-    Calculate day-of-week of the date.
+    Calculate day-of-week of the date. (tool function)
     """
-
-    print('runtime :', runtime)
 
     return calculate_day_of_week(date_str)
 
