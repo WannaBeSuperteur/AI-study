@@ -152,16 +152,12 @@ def fine_tune_execute_tool_call_llm(dataset_df, lora_llm, tokenizer):
     """
     Train LLM (Large Language Model) for Tool Call.
     Create Date: 2026.02.20
+    Last Update Date: 2026.02.25 (handle tool calling)
 
     :param dataset_df: Dataset DataFrame
     :param lora_llm:   LLM to fine-tune
     :param tokenizer:  Tokenizer of LLM to fine-tune
     """
-
-    dataset_df['text'] = dataset_df.apply(
-        lambda x: f"{x['user_input']} {ANSWER_PREFIX} {ANSWER_START_MARK} {x['tool_call_output']}{tokenizer.eos_token}",
-        axis=1
-    )
 
     train_llm_with_dataset_df(dataset_df,
                               lora_llm,
@@ -199,5 +195,5 @@ if __name__ == '__main__':
     dataset_df = pd.read_csv('../toolcall_training_data.csv')
 
     fine_tune_execute_tool_call_llm(dataset_df, lora_llm, tokenizer)
-    fine_tune_final_output_llm(dataset_df, lora_llm, tokenizer)
+#    fine_tune_final_output_llm(dataset_df, lora_llm, tokenizer)
 
