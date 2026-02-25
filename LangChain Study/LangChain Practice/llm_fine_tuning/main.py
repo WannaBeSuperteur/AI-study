@@ -1,5 +1,6 @@
 
 import pandas as pd
+
 from datasets import DatasetDict, Dataset
 from trl import DataCollatorForCompletionOnlyLM
 
@@ -18,19 +19,121 @@ def generate_llm_trainable_dataset(dataset_df):
     return dataset
 
 
-def train_llm_with_dataset_df(dataset_df, lora_llm, tokenizer, num_train_epochs, save_model_dir):
+def build_row_for_tool_call(row):
+    """
+    Convert into Tool Call row for tool-calling LLM Dataset.
+    Create Date: 2026.02.25
+
+    :param row: original row from Training Dataset (Pandas DataFrame)
+    :return: converted json dict
+    """
+
+    messages = [
+        {"role": "user", "content": row["user_input"]},
+        {"role": "assistant",
+         "tool_calls": [
+             {
+                 "type": "function",
+                 "function": {
+                     "name": row["tool_call_output"]["tool_call"]["name"],
+                     "arguments": row["tool_call_output"]["tool_call"]["arguments"]
+                 }
+             }
+         ]}
+    ]
+
+    tools = [
+        {
+            "type": "function",
+            "function": {
+                "name": "calculate_date",
+                "description": "Calculate the date before/after N days from original date.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "date_str": {
+                            "type": "string",
+                            "description": "original date string, in the format of \"yyyy-mm-dd\""
+                        },
+                        "days": {
+                            "type": "integer",
+                            "description": "number of days (positive for after, negative for before)"
+                        }
+                    },
+                    "required": ["date_str", "days"],
+                    "additionalProperties": False
+                }
+            }
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "calculate_day_of_week",
+                "description": "Calculate day-of-week of the date.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "date_str": {
+                            "type": "string",
+                            "description": "original date string, in the format of \"yyyy-mm-dd\""
+                        }
+                    },
+                    "required": ["date_str"],
+                    "additionalProperties": False
+                }
+            }
+        }
+    ]
+
+    return {
+        "messages": messages,
+        "tools": tools
+    }
+
+
+def generate_llm_trainable_dataset_for_tool_call(dataset_df):
+    """
+    Generate LLM Trainable Dataset for tool calling.
+    Create Date: 2026.02.25
+
+    :param dataset_df: Original LLM Training Dataset (Pandas DataFrame)
+    :return: converted dataset with tool calling
+    """
+
+    dataset = DatasetDict()
+    row_count = len(dataset_df)
+    train_row_count = int(0.85 * row_count)
+
+    train_df = dataset_df.iloc[:train_row_count].copy()
+    valid_df = dataset_df.iloc[train_row_count:].copy()
+
+    train_records = [build_row_for_tool_call(row) for _, row in train_df.iterrows()]
+    valid_records = [build_row_for_tool_call(row) for _, row in valid_df.iterrows()]
+
+    dataset["train"] = Dataset.from_list(train_records)
+    dataset["valid"] = Dataset.from_list(valid_records)
+
+    return dataset
+
+
+def train_llm_with_dataset_df(dataset_df, lora_llm, tokenizer, num_train_epochs, save_model_dir, is_tool_call=False):
     """
     Train LLM (Large Language Model) using given Dataset DataFrame.
     Create Date: 2026.02.20
+    Last Update Date: 2026.02.25 (handle tool calling)
 
     :param dataset_df:       Dataset DataFrame
     :param lora_llm:         LLM to fine-tune
     :param tokenizer:        Tokenizer of LLM to fine-tune
     :param num_train_epochs: Train Epoch count
     :param save_model_dir:   Directory to save fine-tuned LLM
+    :param is_tool_call:     True for Tool Call, False for just output generation
     """
 
-    dataset = generate_llm_trainable_dataset(dataset_df)
+    if is_tool_call:
+        dataset = generate_llm_trainable_dataset_for_tool_call(dataset_df)
+    else:
+        dataset = generate_llm_trainable_dataset(dataset_df)
 
     # create data collator
     response_template = tokenizer.encode(ANSWER_START_MARK, add_special_tokens=False)
@@ -64,7 +167,8 @@ def fine_tune_execute_tool_call_llm(dataset_df, lora_llm, tokenizer):
                               lora_llm,
                               tokenizer,
                               num_train_epochs=5,
-                              save_model_dir='execute_tool_call_llm')
+                              save_model_dir='execute_tool_call_llm',
+                              is_tool_call=True)
 
 
 def fine_tune_final_output_llm(dataset_df, lora_llm, tokenizer):
