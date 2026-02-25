@@ -1,4 +1,5 @@
 
+import json
 import pandas as pd
 
 from datasets import DatasetDict, Dataset
@@ -28,6 +29,7 @@ def build_row_for_tool_call(row):
     :return: converted json dict
     """
 
+    tool_call_output_info = json.loads(row["tool_call_output"])
     messages = [
         {"role": "user", "content": row["user_input"]},
         {"role": "assistant",
@@ -35,8 +37,8 @@ def build_row_for_tool_call(row):
              {
                  "type": "function",
                  "function": {
-                     "name": row["tool_call_output"]["tool_call"]["name"],
-                     "arguments": row["tool_call_output"]["tool_call"]["arguments"]
+                     "name": tool_call_output_info["tool_call"]["name"],
+                     "arguments": tool_call_output_info["tool_call"]["arguments"]
                  }
              }
          ]}
