@@ -7,6 +7,7 @@ def calculate_date(date_str: str, days: int) -> str:
     """
     Calculate the date before/after N days from original date.
     Create Date : 2026.02.20
+    Last Update Date : 2026.02.25 (fix bug)
 
     :param date_str: original date string, in the format of "yyyy-mm-dd"
     :param days:     number of days (positive for after, negative for before)
@@ -18,7 +19,7 @@ def calculate_date(date_str: str, days: int) -> str:
     original_day = int(date_str.split("-")[2])
     original_date = date(original_year, original_month, original_day)
 
-    dest_date = original_date - timedelta(days=days)
+    dest_date = original_date + timedelta(days=days)
     formatted_dest_date = dest_date.strftime('%Y년 %m월 %d일')
     return formatted_dest_date
 
