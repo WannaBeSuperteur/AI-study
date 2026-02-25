@@ -1,12 +1,16 @@
+from langchain_classic.chains.llm import LLMChain
 
 from tool_functions import calculate_date_, calculate_day_of_week_
 
+import re
+import json
 import torch
-from typing import cast
+from typing import cast, Union, ClassVar, Pattern
 
+from langchain_core.agents import AgentAction, AgentFinish
 from langchain_core.language_models import BaseChatModel
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_classic.agents import AgentExecutor, create_tool_calling_agent
+from langchain_classic.agents import AgentExecutor, create_tool_calling_agent, AgentOutputParser, LLMSingleActionAgent
 from langchain_huggingface import HuggingFacePipeline, ChatHuggingFace
 from transformers import AutoModelForCausalLM, pipeline, AutoTokenizer, AutoConfig, BitsAndBytesConfig
 
@@ -14,6 +18,51 @@ from transformers import AutoModelForCausalLM, pipeline, AutoTokenizer, AutoConf
 ORIGINAL_MIDM_LLM_PATH = 'llm_fine_tuning/midm_original_llm'
 ANSWER_PREFIX = '(답변 시작)'
 LANGCHAIN_ASSISTANT_PREFIX = '<|start_header_id|>assistant<|end_header_id|>\n\n'
+
+
+# most part of ToolCallTagOutputParser generated using ChatGPT-5.2 Thinking
+class ToolCallTagOutputParser(AgentOutputParser):
+    """
+    LLM output examples:
+        <tool_call>
+        {"name": "calculate_day_of_week", "arguments": {"date_str": "2024-06-18"}}
+        </tool_call>
+    """
+
+    TOOL_CALL_PATTERN: ClassVar[Pattern[str]] = re.compile(
+        r"<tool_call>\s*(.*?)\s*</tool_call>",
+        re.DOTALL | re.IGNORECASE
+    )
+
+    def __init__(self):
+        super().__init__()
+
+    def parse(self, text: str) -> Union[AgentAction, AgentFinish]:
+        raw = (text or "").strip()
+
+        # parse tool calling
+        m = self.TOOL_CALL_PATTERN.search(raw)
+
+        if m:
+            payload_str = m.group(1).strip()
+            try:
+                payload = json.loads(payload_str)
+            except json.JSONDecodeError as e:
+                return AgentFinish(
+                    return_values={"output": f"[JSONDecodeError] {e}"},
+                    log=raw
+                )
+
+            tool_name = payload.get("name", "")
+            tool_args = payload.get("arguments", {}) or {}
+            return AgentAction(
+                tool=tool_name,
+                tool_input=tool_args,
+                log=raw
+            )
+
+        # handle fallback (not tool call or error)
+        return AgentFinish(return_values={"output": raw}, log=raw)
 
 
 def load_langchain_llm(llm_path: str):
@@ -116,6 +165,7 @@ if __name__ == '__main__':
 
     # tool binding
     tools = [calculate_date_, calculate_day_of_week_]
+
     execute_tool_call_chat_llm_with_tools = cast(
         BaseChatModel,
         execute_tool_call_chat_llm.bind_tools(tools)
@@ -127,17 +177,21 @@ if __name__ == '__main__':
         MessagesPlaceholder(variable_name="agent_scratchpad")
     ])
 
-    # Expected type 'BaseLanguageModel', got 'Runnable[Any, AIMessage]' instead -> 수정 필요
-    tool_call_agent = create_tool_calling_agent(
-        llm=execute_tool_call_chat_llm_with_tools,
-        tools=tools,
-        prompt=prompt
+    # prepare agent executor
+    output_parser = ToolCallTagOutputParser()
+    execute_tool_call_chat_llm_chain = prompt | execute_tool_call_chat_llm
+
+    tool_call_agent = LLMSingleActionAgent(
+        llm_chain=execute_tool_call_chat_llm_chain,
+        output_parser=output_parser,
+        allowed_tools=[t.name for t in tools]
     )
     tool_call_agent_executor = AgentExecutor(
         agent=tool_call_agent,
         tools=tools,
         verbose=True,
-        return_intermediate_steps=True
+        return_intermediate_steps=True,
+        handle_parsing_errors=True
     )
 
     run_agent(tool_call_agent_executor, final_output_llm_chat_llm)
