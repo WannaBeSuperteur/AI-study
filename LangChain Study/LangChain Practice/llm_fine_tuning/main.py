@@ -10,22 +10,43 @@ from llm_fine_tuning import get_llm, train_llm, train_llm_for_tool_call
 
 
 # NEW_CHAT_TEMPLATE Generated using GPT-5.2 Thinking
-NEW_CHAT_TEMPLATE = """{% for message in messages %}
-{% if message['role'] == 'user' -%}
-<|im_start|>user
-{{ message['content'] }}<|im_end|>
-{% elif message['role'] == 'assistant' -%}
-<|im_start|>assistant
-{% if message.get('content') %}{{ message['content'] }}{% endif %}
-{% if message.get('tool_calls') %}{{ message['tool_calls'] | tojson }}{% endif %}<|im_end|>
-{% elif message['role'] == 'tool' -%}
-<|im_start|>tool
-{{ message['content'] }}<|im_end|>
-{% endif -%}
-{% endfor -%}
-{% if add_generation_prompt -%}
-<|im_start|>assistant
-{% endif -%}"""
+NEW_CHAT_TEMPLATE = r"""
+{%- for message in messages %}
+    {%- if message['role'] == 'user' %}
+{{- '<|im_start|>user\n' }}
+{{- message['content'] }}
+{{- '<|im_end|>\n' }}
+
+    {%- elif message['role'] == 'assistant' %}
+{% generation %}
+{{- '<|im_start|>assistant' }}
+        {%- if message.get('content') %}
+{{- '\n' + message['content'] }}
+        {%- endif %}
+        {%- if message.get('tool_calls') %}
+            {%- for tc in message['tool_calls'] %}
+                {%- set tcf = tc['function'] if tc.get('function') is defined else tc %}
+{{- '\n<tool_call>\n' }}
+{{- '{"name": "' + tcf['name'] + '", "arguments": ' + (tcf['arguments'] | tojson) + '}' }}
+{{- '\n</tool_call>' }}
+            {%- endfor %}
+        {%- endif %}
+{{- '<|im_end|>\n' }}
+{% endgeneration %}
+
+    {%- elif message['role'] == 'tool' %}
+{{- '<|im_start|>tool\n' }}
+        {%- if message.get('content') %}
+{{- message['content'] }}
+        {%- endif %}
+{{- '<|im_end|>\n' }}
+    {%- endif %}
+{%- endfor %}
+
+{%- if add_generation_prompt %}
+{{- '<|im_start|>assistant\n' }}
+{%- endif %}
+"""
 
 
 def generate_llm_trainable_dataset(dataset_df):
