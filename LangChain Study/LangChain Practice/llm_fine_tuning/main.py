@@ -9,7 +9,7 @@ from llm_fine_tuning import LLM_PATH, ANSWER_PREFIX, ANSWER_START_MARK
 from llm_fine_tuning import get_llm, train_llm, train_llm_for_tool_call
 
 
-# NEW_CHAT_TEMPLATE Generated using GPT-5.2 Thinking
+# most part of NEW_CHAT_TEMPLATE Generated using GPT-5.2 Thinking (end token 은 실제 tokenizer의 EOS_TOKEN 에 맞게 수정)
 NEW_CHAT_TEMPLATE = r"""
 {%- for message in messages %}
     {%- if message['role'] == 'user' %}
@@ -31,7 +31,7 @@ NEW_CHAT_TEMPLATE = r"""
 {{- '\n</tool_call>' }}
             {%- endfor %}
         {%- endif %}
-{{- '<|im_end|>\n' }}
+{{- '<|end_of_text|>\n' }}
 {% endgeneration %}
 
     {%- elif message['role'] == 'tool' %}
@@ -39,13 +39,9 @@ NEW_CHAT_TEMPLATE = r"""
         {%- if message.get('content') %}
 {{- message['content'] }}
         {%- endif %}
-{{- '<|im_end|>\n' }}
+{{- '<|end_of_text|>\n' }}
     {%- endif %}
 {%- endfor %}
-
-{%- if add_generation_prompt %}
-{{- '<|im_start|>assistant\n' }}
-{%- endif %}
 """
 
 

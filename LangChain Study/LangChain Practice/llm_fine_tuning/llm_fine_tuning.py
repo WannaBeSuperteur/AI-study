@@ -20,10 +20,11 @@ tokenizer = None
 
 class ValidateCallback(TrainerCallback):
 
-    def __init__(self, valid_dataset, max_length=128):
+    def __init__(self, valid_dataset, max_length=128, is_tool_call=False):
         super(ValidateCallback, self).__init__()
         self.valid_dataset = valid_dataset
         self.max_length = max_length
+        self.is_tool_call = is_tool_call
 
     def on_epoch_end(self, args: TrainingArguments, state: TrainerState, control: TrainerControl, **kwargs):
         global lora_llm, tokenizer
@@ -31,7 +32,26 @@ class ValidateCallback(TrainerCallback):
         print('=== INFERENCE TEST ===')
 
         for valid_input in self.valid_dataset:
-            valid_input_text = valid_input['text'].split(ANSWER_PREFIX)[0] + ANSWER_PREFIX
+            if self.is_tool_call:
+                infer_messages = []
+                tools = valid_input.get("tools", None)
+
+                for m in valid_input["messages"]:
+                    if m["role"] == "user":
+                        infer_messages.append({
+                            "role": "user",
+                            "content": m.get("content", "")
+                        })
+
+                valid_input_text = tokenizer.apply_chat_template(
+                    infer_messages,
+                    tools=tools,
+                    tokenize=False,
+                    add_generation_prompt=True,
+                )
+
+            else:
+                valid_input_text = valid_input['text'].split(ANSWER_PREFIX)[0] + ANSWER_PREFIX
 
             inputs = tokenizer(valid_input_text, return_tensors='pt').to(lora_llm.device)
             inputs = {'input_ids': inputs['input_ids'].to(lora_llm.device),
@@ -43,10 +63,14 @@ class ValidateCallback(TrainerCallback):
                                         temperature=0.6,
                                         eos_token_id=tokenizer.eos_token_id,
                                         pad_token_id=tokenizer.pad_token_id,
-                                        min_new_tokens=5)                      # 처음에 바로 EOS token 이 생성되는 것 방지
+                                        min_new_tokens=5)  # 처음에 바로 EOS token 이 생성되는 것 방지
             llm_answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
             llm_answer = llm_answer[len(valid_input_text):]
-            llm_answer = llm_answer.split(ANSWER_PREFIX)[-1]
+
+            if self.is_tool_call:
+                print('')  # add new-line before next valid input for test log readability
+            else:
+                llm_answer = llm_answer.split(ANSWER_PREFIX)[-1]
 
             print(f'valid input: {valid_input_text}\nLLM answer: {llm_answer} (total tokens: {len(outputs[0])})')
 
@@ -170,7 +194,7 @@ def train_llm_for_tool_call(llm, dataset, save_model_dir='fine_tuned_llm', num_t
         eval_dataset=dataset['valid'],
         processing_class=tokenizer,
         args=training_args,
-        callbacks=[ValidateCallback(dataset['valid'], max_length=max_length)]
+        callbacks=[ValidateCallback(dataset['valid'], max_length=max_length, is_tool_call=True)]
     )
 
     trainer.train()
