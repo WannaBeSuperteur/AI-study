@@ -6,7 +6,7 @@ from datasets import DatasetDict, Dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments, BitsAndBytesConfig, TrainerCallback, \
                          TrainerState, TrainerControl
 from peft import prepare_model_for_kbit_training, LoraConfig, get_peft_model
-from trl import SFTTrainer, DataCollatorForCompletionOnlyLM
+from trl import SFTTrainer, DataCollatorForCompletionOnlyLM, SFTConfig
 
 import pandas as pd
 
@@ -134,6 +134,42 @@ def train_llm(llm, dataset, data_collator, save_model_dir='fine_tuned_llm', num_
         processing_class=tokenizer,
         args=training_args,
         data_collator=data_collator,
+        callbacks=[ValidateCallback(dataset['valid'], max_length=max_length)]
+    )
+
+    trainer.train()
+    trainer.save_model(save_model_dir)
+
+
+def train_llm_for_tool_call(llm, dataset, save_model_dir='fine_tuned_llm', num_train_epochs=10, max_length=128):
+    """
+        Train LLM for AI Agent with tool calling, with given dataset.
+        Create Date : 2026.02.25
+
+        :param llm:              Large Language Model (LLM) to train
+        :param dataset:          Training + Valid Dataset of LLM,
+                                 in the form of {'train': (Train Dataset), 'valid': (Valid Dataset)}
+        :param save_model_dir:   Directory to save fine-tuned LLM
+        :param num_train_epochs: Train Epoch count
+        :param max_length:       Maximum number of LLM output tokens
+    """
+
+    training_args = SFTConfig(
+        learning_rate=0.0003,
+        output_dir="./output",
+        num_train_epochs=num_train_epochs,
+        per_device_train_batch_size=2,
+        per_device_eval_batch_size=1,
+        assistant_only_loss=True,
+        max_length=max_length
+    )
+
+    trainer = SFTTrainer(
+        llm,
+        train_dataset=dataset['train'],
+        eval_dataset=dataset['valid'],
+        processing_class=tokenizer,
+        args=training_args,
         callbacks=[ValidateCallback(dataset['valid'], max_length=max_length)]
     )
 

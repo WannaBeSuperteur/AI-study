@@ -6,7 +6,26 @@ from datasets import DatasetDict, Dataset
 from trl import DataCollatorForCompletionOnlyLM
 
 from llm_fine_tuning import LLM_PATH, ANSWER_PREFIX, ANSWER_START_MARK
-from llm_fine_tuning import get_llm, train_llm
+from llm_fine_tuning import get_llm, train_llm, train_llm_for_tool_call
+
+
+# NEW_CHAT_TEMPLATE Generated using GPT-5.2 Thinking
+NEW_CHAT_TEMPLATE = """{% for message in messages %}
+{% if message['role'] == 'user' -%}
+<|im_start|>user
+{{ message['content'] }}<|im_end|>
+{% elif message['role'] == 'assistant' -%}
+<|im_start|>assistant
+{% if message.get('content') %}{{ message['content'] }}{% endif %}
+{% if message.get('tool_calls') %}{{ message['tool_calls'] | tojson }}{% endif %}<|im_end|>
+{% elif message['role'] == 'tool' -%}
+<|im_start|>tool
+{{ message['content'] }}<|im_end|>
+{% endif -%}
+{% endfor -%}
+{% if add_generation_prompt -%}
+<|im_start|>assistant
+{% endif -%}"""
 
 
 def generate_llm_trainable_dataset(dataset_df):
@@ -138,16 +157,24 @@ def train_llm_with_dataset_df(dataset_df, lora_llm, tokenizer, num_train_epochs,
         dataset = generate_llm_trainable_dataset(dataset_df)
 
     # create data collator
-    response_template = tokenizer.encode(ANSWER_START_MARK, add_special_tokens=False)
-    collator = DataCollatorForCompletionOnlyLM(response_template, tokenizer=tokenizer)
+    if is_tool_call:
+        train_llm_for_tool_call(lora_llm,
+                                dataset,
+                                save_model_dir=save_model_dir,
+                                num_train_epochs=num_train_epochs,
+                                max_length=128)
 
-    # train LLM
-    train_llm(lora_llm,
-              dataset,
-              collator,
-              save_model_dir=save_model_dir,
-              num_train_epochs=num_train_epochs,
-              max_length=128)
+    else:
+        response_template = tokenizer.encode(ANSWER_START_MARK, add_special_tokens=False)
+        collator = DataCollatorForCompletionOnlyLM(response_template, tokenizer=tokenizer)
+
+        # train LLM
+        train_llm(lora_llm,
+                  dataset,
+                  collator,
+                  save_model_dir=save_model_dir,
+                  num_train_epochs=num_train_epochs,
+                  max_length=128)
 
 
 def fine_tune_execute_tool_call_llm(dataset_df, lora_llm, tokenizer):
@@ -193,9 +220,14 @@ def fine_tune_final_output_llm(dataset_df, lora_llm, tokenizer):
 
 
 if __name__ == '__main__':
-    lora_llm, tokenizer = get_llm(LLM_PATH)
-    dataset_df = pd.read_csv('../toolcall_training_data.csv')
 
+    # Fine-Tuning tool call LLM
+    lora_llm, tokenizer = get_llm(LLM_PATH)
+    tokenizer.chat_template = NEW_CHAT_TEMPLATE
+    dataset_df = pd.read_csv('../toolcall_training_data.csv')
     fine_tune_execute_tool_call_llm(dataset_df, lora_llm, tokenizer)
+
+    # Fine-Tuning final output LLM
+#    lora_llm, tokenizer = get_llm(LLM_PATH)
 #    fine_tune_final_output_llm(dataset_df, lora_llm, tokenizer)
 
