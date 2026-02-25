@@ -179,12 +179,14 @@ if __name__ == '__main__':
 
     # prepare agent executor
     output_parser = ToolCallTagOutputParser()
-    execute_tool_call_chat_llm_chain = prompt | execute_tool_call_chat_llm
-
+    execute_tool_call_chat_llm_chain = LLMChain(
+        llm=execute_tool_call_chat_llm,
+        prompt=prompt
+    )
     tool_call_agent = LLMSingleActionAgent(
         llm_chain=execute_tool_call_chat_llm_chain,
         output_parser=output_parser,
-        allowed_tools=[t.name for t in tools]
+        stop=["</tool_call>"]
     )
     tool_call_agent_executor = AgentExecutor(
         agent=tool_call_agent,
