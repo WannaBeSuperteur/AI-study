@@ -24,7 +24,7 @@ def calculate_date(date_str: str, days: int) -> str:
     return formatted_dest_date
 
 
-@tool
+@tool("calculate_date_")
 def calculate_date_(date_str: str, days: int) -> str:
     """
     Calculate the date before/after N days from original date. (tool function)
@@ -54,7 +54,7 @@ def calculate_day_of_week(date_str: str) -> str:
     return dow_name
 
 
-@tool
+@tool("calculate_day_of_week_")
 def calculate_day_of_week_(date_str: str) -> str:
     """
     Calculate day-of-week of the date. (tool function)

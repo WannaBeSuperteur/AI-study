@@ -9,8 +9,8 @@ from typing import cast, Union, ClassVar, Pattern
 
 from langchain_core.agents import AgentAction, AgentFinish
 from langchain_core.language_models import BaseChatModel
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_classic.agents import AgentExecutor, create_tool_calling_agent, AgentOutputParser, LLMSingleActionAgent
+from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
+from langchain_classic.agents import AgentExecutor, AgentOutputParser, create_react_agent
 from langchain_huggingface import HuggingFacePipeline, ChatHuggingFace
 from transformers import AutoModelForCausalLM, pipeline, AutoTokenizer, AutoConfig, BitsAndBytesConfig
 
@@ -121,7 +121,7 @@ def run_agent(tool_call_agent_executor, final_output_llm_chat_llm):
     """
     Run LLM Agent.
     Create Date: 2026.02.22
-    Last Update Date: 2026.02.23 (tool call 재 구현)
+    Last Update Date: 2026.02.26 (tool call 재 구현)
 
     :param tool_call_agent_executor:  LLM Agent Executor (for Tool Call LLM)
     :param final_output_llm_chat_llm: LangChain LLM to convert Tool Call result to Final Output
@@ -131,7 +131,7 @@ def run_agent(tool_call_agent_executor, final_output_llm_chat_llm):
         user_input = input('\nUSER INPUT:\n')
 
         # execute tool
-        tool_execute_result = tool_call_agent_executor.invoke({'input': user_input + f' {ANSWER_PREFIX}'})
+        tool_execute_result = tool_call_agent_executor.invoke({'input': user_input})
         print(tool_execute_result)
 
         # convert to final answer
@@ -171,29 +171,23 @@ if __name__ == '__main__':
         execute_tool_call_chat_llm.bind_tools(tools)
     )
 
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", "너는 날짜 및 요일을 계산하는 어시스턴트이다. 필요 시 tool을 사용한다."),
-        ("human", "{input}"),
-        MessagesPlaceholder(variable_name="agent_scratchpad")
-    ])
+    prompt = PromptTemplate.from_template("tools: {tools}, tool_names: {tool_names} / {input} {agent_scratchpad}")
 
     # prepare agent executor
     output_parser = ToolCallTagOutputParser()
-    execute_tool_call_chat_llm_chain = LLMChain(
+
+    tool_call_agent = create_react_agent(
         llm=execute_tool_call_chat_llm,
-        prompt=prompt
+        tools=tools,
+        prompt=prompt,
+        output_parser=output_parser
     )
-    tool_call_agent = LLMSingleActionAgent(
-        llm_chain=execute_tool_call_chat_llm_chain,
-        output_parser=output_parser,
-        stop=["</tool_call>"]
-    )
+
     tool_call_agent_executor = AgentExecutor(
         agent=tool_call_agent,
         tools=tools,
         verbose=True,
-        return_intermediate_steps=True,
-        handle_parsing_errors=True
+        return_intermediate_steps=True
     )
 
     run_agent(tool_call_agent_executor, final_output_llm_chat_llm)
