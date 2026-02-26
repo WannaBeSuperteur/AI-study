@@ -1,5 +1,7 @@
+from langgraph.store.base import BaseStore
 
 from tool_functions import calculate_date_, calculate_day_of_week_
+from memory_functions import get_user_info, set_user_info
 
 import re
 import json
@@ -112,30 +114,57 @@ def run_agent(tool_call_agent_executor, final_output_llm_chat_llm):
     """
     Run LLM Agent.
     Create Date: 2026.02.22
-    Last Update Date: 2026.02.26 (tool call 재 구현)
+    Last Update Date: 2026.02.26 (tool call 재 구현 + memory handling)
 
     :param tool_call_agent_executor:  LLM Agent Executor (for Tool Call LLM)
     :param final_output_llm_chat_llm: LangChain LLM to convert Tool Call result to Final Output
     """
 
+    base_store = BaseStore()
+
     while True:
         user_input = input('\nUSER INPUT:\n')
 
-        # execute tool
-        tool_execute_result = tool_call_agent_executor.invoke({'input': user_input})
-        tool_execute_result_str = tool_execute_result['intermediate_steps'][-1][1]
-        print(f'tool_execute_result : {tool_execute_result_str}')
+        # memory handling
+        # get value:   "[MEMORY] get key"
+        # write value: "[MEMORY] write key=value"
+        if user_input.startswith('[MEMORY]'):
+            try:
+                input_split = user_input.split(' ')
+                action_type = input_split[1]
+                assert action_type in ['get', 'write']
 
-        # convert to final answer
-        final_llm_prompt = ChatPromptTemplate.from_template(
-            '{user_input} -> {tool_execute_result}' + f' {ANSWER_PREFIX}'
-        )
-        print(f'final_llm_prompt : {final_llm_prompt}')
+                if action_type == 'get':
+                    key = input_split[2]
+                    result = get_user_info(key, base_store)
+                    print(f'get result : {result}')
 
-        final_chain = final_llm_prompt | final_output_llm_chat_llm
-        final_result = final_chain.invoke({'user_input': user_input, 'tool_execute_result': tool_execute_result_str})
-        final_result_content = final_result.content.split(LANGCHAIN_ASSISTANT_PREFIX)[-1]
-        print(f'final result : {final_result_content}')
+                if action_type == 'write':
+                    key = input_split[2].split('=')[0]
+                    value = input_split[2].split('=')[1]
+                    set_user_info(key, value, base_store)
+                    print(f'write successful (key={key}, value={value})')
+
+            except:
+                print('Wrong memory handling format.')
+
+        # LLM process (tool calling & final answer)
+        else:
+            # execute tool
+            tool_execute_result = tool_call_agent_executor.invoke({'input': user_input})
+            tool_execute_result_str = tool_execute_result['intermediate_steps'][-1][1]
+            print(f'tool_execute_result : {tool_execute_result_str}')
+
+            # convert to final answer
+            final_llm_prompt = ChatPromptTemplate.from_template(
+                '{user_input} -> {tool_execute_result}' + f' {ANSWER_PREFIX}'
+            )
+            print(f'final_llm_prompt : {final_llm_prompt}')
+
+            final_chain = final_llm_prompt | final_output_llm_chat_llm
+            final_result = final_chain.invoke({'user_input': user_input, 'tool_execute_result': tool_execute_result_str})
+            final_result_content = final_result.content.split(LANGCHAIN_ASSISTANT_PREFIX)[-1]
+            print(f'final result : {final_result_content}')
 
 
 if __name__ == '__main__':
