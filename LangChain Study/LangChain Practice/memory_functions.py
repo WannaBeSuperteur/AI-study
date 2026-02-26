@@ -1,22 +1,22 @@
 
-from langchain.tools import tool, ToolRuntime
+from langchain.tools import tool
+from langgraph.store.base import BaseStore
 
 USER_INFO_KEY = "user_info"
 
 
 @tool
-def get_user_info(info_type: str, runtime: ToolRuntime) -> str:
+def get_user_info(info_type: str, store: BaseStore) -> str:
     """
     Get user info of info_type.
     Create Date : 2026.02.20
+    Last Update Date : 2026.02.26 (do not use Runtime, only use store)
 
     :param info_type: info key to search
     :return:          matching value for the info key
     """
 
-    store = runtime.store
-    user_id = runtime.config['metadata'].get("user_id", "tester")
-
+    user_id = 'tester'
     namespace = ("users", user_id)
     memory = store.get(namespace, USER_INFO_KEY)
 
@@ -30,19 +30,18 @@ def get_user_info(info_type: str, runtime: ToolRuntime) -> str:
 
 
 @tool
-def set_user_info(info_type: str, info_value: str, runtime: ToolRuntime):
+def set_user_info(info_type: str, info_value: str, store: BaseStore):
     """
     Store user info of info_type as info_value.
     Create Date : 2026.02.20
+    Last Update Date : 2026.02.26 (do not use Runtime, only use store)
 
     :param info_type:  info key to store info value
     :param info_value: info value to be stored
     :return:           matching value for the info key
     """
 
-    store = runtime.store
-    user_id = runtime.config['metadata'].get("user_id", "tester")
-
+    user_id = 'tester'
     namespace = ("users", user_id)
     memory = store.get(namespace, USER_INFO_KEY)
 
