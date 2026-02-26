@@ -13,6 +13,9 @@
   * [5-1. EOS token 학습 안됨](#5-1-eos-token-학습-안됨)
   * [5-2. LLM Fine-Tuning 후, 응답이 제대로 생성되지 않음](#5-2-llm-fine-tuning-후-응답이-제대로-생성되지-않음)
   * [5-3. LLM output 에서 처음에 EOS token 발생](#5-3-llm-output-에서-처음에-eos-token-발생)
+  * [5-4. Fine-Tuning 된 LLM 로딩 시 tensor size 불일치](#5-4-fine-tuning-된-llm-로딩-시-tensor-size-불일치)
+* [6. 참고](#6-참고)
+  * [6-1. Quantization 적용/미 적용 시 GPU 메모리 사용량 차이](#6-1-quantization-적용미-적용-시-gpu-메모리-사용량-차이) 
 
 ## 1. 기본 요구사항
 
@@ -40,7 +43,8 @@
 | 🧠 모델 선택   | LLM 학습 (Fine-Tuning) 대상 LLM 최종 선택  | 02.20 금 (1d)           | ```LangChain-practice-003-fine-tuning``` | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/3) | ✅  |
 | 📝 데이터셋 제작 | LLM 학습 데이터셋 제작                     | 02.20 금 (1d)           | ```LangChain-practice-003-fine-tuning``` | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/3) | ✅  |
 | 🧪 모델 학습   | LLM 학습 (Fine-Tuning) 실시            | 02.20 금 - 02.22 일 (3d) | ```LangChain-practice-003-fine-tuning``` | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/3) | ✅  |
-| ⚙ 기능 구현    | LLM 에이전트 기능 구현                     | 02.22 일 - 02.23 월 (2d) | ```LangChain-practice-004-agent```       | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/4) | 💨 |
+| ⚙ 기능 구현    | LLM 에이전트 기능 구현                     | 02.22 일 - 02.24 화 (3d) | ```LangChain-practice-004-agent```       |                                                                | ⬜  |
+| ⚙ 기능 구현    | LLM 에이전트 기능 구현 (tool call 재 구현)    | 02.23 월 - 02.24 화 (3d) | ```LangChain-practice-005-tool-call```   | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/4) | 💨 |
 | 🔍 최종 검토   | 최종 QA (버그 유무 검사)                   | 02.24 화 (1d)           |                                          |                                                                | ⬜  |
 | 📃 문서화     | 프로젝트 문서 정리 및 마무리                   | 02.24 화 (1d)           |                                          |                                                                | ⬜  |
 
@@ -258,3 +262,56 @@ outputs = lora_llm.generate(**inputs,
                             pad_token_id=tokenizer.pad_token_id,
                             min_new_tokens=5)                      # 처음에 바로 EOS token 이 생성되는 것 방지
 ```
+
+### 5-4. Fine-Tuning 된 LLM 로딩 시 tensor size 불일치
+
+* 문제 상황
+  * Fine-Tuning 된 LLM 로딩 시, tensor 크기가 불일치하여 다음과 같은 오류 발생
+
+```
+RuntimeError: Error(s) in loading state_dict for LlamaForCausalLM:
+        size mismatch for model.embed_tokens.weight: copying a param with shape torch.Size([131384, 1792]) from checkpoint, the shape in current model is torch.Size([131392, 1792]).
+        size mismatch for lm_head.weight: copying a param with shape torch.Size([131384, 1792]) from checkpoint, the shape in current model is torch.Size([131392, 1792]).
+```
+
+* 문제 원인
+  * Fine-Tuning 된 LLM과 원본 Mi:dm-2.0 LLM 간 **tokenizer 의 vocab size 불일치**
+* 해결 방법
+  * **config 에서 ```vocab_size```를 수정** (Fine-Tuning 된 LLM 의 vocab size)
+  * ```ignore_mismatched_sizes=True``` 로 **크기 불일치 시에도 오류 미 발생** 하도록 수정 + 후처리
+
+```python
+config = AutoConfig.from_pretrained(ORIGINAL_MIDM_LLM_PATH)
+config.vocab_size = len(tokenizer)  # new vocab size
+
+llm = AutoModelForCausalLM.from_pretrained(
+    llm_path,
+    config=config,
+    trust_remote_code=True,
+    torch_dtype=torch.float16,
+    ignore_mismatched_sizes=True
+)
+```
+
+## 6. 참고
+
+### 6-1. Quantization 적용/미 적용 시 GPU 메모리 사용량 차이
+
+* 적용 Quantization
+  * **BitsAndBytesConfig**
+
+```python
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_use_double_quant=True,
+    bnb_4bit_quant_type='nf4',
+    bnb_4bit_compute_dtype='bfloat16'
+)
+```
+
+* Quantization 적용 vs. 미 적용 시 GPU 메모리 사용량
+  * 2개의 [Midm-2.0-Mini-Instruct](https://huggingface.co/K-intelligence/Midm-2.0-Mini-Instruct) Fine-Tuning 된 LLM 로딩 시 기준
+
+| Quantization 적용 시 | Quantization 미 적용 시 | 차이        |
+|-------------------|---------------------|-----------|
+| 9,970 MB          | 6,141 MB            | 🔻 38.4 % |

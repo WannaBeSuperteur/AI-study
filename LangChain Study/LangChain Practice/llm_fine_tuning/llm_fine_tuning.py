@@ -6,7 +6,7 @@ from datasets import DatasetDict, Dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments, BitsAndBytesConfig, TrainerCallback, \
                          TrainerState, TrainerControl
 from peft import prepare_model_for_kbit_training, LoraConfig, get_peft_model
-from trl import SFTTrainer, DataCollatorForCompletionOnlyLM
+from trl import SFTTrainer, DataCollatorForCompletionOnlyLM, SFTConfig
 
 import pandas as pd
 
@@ -20,10 +20,11 @@ tokenizer = None
 
 class ValidateCallback(TrainerCallback):
 
-    def __init__(self, valid_dataset, max_length=128):
+    def __init__(self, valid_dataset, max_length=128, is_tool_call=False):
         super(ValidateCallback, self).__init__()
         self.valid_dataset = valid_dataset
         self.max_length = max_length
+        self.is_tool_call = is_tool_call
 
     def on_epoch_end(self, args: TrainingArguments, state: TrainerState, control: TrainerControl, **kwargs):
         global lora_llm, tokenizer
@@ -31,7 +32,26 @@ class ValidateCallback(TrainerCallback):
         print('=== INFERENCE TEST ===')
 
         for valid_input in self.valid_dataset:
-            valid_input_text = valid_input['text'].split(ANSWER_PREFIX)[0] + ANSWER_PREFIX
+            if self.is_tool_call:
+                infer_messages = []
+                tools = valid_input.get("tools", None)
+
+                for m in valid_input["messages"]:
+                    if m["role"] == "user":
+                        infer_messages.append({
+                            "role": "user",
+                            "content": m.get("content", "")
+                        })
+
+                valid_input_text = tokenizer.apply_chat_template(
+                    infer_messages,
+                    tools=tools,
+                    tokenize=False,
+                    add_generation_prompt=True,
+                )
+
+            else:
+                valid_input_text = valid_input['text'].split(ANSWER_PREFIX)[0] + ANSWER_PREFIX
 
             inputs = tokenizer(valid_input_text, return_tensors='pt').to(lora_llm.device)
             inputs = {'input_ids': inputs['input_ids'].to(lora_llm.device),
@@ -43,10 +63,14 @@ class ValidateCallback(TrainerCallback):
                                         temperature=0.6,
                                         eos_token_id=tokenizer.eos_token_id,
                                         pad_token_id=tokenizer.pad_token_id,
-                                        min_new_tokens=5)                      # 처음에 바로 EOS token 이 생성되는 것 방지
+                                        min_new_tokens=5)  # 처음에 바로 EOS token 이 생성되는 것 방지
             llm_answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
             llm_answer = llm_answer[len(valid_input_text):]
-            llm_answer = llm_answer.split(ANSWER_PREFIX)[-1]
+
+            if self.is_tool_call:
+                print('')  # add new-line before next valid input for test log readability
+            else:
+                llm_answer = llm_answer.split(ANSWER_PREFIX)[-1]
 
             print(f'valid input: {valid_input_text}\nLLM answer: {llm_answer} (total tokens: {len(outputs[0])})')
 
@@ -135,6 +159,42 @@ def train_llm(llm, dataset, data_collator, save_model_dir='fine_tuned_llm', num_
         args=training_args,
         data_collator=data_collator,
         callbacks=[ValidateCallback(dataset['valid'], max_length=max_length)]
+    )
+
+    trainer.train()
+    trainer.save_model(save_model_dir)
+
+
+def train_llm_for_tool_call(llm, dataset, save_model_dir='fine_tuned_llm', num_train_epochs=10, max_length=128):
+    """
+        Train LLM for AI Agent with tool calling, with given dataset.
+        Create Date : 2026.02.25
+
+        :param llm:              Large Language Model (LLM) to train
+        :param dataset:          Training + Valid Dataset of LLM,
+                                 in the form of {'train': (Train Dataset), 'valid': (Valid Dataset)}
+        :param save_model_dir:   Directory to save fine-tuned LLM
+        :param num_train_epochs: Train Epoch count
+        :param max_length:       Maximum number of LLM output tokens
+    """
+
+    training_args = SFTConfig(
+        learning_rate=0.0003,
+        output_dir="./output",
+        num_train_epochs=num_train_epochs,
+        per_device_train_batch_size=2,
+        per_device_eval_batch_size=1,
+        assistant_only_loss=True,
+        max_length=max_length
+    )
+
+    trainer = SFTTrainer(
+        llm,
+        train_dataset=dataset['train'],
+        eval_dataset=dataset['valid'],
+        processing_class=tokenizer,
+        args=training_args,
+        callbacks=[ValidateCallback(dataset['valid'], max_length=max_length, is_tool_call=True)]
     )
 
     trainer.train()
