@@ -1,4 +1,3 @@
-from langgraph.store.base import BaseStore
 
 from tool_functions import calculate_date_, calculate_day_of_week_
 from memory_functions import get_user_info, set_user_info
@@ -12,12 +11,16 @@ from langchain_core.agents import AgentAction, AgentFinish
 from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
 from langchain_classic.agents import AgentExecutor, AgentOutputParser, create_react_agent
 from langchain_huggingface import HuggingFacePipeline, ChatHuggingFace
+from langgraph.store.memory import InMemoryStore
+
 from transformers import AutoModelForCausalLM, pipeline, AutoTokenizer, AutoConfig, BitsAndBytesConfig
 
 
 ORIGINAL_MIDM_LLM_PATH = 'llm_fine_tuning/midm_original_llm'
 ANSWER_PREFIX = '(답변 시작)'
 LANGCHAIN_ASSISTANT_PREFIX = '<|start_header_id|>assistant<|end_header_id|>\n\n'
+
+global memory_store
 
 
 # most part of ToolCallTagOutputParser generated using ChatGPT-5.2 Thinking
@@ -120,7 +123,7 @@ def run_agent(tool_call_agent_executor, final_output_llm_chat_llm):
     :param final_output_llm_chat_llm: LangChain LLM to convert Tool Call result to Final Output
     """
 
-    base_store = BaseStore()
+    global memory_store
 
     while True:
         user_input = input('\nUSER INPUT:\n')
@@ -136,17 +139,17 @@ def run_agent(tool_call_agent_executor, final_output_llm_chat_llm):
 
                 if action_type == 'get':
                     key = input_split[2]
-                    result = get_user_info(key, base_store)
+                    result = get_user_info(key, memory_store)
                     print(f'get result : {result}')
 
                 if action_type == 'write':
                     key = input_split[2].split('=')[0]
                     value = input_split[2].split('=')[1]
-                    set_user_info(key, value, base_store)
+                    set_user_info(key, value, memory_store)
                     print(f'write successful (key={key}, value={value})')
 
-            except:
-                print('Wrong memory handling format.')
+            except Exception as e:
+                print(f'error: {e}')
 
         # LLM process (tool calling & final answer)
         else:
@@ -206,4 +209,5 @@ if __name__ == '__main__':
         max_iterations=1
     )
 
+    memory_store = InMemoryStore()
     run_agent(tool_call_agent_executor, final_output_llm_chat_llm)

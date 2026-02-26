@@ -1,12 +1,12 @@
 
 from langchain.tools import tool
-from langgraph.store.base import BaseStore
+from langgraph.store.memory import InMemoryStore
 
 USER_INFO_KEY = "user_info"
 
 
 @tool
-def get_user_info(info_type: str, store: BaseStore) -> str:
+def get_user_info(info_type: str, store: InMemoryStore) -> str:
     """
     Get user info of info_type.
     Create Date : 2026.02.20
@@ -30,7 +30,7 @@ def get_user_info(info_type: str, store: BaseStore) -> str:
 
 
 @tool
-def set_user_info(info_type: str, info_value: str, store: BaseStore):
+def set_user_info(info_type: str, info_value: str, store: InMemoryStore):
     """
     Store user info of info_type as info_value.
     Create Date : 2026.02.20
