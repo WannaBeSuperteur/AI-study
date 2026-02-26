@@ -1,10 +1,14 @@
-from langchain_core.prompts import ChatPromptTemplate
 
-from tool_functions import calculate_date_, calculate_day_of_week_, calculate_date, calculate_day_of_week
-import torch
+from tool_functions import calculate_date_, calculate_day_of_week_
+
+import re
 import json
+import torch
+from typing import Union, ClassVar, Pattern
 
-from langchain.agents import create_agent
+from langchain_core.agents import AgentAction, AgentFinish
+from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
+from langchain_classic.agents import AgentExecutor, AgentOutputParser, create_react_agent
 from langchain_huggingface import HuggingFacePipeline, ChatHuggingFace
 from transformers import AutoModelForCausalLM, pipeline, AutoTokenizer, AutoConfig, BitsAndBytesConfig
 
@@ -12,6 +16,44 @@ from transformers import AutoModelForCausalLM, pipeline, AutoTokenizer, AutoConf
 ORIGINAL_MIDM_LLM_PATH = 'llm_fine_tuning/midm_original_llm'
 ANSWER_PREFIX = '(답변 시작)'
 LANGCHAIN_ASSISTANT_PREFIX = '<|start_header_id|>assistant<|end_header_id|>\n\n'
+
+
+# most part of ToolCallTagOutputParser generated using ChatGPT-5.2 Thinking
+class ToolCallTagOutputParser(AgentOutputParser):
+    """
+    LLM output examples:
+        <tool_call>
+        {"name": "calculate_day_of_week", "arguments": {"date_str": "2024-06-18"}}
+        </tool_call>
+    """
+
+    TOOL_CALL_PATTERN: ClassVar[Pattern[str]] = re.compile(
+        r"<tool_call>\s*(.*?)\s*</tool_call>",
+        re.DOTALL | re.IGNORECASE
+    )
+
+    def __init__(self):
+        super().__init__()
+
+    def parse(self, text: str) -> Union[AgentAction, AgentFinish]:
+        raw = (text or "").strip()
+
+        # parse tool calling
+        m = self.TOOL_CALL_PATTERN.search(raw)
+
+        if m:
+            payload_str = m.group(1).strip()
+            try:
+                payload = json.loads(payload_str)
+            except json.JSONDecodeError as e:
+                return AgentFinish(return_values={"output": f"[JSONDecodeError] {e}"}, log=raw)
+
+            tool_name = payload.get("name", "")
+            tool_args = payload.get("arguments", {}) or {}
+            return AgentAction(tool=tool_name, tool_input=tool_args, log=raw)
+
+        # handle fallback (not tool call or error)
+        return AgentFinish(return_values={"output": raw}, log=raw)
 
 
 def load_langchain_llm(llm_path: str):
@@ -66,42 +108,23 @@ def load_langchain_llm(llm_path: str):
     return langchain_llm
 
 
-def run_agent(agent, final_output_llm_chat_llm, tools_original_functions):
+def run_agent(tool_call_agent_executor, final_output_llm_chat_llm):
     """
     Run LLM Agent.
     Create Date: 2026.02.22
+    Last Update Date: 2026.02.26 (tool call 재 구현)
 
-    :param agent:                     LLM Agent to run
+    :param tool_call_agent_executor:  LLM Agent Executor (for Tool Call LLM)
     :param final_output_llm_chat_llm: LangChain LLM to convert Tool Call result to Final Output
-    :param tools_original_functions:  original tool function list
     """
-
-    tool_map = {}
-    for tool in tools_original_functions:
-        tool_map[tool.__name__ + '_'] = tool
 
     while True:
         user_input = input('\nUSER INPUT:\n')
 
         # execute tool
-        tool_result = agent.invoke({
-            "messages": [{'role': 'user', 'content': user_input + f' {ANSWER_PREFIX}'}]
-        })
-        tool_result_msg = tool_result["messages"][-1]
-        tool_result_content = tool_result_msg.content.split(LANGCHAIN_ASSISTANT_PREFIX)[-1]
-        tool_result_content_json = json.loads(tool_result_content)
-
-        try:
-            tool_call = tool_result_content_json["tool_call"]
-            tool_name = tool_call.get("name")
-            arg_dict = tool_call.get("arguments")
-            tool_execute_result = tool_map[tool_name](**arg_dict)
-
-            print(f'tool execution result : {tool_execute_result}')
-
-        except Exception as e:
-            print(e)
-            tool_execute_result = '도구 호출 실패'
+        tool_execute_result = tool_call_agent_executor.invoke({'input': user_input})
+        tool_execute_result_str = tool_execute_result['intermediate_steps'][-1][1]
+        print(f'tool_execute_result : {tool_execute_result_str}')
 
         # convert to final answer
         final_llm_prompt = ChatPromptTemplate.from_template(
@@ -110,7 +133,7 @@ def run_agent(agent, final_output_llm_chat_llm, tools_original_functions):
         print(f'final_llm_prompt : {final_llm_prompt}')
 
         final_chain = final_llm_prompt | final_output_llm_chat_llm
-        final_result = final_chain.invoke({'user_input': user_input, 'tool_execute_result': tool_execute_result})
+        final_result = final_chain.invoke({'user_input': user_input, 'tool_execute_result': tool_execute_result_str})
         final_result_content = final_result.content.split(LANGCHAIN_ASSISTANT_PREFIX)[-1]
         print(f'final result : {final_result_content}')
 
@@ -132,12 +155,26 @@ if __name__ == '__main__':
     execute_tool_call_chat_llm = ChatHuggingFace(llm=execute_tool_call_llm)
     final_output_llm_chat_llm = ChatHuggingFace(llm=final_output_llm)
 
+    # tool binding
     tools = [calculate_date_, calculate_day_of_week_]
-    tools_original_functions = [calculate_date, calculate_day_of_week]
+    prompt = PromptTemplate.from_template("tools: {tools}, tool_names: {tool_names} / {input} {agent_scratchpad}")
 
-    agent = create_agent(
-        model=execute_tool_call_chat_llm,
-        tools=tools
+    # prepare agent executor
+    output_parser = ToolCallTagOutputParser()
+
+    tool_call_agent = create_react_agent(
+        llm=execute_tool_call_chat_llm,
+        tools=tools,
+        prompt=prompt,
+        output_parser=output_parser
     )
 
-    run_agent(agent, final_output_llm_chat_llm, tools_original_functions)
+    tool_call_agent_executor = AgentExecutor(
+        agent=tool_call_agent,
+        tools=tools,
+        verbose=True,
+        return_intermediate_steps=True,
+        max_iterations=1
+    )
+
+    run_agent(tool_call_agent_executor, final_output_llm_chat_llm)
