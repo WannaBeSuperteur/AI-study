@@ -139,13 +139,13 @@ def run_agent(tool_call_agent_executor, final_output_llm_chat_llm):
 
                 if action_type == 'get':
                     key = input_split[2]
-                    result = get_user_info(key, memory_store)
+                    result = get_user_info.invoke({'info_type': key, 'store': memory_store})
                     print(f'get result : {result}')
 
                 if action_type == 'write':
                     key = input_split[2].split('=')[0]
                     value = input_split[2].split('=')[1]
-                    set_user_info(key, value, memory_store)
+                    set_user_info.invoke({'info_type': key, 'info_value': value, 'store': memory_store})
                     print(f'write successful (key={key}, value={value})')
 
             except Exception as e:
