@@ -31,7 +31,7 @@
 ## 2. 개발 일정
 
 * 전체 개발 일정
-  * **2026.02.19 (목) - 02.24 (화), 6 days**
+  * **2026.02.19 (목) - 02.27 (금), 9 days**
 * 상세 개발 일정
 
 | 구분         | 계획 내용                              | 일정                     | branch                                   | issue                                                          | 상태 |
@@ -43,10 +43,10 @@
 | 🧠 모델 선택   | LLM 학습 (Fine-Tuning) 대상 LLM 최종 선택  | 02.20 금 (1d)           | ```LangChain-practice-003-fine-tuning``` | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/3) | ✅  |
 | 📝 데이터셋 제작 | LLM 학습 데이터셋 제작                     | 02.20 금 (1d)           | ```LangChain-practice-003-fine-tuning``` | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/3) | ✅  |
 | 🧪 모델 학습   | LLM 학습 (Fine-Tuning) 실시            | 02.20 금 - 02.22 일 (3d) | ```LangChain-practice-003-fine-tuning``` | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/3) | ✅  |
-| ⚙ 기능 구현    | LLM 에이전트 기능 구현                     | 02.22 일 - 02.24 화 (3d) | ```LangChain-practice-004-agent```       |                                                                | ⬜  |
-| ⚙ 기능 구현    | LLM 에이전트 기능 구현 (tool call 재 구현)    | 02.23 월 - 02.24 화 (3d) | ```LangChain-practice-005-tool-call```   | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/4) | 💨 |
-| 🔍 최종 검토   | 최종 QA (버그 유무 검사)                   | 02.24 화 (1d)           |                                          |                                                                | ⬜  |
-| 📃 문서화     | 프로젝트 문서 정리 및 마무리                   | 02.24 화 (1d)           |                                          |                                                                | ⬜  |
+| ⚙ 기능 구현    | LLM 에이전트 기능 구현                     | 02.22 일 - 02.26 목 (5d) | ```LangChain-practice-004-agent```       | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/4) | ✅  |
+| ⚙ 기능 구현    | LLM 에이전트 기능 구현 (tool call 재 구현)    | 02.23 월 - 02.26 목 (5d) | ```LangChain-practice-005-tool-call```   | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/4) | ✅  |
+| 🔍 최종 검토   | 최종 QA (버그 유무 검사)                   | 02.27 금 (1d)           |                                          |                                                                | ⬜  |
+| 📃 문서화     | 프로젝트 문서 정리 및 마무리                   | 02.27 금 (1d)           |                                          |                                                                | ⬜  |
 
 ## 3. 구현 내용 상세
 
