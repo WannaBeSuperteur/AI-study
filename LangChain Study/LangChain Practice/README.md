@@ -47,13 +47,23 @@
 | ⚙ 기능 구현    | LLM 에이전트 기능 구현                     | 02.22 일 - 02.26 목 (5d) | ```LangChain-practice-004-agent```       | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/4) | ✅  |
 | ⚙ 기능 구현    | LLM 에이전트 기능 구현 (tool call 재 구현)    | 02.23 월 - 02.26 목 (5d) | ```LangChain-practice-005-tool-call```   | [issue](https://github.com/WannaBeSuperteur/AI-study/issues/4) | ✅  |
 | 🔍 최종 검토   | 최종 QA (버그 유무 검사)                   | 02.28 토 (1d)           |                                          |                                                                | ✅  |
-| 📃 문서화     | 프로젝트 문서 정리 및 마무리                   | 02.28 토 (1d)           |                                          |                                                                | 💨 |
+| 📃 문서화     | 프로젝트 문서 정리 및 마무리                   | 02.28 토 (1d)           |                                          |                                                                | ✅  |
 
 ## 3. 구현 내용 상세
 
 * 전체 구조
 
-TBU
+```
+[ USER_INPUT ] ---> TOOL_LLM ---> [ TOOL_LLM_OUTPUT ] ---> PARSER ---> [ TOOL_USE_DECISION ]
+                                                                          |            |
+                                                            (day of week) |            | (+- date)
+                                                                          V            V
+                             one of 2 functions :    [ CALCULATE_DAY_OF_WEEK ]   [ CALCULATE_DATE ]
+                                                                          |            |
+                                                                          |            |
+                                                                          V            V
+[ FINAL_OUTPUT ] <----------------------------------- FINAL_LLM <----- [ TOOL_CALL_RESULT ] 
+```
 
 * 학습 데이터셋
   * [toolcall_training_data.csv](toolcall_training_data.csv)
