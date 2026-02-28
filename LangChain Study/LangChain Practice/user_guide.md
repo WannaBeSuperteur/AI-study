@@ -305,4 +305,23 @@ zstandard==0.25.0
 
 ## 3. 사용자 가이드
 
-TBU
+* **1.** ```LangChain Study/LangChain Practice``` 디렉토리에서 ```main.py``` 실행
+  * ```python main.py``` 
+
+* **2.** ```USER INPUT:``` 입력란이 나타나면, **요일 계산** 또는 **날짜 계산** 요청
+  * LLM 에이전트의 최종 답변은 ```final result :``` 부분에 해당
+
+```
+USER INPUT:
+2024년 6월 18일이 무슨 요일인지 알려줘
+```
+
+![image](../images/LangChain_Practice_2.PNG)
+
+```
+USER INPUT:
+2024년 6월 18일의 100일 후 날짜가 언제인지 알려줘
+```
+
+![image](../images/LangChain_Practice_3.PNG)
+
