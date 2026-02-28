@@ -245,6 +245,6 @@ if __name__ == '__main__':
     fine_tune_execute_tool_call_llm(dataset_df, lora_llm, tokenizer)
 
     # Fine-Tuning final output LLM
-#    lora_llm, tokenizer = get_llm(LLM_PATH)
-#    fine_tune_final_output_llm(dataset_df, lora_llm, tokenizer)
+    lora_llm, tokenizer = get_llm(LLM_PATH)
+    fine_tune_final_output_llm(dataset_df, lora_llm, tokenizer)
 
