@@ -15,7 +15,8 @@
   * [5-3. LLM output 에서 처음에 EOS token 발생](#5-3-llm-output-에서-처음에-eos-token-발생)
   * [5-4. Fine-Tuning 된 LLM 로딩 시 tensor size 불일치](#5-4-fine-tuning-된-llm-로딩-시-tensor-size-불일치)
 * [6. 참고](#6-참고)
-  * [6-1. Quantization 적용/미 적용 시 GPU 메모리 사용량 차이](#6-1-quantization-적용미-적용-시-gpu-메모리-사용량-차이) 
+  * [6-1. Quantization 적용/미 적용 시 GPU 메모리 사용량 차이](#6-1-quantization-적용미-적용-시-gpu-메모리-사용량-차이)
+* [7. QA 로그 및 사용자 가이드](#7-qa-로그-및-사용자-가이드)
 
 ## 1. 기본 요구사항
 
@@ -315,3 +316,7 @@ bnb_config = BitsAndBytesConfig(
 | Quantization 적용 시 | Quantization 미 적용 시 | 차이        |
 |-------------------|---------------------|-----------|
 | 9,970 MB          | 6,141 MB            | 🔻 38.4 % |
+
+## 7. QA 로그 및 사용자 가이드
+
+* [QA 로그](QA_log.md)
