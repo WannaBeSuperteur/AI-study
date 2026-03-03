@@ -1,3 +1,13 @@
+## 2026.03.03 (화)
+**[딥시크, 후속 LLM 'V4' 공개 예정](https://n.news.naver.com/mnews/article/032/0003430888?sid=105)** ```AI``` ```DeepSeek``` ```Large Language Model```
+
+* 중국 스타트업 딥시크 (DeepSeek) 가 2026.03.04일 거대 언어 모델 **DeepSeek-V4** 를 공개할 예정이다.
+  * 기존 DeepSeek-R1 이 추론 특화 모델이었던 것과 달리 **범용 모델** 이다.
+* DeepSeek-V4의 특징은 다음과 같다.
+  * **최대 1조 개 파라미터** 의 모델
+  * 텍스트, 이미지, 영상 등 **다양한 형태 (Modality) 의 데이터** 처리 가능
+  * **코딩 분야** 성능 우수
+
 ## 2026.03.02 (월)
 **[LG, 초거대 AI '엑사원 4.5' 상반기 공개 예정](https://n.news.naver.com/mnews/article/021/0002774053?sid=101)** ```AI``` ```Large Language Model``` ```MultiModal Model```
 
