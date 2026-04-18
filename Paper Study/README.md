@@ -1,15 +1,23 @@
 Paper Study (2025.03.12 -)
 
-## Overview
+## 목차
 
-* **Total 44 Papers | 46 Documents** (2025.10.27)
+* [1. Overview](#1-overview)
+* [2. Large Language Model](#2-large-language-model)
+* [3. Vision Model](#3-vision-model)
+* [4. Other Models](#4-other-models)
+
+## 1. Overview
+
+* **Total 45 Papers | 47 Documents** (2026.04.18)
 
 | Field                                            | Paper Count         | Paper Count<br>(Generative AI) |
 |--------------------------------------------------|---------------------|--------------------------------|
 | [Large Language Model](Large%20Language%20Model) | 32 Papers (34 Docs) | 32 Papers                      |
 | [Vision Model](Vision%20Model)                   | 12 Papers (12 Docs) | 8 Papers                       |
+| [Other Models](Other%20Models)                   | 1 Paper (1 Doc)     | 0 Papers                       |
 
-## Large Language Model
+## 2. Large Language Model
 
 * **Total 32 Papers | 34 Documents** (2025.10.27)
   * Including 32 Generative AI Papers
@@ -52,7 +60,7 @@ Paper Study (2025.03.12 -)
 | 2025.10.18 - 10.25 [(Study Doc)](Large%20Language%20Model/%5B2025.10.18%5D%20Memento%20-%20Fine-tuning%20LLM%20Agents%20without%20Fine-tuning%20LLMs.md)                                                      | 🧪 [Memento: Fine-tuning LLM Agents without Fine-tuning LLMs](https://arxiv.org/pdf/2508.16153)                                                                       | 2025.08   |                                                                                                                                         |
 | 2025.10.27 - 10.28 + 2026.02.14 - 02.15 [(Study Doc)](Large%20Language%20Model/%5B2025.10.27%5D%20Next-Generation%20Database%20Interfaces%20-%20A%20Surve%20of%20LLM-based%20Text-to-SQL.md)                  | 💬 [Next-Generation Database Interfaces: A Survey of LLM-based Text-to-SQL](https://arxiv.org/pdf/2406.08426)                                                         | 2024.06   |                                                                                                                                         |
 
-## Vision Model
+## 3. Vision Model
 
 * **Total 12 Papers | 12 Documents** (2025.09.13)
   * Including 8 Generative AI Papers
@@ -72,3 +80,11 @@ Paper Study (2025.03.12 -)
 | 2025.09.07 [(Study Doc)](Vision%20Model/%5B2025.09.07%5D%20CLIPArTT%20-%20Adaption%20of%20CLIP%20to%20New%20Domains%20at%20Test%20Time.md)                                                                           | 🎭 [CLIPArTT: Adaption of CLIP to New Domains at Test Time](https://arxiv.org/pdf/2405.00754)                                                                       | 2024.05   |                                                                                                                                                    |
 | 2025.09.12 - 09.13 [(Study Doc)](Vision%20Model/%5B2025.09.12%5D%20CLIP-CID%20-%20Efficient%20CLIP%20Distillation%20via%20Cluster-Instance%20Discrimination.md)                                                      | 🎭 [CLIP-CID: Efficient CLIP Distillation via Cluster-Instance Discrimination](https://ojs.aaai.org/index.php/AAAI/article/download/35505/37660)                    | 2025.04   |                                                                                                                                                    |
 | 2025.09.13 - 09.14 [(Study Doc)](Vision%20Model/%5B2025.09.13%5D%20Stable-Hair%20-%20Real-World%20Hair%20Transfer%20via%20Diffusion%20Model.md)                                                                      | 🎭 [Stable-Hair: Real-World Hair Transfer via Diffusion Model](https://ojs.aaai.org/index.php/AAAI/article/view/33123/35278)                                        | 2025.04   |                                                                                                                                                    |
+
+## 4. Other Models
+
+* **Total 1 Papers | 1 Document** (2026.04.18)
+
+| Study Date<br>(Study Doc. Link)                                                                                                                 | Paper                                                                                                 | Published | 비고                                                                                                                                        |
+|-------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|-----------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| 2026.04.18 [(Study Doc)](Other%20Models/%5B2026.04.18%5D%20TabTransformer%20-%20Tabular%20Data%20Modeling%20Using%20Contextual%20Embeddings.md) | [TabTransformer: Tabular Data Modeling Using Contextual Embeddings](https://arxiv.org/pdf/2012.06678) | 2020.12   | [Oh-LoRA Hyper-param Battle (2025.10.06 - )](https://github.com/WannaBeSuperteur/AI_Projects/tree/main/2025_10_06_OhLoRA_HP_Battle) 관련 논문 |
