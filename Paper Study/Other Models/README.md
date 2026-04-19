@@ -1,4 +1,4 @@
-## Large Language Model
+## Other Models (Tabular, ...)
 
 * **Total 1 Paper | 1 Document** (2026.04.18)
 
