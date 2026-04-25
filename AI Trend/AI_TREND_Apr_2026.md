@@ -1,3 +1,14 @@
+## 2026.04.25 (토)
+**[DeepSeek, 저비용 AI 'V4' 프리뷰 모델 공개](https://n.news.naver.com/mnews/article/092/0002420154?sid=105)** ```AI``` ```DeepSeek``` ```Large Language Model```
+
+* 2026.04.24일 딥시크 (DeepSeek) 가 자사의 신규 LLM (거대 언어 모델) 인 **DeepSeek V4 Preview 모델** 을 공개했다.
+  * 이 모델은 **Flash, Pro 의 2가지 버전** 으로, 이전 모델들과 동일하게 **오픈소스 형태** 로 공개된다. 
+* DeepSeek-V4 모델의 특징은 다음과 같다.
+  * **에이전트 기반 작업, 지식 처리, 추론** 분야에서 경쟁사 모델 대비 우수 
+  * **추론 비용** (AI 모델 실행, 즉 출력 생성 시의 컴퓨팅 연산 비용) 절감
+  * **AI 에이전트** 도구 사용 가능 (Claude Code, OpenClaw 등)
+* DeepSeek-V4 출시 이후, 알리바바, 바이트댄스 등의 모델 출시로 인해 **중국 내에서 AI 모델 분야 경쟁이 치열해질 것** 으로 전망된다.
+
 ## 2026.04.24 (금)
 **[OpenAI, GPT-5.5 모델 공개](https://n.news.naver.com/mnews/article/005/0001845205?sid=101)** ```AI``` ```OpenAI``` ```ChatGPT```
 
