@@ -1,3 +1,16 @@
+## 2026.07.12 (일)
+**[학계는 '확산형 언어모델' 연구 중](https://n.news.naver.com/mnews/article/138/0002233899?sid=105)** ```AI``` ```Large Language Model```
+
+* 최근 AI 연구의 핵심이 '모델 규모 경쟁' 보다는 **효율적 추론, 신뢰성, 안전성** 쪽으로 이동하고 있다.
+* **제 43회 ICML (국제머신러닝학회)** 의 주요 주제는 다음과 같다.
+  * [트랜스포머 (Transformer)](../Natural%20Language%20Processing/Basics_트랜스포머%20모델.md) 이후의 시퀀스 모델
+  * [확산 모델 (Diffusion Model)](../Generative%20AI/Basics_Diffusion%20Model.md) 의 정량/이론적 이해 
+  * 안전성, 머신 언러닝 (un-learning), 워터마킹
+  * 심층 강화학습
+  * LLM 사후 학습 및 테스트-타임 학습
+* 최근에는 **확산형 언어 모델 (dLLM), 즉 확산 모델의 기술을 언어 모델에 적용하는 기술** 이 최우수 논문상을 받는 등 주목받고 있다.
+  * 특히, 확산형 언어 모델의 토큰 생성 순서가 자유롭다는 점이 오히려 **추론 경로와 답변의 다양성이 줄어드는 단점** 을 가지고 있음을 지적하고, 이를 해결하는 대안책이 제시되기도 했다. 
+
 ## 2026.07.11 (토)
 **[OpenAI, 챗GPT 워크 (ChatGPT Work) 공개](https://n.news.naver.com/mnews/article/092/0002430055?sid=105)** ```AI``` ```OpenAI``` ```ChatGPT```
 
