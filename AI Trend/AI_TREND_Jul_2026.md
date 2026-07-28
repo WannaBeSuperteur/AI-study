@@ -1,3 +1,21 @@
+## 2026.07.28 (화)
+**[카카오, 경량 언어 모델 4종 공개](https://n.news.naver.com/mnews/article/001/0016218315?sid=105)** ```AI``` ```Kakao AI``` ```Large Language Model```
+
+* 2026.07.28일 카카오가 **자체 언어 모델 '카나나'의 경량 버전 모델 4종을 오픈소스로 공개** 했다.
+  * [HuggingFace 링크](https://huggingface.co/collections/kakaocorp/kanana-2-slm)
+* 이번에 공개된 언어 모델은 다음과 같다.
+
+| 구분          | 언어 모델                                                   |
+|-------------|---------------------------------------------------------|
+| Base 모델     | ```Kanana-2-1.3B-Base``` ```Kanana-2-3B-Base```         |
+| Instruct 모델 | ```Kanana-2-1.3B-Instruct``` ```Kanana-2-3B-Instruct``` |
+
+* 이번에 공개된 모델들의 특징은 다음과 같다.
+  * 스마트폰 등 구동 가능
+  * 비슷한 규모의 최신 오픈소스 언어 모델 대비 성능 우수
+  * 카카오 자체 개발 한국어 토크나이저 적용
+* 배포 라이선스는 **카나나 오픈 라이선스 (상업적 사용 가능)** 이다.
+
 ## 2026.07.27 (월)
 **[AI의 정책 안전망을 뚫는 속임수](https://n.news.naver.com/mnews/article/022/0004146138?sid=104)** ```AI``` ```Generative AI``` ```Large Language Model```
 
