@@ -1,3 +1,14 @@
+## 2026.07.29 (수)
+**[SKT, '독자 파운데이션 모델' 프로젝트 2차 모델 공개](https://n.news.naver.com/mnews/article/421/0009084930?sid=105)** ```AI``` ```Large Language Model```
+
+* 2026.07.29일 SKT가 '독자 파운데이션 모델'인 **A.X K2 모델** 을 공개했다.
+  * A.X K2는 파라미터 6880억 개 (688B) 규모의 모델로, [HuggingFace](https://huggingface.co/skt/A.X-K2) 에 공개되어 있다. 
+* A.X K2의 특징은 다음과 같다.
+  * 성능 향상을 위한, SKT 자체 개발 구조인 **SGA (Sparse Gated Attention)** 적용
+    * 이 구조는 **긴 문맥 처리 시, 관련성이 높은 정보를 선별** 한다.
+  * 최근 6개월 이내 출시된 세계적으로 유명한 AI 모델 (Qwen3.5-397B-A17B, DeepSeek-V4-Flash 등) 과 동급의 성능 수준
+* 한편, SKT는 A.X K2를 다양한 분야 (제조, 국방, 바이오, 사무 등) 에 확대 적용할 계획이다.
+
 ## 2026.07.28 (화)
 **[카카오, 경량 언어 모델 4종 공개](https://n.news.naver.com/mnews/article/001/0016218315?sid=105)** ```AI``` ```Kakao AI``` ```Large Language Model```
 
