@@ -1,3 +1,14 @@
+## 2026.07.30 (목)
+**[OpenAI, 한국 17개 대학에 연구자용 ChatGPT 무료 제공](https://n.news.naver.com/mnews/article/003/0014098817?sid=105)** ```AI``` ```OpenAI``` ```ChatGPT```
+
+* 2026.07.30일 OpenAI가 **학술 연구자를 위한 챗GPT** 라는 글로벌 프로그램을 출시했다.
+  * 이 프로그램에 선정된 기관은 **OpenAI의 첨단 AI 모델 및 연구 도구를 무료로 사용** 할 수 있다.
+* 상세 내용은 다음과 같다.
+  * 대한민국 기관 중에는 **서울대학교, KAIST 등 17곳** 선정 (아시아태평양 지역 총 70곳)
+  * **ChatGPT, ChatGPT Work, Codex** 에서 **최신 AI 모델 (GPT-5.6 등)** 사용 가능
+    * **GPT-5.6 솔 프로** 포함 
+  * 생명과학 연구자를 위한 기능 포함
+
 ## 2026.07.29 (수)
 **[SKT, '독자 파운데이션 모델' 프로젝트 2차 모델 공개](https://n.news.naver.com/mnews/article/421/0009084930?sid=105)** ```AI``` ```Large Language Model```
 
