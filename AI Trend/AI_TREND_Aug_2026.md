@@ -1,3 +1,14 @@
+## 2026.08.03 (월)
+**[알리바바, Qwen3.8-맥스 모델 공개](https://n.news.naver.com/mnews/article/016/0002678894?sid=104)** ```AI``` ```Large Language Model```
+
+* 2026.08.03일 알리바바가 **Qwen3.8-Max (큐원3.8-맥스)** 를 공개했다.
+  * 해당 모델은 **문샷의 Kimi K3에 비해 모델 규모가 크게 떨어지지 않는** 수준에 해당한다. 
+* 큐원3.8-맥스의 특징은 다음과 같다.
+  * 파라미터 **약 2조 4000억 개 (2400B)**
+  * [전문가 혼합 (Mixture of Experts)](../AI%20Basics/LLM%20Basics/LLM_기초_Mixture_of_Experts.md) 을 통해 비용 및 응답 지연 감소 (한번에 약 950억 파라미터 사용)
+  * **텍스트, 이미지, 영상** 까지 지원
+* 한편, 큐원3.8-맥스 모델은 다음 주 출시될 예정이다.
+
 ## 2026.08.02 (일)
 **[드라마, 예능 장악한 AI 기술](https://n.news.naver.com/mnews/article/001/0016228636?sid=103)** ```AI``` ```Generative AI```
 
