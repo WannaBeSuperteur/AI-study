@@ -1,3 +1,14 @@
+## 2026.08.11 (화)
+**[UNIST, AI '전문가 공유' 기술 개발](https://n.news.naver.com/mnews/article/011/0004650102?sid=105)** ```AI``` ```Large Language Model```
+
+* UNIST 인공지능대학원 교수팀이 **새로운 전문가 혼합 (MoE, Mixture of Experts)** 구조를 통해 **파라미터 수를 줄이면서 언어 모델의 성능을 유지** 하는 방법을 개발했다.
+  * 이 방법은 **GMoE (Global Mixture of Experts)** 이다.
+  * 이 방법을 통해 **파라미터 개수를 5.49억 → 2.04억 개 (약 63%) 감소** 시키면서 성능을 유지하는 성과를 거두었다.
+* GMoE의 핵심 아이디어는 다음과 같다.
+  * 모든 layer에서 사용하는 **공용 전문가** 와 각 층마다 두는 **전용 전문가** 로, **'공유'하는 방식** 사용
+    * 이를 통해 **모델 크기 감소 및 메모리 절약** 
+  * 입력값이 특정 Expert 에만 몰리는 문제 해결
+
 ## 2026.08.10 (월) ```🎉✨ AI-Study repo 1000 days ✨🎉```
 **[끝없는 AI 모델 출시, 성능 평가 기관이 수혜자](https://n.news.naver.com/mnews/article/009/0005718545?sid=105)** ```AI``` ```Large Language Model```
 
