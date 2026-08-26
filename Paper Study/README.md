@@ -9,18 +9,18 @@ Paper Study (2025.03.12 -)
 
 ## 1. Overview
 
-* **Total 45 Papers | 47 Documents** (2026.04.18)
+* **Total 46 Papers | 48 Documents** (2026.08.26)
 
 | Field                                            | Paper Count         | Paper Count<br>(Generative AI) |
 |--------------------------------------------------|---------------------|--------------------------------|
-| [Large Language Model](Large%20Language%20Model) | 32 Papers (34 Docs) | 32 Papers                      |
+| [Large Language Model](Large%20Language%20Model) | 33 Papers (35 Docs) | 33 Papers                      |
 | [Vision Model](Vision%20Model)                   | 12 Papers (12 Docs) | 8 Papers                       |
 | [Other Models](Other%20Models)                   | 1 Paper (1 Doc)     | 0 Papers                       |
 
 ## 2. Large Language Model
 
-* **Total 32 Papers | 34 Documents** (2025.10.27)
-  * Including 32 Generative AI Papers
+* **Total 33 Papers | 35 Documents** (2026.08.26)
+  * Including 33 Generative AI Papers
   * 💻 (Single LLM Product / Model), 🤖 (LLM Agent), 🧪 (LLM Methodology), ⚖ (LLM Ethics), 🧠 [(LLM Reasoning)](../AI%20Basics/LLM%20Basics/LLM_기초_추론형_모델.md), 🎭 (multi-modal), 💬 (others)
 
 | Study Date<br>(Study Doc. Link)                                                                                                                                                                               | Paper                                                                                                                                                                 | Published | 비고                                                                                                                                      |
@@ -59,6 +59,7 @@ Paper Study (2025.03.12 -)
 | 2025.10.10 [(Study Doc)](Large%20Language%20Model/%5B2025.10.10%5D%20LLM%20Maybe%20LongLM%20-%20SelfExtend%20LLM%20Context%20Window%20Without%20Training.md)                                                  | 🧪 [LLM Maybe LongLM: SelfExtend LLM Context Window Without Tuning](https://arxiv.org/pdf/2401.01325)                                                                 | 2024.01   |                                                                                                                                         |
 | 2025.10.18 - 10.25 [(Study Doc)](Large%20Language%20Model/%5B2025.10.18%5D%20Memento%20-%20Fine-tuning%20LLM%20Agents%20without%20Fine-tuning%20LLMs.md)                                                      | 🧪 [Memento: Fine-tuning LLM Agents without Fine-tuning LLMs](https://arxiv.org/pdf/2508.16153)                                                                       | 2025.08   |                                                                                                                                         |
 | 2025.10.27 - 10.28 + 2026.02.14 - 02.15 [(Study Doc)](Large%20Language%20Model/%5B2025.10.27%5D%20Next-Generation%20Database%20Interfaces%20-%20A%20Surve%20of%20LLM-based%20Text-to-SQL.md)                  | 💬 [Next-Generation Database Interfaces: A Survey of LLM-based Text-to-SQL](https://arxiv.org/pdf/2406.08426)                                                         | 2024.06   |                                                                                                                                         |
+| 2026.08.26 - 08.27 [(Study Doc)](Large%20Language%20Model/%5B2026.08.26%5D%20Self-Improvements%20in%20Modern%20Agentic%20Systems%20-%20A%20Survey.md)                                                         | 🤖 [Self-Improvements in Modern Agentic Systems: A Survey](https://arxiv.org/pdf/2607.13104)                                                                          | 2026.07   |                                                                                                                                         |
 
 ## 3. Vision Model
 
