@@ -9,13 +9,13 @@ Paper Study (2025.03.12 -)
 
 ## 1. Overview
 
-* **Total 49 Papers | 51 Documents** (2026.09.30)
+* **Total 50 Papers | 52 Documents** (2026.10.01)
 
 | Field                                            | Paper Count         | Paper Count<br>(Generative AI) |
 |--------------------------------------------------|---------------------|--------------------------------|
 | [Large Language Model](Large%20Language%20Model) | 35 Papers (37 Docs) | 35 Papers                      |
 | [Vision Model](Vision%20Model)                   | 13 Papers (13 Docs) | 8 Papers                       |
-| [Other Models](Other%20Models)                   | 1 Paper (1 Doc)     | 0 Papers                       |
+| [Other Models](Other%20Models)                   | 2 Papers (2 Docs)   | 0 Papers                       |
 
 ## 2. Large Language Model
 
@@ -87,8 +87,9 @@ Paper Study (2025.03.12 -)
 
 ## 4. Other Models
 
-* **Total 1 Papers | 1 Document** (2026.04.18)
+* **Total 2 Papers | 2 Documents** (2026.10.01)
 
-| Study Date<br>(Study Doc. Link)                                                                                                                 | Paper                                                                                                 | Published | 비고                                                                                                                                        |
-|-------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|-----------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| 2026.04.18 [(Study Doc)](Other%20Models/%5B2026.04.18%5D%20TabTransformer%20-%20Tabular%20Data%20Modeling%20Using%20Contextual%20Embeddings.md) | [TabTransformer: Tabular Data Modeling Using Contextual Embeddings](https://arxiv.org/pdf/2012.06678) | 2020.12   | [Oh-LoRA Hyper-param Battle (2025.10.06 - )](https://github.com/WannaBeSuperteur/AI_Projects/tree/main/2025_10_06_OhLoRA_HP_Battle) 관련 논문 |
+| Study Date<br>(Study Doc. Link)                                                                                                                                                                    | Paper                                                                                                                                         | Published | 비고                                                                                                                                        |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|-----------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| 2026.04.18 [(Study Doc)](Other%20Models/%5B2026.04.18%5D%20TabTransformer%20-%20Tabular%20Data%20Modeling%20Using%20Contextual%20Embeddings.md)                                                    | [TabTransformer: Tabular Data Modeling Using Contextual Embeddings](https://arxiv.org/pdf/2012.06678)                                         | 2020.12   | [Oh-LoRA Hyper-param Battle (2025.10.06 - )](https://github.com/WannaBeSuperteur/AI_Projects/tree/main/2025_10_06_OhLoRA_HP_Battle) 관련 논문 |
+| 2026.10.01 [(Study Doc)](Other%20Models/%5B2026.10.01%5D%20Graph%20Neural%20Networks%20for%20Automatic%20Addition%20of%20Optimizing%20Components%20in%20Printed%20Circuit%20Board%20Schematics.md) | [Graph Neural Networks for Automatic Addition of Optimizing Components in Printed Circuit Board Schematics](https://arxiv.org/pdf/2506.10577) | 2025.06   |                                                                                                                                           |
