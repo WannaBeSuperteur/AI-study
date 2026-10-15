@@ -1,6 +1,6 @@
 ## Vision Model
 
-* **Total 14 Papers | 14 Documents** (2026.10.14)
+* **Total 13 Papers | 13 Documents** (2026.09.12)
   * Including 8 Generative AI Papers
   * 🖼 (non-generative), 🎨 (generative), 🎭 (generative multi-modal & CLIP), 🔠 (OCR)
 
@@ -19,4 +19,3 @@
 | 2025.09.12 - 09.13 [(Study Doc)](%5B2025.09.12%5D%20CLIP-CID%20-%20Efficient%20CLIP%20Distillation%20via%20Cluster-Instance%20Discrimination.md)                                                        | 🎭 [CLIP-CID: Efficient CLIP Distillation via Cluster-Instance Discrimination](https://ojs.aaai.org/index.php/AAAI/article/download/35505/37660)                    | 2025.04   |                                                                                                                                                    |
 | 2025.09.13 - 09.14 [(Study Doc)](%5B2025.09.13%5D%20Stable-Hair%20-%20Real-World%20Hair%20Transfer%20via%20Diffusion%20Model.md)                                                                        | 🎭 [Stable-Hair: Real-World Hair Transfer via Diffusion Model](https://ojs.aaai.org/index.php/AAAI/article/view/33123/35278)                                        | 2025.04   |                                                                                                                                                    |
 | 2026.09.12 - 09.15 + 09.27 [(Study Doc)](%5B2026.09.12%5D%20Deep%20Learning-Based%20Object%20Pose%20Estimation%20-%20A%20Comprehensive%20Survey.md)                                                     | 🖼 [Deep Learning-Based Object Pose Estimation: A Comprehensive Survey](https://arxiv.org/pdf/2405.07801)                                                           | 2026.01   |                                                                                                                                                    |
-| 2026.10.14 [(Study Doc)](%5B2026.10.14%5D%20Unsupervised%20Anomaly%20Prediction%20with%20N-BEATS%20and%20Graph%20Neural%20Network%20in%20Multi-variate%20Semiconductor%20Process%20Time%20Series.md)    | 🖼 [Unsupervised Anomaly Prediction with N-BEATS and Graph Neural Network in Multi-variate Semiconductor Process Time Series](https://arxiv.org/pdf/2510.20718)     | 2025.10   |                                                                                                                                                    |
