@@ -9,18 +9,18 @@ Paper Study (2025.03.12 -)
 
 ## 1. Overview
 
-* **Total 51 Papers | 53 Documents** (2026.10.14)
+* **Total 51 Papers | 53 Documents** (2026.10.18)
 
 | Field                                            | Paper Count         | Paper Count<br>(Generative AI) |
 |--------------------------------------------------|---------------------|--------------------------------|
-| [Large Language Model](Large%20Language%20Model) | 35 Papers (37 Docs) | 35 Papers                      |
+| [Large Language Model](Large%20Language%20Model) | 36 Papers (38 Docs) | 36 Papers                      |
 | [Vision Model](Vision%20Model)                   | 13 Papers (13 Docs) | 8 Papers                       |
 | [Other Models](Other%20Models)                   | 3 Papers (3 Docs)   | 0 Papers                       |
 
 ## 2. Large Language Model
 
-* **Total 35 Papers | 37 Documents** (2026.09.30)
-  * Including 35 Generative AI Papers
+* **Total 36 Papers | 38 Documents** (2026.10.18)
+  * Including 36 Generative AI Papers
   * 💻 (Single LLM Product / Model), 🤖 (LLM Agent), 🧪 (LLM Methodology), ⚖ (LLM Ethics), 🧠 [(LLM Reasoning)](../AI%20Basics/LLM%20Basics/LLM_기초_추론형_모델.md), 🎭 (multi-modal), 💬 (others)
 
 | Study Date<br>(Study Doc. Link)                                                                                                                                                                               | Paper                                                                                                                                                                 | Published | 비고                                                                                                                                      |
@@ -62,6 +62,7 @@ Paper Study (2025.03.12 -)
 | 2026.08.26 - 08.28 [(Study Doc)](Large%20Language%20Model/%5B2026.08.26%5D%20Self-Improvements%20in%20Modern%20Agentic%20Systems%20-%20A%20Survey.md)                                                         | 🤖 [Self-Improvements in Modern Agentic Systems: A Survey](https://arxiv.org/pdf/2607.13104)                                                                          | 2026.07   |                                                                                                                                         |
 | 2026.09.06 - 09.07 [(Study Doc)](Large%20Language%20Model/%5B2026.09.06%5D%20Encrypted%20Large%20Model%20Inference%20-%20The%20Equivalent%20Encryption%20Paradigm.md)                                         | 💬 [Encrypted Large Model Inference: The Equivariant Encryption Paradigm](https://arxiv.org/pdf/2502.01013)                                                           | 2025.02   | 
 | 2026.09.30 - 10.01 [(Study Doc)](Large%20Language%20Model/%5B2026.09.30%5D%20Integrating%20Graphs,%20Large%20Language%20Models,%20and%20Agents%20-%20Reasoning%20and%20Retrieval.md)                          | 🤖 [Integrating Graphs, Large Language Models, and Agents: Reasoning and Retrieval](https://arxiv.org/pdf/2604.15951)                                                 | 2026.04   |                                                                                                                                         |
+| 2026.10.18 [(Study Doc)](Large%20Language%20Model/%5B2026.10.18%5D%20SemiFA%20-%20An%20Agentic%20Multi-Modal%20Framework%20for%20Autonomous%20Semiconductor%20Failure%20Analysis%20Report%20Generation.md)    | 🤖 [SemiFA: An Agentic Multi-Modal Framework for Autonomous Semiconductor Failure Analysis Report Generation](https://arxiv.org/pdf/2604.13236)                       | 2026.04   |                                                                                                                                         |
 
 ## 3. Vision Model
 
