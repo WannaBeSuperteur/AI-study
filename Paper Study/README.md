@@ -9,7 +9,7 @@ Paper Study (2025.03.12 -)
 
 ## 1. Overview
 
-* **Total 51 Papers | 53 Documents** (2026.10.18)
+* **Total 52 Papers | 54 Documents** (2026.10.18)
 
 | Field                                            | Paper Count         | Paper Count<br>(Generative AI) |
 |--------------------------------------------------|---------------------|--------------------------------|
