@@ -1,3 +1,18 @@
+## 2026.11.20 (금)
+**[AI가 푼 수능, GPT, 제미나이 만점](https://n.news.naver.com/mnews/article/092/0002446230?sid=105)** ```AI``` ```Large Language Model```
+
+* '2027학년도 수능 거대언어모델 (LLM) 풀이 대시보드'에 따르면, **2027 수능에서 만점을 받은 LLM이 등장** 했다.
+  * 해당 언어 모델은 OpenAI의 **GPT-6.2 Astra**, Google의 **Gemini-4 Neon** 이다.
+* 각 모델 별 수능 성적은 다음과 같다.
+
+| 순위 | 모델                                   | 수능 성적  | 비고           |
+|----|--------------------------------------|--------|--------------|
+| 1위 | `GPT-6.2 Astra` `Gemini-4 Neon`      | 450.0점 | 만점           |
+| 3위 | `GPT-6.2 Sol` `Gemini-4 Argon`       | 449.6점 |              |
+| 5위 | `Claude Opus 5.5` `Claude Fable 5.2` | 449.3점 | 모두 Claude 모델 |
+
+* 국내 모델 1위는 **LG AI연구원의 'K-엑사원 2.5' (414.7점)** 이다.
+
 ## 2026.11.19 (목)
 **[AI 의료 질병 진단 성능, 최소 90% 기대](https://n.news.naver.com/mnews/article/032/0003483415?sid=103)** ```AI``` ```Medical AI```
 
